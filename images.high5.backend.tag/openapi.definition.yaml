@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1297
+  version: 0.0.107-1306
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2142,24 +2142,12 @@ paths:
                   $ref: '#/components/examples/NodeNotFoundException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/nodes/content/{secret}:
+  /v1/org/nodes/content/{secret}:
     get:
       tags:
         - Node
       summary: Get nodes content as plain text javascript by a secret
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
         - name: secret
           in: path
           description: Secret that got generated on node creation
