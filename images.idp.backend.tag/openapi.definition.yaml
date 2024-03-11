@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1656
+  version: 0.0.143-1659
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1128,7 +1128,7 @@ paths:
       summary: Patch an organization member's role in the Organization
       description: |-
 
-        Required organization role: MANAGER\
+        Required organization role: ADMIN\
         Required scopes: IDP_ORGANIZATION_WRITE
       security:
         - BearerAuth: []
@@ -1196,7 +1196,7 @@ paths:
       summary: Remove a user from an organization by the organization user id
       description: |-
 
-        Required organization role: MANAGER\
+        Required organization role: ADMIN\
         Required scopes: IDP_ORGANIZATION_WRITE
       security:
         - BearerAuth: []
@@ -2417,7 +2417,7 @@ paths:
       summary: Patch a team by its name
       description: |-
 
-        Required organization role: ADMIN\
+        Required organization role: MANAGER\
         Required scopes: IDP_ORGANIZATION_WRITE
       security:
         - BearerAuth: []
