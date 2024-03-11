@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1310
+  version: 0.0.107-1311
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6810,6 +6810,9 @@ components:
         designHash:
           type: string
           description: The hash of the design
+        type:
+          $ref: '#/components/schemas/SnapshotType'
+          description: Type of the snapshot
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -6825,6 +6828,7 @@ components:
         - organization
         - creator
         - designHash
+        - type
         - createDate
         - modifyDate
       example:
@@ -6847,6 +6851,7 @@ components:
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         designHash: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
+        type: manual
         createDate: 1701270816094
         modifyDate: 1701270816094
     SnapshotPatchDto:
