@@ -1,0 +1,2219 @@
+openapi: 3.0.0
+info:
+  title: hcloud - Fuse
+  version: 0.0.4-706
+  contact:
+    name: MoovIT Software Products GmbH
+    url: https://www.moovit-sp.com
+    email: info@moovit-sp.com
+  description: Fuse handles everything around cronjobs.
+servers:
+  - url: https://eu-central-1.helmut.cloud/api/fuse
+    description: EU-Central production server
+  - url: https://na-west-1.helmut.cloud/api/fuse
+    description: NA-West production server
+  - url: https://eu-dev-1.app.helmut.cloud/api/fuse
+    description: EU development server
+  - url: http://localhost/api/fuse
+    description: Localhost
+paths:
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}:
+    get:
+      tags:
+        - Cronjob
+      summary: Retrieve a cronjob by its ID
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization the cronjob belongs to
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space the cronjob belongs to
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      responses:
+        '200':
+          description: Cronjob object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - Cronjob
+      summary: Updates a cronjob
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the cronjob
+          required: true
+          schema:
+            type: string
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/CronjobCreateDto'
+      responses:
+        '200':
+          description: Updated cronjob object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobDto'
+        '400':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobInvalidExpressionException:
+                  $ref: '#/components/examples/CronjobInvalidExpressionException'
+                CronjobInvalidTimezoneException:
+                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Cronjob
+      summary: Deletes a cronjob
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: FUSE_SPACE_DELETE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/search:
+    post:
+      tags:
+        - Cronjob
+      summary: >-
+        Retrieves all cronjobs that match the provided search filter. Will
+        return all cronjobs of the specified space if no search filter is
+        provided.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of filtered Cronjobs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs:
+    post:
+      tags:
+        - Cronjob
+      summary: Creates a new cronjob
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/CronjobCreateDto'
+        required: true
+      responses:
+        '201':
+          description: Cronjob object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobDto'
+        '400':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobInvalidExpressionException:
+                  $ref: '#/components/examples/CronjobInvalidExpressionException'
+                CronjobInvalidTimezoneException:
+                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/expression:
+    patch:
+      tags:
+        - Cronjob
+      summary: Updates the quartz cron expression of the cronjob
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/CronjobExpressionPatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated cronjob object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobDto'
+        '400':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobInvalidExpressionException:
+                  $ref: '#/components/examples/CronjobInvalidExpressionException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/enabled:
+    patch:
+      tags:
+        - Cronjob
+      summary: Sets the cronjob's enabled flag
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+        - name: nextExecution
+          in: query
+          description: >-
+            Optional - Alongside the cronjob also retrieve the timestamps for
+            three next executions (for the specified timezone, in milliseconds)
+          required: false
+          schema:
+            type: boolean
+            default: 'false'
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/CronjobEnabledPatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated cronjob object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/next:
+    get:
+      tags:
+        - Cronjob
+      summary: >-
+        Retrieves the timestamps (in milliseconds, UTC+0) of the next n cronjob
+        executions.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+        - name: amount
+          in: query
+          description: >-
+            Amount of execution-timestamps that should be returned, min: 1, max:
+            10, default: 3
+          required: false
+          schema:
+            type: number
+            default: 3
+      responses:
+        '200':
+          description: >-
+            Array holding the timestamps (in milliseconds, UTC+0) for the next n
+            executions of the cronjob
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: number
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/cron/resolve:
+    post:
+      tags:
+        - Cronjob
+      summary: >-
+        Resolve a Quartz cron expression along with a timezone to get the next
+        execution(s)
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/CronPatternDto'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Array holding the timestamps (in milliseconds, in UTC) for the next
+            amount executions for given Quartz expression
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: number
+        '400':
+          description: Invalid request body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobInvalidExpressionException:
+                  $ref: '#/components/examples/CronjobInvalidExpressionException'
+                CronjobInvalidTimezoneException:
+                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/logs/search:
+    post:
+      tags:
+        - CronjobLog
+      summary: Search cronjob logs for one cronjob
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the cronjob
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of cronjob logs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CronjobLogDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/logs/{cronjobLogId}:
+    get:
+      tags:
+        - CronjobLog
+      summary: Retrieves a cronjob log by its ID
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - name: cronjobId
+          in: path
+          description: ID of the Cronjob
+          required: true
+          schema:
+            type: string
+        - name: cronjobLogId
+          in: path
+          description: ID of the Cronjob log
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Cronjob log object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CronjobLogDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                CronjobNotFoundException:
+                  $ref: '#/components/examples/CronjobNotFoundException'
+                CronjobLogNotFoundException:
+                  $ref: '#/components/examples/CronjobLogNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}:
+    get:
+      tags:
+        - Space
+      summary: Retrieves a Space by its name
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Space object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Space
+      summary: >-
+        Deletes a Space by its name along with all related cronjobs and cronjob
+        logs.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: OWNER\
+        Required scopes: FUSE_SPACE_DELETE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/search:
+    post:
+      tags:
+        - Space
+      summary: >-
+        Retrieves all spaces of an organization that match the provided search
+        filter. Will return all spaces if no search filter is provided.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of filtered Spaces
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
+    post:
+      tags:
+        - Space
+      summary: >-
+        For the specified space, will retrieve all space permissions that match
+        the provided search filter or all space permissions if no search filter
+        is provided.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of filtered Spaces permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces:
+    post:
+      tags:
+        - Space
+      summary: Creates a new Space in the given Organization
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          .application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceCreateDto'
+        required: true
+      responses:
+        '201':
+          description: Space object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNameInUseException:
+                  $ref: '#/components/examples/SpaceNameInUseException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/name:
+    patch:
+      tags:
+        - Space
+      summary: Renames a Space
+      description: |-
+
+        Required organization role: ADMIN\
+        Required space permission: MANAGE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpacePatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNameInUseException:
+                  $ref: '#/components/examples/SpaceNameInUseException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permission/user:
+    put:
+      tags:
+        - Space
+      summary: Add, update, delete a users space's permission
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceUserPermissionDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '400':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OrganizationMemberNotFoundException:
+                  $ref: '#/components/examples/OrganizationMemberNotFoundException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceRequiresOwnerException:
+                  $ref: '#/components/examples/SpaceRequiresOwnerException'
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permission/team:
+    put:
+      tags:
+        - Space
+      summary: Add, update, delete a team's spaces permission
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: FUSE_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceTeamPermissionDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceRequiresOwnerException:
+                  $ref: '#/components/examples/SpaceRequiresOwnerException'
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                TeamNotFoundException:
+                  $ref: '#/components/examples/TeamNotFoundException'
+        default:
+          description: Unexpected error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    CronPatternDto:
+      properties:
+        expression:
+          type: string
+          description: Quartz cron expression
+        timezone:
+          type: string
+          description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
+        amount:
+          type: number
+          description: Amount of returned execution-dates
+      required:
+        - expression
+        - timezone
+        - amount
+      example:
+        expression: 0 0 12 ? JUL,AUG 2 2024
+        timezone: Europe/London
+        amount: 5
+    CronjobCreateDto:
+      properties:
+        name:
+          type: string
+          description: Name for the cronjob
+        expression:
+          type: string
+          description: Quartz cron expression
+        targetUrl:
+          type: string
+          description: Target URL. The Cronjob will execute HTTP calls to this URL
+        httpMethod:
+          $ref: '#/components/schemas/HttpMethodEnum'
+          description: HTTP method, e.g. GET, POST, PUT, DELETE
+        acceptInvalidSSL:
+          type: boolean
+        timezone:
+          type: string
+          description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
+        description:
+          type: string
+          description: Description of the cronjob
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+          description: Headers for the HTTP request as key value pairs
+        body:
+          type: string
+          description: Body for the HTTP request, limited to 1024kb
+        enabled:
+          type: boolean
+          description: Whether the cronjob is enabled
+        lastStatus:
+          type: number
+          description: HTTP status code of the cronjob last execution result
+        lastTriggered:
+          type: number
+          description: Last triggered date of the cronjob as unix timestamp
+      required:
+        - name
+        - expression
+        - targetUrl
+        - httpMethod
+        - timezone
+        - enabled
+      example:
+        name: My cronjob
+        expression: 0 0 12 ? * * *
+        targetUrl: http://www.gitlab.com
+        httpMethod: POST
+        acceptInvalidSSL: false
+        timezone: Europe/London
+        enabled: false
+    CronjobDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the cronjob
+        name:
+          type: string
+          description: Name of the cronjob
+        expression:
+          type: string
+          description: Quartz cron expression
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the cronjob belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the cronjob
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Space the cronjob belongs to
+        targetUrl:
+          type: string
+          description: Target URL. The Cronjob will execute HTTP calls to this URL
+        httpMethod:
+          $ref: '#/components/schemas/HttpMethodEnum'
+          description: >-
+            HTTP method for the requests made by the cronjob, e.g. GET, POST,
+            PUT, DELETE
+        acceptInvalidSSL:
+          type: boolean
+          description: Whether to accept invalid SSL certificates
+        timezone:
+          type: string
+          description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
+        description:
+          type: string
+          description: Description of the cronjob
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+          description: >-
+            Headers (as key value pairs) for the HTTP requests that will be
+            triggered by the cronjob
+        body:
+          type: string
+          description: Body for the HTTP request
+        enabled:
+          type: boolean
+          description: Switch for turning the cronjob on/off
+        createDate:
+          type: number
+          description: Create date of the cronjob as unix timestamp
+        modifyDate:
+          type: number
+          description: Date of last modification of the cronjob as unix timestamp
+        nextExecution:
+          type: array
+          items:
+            type: number
+          description: Dates of next executions of the cronjob as unix timestamp
+        lastStatus:
+          type: number
+          description: HTTP status code of the cronjob last execution result
+        lastTriggered:
+          type: number
+          description: Last triggered date of the cronjob as unix timestamp
+      required:
+        - _id
+        - name
+        - expression
+        - organization
+        - space
+        - targetUrl
+        - httpMethod
+        - acceptInvalidSSL
+        - timezone
+        - createDate
+        - modifyDate
+      example:
+        _id: 63d7d7408f32c094b42c8130
+        name: My cronjob
+        expression: 0 0 12 ? * * *
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        space:
+          _id: 63ecb429ee5ede1101f25d33
+          name: SpaceName
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        targetUrl: http://www.gitlab.com
+        httpMethod: POST
+        acceptInvalidSSL: false
+        timezone: Europe/London
+        headers: []
+        createDate: 1676457001
+        modifyDate: 1676457001
+    CronjobEnabledPatchDto:
+      properties:
+        enabled:
+          type: boolean
+          description: Boolean flag
+      required:
+        - enabled
+      example:
+        enabled: true
+    CronjobExpressionPatchDto:
+      properties:
+        expression:
+          type: string
+          description: Quartz cron expression
+      required:
+        - expression
+      example:
+        expression: 0 0 12 ? * * *
+    CronjobLogDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the cronjobLog
+        cronjob:
+          $ref: '#/components/schemas/ReducedCronjob'
+          description: Cronjob the log belongs to
+        statusCode:
+          type: number
+          description: Statuscode of the cronjob request result
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the cronjob belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the cronjob
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Fuse space the cronjob belongs to
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+          description: Optional headers - improve description here
+        body:
+          type: string
+          description: Optional body  - improve description here
+        createDate:
+          type: number
+          description: Create date of the cronjob as unix timestamp
+      required:
+        - _id
+        - cronjob
+        - statusCode
+        - organization
+        - creator
+        - space
+        - createDate
+      example:
+        _id: 63d7d7408f32c094b42c8130
+        cronjob:
+          _id: 63d7d7408f32c094b42c8130
+          name: My cronjob
+        statusCode: 200
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        space:
+          _id: 63ecb429ee5ede1101f25d33
+          name: SpaceName
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        headers:
+          - key: Authorization
+            value: some token
+        body: '{ request: ''body'' }'
+        createDate: 1676457001
+    CustomError:
+      properties:
+        code:
+          type: string
+          description: >-
+            "A helmut cloud custom error code following this schema: [Custom
+            Error
+            Codes](https://development-guideline.pages.moovit-sp.com/en/hcloud/customErrorCodes.html)"
+        error:
+          type: string
+          description: 'Name of the error in the following format: name.of.error'
+        message:
+          type: string
+          description: Error description
+      required:
+        - code
+        - error
+        - message
+      example: null
+    HttpMethodEnum:
+      enum:
+        - GET
+        - POST
+        - PUT
+        - PATCH
+        - DELETE
+      type: string
+      description: ''
+    Search:
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchFilter'
+          description: A list of filters
+        sorting:
+          $ref: '#/components/schemas/Sorting'
+          description: The sorting definition
+      example:
+        filters:
+          - type: DATE
+            key: modifyDate
+            comparator: less than
+            value: 1681912446650
+        sorting:
+          direction: DESC
+          fields:
+            - name
+            - company
+    SearchFilterComparatorBoolean:
+      enum:
+        - is
+        - is not
+      type: string
+      description: |
+        * is - Boolean equals the specified boolean value
+        * is not - Boolean does not equal the specified boolean value
+    SearchFilterComparatorDate:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Date equals the specified date value
+
+        * is not - Date does not equal the specified date value
+
+        * greater than - Date is more recent than the specified date value
+
+        * less than - Date is older than the specified date value
+
+        * greater than or equal - Date is more recent or equal to the specified
+        date value
+
+        * less than or equal - Date is older than or equal to the specified date
+        value
+    SearchFilterComparatorNumber:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Number equals the specified numeric value
+
+        * is not - Number does not equal the specified numeric value
+
+        * greater than - Number is greater than the specified numeric value
+
+        * less than - Number is less than the specified numeric value
+
+        * greater than or equal - Number is greater than or equal to the
+        specified numeric value
+
+        * less than or equal - Number is less than or equal to the specified
+        numeric value
+    SearchFilterComparatorString:
+      enum:
+        - is
+        - is not
+        - starts with
+        - ends with
+        - contains
+      type: string
+      description: |
+        * is - String equals the specified string value
+        * is not - String does not equal the specified string value
+        * starts with - String starts with the specified string value
+        * ends with - String ends with the specified string value
+        * contains - String contains the specified string value
+    SearchFilterType:
+      enum:
+        - STRING
+        - SELECT
+        - MULTISELECT
+        - TYPEAHEAD
+        - NUMBER
+        - DATE
+        - BOOLEAN
+      type: string
+      description: |
+        * STRING - Filter by a string value
+        * SELECT - Filter by a value from a set of possible choices
+        * MULTISELECT - Filter by multiple values from a set of possible choices
+        * TYPEAHEAD - Filter by ???
+        * NUMBER - Filter by a numeric value
+        * DATE - Filter by a Date value
+        * BOOLEAN - Filter by a boolean flag
+    SortDirection:
+      enum:
+        - ASC
+        - DESC
+      type: string
+      description: |
+        * ASC - Ascending order
+        * DESC - Descending order
+    Sorting:
+      properties:
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+        fields:
+          type: array
+          items:
+            type: string
+          description: The fields to consider when performing the sorting of the result.
+      example:
+        direction: DESC
+        fields:
+          - name
+          - company
+    SpaceCreateDto:
+      properties:
+        name:
+          type: string
+          description: Name of the space
+      required:
+        - name
+      example:
+        name: SpaceName
+    SpaceDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the space
+        name:
+          type: string
+          description: Name of the space
+        avatarUrl:
+          type: string
+          description: URL for the avatar of the space
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the space belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the space
+        permissionOfUser:
+          $ref: '#/components/schemas/SpacePermission'
+          description: >-
+            Permission the requesting user has in this space, only returned if
+            explicit permission exists
+        createDate:
+          type: number
+          description: Create date of the space as unix timestamp
+        modifyDate:
+          type: number
+          description: Date of the last modification of the space as unix timestamp
+      required:
+        - _id
+        - name
+        - avatarUrl
+        - organization
+        - createDate
+        - modifyDate
+      example:
+        _id: 63ecb429ee5ede1101f25d33
+        name: SpaceName
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        createDate: 1676457001
+        modifyDate: 1676457001
+    SpaceEntity:
+      enum:
+        - team
+        - user
+      type: string
+      description: |
+        * team - This space entity is a team
+        * user - This space entity is a user
+    SpaceEntityPermissionDto:
+      properties:
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: The organization the space belongs to
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Space the design belongs to
+        entityId:
+          type: string
+          description: ID of the entity (user or team)
+        entityName:
+          type: string
+          description: Name of the entity
+        type:
+          $ref: '#/components/schemas/SpaceEntity'
+          description: Type of the entity
+        permission:
+          $ref: '#/components/schemas/SpacePermission'
+          description: Permission the entity has within the space
+      required:
+        - organization
+        - space
+        - entityId
+        - entityName
+        - type
+        - permission
+      example:
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        space:
+          _id: 63ecb429ee5ede1101f25d33
+          name: SpaceName
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        entityId: 63c7e64ff912d31ffa27a5b4
+        entityName: Account MSP
+        type: user
+        permission: OWNER
+    SpacePatchDto:
+      properties:
+        newSpaceName:
+          type: string
+          description: New name for the space
+      required:
+        - newSpaceName
+      example:
+        newSpaceName: new_space_name
+    SpacePermission:
+      enum:
+        - NONE
+        - READ
+        - WRITE
+        - MANAGE
+        - OWNER
+      type: string
+      description: >
+        * NONE - Used to remove all permissions from a user.
+
+        * READ - Permission to read space information
+
+        * WRITE - Permission to read and write space information and execute
+
+        * MANAGE - Permission to read and write space information, execute and
+        manage user permissions
+
+        * OWNER - Permission to read and write space information, execute,
+        manage user permissions and delete the space
+    SpaceTeamPermissionDto:
+      properties:
+        teamName:
+          type: string
+          description: Name of the team
+        permission:
+          $ref: '#/components/schemas/SpacePermission'
+          description: Permission the team shall have in the space
+      required:
+        - teamName
+        - permission
+      example:
+        teamName: a cool team name
+        permission: MANAGE
+    SpaceUserPermissionDto:
+      properties:
+        userId:
+          type: string
+          description: ID of the user
+        permission:
+          $ref: '#/components/schemas/SpacePermission'
+          description: Permission the user shall have in the space
+      required:
+        - userId
+        - permission
+      example:
+        userId: 63c7e64ff912d31ffa27a5b4
+        permission: OWNER
+    Header:
+      properties:
+        key:
+          type: string
+          description: The header's key
+        value:
+          type: string
+          description: The header's value
+      required:
+        - key
+        - value
+      example:
+        key: X-Custom-Header
+        value: some-interesting-value
+    ReducedCronjob:
+      properties:
+        _id:
+          type: string
+          description: ID of the cronjob
+        name:
+          type: string
+          description: Name of the cronjob
+      required:
+        - _id
+        - name
+      example:
+        _id: 63c7e64fc912d31ffa27a5b4
+        name: Do something
+    ReducedOrganization:
+      properties:
+        _id:
+          type: string
+          description: ID of the organization
+        name:
+          type: string
+          description: Name of the organization
+        avatarUrl:
+          type: string
+          description: URL of the avatar of the organization
+      required:
+        - _id
+        - name
+        - avatarUrl
+      example:
+        _id: 63c7e64ff912d31ffa27a5b4
+        name: Moovit Software Products
+        avatarUrl: https://example.com/asset/some_avatar.webp
+    ReducedSpace:
+      properties:
+        _id:
+          type: string
+          description: ID of the space
+        name:
+          type: string
+          description: Name of the space
+        avatarUrl:
+          type: string
+          description: URL of the space avatar
+      required:
+        - _id
+        - name
+        - avatarUrl
+      example:
+        _id: 63c7e64ff912d31ffa27a5b4
+        name: MySpace
+        avatarUrl: https://example.com/asset/some_avatar.webp
+    ReducedUser:
+      properties:
+        _id:
+          type: string
+          description: ID of the user
+        name:
+          type: string
+          description: Name of the user
+        avatarUrl:
+          type: string
+          description: URL of the avatar of the user
+      required:
+        - _id
+        - name
+        - avatarUrl
+      example:
+        _id: 63c7e64ff912d31ffa27a5b4
+        name: Helmut Mc Cloud
+        avatarUrl: https://example.com/asset/some_avatar.webp
+    SearchFilter:
+      properties:
+        type:
+          description: The type of the filter
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          description: The search comparator
+          oneOf:
+            - $ref: '#/components/schemas/SearchFilterComparatorString'
+            - $ref: '#/components/schemas/SearchFilterComparatorNumber'
+            - $ref: '#/components/schemas/SearchFilterComparatorDate'
+            - $ref: '#/components/schemas/SearchFilterComparatorBoolean'
+        value:
+          description: The value searching for
+          oneOf:
+            - type: string
+            - type: string[]
+            - type: boolean
+            - type: number
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      example:
+        type: STRING
+        key: name
+        comparator: starts with
+        value: Editor-
+  examples:
+    NotAuthorizedException:
+      value:
+        code: 003.001.0001
+        error: unauthorized
+        message: You're not authorized
+    InsufficientAccessRightException:
+      value:
+        code: 003.001.0004
+        error: insufficient.rights
+        message: You have not enough rights to access/manipulate this resource
+    SpaceNotFoundException:
+      value:
+        code: 003.010.0001
+        error: space.not.found
+        message: Given space not found
+    SpaceNameInUseException:
+      value:
+        code: 003.010.0002
+        error: space.name.in.use
+        message: Given space name is already in use
+    SpaceInsufficientPermissionException:
+      value:
+        code: 003.010.0003
+        error: space.insufficient.permission
+        message: You do not have the required permission
+    CronjobNotFoundException:
+      value:
+        code: 003.020.0001
+        error: cronjob.not.found
+        message: Given cronjob not found
+    CronjobInvalidExpressionException:
+      value:
+        code: 003.020.0003
+        error: cronjob.invalid.expression
+        message: >-
+          Given cronjob expression is either not a valid quartz format, uses
+          advanced expressions that are not supported or holds a value other
+          than 0 for the 'seconds' field (seconds are currently not allowed)
+    CronjobInvalidTimezoneException:
+      value:
+        code: 003.020.0002
+        error: cronjob.invalid.timezone
+        message: Given cronjob timezone is not a valid IANA format
+    CronjobLogNotFoundException:
+      value:
+        code: 003.020.0004
+        error: cronjob.log.not.found
+        message: Given cronjob log not found
+    SpaceRequiresOwnerException:
+      value:
+        code: 003.010.0006
+        error: space.requires.owner
+        message: >-
+          A space must have at least one owner. Removing or changing the
+          role/permissions of the last owner is not possible.
+    TeamNotFoundException:
+      value:
+        code: 003.008.0001
+        error: team.not.found
+        message: Team does not exist
+    OrganizationMemberNotFoundException:
+      value:
+        code: 003.002.0001
+        error: organization.member.not.found
+        message: User is not member of the organization
+    InvalidFilterException:
+      value:
+        code: 003.023.0001
+        error: search.invalid.filter
+        message: The value of the filter property 'field' is invalid
+  parameters:
+    LimitParameter:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+      required: false
+      description: Max number of items to return. Integer between 1 and 100.
+    PageParameter:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      required: false
+      description: Designates the current page, when using a limit. Minimum value is 0.
