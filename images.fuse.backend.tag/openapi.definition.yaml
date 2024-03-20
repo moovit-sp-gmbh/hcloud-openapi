@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-718
+  version: 0.0.4-719
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1064,71 +1064,6 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
-    post:
-      tags:
-        - Space
-      summary: >-
-        For the specified space, will retrieve all space permissions that match
-        the provided search filter or all space permissions if no search filter
-        is provided.
-      description: |-
-
-        Required organization role: MEMBER\
-        Required space permission: MANAGE\
-        Required scopes: FUSE_SPACE_READ
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/LimitParameter'
-        - $ref: '#/components/parameters/PageParameter'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Search'
-      responses:
-        '200':
-          description: List of filtered Spaces permissions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Insufficient permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-        default:
-          description: Unexpected error
   /v1/org/{orgName}/spaces:
     post:
       tags:
@@ -1269,7 +1204,72 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permission/user:
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
+    post:
+      tags:
+        - Space
+      summary: >-
+        For the specified space, will retrieve all space permissions that match
+        the provided search filter or all space permissions if no search filter
+        is provided.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: FUSE_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the Organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the Space
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of filtered Spaces permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Insufficient permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/user:
     put:
       tags:
         - Space
@@ -1350,7 +1350,7 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permission/team:
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/team:
     put:
       tags:
         - Space
@@ -1932,6 +1932,9 @@ components:
         permission:
           $ref: '#/components/schemas/SpacePermission'
           description: Permission the entity has within the space
+        avatarUrl:
+          type: string
+          description: URL of the entity's avatar
       required:
         - organization
         - space
@@ -1939,6 +1942,7 @@ components:
         - entityName
         - type
         - permission
+        - avatarUrl
       example:
         organization:
           _id: 6436bb9988821e8f6400c2f8
@@ -1952,6 +1956,7 @@ components:
         entityName: Account MSP
         type: user
         permission: OWNER
+        avatarUrl: https://dali.s3.helmut.cloud/no_avatar.webp
     SpacePatchDto:
       properties:
         newSpaceName:
