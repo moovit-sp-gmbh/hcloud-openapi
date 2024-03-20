@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1327
+  version: 0.0.107-1331
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -3022,71 +3022,6 @@ paths:
                   $ref: '#/components/examples/NotAuthorizedException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
-    post:
-      tags:
-        - Space
-      summary: >-
-        For the specified space, will retrieve all space permissions that match
-        the provided search filter or all space permissions if no search filter
-        is provided.
-      description: |-
-
-        Required organization role: MEMBER\
-        Required space permission: MANAGE\
-        Required scopes: HIGH5_SPACE_READ
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/LimitParameter'
-        - $ref: '#/components/parameters/PageParameter'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Search'
-      responses:
-        '200':
-          description: List of space permissions
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '400':
-          description: Invalid filter
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InvalidFilterException:
-                  $ref: '#/components/examples/InvalidFilterException'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        default:
-          description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}:
     get:
       tags:
@@ -3356,147 +3291,6 @@ paths:
               examples:
                 SpaceNotFoundException:
                   $ref: '#/components/examples/SpaceNotFoundException'
-        default:
-          description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permission/user:
-    put:
-      tags:
-        - Space
-      summary: Add, update, delete a user's permission
-      description: |-
-
-        Required organization role: MEMBER\
-        Required space permission: MANAGE\
-        Required scopes: HIGH5_SPACE_WRITE
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SpaceUserPermissionDto'
-      responses:
-        '200':
-          description: Space object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-        '404':
-          description: Not Found exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceNotFoundException:
-                  $ref: '#/components/examples/SpaceNotFoundException'
-        default:
-          description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/permission/team:
-    put:
-      tags:
-        - Space
-      summary: Add, update, delete a team's permission
-      description: |-
-
-        Required organization role: MEMBER\
-        Required space permission: MANAGE\
-        Required scopes: HIGH5_SPACE_WRITE
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SpaceTeamPermissionDto'
-        required: true
-      responses:
-        '200':
-          description: Updated Space
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-        '404':
-          description: Not Found exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceNotFoundException:
-                  $ref: '#/components/examples/SpaceNotFoundException'
-                TeamNotFoundException:
-                  $ref: '#/components/examples/TeamNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/wave/engine:
@@ -3923,6 +3717,212 @@ paths:
               examples:
                 SpaceNotFoundException:
                   $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
+    post:
+      tags:
+        - Space
+      summary: >-
+        For the specified space, will retrieve all space permissions that match
+        the provided search filter or all space permissions if no search filter
+        is provided.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of space permissions
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '400':
+          description: Invalid filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/user:
+    put:
+      tags:
+        - Space
+      summary: Add, update, delete a user's permission
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceUserPermissionDto'
+      responses:
+        '200':
+          description: Space object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/permissions/team:
+    put:
+      tags:
+        - Space
+      summary: Add, update, delete a team's permission
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpaceTeamPermissionDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceEntityPermissionDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                TeamNotFoundException:
+                  $ref: '#/components/examples/TeamNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/search:
@@ -6983,6 +6983,9 @@ components:
         permission:
           $ref: '#/components/schemas/SpacePermission'
           description: Permission the entity has within the space
+        avatarUrl:
+          type: string
+          description: URL of the entity's avatar
       required:
         - organization
         - space
@@ -6990,6 +6993,7 @@ components:
         - entityName
         - type
         - permission
+        - avatarUrl
       example:
         organization:
           _id: 6436bb9988821e8f6400c2f8
@@ -7003,6 +7007,7 @@ components:
         entityName: Team 1
         type: team
         permission: READ
+        avatarUrl: https://dali.s3.helmut.cloud/no_avatar.webp
     SpacePatchCatalogDto:
       properties:
         version:
