@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-724
+  version: 0.0.4-727
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
