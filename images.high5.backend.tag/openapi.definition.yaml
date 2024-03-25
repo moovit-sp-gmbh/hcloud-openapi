@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1331
+  version: 0.0.107-1348
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5277,10 +5277,12 @@ components:
           description: Name of the design
         content:
           type: object
-          description: Stream design content itself
+          description: >-
+            Object containing all information needed to visualize the design in
+            SDS
         build:
           type: object
-          description: The published stream design itself
+          description: Object containing information needed for stream exection
       required:
         - name
         - content
@@ -5394,7 +5396,9 @@ components:
           description: The name of the design
         content:
           type: object
-          description: The stream design content itself
+          description: >-
+            Object containing all information needed to visualize the design in
+            SDS
         streamId:
           type: string
           description: The stream id the design belongs to
@@ -6803,7 +6807,9 @@ components:
           description: The name of the snapshot
         content:
           $ref: '#/components/schemas/StreamDesign'
-          description: The stream design content
+          description: >-
+            Object containing all information needed to visualize the design in
+            SDS
         streamId:
           type: string
           description: The stream id the snapshot belongs to
