@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1398
+  version: 0.0.107-1407
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5990,6 +5990,9 @@ components:
           createDate: 1692274988700
           startDate: 1692275019340
           endDate: 1692275019340
+          event:
+            _id: 63c7e6e4eae82d8001b65305
+            name: helmut4.webhook.test
         log:
           _id: 6479b0630053275a1742e233
           streamId: 6479ab9d7526ebe483d9f7c3
@@ -6310,6 +6313,9 @@ components:
         endDate:
           type: number
           description: End date as unix timestamp
+        event:
+          $ref: '#/components/schemas/ReducedEvent'
+          description: Event the stream belongs to
       required:
         - _id
         - organization
@@ -6326,6 +6332,7 @@ components:
         - createDate
         - startDate
         - endDate
+        - event
       example:
         _id: 649180269bdc11b1fe807939
         organization:
@@ -6355,6 +6362,9 @@ components:
         createDate: 1692274988700
         startDate: 1692275019340
         endDate: 1692275019340
+        event:
+          _id: 63c7e6e4eae82d8001b65305
+          name: helmut4.webhook.test
     JoinTokenDto:
       properties:
         _id:
