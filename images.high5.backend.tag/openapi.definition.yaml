@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1392
+  version: 0.0.107-1398
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5251,6 +5251,25 @@ components:
       in: header
       name: Authorization
   schemas:
+    CustomError:
+      properties:
+        code:
+          type: string
+          description: >-
+            "A helmut cloud custom error code following this schema: [Custom
+            Error
+            Codes](https://development-guideline.pages.moovit-sp.com/en/hcloud/customErrorCodes.html)"
+        error:
+          type: string
+          description: 'Name of the error in the following format: name.of.error'
+        message:
+          type: string
+          description: Error description
+      required:
+        - code
+        - error
+        - message
+      example: null
     DesignCreateDto:
       properties:
         name:
@@ -6910,11 +6929,11 @@ components:
         creator:
           $ref: '#/components/schemas/ReducedUser'
           description: The creator of the space
-        permissionOfUser:
+        highestPermissionOfUser:
           $ref: '#/components/schemas/SpacePermission'
           description: >-
-            Permission the requesting user has in this space, only returned if
-            explicit permission exists
+            Highest permission the requesting user has in this space, be it his
+            own or the permission of a team he is part of
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -6940,6 +6959,7 @@ components:
           _id: 64180bfafe4fbcd791493ef4
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        highestPermissionOfUser: OWNER
         createDate: 1674045151
         modifyDate: 1674045151
     SpaceEntity:
@@ -7642,9 +7662,6 @@ components:
           name: Helmut4
           organizationId: 63c7e64ff912d31ffa27a5c4
           creatorId: 63c7e64ff912d31ffa27a5b4
-          permissions:
-            - entityId: 63c7e64ff912d31ffa27a5b4
-              permission: OWNER
           createDate: 1674045151
           modifyDate: 1674045151
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
@@ -8139,6 +8156,200 @@ components:
         hmacHeaderName: x-hub-signature-256
         hmacAlgorithm: sha256
         hmacSecret: 649180269bdc11b1fe807938
+  examples:
+    OrganizationNotFoundException:
+      value:
+        code: 002.007.0001
+        error: organization.not.found
+        message: Organization not found
+    InvalidBodyException:
+      value:
+        code: 002.000.0004
+        error: invalid.body
+        message: Message describing the problem in detail.
+    StreamInactiveException:
+      value:
+        code: 002.015.0001
+        error: stream.inactive
+        message: >-
+          Unable to execute stream marked as inactive. Please change the state
+          of the stream first.
+    WaveCatalogNotFoundException:
+      value:
+        code: 002.013.0002
+        error: wave.catalog.not.found
+        message: Requested wave catalog not found
+    FailedDependencyException:
+      value:
+        code: 002.013.0003
+        error: failed.dependency
+        message: >-
+          Failed to request resource(s) from 'Failed to get engine from
+          'https://wave.s3.helmut.cloud/engines/default/''
+    InternalServerErrorException:
+      value:
+        code: 002.000.0002
+        error: internal.server.error
+        message: Message desribing the problem
+    NotAuthorizedException:
+      value:
+        code: 002.001.0001
+        error: unauthorized
+        message: You're not authorized
+    SpaceInsufficientPermissionException:
+      value:
+        code: 002.010.0003
+        error: space.insufficient.permission
+        message: You do not have the required permission
+    SpaceNotFoundException:
+      value:
+        code: 002.010.0001
+        error: space.not.found
+        message: Given space not found
+    SpaceNameInUseException:
+      value:
+        code: 002.010.0002
+        error: space.name.in.use
+        message: Given space name is already in use
+    StreamNotFoundException:
+      value:
+        code: 002.014.0001
+        error: stream.not.found
+        message: Given stream not found
+    EventNotFoundException:
+      value:
+        code: 002.017.0001
+        error: event.not.found
+        message: Given event not found
+    DesignNotFoundException:
+      value:
+        code: 002.018.0001
+        error: design.not.found
+        message: Given design not found
+    EventNameInUseException:
+      value:
+        code: 002.017.0002
+        error: event.name.in.use
+        message: Given event name is already in use
+    NodeNotFoundException:
+      value:
+        code: 002.016.0001
+        error: node.not.found
+        message: Node not found
+    WebhookNotFoundException:
+      value:
+        code: 002.011.0002
+        error: webhook.not.found
+        message: Given webhook not found
+    WebhookNameInUseException:
+      value:
+        code: 002.011.0001
+        error: webhook.name.in.use
+        message: Given webhook name is already in use
+    WebhookInvalidSecurityHeadersException:
+      value:
+        code: 002.011.0006
+        error: invalid.security.headers
+        message: The provided security headers do not match
+    WebhookExecutionFailedGenericException:
+      value:
+        code: 002.011.0008
+        error: webhook.execution.error
+        message: Failed to execute webhook
+    WebhookPreparationErrorException:
+      value:
+        code: 002.011.0009
+        error: webhook.preparation.error
+        message: Failed to prepare webhook - Detailed message of the problem
+    WaveEngineNotFoundException:
+      value:
+        code: 002.013.0001
+        error: wave.engine.not.found
+        message: Requested wave engine not found
+    InsufficientAccessRightException:
+      value:
+        code: 002.001.0004
+        error: insufficient.rights
+        message: You have not enough rights to access/manipulate this resource
+    SecretNotFoundException:
+      value:
+        code: 002.024.0001
+        error: secret.not.found
+        message: Secret not found.
+    SecretAlreadyExistsException:
+      value:
+        code: 002.024.0002
+        error: secret.already.exists
+        message: Secret already exists.
+    TeamNotFoundException:
+      value:
+        code: 002.008.0001
+        error: team.not.found
+        message: Team does not exist
+    InvalidFilterException:
+      value:
+        code: 002.023.0001
+        error: search.invalid.filter
+        message: The value of the filter property 'field' is invalid
+    NodeCatalogueNotFoundException:
+      value:
+        code: 002.016.0002
+        error: node.catalogue.not.found
+        message: Node catalogue not found
+    StreamExecutionException:
+      value:
+        code: 002.015.0002
+        error: stream.execution.failed
+        message: >-
+          Failed to execute given stream - 'Detailed message describing the
+          problem'
+    ExecutionLogNotFoundException:
+      value:
+        code: 002.025.0001
+        error: execution.log.not.found
+        message: Execution log not found.
+    DesignNodeNotFoundException:
+      value:
+        code: 002.018.0002
+        error: design.node.not.found
+        message: Given design node not found
+    DesignLinkNotFoundException:
+      value:
+        code: 002.018.0003
+        error: design.link.not.found
+        message: Given design link not found
+    DesignHashMismatchException:
+      value:
+        code: 002.018.0004
+        error: design.hash.mismatch
+        message: >-
+          Mismatch between actual current hash and expected current hash. You
+          may need to retrieve a more up-to-date version of this design.
+    SnapshotAlreadyExistsException:
+      value:
+        code: 002.018.0005
+        error: snapshot.already.exists
+        message: There already a snapshot of this design with the same name.
+    SnapshotNotFoundException:
+      value:
+        code: 002.018.0006
+        error: snapshot.not.found
+        message: Design snapshot not found.
+    StreamNameInUseException:
+      value:
+        code: 002.014.0002
+        error: stream.name.in.use
+        message: Given stream name is already in use
+    JoinTokenAlreadyExistsException:
+      value:
+        code: 002.031.0001
+        error: join.token.already.exists
+        message: Join token with the same already exists.
+    JoinTokenNotFoundException:
+      value:
+        code: 002.031.0002
+        error: join.token.not.found
+        message: Join token not found.
   parameters:
     LimitParameter:
       in: query
