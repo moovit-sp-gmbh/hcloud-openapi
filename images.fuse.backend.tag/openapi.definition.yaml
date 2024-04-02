@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-732
+  version: 0.0.4-737
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1872,11 +1872,11 @@ components:
         creator:
           $ref: '#/components/schemas/ReducedUser'
           description: Creator of the space
-        permissionOfUser:
+        highestPermissionOfUser:
           $ref: '#/components/schemas/SpacePermission'
           description: >-
-            Permission the requesting user has in this space, only returned if
-            explicit permission exists
+            Highest permission the requesting user has in this space, be it his
+            own or the permission of a team he is part of
         createDate:
           type: number
           description: Create date of the space as unix timestamp
@@ -1902,6 +1902,7 @@ components:
           _id: 64180bfafe4fbcd791493ef4
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        highestPermissionOfUser: OWNER
         createDate: 1676457001
         modifyDate: 1676457001
     SpaceEntity:
