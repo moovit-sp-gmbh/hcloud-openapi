@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1422
+  version: 0.0.107-1436
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2457,6 +2457,77 @@ paths:
       responses:
         '204':
           description: No content
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                SecretNotFoundException:
+                  $ref: '#/components/examples/SecretNotFoundException'
+        default:
+          description: Unexpected error
+    get:
+      tags:
+        - Space.Secrets
+      summary: Get a secret by its key.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+        - name: secretKey
+          in: path
+          description: Key of the secret
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Secret details
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretDto'
         '401':
           description: Not Authorized exception
           content:
