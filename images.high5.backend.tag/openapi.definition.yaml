@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1442
+  version: 0.0.107-1445
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2173,6 +2173,26 @@ paths:
             text/plain:
               schema:
                 type: string
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceInsufficientPermissionException:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Not Found exception
           content:
@@ -2180,6 +2200,10 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                OrganizationNotFoundException:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                SpaceNotFoundException:
+                  $ref: '#/components/examples/SpaceNotFoundException'
                 NodeNotFoundException:
                   $ref: '#/components/examples/NodeNotFoundException'
         default:
