@@ -1,0 +1,390 @@
+openapi: 3.0.0
+info:
+  title: hcloud - Auditor
+  version: 0.0.28-303
+  contact:
+    name: MoovIT Software Products GmbH
+    url: https://www.moovit-sp.com
+    email: info@moovit-sp.com
+  description: Auditor manages audit logs
+servers:
+  - url: https://eu-central-1.helmut.cloud/api/auditor
+    description: EU-Central production server
+  - url: https://na-west-1.helmut.cloud/api/auditor
+    description: NA-West production server
+  - url: https://eu-dev-1.app.helmut.cloud/api/auditor
+    description: EU development server
+  - url: http://localhost/api/auditor
+    description: Localhost
+paths:
+  /v1/org/{orgName}/logs/search:
+    post:
+      tags:
+        - AuditLogs
+      summary: >-
+        Retrieves all audit logs that match the provided search filter. Returns
+        all audit logs of the organization if no search filter is provided.
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of audit logs that match the search filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogDtoWithOrgName'
+        '400':
+          description: Invalid filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        default:
+          description: Unexpected error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    AuditLogDtoWithOrgName:
+      properties:
+        origin:
+          $ref: '#/components/schemas/Origin'
+          description: Origin of the log (idp, high5, auditor, ...)
+        level:
+          $ref: '#/components/schemas/Level'
+          description: Level of the log (info, warn, error, debug, ...)
+        organizationName:
+          type: string
+        space:
+          type: string
+          description: Name of the Space
+        event:
+          $ref: '#/components/schemas/Event'
+          description: Event of the log (login, logout, user, stream, ...)
+        user:
+          type: string
+          description: User that triggered the audit log
+        type:
+          $ref: '#/components/schemas/Type'
+          description: Type of the log (read, write, update, ...)
+        timestamp:
+          type: number
+          description: Timestamp in unix format
+        message:
+          type: object
+          description: Actual message
+        correlationId:
+          type: string
+          description: Request correlation id
+        requestorIp:
+          type: string
+          description: Ip of the client of the initial request
+      required:
+        - origin
+        - level
+        - organizationName
+        - event
+        - user
+        - timestamp
+        - correlationId
+        - requestorIp
+      example:
+        origin: idp
+        level: debug
+        organizationName: OrgName
+        event: login
+        user: 62f0c93a38c853e70f99ec43
+        type: connect
+        timestamp: 1674574027
+        message: Authenticate account@moovit-sp.com
+        correlationId: 1aab73eb73a35934:6eed330da496b4a4:1aab73eb73a35934:0
+    CustomError:
+      properties:
+        code:
+          type: string
+          description: >-
+            "A helmut cloud custom error code following this schema: [Custom
+            Error
+            Codes](https://development-guideline.pages.moovit-sp.com/en/hcloud/customErrorCodes.html)"
+        error:
+          type: string
+          description: 'Name of the error in the following format: name.of.error'
+        message:
+          type: string
+          description: Error description
+      required:
+        - code
+        - error
+        - message
+      example: null
+    Search:
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchFilter'
+          description: A list of filters
+        sorting:
+          $ref: '#/components/schemas/Sorting'
+          description: The sorting definition
+      example:
+        filters:
+          - type: DATE
+            key: modifyDate
+            comparator: less than
+            value: 1681912446650
+        sorting:
+          direction: DESC
+          fields:
+            - name
+            - company
+    SearchFilterComparatorBoolean:
+      enum:
+        - is
+        - is not
+      type: string
+      description: |
+        * is - Boolean equals the specified boolean value
+        * is not - Boolean does not equal the specified boolean value
+    SearchFilterComparatorDate:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Date equals the specified date value
+
+        * is not - Date does not equal the specified date value
+
+        * greater than - Date is more recent than the specified date value
+
+        * less than - Date is older than the specified date value
+
+        * greater than or equal - Date is more recent or equal to the specified
+        date value
+
+        * less than or equal - Date is older than or equal to the specified date
+        value
+    SearchFilterComparatorNumber:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Number equals the specified numeric value
+
+        * is not - Number does not equal the specified numeric value
+
+        * greater than - Number is greater than the specified numeric value
+
+        * less than - Number is less than the specified numeric value
+
+        * greater than or equal - Number is greater than or equal to the
+        specified numeric value
+
+        * less than or equal - Number is less than or equal to the specified
+        numeric value
+    SearchFilterComparatorString:
+      enum:
+        - is
+        - is not
+        - starts with
+        - ends with
+        - contains
+      type: string
+      description: |
+        * is - String equals the specified string value
+        * is not - String does not equal the specified string value
+        * starts with - String starts with the specified string value
+        * ends with - String ends with the specified string value
+        * contains - String contains the specified string value
+    SearchFilterType:
+      enum:
+        - STRING
+        - SELECT
+        - MULTISELECT
+        - TYPEAHEAD
+        - NUMBER
+        - DATE
+        - BOOLEAN
+      type: string
+      description: |
+        * STRING - Filter by a string value
+        * SELECT - Filter by a value from a set of possible choices
+        * MULTISELECT - Filter by multiple values from a set of possible choices
+        * TYPEAHEAD - Filter by ???
+        * NUMBER - Filter by a numeric value
+        * DATE - Filter by a Date value
+        * BOOLEAN - Filter by a boolean flag
+    SortDirection:
+      enum:
+        - ASC
+        - DESC
+      type: string
+      description: |
+        * ASC - Ascending order
+        * DESC - Descending order
+    Sorting:
+      properties:
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+        fields:
+          type: array
+          items:
+            type: string
+          description: The fields to consider when performing the sorting of the result.
+      example:
+        direction: DESC
+        fields:
+          - name
+          - company
+    Event:
+      enum:
+        - Login
+        - Logout
+        - User
+        - Organization
+        - App
+        - Event
+        - Stream
+        - Mail
+      type: string
+    Level:
+      enum:
+        - INFO
+        - WARN
+        - ERROR
+        - DEBUG
+      type: string
+    Origin:
+      enum:
+        - IDP
+        - High5
+        - Auditor
+        - Mailer
+      type: string
+    SearchFilter:
+      properties:
+        type:
+          description: The type of the filter
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          description: The search comparator
+          oneOf:
+            - $ref: '#/components/schemas/SearchFilterComparatorString'
+            - $ref: '#/components/schemas/SearchFilterComparatorNumber'
+            - $ref: '#/components/schemas/SearchFilterComparatorDate'
+            - $ref: '#/components/schemas/SearchFilterComparatorBoolean'
+        value:
+          description: The value searching for
+          oneOf:
+            - type: string
+            - type: string[]
+            - type: boolean
+            - type: number
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      example:
+        type: STRING
+        key: name
+        comparator: starts with
+        value: Editor-
+    Type:
+      enum:
+        - Read
+        - Write
+        - Create
+        - Update
+        - Delete
+        - Execute
+        - Connect
+        - Disconnect
+        - Add
+        - Remove
+        - Send
+        - Receive
+      type: string
+  examples:
+    NotAuthorizedException:
+      value:
+        code: 004.001.0001
+        error: unauthorized
+        message: You're not authorized
+    InvalidFilterException:
+      value:
+        code: 004.023.0001
+        error: search.invalid.filter
+        message: The value of the filter property 'field' is invalid
+  parameters:
+    LimitParameter:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+      required: false
+      description: The number of items to return. Integer between 1 and 100.
+    PageParameter:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      required: false
+      description: Designates the current page, when using a limit. Minimum value is 0.
