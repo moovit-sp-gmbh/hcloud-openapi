@@ -1,0 +1,861 @@
+openapi: 3.0.0
+info:
+  title: 'hcloud - '
+  version: 0.0.1-84
+  contact:
+    name: MoovIT Software Products GmbH
+    url: https://www.moovit-sp.com
+    email: info@moovit-sp.com
+  description: ''
+servers:
+  - url: https://eu-central-1.helmut.cloud
+    description: EU-Central production server
+  - url: https://na-west-1.helmut.cloud
+    description: NA-West production server
+  - url: https://eu-dev-1.app.helmut.cloud
+    description: EU development server
+  - url: http://localhost
+    description: Localhost
+paths:
+  /v1/org/{orgName}/connect/search:
+    post:
+      tags:
+        - Connect
+      summary: Search the available execution targets for a given organization
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      security:
+        - BasicAuth: []
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TargetAgentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OrganizationNotFoundException:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/connect:
+    post:
+      tags:
+        - Connect
+      summary: Connect to a given organization
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentConnectDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentOfflineException:
+                  $ref: '#/components/examples/AgentOfflineException'
+                AgentAlreadyConnectedException:
+                  $ref: '#/components/examples/AgentAlreadyConnectedException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentNotFoundException:
+                  $ref: '#/components/examples/AgentNotFoundException'
+                OrganizationNotFoundException:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/hello:
+    post:
+      tags:
+        - Hello
+      summary: Say hello to the mothership to signify that an agent is online
+      security:
+        - BearerAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHelloDto'
+        required: true
+      responses:
+        '200':
+          description: The agent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentDto'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentNotFoundException:
+                  $ref: '#/components/examples/AgentNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/hello/again:
+    patch:
+      tags:
+        - Hello
+      summary: >-
+        Say hello again to the mothership to signify that an agent is still
+        online and update its stats
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentHelloAgainDto'
+        required: true
+      responses:
+        '200':
+          description: The agent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AgentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentOfflineException:
+                  $ref: '#/components/examples/AgentOfflineException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentNotFoundException:
+                  $ref: '#/components/examples/AgentNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/register:
+    post:
+      tags:
+        - Register
+      summary: Register an agent with the mothership
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AgentRegisterDto'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SecretExchangeDto'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    AgentConnectDto:
+      properties:
+        memberToken:
+          type: string
+          description: Token bound to a member of the organization
+        email:
+          type: string
+          description: Email of the member
+      required:
+        - memberToken
+        - email
+      example:
+        memberToken: >-
+          eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ.SflKxwRJSMeKKF2QT4fwpMeJf36POk6yJV_adQssw5c
+        email: example@example.com
+    AgentDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the agent
+        uuid:
+          type: string
+          description: UUID of the agent
+        ip:
+          type: string
+          description: IP of the agent
+        cpu:
+          type: string
+          description: CPU model of the agent machine
+        cpuUtilization:
+          type: number
+          description: Current CPU utilization on the agent machine
+        memoryTotal:
+          type: number
+          description: Total RAM capacity of the agent machine in bytes
+        memoryUsed:
+          type: number
+          description: Amount of RAM in use on the agent machine in bytes
+        hostname:
+          type: string
+          description: Host name of the agent machine
+        nickname:
+          type: string
+          description: Nickname for the agent
+        osPlatform:
+          type: string
+          description: OS platform installed on the agent machine
+        osRelease:
+          type: string
+          description: OS release installed on the agent machine
+        osVersion:
+          type: string
+          description: OS version installed on the agent machine
+        uptime:
+          type: number
+          description: Uptime of the agent machine in seconds
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          description: Status of the agent
+        createDate:
+          type: number
+          description: Date of the agent's first hello to the mothership
+        modifyDate:
+          type: number
+          description: Date of the agent's last communication to the mothership
+      required:
+        - _id
+        - uuid
+        - cpu
+        - cpuUtilization
+        - memoryTotal
+        - memoryUsed
+        - hostname
+        - nickname
+        - osPlatform
+        - osRelease
+        - osVersion
+        - uptime
+        - status
+        - createDate
+        - modifyDate
+      example:
+        _id: 65562d052ed0590e5d580ca0
+        uuid: dcf1c58a-0806-4f6d-9530-d4fe0d8672d3
+        ip: 192.168.0.1
+        cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+        cpuUtilization: 2
+        memoryTotal: 34359738368
+        memoryUsed: 34007285760
+        hostname: 2019-jb.local
+        nickname: 2019-jb.local
+        osPlatform: darwin
+        osRelease: 23.0.0
+        osVersion: >-
+          Darwin Kernel Version 23.0.0: Fri Sep 15 14:42:42 PDT 2023;
+          root:xnu-10002.1.13~1/RELEASE_X86_64
+        uptime: 288273
+        status: IDLE
+        createDate: 1697726857196
+        modifyDate: 1697726857196
+    AgentHelloAgainDto:
+      properties:
+        cpuUtilization:
+          type: number
+          description: Current CPU utilization in the agent machine
+        memoryUsed:
+          type: number
+          description: Amount of RAM in use on the agent machine in bytes
+        uptime:
+          type: number
+          description: Uptime of the agent machine in seconds
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          description: Status of the agent
+      required:
+        - cpuUtilization
+        - memoryUsed
+        - uptime
+        - status
+      example:
+        cpuUtilization: 2
+        memoryUsed: 34007285760
+        uptime: 288273
+        status: IDLE
+    AgentHelloDto:
+      properties:
+        cpuUtilization:
+          type: number
+          description: Current CPU utilization in the agent machine
+        memoryUsed:
+          type: number
+          description: Amount of RAM in use on the agent machine in bytes
+        uptime:
+          type: number
+          description: Uptime of the agent machine in seconds
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          description: Status of the agent
+        nickname:
+          type: string
+          description: Nickname for the agent
+      required:
+        - cpuUtilization
+        - memoryUsed
+        - uptime
+        - status
+      example:
+        cpuUtilization: 2
+        memoryUsed: 34007285760
+        uptime: 288273
+        status: BUSY
+    AgentRegisterDto:
+      properties:
+        uuid:
+          type: string
+          description: UUID of the agent
+        cpu:
+          type: string
+          description: CPU model of the agent
+        cpuUtilization:
+          type: number
+          description: Current CPU utilization in the agent machine
+        memoryTotal:
+          type: number
+          description: Total RAM capacity of the agent machine in bytes
+        memoryUsed:
+          type: number
+          description: Amount of RAM in use on the agent machine in bytes
+        hostname:
+          type: string
+          description: Host name of the agent machine
+        nickname:
+          type: string
+          description: Nickname for the agent
+        osPlatform:
+          type: string
+          description: OS platform installed on the agent machine
+        osRelease:
+          type: string
+          description: OS release installed on the agent machine
+        osVersion:
+          type: string
+          description: OS version installed on the agent machine
+        uptime:
+          type: number
+          description: Uptime of the agent machine in seconds
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          description: Status of the agent
+        publicKey:
+          type: string
+          description: Key used for secret exchange with the agent
+      required:
+        - uuid
+        - cpu
+        - cpuUtilization
+        - memoryTotal
+        - memoryUsed
+        - hostname
+        - nickname
+        - osPlatform
+        - osRelease
+        - osVersion
+        - uptime
+        - status
+        - publicKey
+      example:
+        uuid: dcf1c58a-0806-4f6d-9530-d4fe0d8672d3
+        cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+        cpuUtilization: 2
+        memoryTotal: 34359738368
+        memoryUsed: 34007285760
+        hostname: 2019-jb.local
+        nickname: 2019-jb.local
+        osPlatform: darwin
+        osRelease: 23.0.0
+        osVersion: >-
+          Darwin Kernel Version 23.0.0: Fri Sep 15 14:42:42 PDT 2023;
+          root:xnu-10002.1.13~1/RELEASE_X86_64
+        uptime: 288273
+        status: IDLE
+        publicKey: >-
+          30820122300d06092a864886f70d01010105000382010f003082010a0282010100a760f62788820d602017486dc1f76fc199628b73628c840fea60d0ba38915e08d61ace8bb29037d514718025c5b3b451c869781bfd4274ad09e791066b7cad71c38a715d924eac1c055df938020b94728ce3c939667ae8fe78482e0b262d90d65dbd42a5a8e649fd1d66a5152923b7230c89bf2e02344dbede85160649f8090dc297c31baec8c145be9b43c07d54c92be3d6588e44ec17e688ee6b915f48a99d99a63a3ed447d0868f4d4601d6e7a0586d49c4980e5b635b61351c6bf926e80bd6dc15e72e4ba0f9e90996a190b489e9b242b89631e5531c5b083b219faaead21d0f64d6b1fa3a2b73a1fe9bb2f7ec7985300e8319494be2789fd4723c0a741d0203010001
+    CustomError:
+      properties:
+        code:
+          type: string
+          description: >-
+            "A helmut cloud custom error code following this schema: [Custom
+            Error
+            Codes](https://development-guideline.pages.moovit-sp.com/en/hcloud/customErrorCodes.html)"
+        error:
+          type: string
+          description: 'Name of the error in the following format: name.of.error'
+        message:
+          type: string
+          description: Error description
+      required:
+        - code
+        - error
+        - message
+      example: null
+    Search:
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchFilter'
+          description: A list of filters
+        sorting:
+          $ref: '#/components/schemas/Sorting'
+          description: The sorting definition
+      example:
+        filters:
+          - type: DATE
+            key: modifyDate
+            comparator: less than
+            value: 1681912446650
+        sorting:
+          direction: DESC
+          fields:
+            - name
+            - company
+    SearchFilterComparatorBoolean:
+      enum:
+        - is
+        - is not
+      type: string
+      description: |
+        * is - Boolean equals the specified boolean value
+        * is not - Boolean does not equal the specified boolean value
+    SearchFilterComparatorDate:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Date equals the specified date value
+
+        * is not - Date does not equal the specified date value
+
+        * greater than - Date is more recent than the specified date value
+
+        * less than - Date is older than the specified date value
+
+        * greater than or equal - Date is more recent or equal to the specified
+        date value
+
+        * less than or equal - Date is older than or equal to the specified date
+        value
+    SearchFilterComparatorNumber:
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      type: string
+      description: >
+        * is - Number equals the specified numeric value
+
+        * is not - Number does not equal the specified numeric value
+
+        * greater than - Number is greater than the specified numeric value
+
+        * less than - Number is less than the specified numeric value
+
+        * greater than or equal - Number is greater than or equal to the
+        specified numeric value
+
+        * less than or equal - Number is less than or equal to the specified
+        numeric value
+    SearchFilterComparatorString:
+      enum:
+        - is
+        - is not
+        - starts with
+        - ends with
+        - contains
+      type: string
+      description: |
+        * is - String equals the specified string value
+        * is not - String does not equal the specified string value
+        * starts with - String starts with the specified string value
+        * ends with - String ends with the specified string value
+        * contains - String contains the specified string value
+    SearchFilterType:
+      enum:
+        - STRING
+        - SELECT
+        - MULTISELECT
+        - TYPEAHEAD
+        - NUMBER
+        - DATE
+        - BOOLEAN
+      type: string
+      description: |
+        * STRING - Filter by a string value
+        * SELECT - Filter by a value from a set of possible choices
+        * MULTISELECT - Filter by multiple values from a set of possible choices
+        * TYPEAHEAD - Filter by ???
+        * NUMBER - Filter by a numeric value
+        * DATE - Filter by a Date value
+        * BOOLEAN - Filter by a boolean flag
+    SecretExchangeDto:
+      properties:
+        secret:
+          type: string
+          description: >-
+            Base64 encoded encrypted secret. The encryption key used is the
+            public key sent in the register request. The secret itself is a
+            base64 encoded HMAC symmetric key.
+      required:
+        - secret
+      example:
+        secret: JLtnr3IvQzdouofXJ5qDB//CJ0qTe4J0NTwkiOBUfCU=
+    SortDirection:
+      enum:
+        - ASC
+        - DESC
+      type: string
+      description: |
+        * ASC - Ascending order
+        * DESC - Descending order
+    Sorting:
+      properties:
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+        fields:
+          type: array
+          items:
+            type: string
+          description: The fields to consider when performing the sorting of the result.
+      example:
+        direction: DESC
+        fields:
+          - name
+          - company
+    TargetAgentDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the agent
+        uuid:
+          type: string
+          description: UUID of the agent
+        ip:
+          type: string
+          description: IP of the agent
+        cpu:
+          type: string
+          description: CPU model of the agent machine
+        cpuUtilization:
+          type: number
+          description: Current CPU utilization on the agent machine
+        memoryTotal:
+          type: number
+          description: Total RAM capacity of the agent machine in bytes
+        memoryUsed:
+          type: number
+          description: Amount of RAM in use on the agent machine in bytes
+        hostname:
+          type: string
+          description: Host name of the agent machine
+        nickname:
+          type: string
+          description: Nickname for the agent
+        osPlatform:
+          type: string
+          description: OS platform installed on the agent machine
+        osRelease:
+          type: string
+          description: OS release installed on the agent machine
+        osVersion:
+          type: string
+          description: OS version installed on the agent machine
+        connectionUptime:
+          type: number
+          description: Uptime of the agent connection to the organization
+        status:
+          $ref: '#/components/schemas/AgentStatus'
+          description: Status of the agent
+        createDate:
+          type: number
+          description: Date of the agent's first hello to the mothership
+        modifyDate:
+          type: number
+          description: Date of the agent's last communication to the mothership
+        targetEmail:
+          type: string
+          description: Email address that can be used as a target for stream execution
+      required:
+        - _id
+        - uuid
+        - cpu
+        - cpuUtilization
+        - memoryTotal
+        - memoryUsed
+        - hostname
+        - nickname
+        - osPlatform
+        - osRelease
+        - osVersion
+        - connectionUptime
+        - status
+        - createDate
+        - modifyDate
+        - targetEmail
+      example:
+        _id: 65562d052ed0590e5d580ca0
+        uuid: dcf1c58a-0806-4f6d-9530-d4fe0d8672d3
+        ip: 192.168.0.1
+        cpu: Intel(R) Core(TM) i9-9980HK CPU @ 2.40GHz
+        cpuUtilization: 2
+        memoryTotal: 34359738368
+        memoryUsed: 34007285760
+        hostname: 2019-jb.local
+        nickname: 2019-jb.local
+        osPlatform: darwin
+        osRelease: 23.0.0
+        osVersion: >-
+          Darwin Kernel Version 23.0.0: Fri Sep 15 14:42:42 PDT 2023;
+          root:xnu-10002.1.13~1/RELEASE_X86_64
+        connectionUptime: 288273
+        status: IDLE
+        createDate: 1697726857196
+        modifyDate: 1697726857196
+        targetEmail: example@example.com
+    AgentStatus:
+      enum:
+        - ONLINE
+        - OFFLINE
+      type: string
+      description: |
+        * ONLINE - Signifies the agent is online.
+        * OFFLINE - Signifies the agent is offline.
+    SearchFilter:
+      properties:
+        type:
+          description: The type of the filter
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          description: The search comparator
+          oneOf:
+            - $ref: '#/components/schemas/SearchFilterComparatorString'
+            - $ref: '#/components/schemas/SearchFilterComparatorNumber'
+            - $ref: '#/components/schemas/SearchFilterComparatorDate'
+            - $ref: '#/components/schemas/SearchFilterComparatorBoolean'
+        value:
+          description: The value searching for
+          oneOf:
+            - type: string
+            - type: string[]
+            - type: boolean
+            - type: number
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      example:
+        type: STRING
+        key: name
+        comparator: starts with
+        value: Editor-
+  examples:
+    NotAuthorizedException:
+      value:
+        code: 009.001.0001
+        error: unauthorized
+        message: You're not authorized
+    InsufficientAccessRightException:
+      value:
+        code: 009.001.0004
+        error: insufficient.rights
+        message: You have not enough rights to access/manipulate this resource
+    InternalServerErrorException:
+      value:
+        code: 009.000.0002
+        error: internal.server.error
+        message: The server had problems processing your request
+    AgentOnlineException:
+      value:
+        code: 009.030.0003
+        error: agent.online
+        message: Agent is online
+    AgentNotFoundException:
+      value:
+        code: 009.030.0001
+        error: agent.not.found
+        message: Agent not found
+    AgentOfflineException:
+      value:
+        code: 009.030.0002
+        error: agent.offline
+        message: Agent is offline
+    OrganizationNotFoundException:
+      value:
+        code: 009.007.0001
+        error: organization.not.found
+        message: Organization not found
+    AgentAlreadyConnectedException:
+      value:
+        code: 009.030.0004
+        error: agent.already.connected
+        message: Agent already connected to this organization.
+    InvalidFilterException:
+      value:
+        code: 009.023.0001
+        error: search.invalid.filter
+        message: The value of the filter property 'field' is invalid
+  parameters:
+    LimitParameter:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+      required: false
+      description: Max number of items to return. Integer between 1 and 100.
+    PageParameter:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      required: false
+      description: Designates the current page, when using a limit. Minimum value is 0.
