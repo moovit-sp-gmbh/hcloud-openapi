@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1456
+  version: 0.0.107-1487
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4317,9 +4317,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples:
-                StreamNameInUseException:
-                  $ref: '#/components/examples/StreamNameInUseException'
         '401':
           description: Not Authorized exception
           content:
@@ -8440,11 +8437,6 @@ components:
         code: 002.018.0006
         error: snapshot.not.found
         message: Design snapshot not found.
-    StreamNameInUseException:
-      value:
-        code: 002.014.0002
-        error: stream.name.in.use
-        message: Given stream name is already in use
     JoinTokenAlreadyExistsException:
       value:
         code: 002.031.0001
