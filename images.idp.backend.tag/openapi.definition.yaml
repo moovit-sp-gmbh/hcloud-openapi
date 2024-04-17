@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1723
+  version: 0.0.143-1742
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -270,6 +270,13 @@ paths:
       security:
         - BearerAuth: []
         - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
       responses:
         '200':
           description: License
@@ -310,6 +317,13 @@ paths:
       security:
         - BearerAuth: []
         - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
       requestBody:
         content:
           application/json:
@@ -4863,6 +4877,26 @@ components:
             secondBaseExecutions: false
         expireDate: -1
         createDate: 1706191554
+    LicenseTier:
+      enum:
+        - FREE
+        - PRO
+        - ENTERPRISE
+      type: string
+      description: |
+        * FREE - Free license
+        * PRO - Professional license
+        * ENTERPRISE - Enterprise license
+    LicenseType:
+      enum:
+        - PRODUCTION
+        - POC
+        - THIRD_PARTY
+      type: string
+      description: |
+        * PRODUCTION - Production license
+        * POC - Proof of concept license
+        * THIRD_PARTY - Third party license
     LicenseUpdateDto:
       properties:
         identifier:
@@ -6517,6 +6551,17 @@ components:
         * /account - Set the last view to Account.
         * /high5 - Set the last view to High5.
         * /fuse - Set the last view to Fuse.
+    LicenseQuota:
+      properties:
+        fuse:
+          description: License quota for the Fuse service
+          type: object
+        high5:
+          description: License quota for the High5 service
+          type: object
+        idp:
+          description: License quota for the IDP service
+          type: object
     NatsAccess:
       properties:
         allow:
