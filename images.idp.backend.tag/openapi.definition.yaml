@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1746
+  version: 0.0.143-1749
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -622,6 +622,15 @@ paths:
                   $ref: '#/components/examples/InvalidLoginStateException'
                 MissingEmailAssertionException:
                   $ref: '#/components/examples/MissingEmailAssertionException'
+        '404':
+          description: Login state not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                LoginStateNotFoundException:
+                  $ref: '#/components/examples/LoginStateNotFoundException'
   /v1/login/oauth/authorize:
     get:
       tags:
@@ -2287,6 +2296,8 @@ paths:
               examples:
                 OAuthAppNotFoundException:
                   $ref: '#/components/examples/OAuthAppNotFoundException'
+                OAuthAppSecretNotFoundException:
+                  $ref: '#/components/examples/OAuthAppSecretNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/teams:
@@ -3006,6 +3017,15 @@ paths:
                   $ref: '#/components/examples/UserNotFoundException'
                 OrganizationNotFoundException:
                   $ref: '#/components/examples/OrganizationNotFoundException'
+        '409':
+          description: SAML provider already exists exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SAMLProviderAlreadyExistsException:
+                  $ref: '#/components/examples/SAMLProviderAlreadyExistsException'
         default:
           description: Unexpected error
     put:
@@ -6771,7 +6791,9 @@ components:
           description: The value searching for
           oneOf:
             - type: string
-            - type: string[]
+            - type: array
+              items:
+                type: string
             - type: boolean
             - type: number
       required:
@@ -6795,6 +6817,11 @@ components:
         code: 001.002.0002
         error: organization.member.already.exists
         message: User is already part of the organization
+    InvitationResendLimitException:
+      value:
+        code: 001.003.0004
+        error: invitation.resend.limit.exceeded
+        message: Too many resend-invitation-emails sent. Try again later.
     OrganizationMemberNotFoundException:
       value:
         code: 001.002.0001
