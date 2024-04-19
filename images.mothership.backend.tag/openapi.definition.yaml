@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: 'hcloud - '
-  version: 0.0.1-86
+  version: 0.0.1-94
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -780,7 +780,9 @@ components:
           description: The value searching for
           oneOf:
             - type: string
-            - type: string[]
+            - type: array
+              items:
+                type: string
             - type: boolean
             - type: number
       required:
