@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-307
+  version: 0.0.28-313
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -329,7 +329,9 @@ components:
           description: The value searching for
           oneOf:
             - type: string
-            - type: string[]
+            - type: array
+              items:
+                type: string
             - type: boolean
             - type: number
       required:
