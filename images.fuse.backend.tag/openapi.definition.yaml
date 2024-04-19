@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-749
+  version: 0.0.4-758
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -309,6 +309,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Invalid search filter exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
         '401':
           description: Not Authorized exception
           content:
@@ -773,6 +782,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CronjobLogDto'
+        '400':
+          description: Invalid search filter exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
         '401':
           description: Not Authorized exception
           content:
@@ -1044,6 +1062,15 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Invalid search filter exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
         '401':
           description: Not Authorized exception
           content:
@@ -2119,7 +2146,9 @@ components:
           description: The value searching for
           oneOf:
             - type: string
-            - type: string[]
+            - type: array
+              items:
+                type: string
             - type: boolean
             - type: number
       required:
