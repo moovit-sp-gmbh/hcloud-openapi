@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1487
+  version: 0.0.107-1500
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -960,6 +960,17 @@ paths:
               examples:
                 WebhookExecutionFailedGenericException:
                   $ref: '#/components/examples/WebhookExecutionFailedGenericException'
+                WebhookPreparationErrorException:
+                  $ref: '#/components/examples/WebhookPreparationErrorException'
+        '401':
+          description: Unauthorized, invalid security headers
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WebhookInvalidSecurityHeadersException:
+                  $ref: '#/components/examples/WebhookInvalidSecurityHeadersException'
         '404':
           description: Not Found exception
           content:
@@ -1062,71 +1073,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/High5ExecutionLogDto'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-        '404':
-          description: Not Found exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                OrganizationNotFoundException:
-                  $ref: '#/components/examples/OrganizationNotFoundException'
-        default:
-          description: Unexpected error
-  /v1/org/{orgName}/execution/status/search:
-    post:
-      tags:
-        - Execute.Status
-      summary: Retrieve the Stream execution states of an Organization
-      description: |-
-
-        Required organization role: MEMBER\
-        Required Scope: HIGH5_SPACE_READ
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/LimitParameter'
-        - $ref: '#/components/parameters/PageParameter'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Search'
-      responses:
-        '200':
-          description: >-
-            All the execution logs associated with the specified organization
-            filtered given the
-
-            parameters.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/High5ExecutionStatusDto'
         '401':
           description: Not Authorized exception
           content:
@@ -6983,6 +6929,14 @@ components:
         - name
       example:
         name: This is version 1.0
+    SnapshotType:
+      enum:
+        - manual
+        - published
+      type: string
+      description: |
+        * manual - Manual snapshot
+        * published - Published snapshot
     SortDirection:
       enum:
         - ASC
@@ -8081,7 +8035,9 @@ components:
           description: The value searching for
           oneOf:
             - type: string
-            - type: string[]
+            - type: array
+              items:
+                type: string
             - type: boolean
             - type: number
       required:
@@ -8123,6 +8079,21 @@ components:
       example:
         eventPrefix: DeepVA-
         jsonPathMapping: job.face_recognition.on_completed
+    StreamDesign:
+      properties:
+        nodes:
+          type: array
+          description: Stream design nodes
+          items:
+            type: object
+        links:
+          type: array
+          description: Stream design links
+          items:
+            type: object
+      required:
+        - nodes
+        - links
     StreamNodeOutput:
       properties:
         name:
@@ -8292,7 +8263,7 @@ components:
       value:
         code: 002.000.0002
         error: internal.server.error
-        message: Message desribing the problem
+        message: Message describing the problem
     NotAuthorizedException:
       value:
         code: 002.001.0001
@@ -8393,11 +8364,6 @@ components:
         code: 002.023.0001
         error: search.invalid.filter
         message: The value of the filter property 'field' is invalid
-    NodeCatalogueNotFoundException:
-      value:
-        code: 002.016.0002
-        error: node.catalogue.not.found
-        message: Node catalogue not found
     StreamExecutionException:
       value:
         code: 002.015.0002
@@ -8405,6 +8371,23 @@ components:
         message: >-
           Failed to execute given stream - 'Detailed message describing the
           problem'
+    High5ExecutionNotFoundException:
+      value:
+        code: 002.025.0003
+        error: execution.not.found
+        message: Execution object not found.
+    High5ExecutionStatusNotFoundException:
+      value:
+        code: 002.025.0002
+        error: execution.result.not.found
+        message: Execution result object not found.
+    High5ExecutionCancelException:
+      value:
+        code: 002.025.0004
+        error: execution.cancel
+        message: >-
+          Cancel execution failed 'Stream is already in completed state. Outcome
+          FAILED'
     ExecutionLogNotFoundException:
       value:
         code: 002.025.0001
