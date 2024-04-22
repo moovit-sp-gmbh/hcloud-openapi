@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1510
+  version: 0.0.107-1513
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1102,6 +1102,71 @@ paths:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
+  /v1/org/{orgName}/execution/status/search:
+    post:
+      tags:
+        - Execute.Status
+      summary: Retrieve the Stream execution states of an Organization
+      description: |-
+
+        Required organization role: MEMBER\
+        Required Scope: HIGH5_SPACE_READ
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: >-
+            All the execution logs associated with the specified organization
+            filtered given the
+
+            parameters.
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/High5ExecutionStatusDto'
+        '401':
+          description: Not Authorized exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Not Found exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OrganizationNotFoundException:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        default:
+          description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/logs/search:
     post:
       tags:
@@ -1152,71 +1217,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/High5ExecutionLogDto'
-        '401':
-          description: Not Authorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Forbidden
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-        default:
-          description: Unexpected error
-  /v1/org/{orgName}/spaces/{spaceName}/execution/status/search:
-    post:
-      tags:
-        - Execute.Status
-      summary: Retrieve the Stream execution states of an Space
-      description: |-
-
-        Required organization role: MEMBER\
-        Required space permission: READ\
-        Required Scope: HIGH5_SPACE_READ
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - $ref: '#/components/parameters/LimitParameter'
-        - $ref: '#/components/parameters/PageParameter'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Search'
-      responses:
-        '200':
-          description: >-
-            All the execution logs associated with the specified space filtered
-            given the
-
-            parameters.
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/High5ExecutionStatusDto'
         '401':
           description: Not Authorized
           content:
