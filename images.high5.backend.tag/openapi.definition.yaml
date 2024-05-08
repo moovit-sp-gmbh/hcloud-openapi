@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1531
+  version: 0.0.107-1533
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7512,6 +7512,8 @@ components:
           items:
             $ref: '#/components/schemas/SecurityHeaderDto'
           description: Optional security headers
+        networkSettings:
+          $ref: '#/components/schemas/NetworkSettings'
       required:
         - name
         - target
@@ -7836,6 +7838,8 @@ components:
           description: >-
             Optional parameter to delete existing security header settings. If
             true 'securityHeaders' will be ignored
+        networkSettings:
+          $ref: '#/components/schemas/NetworkSettings'
       example:
         name: webhook-blue
         target: account@moovit-sp.com
