@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1766
+  version: 0.0.143-1767
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1445,17 +1445,6 @@ paths:
               examples:
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Your role in the organization does not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                OrganizationInsufficientRoleException:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: User does not exist
           content:
