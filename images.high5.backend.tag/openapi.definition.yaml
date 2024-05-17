@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1557
+  version: 0.0.107-1560
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5288,6 +5288,34 @@ components:
       type: apiKey
       in: header
       name: Authorization
+  responseGroups:
+    ScopesInterceptor:
+      '403':
+        description: Missing required scope for operation
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Missing required scope for operation:
+                $ref: '#/components/examples/InsufficientAccessRightException'
+    Search:
+      '400':
+        description: Invalid body or search filter
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Invalid body:
+                $ref: '#/components/examples/InvalidBodyException'
+                summary: Invalid body
+              Invalid filter:
+                $ref: '#/components/examples/InvalidFilterException'
+                summary: Invalid search filter
+              Invalid pagination parameters (limit/page):
+                $ref: '#/components/examples/InvalidParameterException'
+                summary: Invalid limit or page
   schemas:
     CustomError:
       properties:
@@ -6020,7 +6048,8 @@ components:
           outcome: PENDING
           message: Message bus timeout
           runningNodes:
-            - name: Lower Case Action Node
+            - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+              name: Lower Case Action Node
               progress: 100
               message: Successfully converted input to lower case
           target: account@moovit-sp.com
@@ -6144,7 +6173,8 @@ components:
           state: QUEUED
           outcome: PENDING
           runningNodes:
-            - name: Lower Case Action Node
+            - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+              name: Lower Case Action Node
               progress: 100
               message: Successfully converted input to lower case
           message: Execution successful
@@ -6172,7 +6202,7 @@ components:
         nodeResults:
           type: array
           items:
-            $ref: '#/components/schemas/StreamSingleNodeResult'
+            $ref: '#/components/schemas/StreamSingleNodeResultDto'
           description: List of single node results
       required:
         - streamId
@@ -6222,7 +6252,8 @@ components:
         state: QUEUED
         outcome: PENDING
         runningNodes:
-          - name: Lower Case Action Node
+          - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+            name: Lower Case Action Node
             progress: 100
             message: Successfully converted input to lower case
         message: Execution successful
@@ -6392,7 +6423,8 @@ components:
         outcome: PENDING
         message: Message bus timeout
         runningNodes:
-          - name: Lower Case Action Node
+          - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+            name: Lower Case Action Node
             progress: 100
             message: Successfully converted input to lower case
         target: account@moovit-sp.com
@@ -7391,6 +7423,9 @@ components:
         order: 1
     StreamRunningNodeDto:
       properties:
+        uuid:
+          type: string
+          description: Uuid to exclusively identify the node
         name:
           type: string
           description: Name of the node
@@ -7403,10 +7438,12 @@ components:
             Message indicating current action that is being performed inside the
             node
       required:
+        - uuid
         - name
         - progress
         - message
       example:
+        uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
         name: Lower Case Action Node
         progress: 100
         message: Successfully converted input to lower case
