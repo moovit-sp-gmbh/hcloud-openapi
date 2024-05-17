@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1541
+  version: 0.0.107-1557
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6467,16 +6467,10 @@ components:
       description: |
         * UP - Move stream up in the execution order
         * DOWN - Move stream down in the execution order
-    NodeCategory:
-      enum:
-        - CUSTOM
-      type: string
-      description: |
-        * CUSTOM - Custom node
     NodeCreateDto:
       properties:
         category:
-          $ref: '#/components/schemas/NodeCategory'
+          type: string
           description: The category of the node
         specification:
           type: string
@@ -6502,7 +6496,7 @@ components:
           type: string
           description: A generated secret
         category:
-          $ref: '#/components/schemas/NodeCategory'
+          type: string
           description: The category the node belongs to
         archived:
           type: boolean
@@ -6567,7 +6561,7 @@ components:
           type: string
           description: A generated secret
         category:
-          $ref: '#/components/schemas/NodeCategory'
+          type: string
           description: The category the node belongs to
         archived:
           type: boolean
