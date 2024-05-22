@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1565
+  version: 0.0.107-1570
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5289,6 +5289,61 @@ components:
       in: header
       name: Authorization
   responseGroups:
+    AuthInterceptor:
+      '401':
+        description: There was an error while evaluating the user's credentials
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              WrongAuthenticationTokenException:
+                $ref: '#/components/examples/WrongAuthenticationTokenException'
+                summary: The JWT payload has an invalid format
+              NotAuthorizedException:
+                $ref: '#/components/examples/NotAuthorizedException'
+                summary: The credentials were incorrect
+              AuthenticationTokenMissingException:
+                $ref: '#/components/examples/AuthenticationTokenMissingException'
+                summary: The Authorization header is empty
+    LicenseQuota:
+      '403':
+        description: License quota exceeded
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              License quota exceeded:
+                $ref: '#/components/examples/LicenseQuotaExceededException'
+    OrganizationInterceptor:
+      '400':
+        description: Organization name is invalid
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Organization name is invalid:
+                $ref: '#/components/examples/InvalidParameterException'
+      '403':
+        description: Organization role is insufficient
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Organization role is insufficient:
+                $ref: '#/components/examples/InsufficientAccessRightException'
+      '404':
+        description: Organization not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Organization not found:
+                $ref: '#/components/examples/OrganizationNotFoundException'
     ScopesInterceptor:
       '403':
         description: Missing required scope for operation
@@ -5316,6 +5371,34 @@ components:
               Invalid pagination parameters (limit/page):
                 $ref: '#/components/examples/InvalidParameterException'
                 summary: Invalid limit or page
+    SpaceInterceptor:
+      '400':
+        description: Space name is invalid
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Space name is invalid:
+                $ref: '#/components/examples/InvalidParameterException'
+      '403':
+        description: Space permission is insufficient
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Space permission is insufficient:
+                $ref: '#/components/examples/SpaceInsufficientPermissionException'
+      '404':
+        description: Space not found
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CustomError'
+            examples:
+              Space not found:
+                $ref: '#/components/examples/SpaceNotFoundException'
   schemas:
     CustomError:
       properties:
