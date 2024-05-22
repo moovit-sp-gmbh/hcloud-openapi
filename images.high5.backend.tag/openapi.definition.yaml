@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1570
+  version: 0.0.107-1575
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6597,7 +6597,7 @@ components:
         - specification
         - typescript
       example:
-        category: CUSTOM
+        category: Some-Node-Category
         specification: >-
           eyJuYW1lIjoiRXhlY3V0ZSBweXRob24iLCJkZXNjcmlwdGlvbiI6ImV4ZWMgcHl0aG9uIiwidHlwZSI6IkFDVElPTiIsInBhY2thZ2UiOiJDVVNUT00iLCJjYXRlZ29yeSI6Ik90aGVyIiwidmVyc2lvbiI6eyJtYWpvciI6MCwibWlub3IiOjAsInBhdGNoIjoxLCJjaGFuZ2Vsb2ciOlsiSW5pdGlhbCBub2RlIl19LCJhdXRob3IiOnsibmFtZSI6Ik1vb3ZJVCBTUCIsImVtYWlsIjoiYWNjb3VudEBtb292aXQtc3AuY29tIiwiY29tcGFueSI6IiJ9LCJpbnB1dHMiOltdLCJvdXRwdXRzIjpbeyJuYW1lIjoiUmVzdWx0IiwiZGVzY3JpcHRpb24iOiJUaGUgRnJhbWVJTyByZXN1bHQiLCJ0eXBlIjoiU1RSSU5HIiwiZXhhbXBsZSI6Int9In1dLCJwYXRoIjoiaHR0cHM6Ly9kZXYuYXBwLmhlbG11dC5jbG91ZDo0NDMvYXBpL2hpZ2g1L3YxL25vZGUvMjE5NmYyOGQ0MWU2NWRlMDQ5Y2RkMDg4ODM0YjI2ZmM0NDAwZjIxZDZmMjQ2M2U5NDk0NTIxMjhiOWIwZDlmNDBjYzdkMDg4ZTk1YzdjOWFkYzEwMjA4M2UwOWFjZjMzZWVjYjM0MTk4NWVhNDBlMGZjNDkzNTQ1YTM2OTg3NjgvY29udGVudCIsImN1c3RvbU5vZGUiOnsiX2lkIjoiNjNjYWE4YmU4MTJjYzFlYjE1N2M5N2RhIn19
         typescript: >-
@@ -6649,7 +6649,7 @@ components:
         _id: 63caa8be812cc1eb157c97da
         secret: >-
           2196f28d41e65de049cdd088834b26fc4400f21d6f2463e949452128b9b0d9f40cc7d088e95c7c9adc102083e09acf33eecb341985ea40e0fc493545a3698768
-        category: CUSTOM
+        category: Some-Node-Category
         archived: false
         organization:
           _id: 6436bb9988821e8f6400c2f8
@@ -6717,7 +6717,7 @@ components:
         _id: 63caa8be812cc1eb157c97da
         secret: >-
           2196f28d41e65de049cdd088834b26fc4400f21d6f2463e949452128b9b0d9f40cc7d088e95c7c9adc102083e09acf33eecb341985ea40e0fc493545a3698768
-        category: CUSTOM
+        category: Some-Node-Category
         archived: false
         organization:
           _id: 6436bb9988821e8f6400c2f8
