@@ -1,20 +1,20 @@
 openapi: 3.0.0
 info:
-  title: 'hcloud - '
-  version: 0.0.1-111
+  title: hcloud - Mothership
+  version: 0.0.1-112
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
     email: info@moovit-sp.com
-  description: ''
+  description: Mothership manages agent status and connections.
 servers:
-  - url: https://eu-central-1.helmut.cloud
+  - url: https://eu-central-1.helmut.cloud/api/mothership
     description: EU-Central production server
-  - url: https://na-west-1.helmut.cloud
+  - url: https://na-west-1.helmut.cloud/api/mothership
     description: NA-West production server
-  - url: https://eu-dev-1.app.helmut.cloud
+  - url: https://eu-dev-1.app.helmut.cloud/api/mothership
     description: EU development server
-  - url: http://localhost
+  - url: http://localhost/api/mothership
     description: Localhost
 paths:
   /v1/org/{orgName}/connect/search:
@@ -50,40 +50,56 @@ paths:
                 items:
                   $ref: '#/components/schemas/TargetAgentDto'
         '400':
-          description: Bad Request
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFilterException:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
                   $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
         '401':
-          description: Unauthorized
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Organization role is insufficient
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Organization role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
-          description: Not Found
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                OrganizationNotFoundException:
+                Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error
@@ -130,6 +146,30 @@ paths:
                   $ref: '#/components/examples/AgentOfflineException'
                 AgentAlreadyConnectedException:
                   $ref: '#/components/examples/AgentAlreadyConnectedException'
+                Authentication token is missing:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Agent unauthorized:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Organization role is insufficient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                License quota exceeded:
+                  $ref: '#/components/examples/LicenseQuotaExceededException'
         '404':
           description: Not Found
           content:
@@ -139,7 +179,7 @@ paths:
               examples:
                 AgentNotFoundException:
                   $ref: '#/components/examples/AgentNotFoundException'
-                OrganizationNotFoundException:
+                Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error
@@ -172,6 +212,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AgentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
         '404':
           description: Not Found
           content:
@@ -221,6 +270,8 @@ paths:
               examples:
                 AgentOfflineException:
                   $ref: '#/components/examples/AgentOfflineException'
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
         '404':
           description: Not Found
           content:
@@ -259,6 +310,15 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SecretExchangeDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
         '500':
           description: Internal Server Error
           content:
@@ -279,117 +339,6 @@ components:
     BasicAuth:
       type: http
       scheme: basic
-  responseGroups:
-    AuthInterceptor:
-      '401':
-        description: There was an error while evaluating the user's credentials
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              WrongAuthenticationTokenException:
-                $ref: '#/components/examples/WrongAuthenticationTokenException'
-                summary: The JWT payload has an invalid format
-              NotAuthorizedException:
-                $ref: '#/components/examples/NotAuthorizedException'
-                summary: The credentials were incorrect
-              AuthenticationTokenMissingException:
-                $ref: '#/components/examples/AuthenticationTokenMissingException'
-                summary: The Authorization header is empty
-    LicenseQuota:
-      '403':
-        description: License quota exceeded
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              License quota exceeded:
-                $ref: '#/components/examples/LicenseQuotaExceededException'
-    OrganizationInterceptor:
-      '400':
-        description: Organization name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Organization role is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization role is insufficient:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-      '404':
-        description: Organization not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization not found:
-                $ref: '#/components/examples/OrganizationNotFoundException'
-    ScopesInterceptor:
-      '403':
-        description: Missing required scope for operation
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Missing required scope for operation:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-    Search:
-      '400':
-        description: Invalid body or search filter
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Invalid body:
-                $ref: '#/components/examples/InvalidBodyException'
-                summary: Invalid body
-              Invalid filter:
-                $ref: '#/components/examples/InvalidFilterException'
-                summary: Invalid search filter
-              Invalid pagination parameters (limit/page):
-                $ref: '#/components/examples/InvalidParameterException'
-                summary: Invalid limit or page
-    SpaceInterceptor:
-      '400':
-        description: Space name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Space permission is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space permission is insufficient:
-                $ref: '#/components/examples/SpaceInsufficientPermissionException'
-      '404':
-        description: Space not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space not found:
-                $ref: '#/components/examples/SpaceNotFoundException'
   schemas:
     AgentConnectDto:
       properties:
@@ -952,6 +901,33 @@ components:
         code: 009.023.0001
         error: search.invalid.filter
         message: The value of the filter property 'field' is invalid
+    InvalidBodyException:
+      value:
+        code: 009.000.0004
+        error: invalid.body
+        message: <detailed cause of validation failure>
+    LicenseQuotaExceededException:
+      value:
+        code: 009.032.0001
+        error: license.quota.exceeded
+        message: You have exceeded the assigned quota for this action.
+    AuthenticationTokenMissingException:
+      value:
+        code: 009.001.0002
+        error: missing.auth.token
+        message: Expected an authentication token that has not been provided
+    InvalidParameterException:
+      value:
+        code: 009.000.0003
+        error: invalid.parameter
+        message: >-
+          Failed to validate '<path | query>' parameter '<parameter name>' -
+          <detailed cause of validation failure>
+    WrongAuthenticationTokenException:
+      value:
+        code: 009.001.0003
+        error: wrong.auth.token
+        message: Your authentication token is invalid
   parameters:
     LimitParameter:
       in: query
