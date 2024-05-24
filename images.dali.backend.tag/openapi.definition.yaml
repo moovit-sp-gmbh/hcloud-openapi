@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-321
+  version: 0.0.5-324
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -58,34 +58,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -125,36 +139,50 @@ paths:
         '204':
           description: No content
         '400':
-          description: Validation error
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -214,53 +242,67 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidBodyException:
-                  $ref: '#/components/examples/InvalidBodyException'
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-        '413':
-          description: Invalid file size exception
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -313,34 +355,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -381,36 +443,56 @@ paths:
         '204':
           description: No content
         '400':
-          description: Validation error
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -471,53 +553,73 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidBodyException:
-                  $ref: '#/components/examples/InvalidBodyException'
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-        '413':
-          description: Invalid file size exception
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -570,34 +672,54 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -638,36 +760,56 @@ paths:
         '204':
           description: No content
         '400':
-          description: Validation error
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -728,53 +870,73 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidBodyException:
-                  $ref: '#/components/examples/InvalidBodyException'
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-        '413':
-          description: Invalid file size exception
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -820,34 +982,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -881,36 +1057,50 @@ paths:
         '204':
           description: No content
         '400':
-          description: Validation error
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -964,53 +1154,67 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidBodyException:
-                  $ref: '#/components/examples/InvalidBodyException'
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-        '413':
-          description: Invalid file size exception
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -1062,34 +1266,48 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -1129,36 +1347,50 @@ paths:
         '204':
           description: No content
         '400':
-          description: Validation error
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         '500':
           description: Internal Server Error (something went wrong)
           content:
@@ -1218,53 +1450,69 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidQueryParameterException:
-                  $ref: '#/components/examples/InvalidQueryParameterException'
                 InvalidBodyException:
                   $ref: '#/components/examples/InvalidBodyException'
                 FileTransferErrorException:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-        '413':
-          description: Invalid file size exception
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -1307,26 +1555,29 @@ paths:
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
         '401':
-          description: Not authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -1355,26 +1606,29 @@ paths:
         '204':
           description: No content
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -1427,45 +1681,50 @@ paths:
                   $ref: '#/components/examples/FileTransferErrorException'
                 ImageProcessingErrorException:
                   $ref: '#/components/examples/ImageProcessingErrorException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient access right
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '413':
-          description: Invalid file size exception
+          description: File size too large
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileSizeException:
+                File size too large:
                   $ref: '#/components/examples/InvalidFileSizeException'
         '415':
-          description: Invalid file type exception
+          description: Invalid file type
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFileTypeException:
+                Invalid file type:
                   $ref: '#/components/examples/InvalidFileTypeException'
         '500':
           description: Internal Server Error (something went wrong)
@@ -1487,117 +1746,6 @@ components:
     BasicAuth:
       type: http
       scheme: basic
-  responseGroups:
-    AuthInterceptor:
-      '401':
-        description: There was an error while evaluating the user's credentials
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              WrongAuthenticationTokenException:
-                $ref: '#/components/examples/WrongAuthenticationTokenException'
-                summary: The JWT payload has an invalid format
-              NotAuthorizedException:
-                $ref: '#/components/examples/NotAuthorizedException'
-                summary: The credentials were incorrect
-              AuthenticationTokenMissingException:
-                $ref: '#/components/examples/AuthenticationTokenMissingException'
-                summary: The Authorization header is empty
-    LicenseQuota:
-      '403':
-        description: License quota exceeded
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              License quota exceeded:
-                $ref: '#/components/examples/LicenseQuotaExceededException'
-    OrganizationInterceptor:
-      '400':
-        description: Organization name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Organization role is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization role is insufficient:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-      '404':
-        description: Organization not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization not found:
-                $ref: '#/components/examples/OrganizationNotFoundException'
-    ScopesInterceptor:
-      '403':
-        description: Missing required scope for operation
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Missing required scope for operation:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-    Search:
-      '400':
-        description: Invalid body or search filter
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Invalid body:
-                $ref: '#/components/examples/InvalidBodyException'
-                summary: Invalid body
-              Invalid filter:
-                $ref: '#/components/examples/InvalidFilterException'
-                summary: Invalid search filter
-              Invalid pagination parameters (limit/page):
-                $ref: '#/components/examples/InvalidParameterException'
-                summary: Invalid limit or page
-    SpaceInterceptor:
-      '400':
-        description: Space name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Space permission is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space permission is insufficient:
-                $ref: '#/components/examples/SpaceInsufficientPermissionException'
-      '404':
-        description: Space not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space not found:
-                $ref: '#/components/examples/SpaceNotFoundException'
   schemas:
     AvatarDto:
       properties:
@@ -1695,3 +1843,18 @@ components:
         code: 007.026.0004
         error: file.transfer.error
         message: An error occurred while transferring the file
+    OrganizationNotFoundException:
+      value:
+        code: 007.007.0001
+        error: organization.not.found
+        message: Organization not found
+    SpaceInsufficientPermissionException:
+      value:
+        code: 007.010.0003
+        error: space.insufficient.permission
+        message: You do not have the required permission
+    SpaceNotFoundException:
+      value:
+        code: 007.010.0001
+        error: space.not.found
+        message: Given space not found
