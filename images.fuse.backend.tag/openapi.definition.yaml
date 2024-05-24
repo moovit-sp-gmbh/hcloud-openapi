@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-769
+  version: 0.0.4-772
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -65,34 +65,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronjobDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -138,7 +164,7 @@ paths:
             default: 'false'
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/CronjobCreateDto'
       responses:
@@ -149,7 +175,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CronjobDto'
         '400':
-          description: Insufficient permission
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -159,34 +185,53 @@ paths:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
                 CronjobInvalidTimezoneException:
                   $ref: '#/components/examples/CronjobInvalidTimezoneException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -224,34 +269,60 @@ paths:
       responses:
         '204':
           description: No content
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -310,34 +381,65 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpaceDto'
         '400':
-          description: Invalid search filter exception
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFilterException:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
                   $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/jobs:
@@ -377,7 +479,7 @@ paths:
             default: 'false'
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/CronjobCreateDto'
         required: true
@@ -389,7 +491,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CronjobDto'
         '400':
-          description: Insufficient permission
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -399,26 +501,50 @@ paths:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
                 CronjobInvalidTimezoneException:
                   $ref: '#/components/examples/CronjobInvalidTimezoneException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/expression:
@@ -464,7 +590,7 @@ paths:
             default: 'false'
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/CronjobExpressionPatchDto'
         required: true
@@ -476,7 +602,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CronjobDto'
         '400':
-          description: Insufficient permission
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -484,34 +610,53 @@ paths:
               examples:
                 CronjobInvalidExpressionException:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -558,7 +703,7 @@ paths:
             default: 'false'
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/CronjobEnabledPatchDto'
         required: true
@@ -569,34 +714,60 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronjobDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -654,34 +825,60 @@ paths:
                 type: array
                 items:
                   type: number
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -697,7 +894,7 @@ paths:
         - BasicAuth: []
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/CronPatternDto'
         required: true
@@ -724,14 +921,21 @@ paths:
                 CronjobInvalidTimezoneException:
                   $ref: '#/components/examples/CronjobInvalidTimezoneException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/jobs/{cronjobId}/logs/search:
@@ -783,42 +987,68 @@ paths:
                 items:
                   $ref: '#/components/schemas/CronjobLogDto'
         '400':
-          description: Invalid search filter exception
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFilterException:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
                   $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
                   $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
@@ -867,37 +1097,63 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CronjobLogDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Cronjob id is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                CronjobNotFoundException:
-                  $ref: '#/components/examples/CronjobNotFoundException'
                 CronjobLogNotFoundException:
                   $ref: '#/components/examples/CronjobLogNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Cronjob not found:
+                  $ref: '#/components/examples/CronjobNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}:
@@ -933,34 +1189,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpaceDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
@@ -994,34 +1272,56 @@ paths:
       responses:
         '204':
           description: No content
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
@@ -1063,32 +1363,65 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpaceDto'
         '400':
-          description: Invalid search filter exception
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFilterException:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
                   $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces:
@@ -1112,7 +1445,7 @@ paths:
             type: string
       requestBody:
         content:
-          .application/json:
+          application/json:
             schema:
               $ref: '#/components/schemas/SpaceCreateDto'
         required: true
@@ -1124,7 +1457,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceDto'
         '400':
-          description: Not Authorized exception
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -1132,24 +1465,48 @@ paths:
               examples:
                 SpaceNameInUseException:
                   $ref: '#/components/examples/SpaceNameInUseException'
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                License quota exceeded:
+                  $ref: '#/components/examples/LicenseQuotaExceededException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/name:
@@ -1192,7 +1549,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceDto'
         '400':
-          description: Not Authorized exception
+          description: Bad Request
           content:
             application/json:
               schema:
@@ -1200,41 +1557,58 @@ paths:
               examples:
                 SpaceNameInUseException:
                   $ref: '#/components/examples/SpaceNameInUseException'
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/permissions/search:
     post:
       tags:
-        - Space
+        - Space.Permissions
       summary: >-
         For the specified space, will retrieve all space permissions that match
         the provided search filter or all space permissions if no search filter
@@ -1276,30 +1650,72 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/permissions/user:
     put:
       tags:
-        - Space
+        - Space.Permissions
       summary: Add, update, delete a users space's permission
       description: |-
 
@@ -1336,7 +1752,47 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceEntityPermissionDto'
         '400':
-          description: Not Authorized exception
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
           content:
             application/json:
               schema:
@@ -1344,43 +1800,16 @@ paths:
               examples:
                 OrganizationMemberNotFoundException:
                   $ref: '#/components/examples/OrganizationMemberNotFoundException'
-        '401':
-          description: Not Authorized exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-        '403':
-          description: Insufficient permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceRequiresOwnerException:
-                  $ref: '#/components/examples/SpaceRequiresOwnerException'
-                InsufficientAccessRightException:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-        '404':
-          description: Not Found exception
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/permissions/team:
     put:
       tags:
-        - Space
+        - Space.Permissions
       summary: Add, update, delete a team's spaces permission
       description: |-
 
@@ -1416,39 +1845,61 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Bad Request
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                SpaceInvalidOwnerException:
+                  $ref: '#/components/examples/SpaceInvalidOwnerException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Insufficient permission
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceRequiresOwnerException:
-                  $ref: '#/components/examples/SpaceRequiresOwnerException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                Organization role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Not Found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
-                  $ref: '#/components/examples/SpaceNotFoundException'
                 TeamNotFoundException:
                   $ref: '#/components/examples/TeamNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
 components:
@@ -1460,117 +1911,6 @@ components:
     BasicAuth:
       type: http
       scheme: basic
-  responseGroups:
-    AuthInterceptor:
-      '401':
-        description: There was an error while evaluating the user's credentials
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              WrongAuthenticationTokenException:
-                $ref: '#/components/examples/WrongAuthenticationTokenException'
-                summary: The JWT payload has an invalid format
-              NotAuthorizedException:
-                $ref: '#/components/examples/NotAuthorizedException'
-                summary: The credentials were incorrect
-              AuthenticationTokenMissingException:
-                $ref: '#/components/examples/AuthenticationTokenMissingException'
-                summary: The Authorization header is empty
-    LicenseQuota:
-      '403':
-        description: License quota exceeded
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              License quota exceeded:
-                $ref: '#/components/examples/LicenseQuotaExceededException'
-    OrganizationInterceptor:
-      '400':
-        description: Organization name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Organization role is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization role is insufficient:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-      '404':
-        description: Organization not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization not found:
-                $ref: '#/components/examples/OrganizationNotFoundException'
-    ScopesInterceptor:
-      '403':
-        description: Missing required scope for operation
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Missing required scope for operation:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-    Search:
-      '400':
-        description: Invalid body or search filter
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Invalid body:
-                $ref: '#/components/examples/InvalidBodyException'
-                summary: Invalid body
-              Invalid filter:
-                $ref: '#/components/examples/InvalidFilterException'
-                summary: Invalid search filter
-              Invalid pagination parameters (limit/page):
-                $ref: '#/components/examples/InvalidParameterException'
-                summary: Invalid limit or page
-    SpaceInterceptor:
-      '400':
-        description: Space name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Space permission is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space permission is insufficient:
-                $ref: '#/components/examples/SpaceInsufficientPermissionException'
-      '404':
-        description: Space not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space not found:
-                $ref: '#/components/examples/SpaceNotFoundException'
   schemas:
     CronPatternDto:
       properties:
@@ -2342,7 +2682,44 @@ components:
       value:
         code: 003.023.0001
         error: search.invalid.filter
-        message: The value of the filter property 'field' is invalid
+        message: The value of the filter property '<field name>' is invalid
+    InvalidBodyException:
+      value:
+        code: 003.000.0004
+        error: invalid.body
+        message: <detailed message about what failed validation>
+    InvalidParameterException:
+      value:
+        code: 003.000.0003
+        error: invalid.parameter
+        message: >-
+          Failed to validate '<path | query>' parameter '<parameter name>' -
+          <cause of validation failure>
+    AuthenticationTokenMissingException:
+      value:
+        code: 003.001.0002
+        error: missing.auth.token
+        message: Expected an authentication token that has not been provided
+    WrongAuthenticationTokenException:
+      value:
+        code: 003.001.0003
+        error: wrong.auth.token
+        message: Your authentication token is invalid
+    LicenseQuotaExceededException:
+      value:
+        code: 003.032.0001
+        error: license.quota.exceeded
+        message: You have exceeded the assigned quota for this action.
+    OrganizationNotFoundException:
+      value:
+        code: 003.007.0001
+        error: organization.not.found
+        message: Organization not found
+    SpaceInvalidOwnerException:
+      value:
+        code: 003.010.0004
+        error: space.invalid.owner
+        message: A team cannot be the owner of a space
   parameters:
     LimitParameter:
       in: query
