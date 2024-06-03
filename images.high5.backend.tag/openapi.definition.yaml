@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1621
+  version: 0.0.107-1622
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8759,6 +8759,74 @@ components:
         name: Lower Case Action Node
         progress: 100
         message: Successfully converted input to lower case
+    StreamSingleNodeResultDto:
+      properties:
+        uuid:
+          type: string
+          description: UUID of the result
+        nodeUuid:
+          type: string
+          description: UUID of the node
+        failed:
+          type: boolean
+          description: Indicates if the node failed or not
+        startTimestamp:
+          type: number
+          description: Timestamp when the node started
+        endTimestamp:
+          type: number
+          description: Timestamp when the node ended
+        name:
+          type: string
+          description: Name of the input
+        inputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamNodeResolvedInputs'
+        outputs:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamNodeOutput'
+          description: Nodes outputs
+        error:
+          $ref: '#/components/schemas/StreamNodeResultError'
+          description: Error if the node failed
+        duration:
+          type: number
+          description: Duration the node took for execution in ms
+        bypassed:
+          type: boolean
+          description: Indicates if the node was bypassed
+        nodeResults:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamSingleNodeResultDto'
+          description: Nested results of the executed nodes from additional adapters
+      required:
+        - uuid
+        - nodeUuid
+        - failed
+        - startTimestamp
+        - endTimestamp
+      example:
+        uuid: 1ea87ea6-d5af-4d55-bfb8-8eb4169b0d15
+        nodeUuid: 1ea87ea6-d5af-4d55-bfb8-8eb4169b0d16
+        failed: false
+        startTimestamp: 1692274990716
+        endTimestamp: 1692275090717
+        name: Http Request Node
+        inputs:
+          - name: Input name
+            originalValue: This got resolved at runtime
+            value: '{payload}'
+        outputs:
+          - name: Output name
+            value: result of node
+        error:
+          code: 400
+          message: Bad Request
+          detail: An http request failed with status code 400
+          trace: Detailed trace of the error
     StreamSinglePatchOrderDto:
       properties:
         direction:
