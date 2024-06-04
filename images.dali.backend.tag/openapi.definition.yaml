@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-331
+  version: 0.0.5-334
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -89,7 +89,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -172,7 +172,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -275,7 +275,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -388,7 +388,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -478,7 +478,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -588,7 +588,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -705,7 +705,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -795,7 +795,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -905,7 +905,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1013,7 +1013,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1090,7 +1090,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1187,7 +1187,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1297,7 +1297,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1380,7 +1380,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1485,7 +1485,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
@@ -1746,145 +1746,6 @@ components:
     BasicAuth:
       type: http
       scheme: basic
-  responseGroups:
-    AuthInterceptor:
-      '401':
-        description: There was an error while evaluating the user's credentials
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              WrongAuthenticationTokenException:
-                $ref: '#/components/examples/WrongAuthenticationTokenException'
-                summary: The JWT payload has an invalid format
-              NotAuthorizedException:
-                $ref: '#/components/examples/NotAuthorizedException'
-                summary: The credentials were incorrect
-              AuthenticationTokenMissingException:
-                $ref: '#/components/examples/AuthenticationTokenMissingException'
-                summary: The Authorization header is empty
-    LicenseQuota:
-      '403':
-        description: License quota exceeded
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              License quota exceeded:
-                $ref: '#/components/examples/LicenseQuotaExceededException'
-    OrganizationInterceptor:
-      '400':
-        description: Organization name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Organization role is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization role is insufficient:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-      '404':
-        description: Organization not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Organization not found:
-                $ref: '#/components/examples/OrganizationNotFoundException'
-    ScopesInterceptor:
-      '403':
-        description: Missing required scope for operation
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Missing required scope for operation:
-                $ref: '#/components/examples/InsufficientAccessRightException'
-    Search:
-      '400':
-        description: Invalid body or search filter
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Invalid body:
-                $ref: '#/components/examples/InvalidBodyException'
-                summary: Invalid body
-              Invalid filter:
-                $ref: '#/components/examples/InvalidFilterException'
-                summary: Invalid search filter
-              Invalid pagination parameters (limit/page):
-                $ref: '#/components/examples/InvalidParameterException'
-                summary: Invalid limit or page
-    SpaceInterceptor:
-      '400':
-        description: Space name is invalid
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space name is invalid:
-                $ref: '#/components/examples/InvalidParameterException'
-      '403':
-        description: Space permission is insufficient
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space permission is insufficient:
-                $ref: '#/components/examples/SpaceInsufficientPermissionException'
-      '404':
-        description: Space not found
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Space not found:
-                $ref: '#/components/examples/SpaceNotFoundException'
-    FileUploadInterceptor:
-      '400':
-        description: No avatar in the request body
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              No avatar in the request body:
-                $ref: '#/components/examples/InvalidBodyException'
-      '413':
-        description: File size too large
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              File size too large:
-                $ref: '#/components/examples/InvalidFileSizeException'
-      '415':
-        description: Invalid file type
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/CustomError'
-            examples:
-              Invalid file type:
-                $ref: '#/components/examples/InvalidFileTypeException'
   schemas:
     AvatarDto:
       properties:
