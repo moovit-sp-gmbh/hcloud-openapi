@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-782
+  version: 0.0.4-783
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -103,7 +103,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -216,7 +216,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -307,7 +307,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -425,7 +425,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -530,7 +530,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -641,7 +641,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -752,7 +752,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -863,7 +863,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1033,7 +1033,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1135,7 +1135,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1225,7 +1225,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1308,7 +1308,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1407,7 +1407,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1494,7 +1494,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -1588,7 +1588,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1695,7 +1695,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1787,7 +1787,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
@@ -1883,7 +1883,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 Space permission is insufficient:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
