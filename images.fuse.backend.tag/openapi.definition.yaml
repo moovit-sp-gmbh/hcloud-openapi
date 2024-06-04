@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-783
+  version: 0.0.4-785
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -105,7 +105,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -218,7 +218,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -309,7 +309,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -427,7 +427,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -532,7 +532,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -643,7 +643,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -754,7 +754,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -865,7 +865,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1035,7 +1035,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1137,7 +1137,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -1227,7 +1227,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1310,7 +1310,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least OWNER:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1409,7 +1409,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1590,7 +1590,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1697,7 +1697,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -1789,7 +1789,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -1885,7 +1885,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
