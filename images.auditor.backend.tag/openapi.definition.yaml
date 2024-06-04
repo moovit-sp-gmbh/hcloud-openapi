@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-330
+  version: 0.0.28-333
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -97,7 +97,7 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Organization role is insufficient:
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Organization not found
