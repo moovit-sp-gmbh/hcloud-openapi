@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1627
+  version: 0.0.107-1628
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1534,7 +1534,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/High5ExecutionPatchLogDto'
+                $ref: '#/components/schemas/High5ExecutionLogDto'
         '401':
           description: Not Authorized
           content:
@@ -7403,6 +7403,9 @@ components:
                 - name: String
                   value: '{"foo":"bar"}'
               endTimestamp: 1692272567734
+          payload:
+            type: JSON
+            data: eyJmb28iOiJiYXIifQ==
     High5ExecutionLogDto:
       properties:
         _id:
@@ -7458,6 +7461,9 @@ components:
               - name: String
                 value: '{"foo":"bar"}'
             endTimestamp: 1692272567734
+        payload:
+          type: JSON
+          data: eyJmb28iOiJiYXIifQ==
     High5ExecutionOutcome:
       enum:
         - PENDING
