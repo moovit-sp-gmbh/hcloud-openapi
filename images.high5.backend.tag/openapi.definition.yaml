@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1628
+  version: 0.0.107-1629
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6601,20 +6601,6 @@ components:
       in: header
       name: Authorization
   schemas:
-    CanvasDimensions:
-      properties:
-        width:
-          type: number
-          description: The width of the SDS canvas
-        height:
-          type: number
-          description: The height of the SDS canvas
-      required:
-        - width
-        - height
-      example:
-        width: 1000
-        height: 700
     CustomError:
       properties:
         code:
@@ -6647,13 +6633,9 @@ components:
         build:
           type: object
           description: Object containing information needed for stream exection
-        canvas:
-          $ref: '#/components/schemas/CanvasDimensions'
-          description: The dimensions of the SDS canvas
       required:
         - name
         - content
-        - canvas
       example:
         name: design-application
         content:
@@ -6744,6 +6726,9 @@ components:
               to:
                 nodeUuid: 111f07fc-aa74-4949-be5b-6d282e91010a
                 connectorUuid: 12fd770c-45d1-42ce-b88b-f463a4d46cf1
+          canvas:
+            width: 1000
+            height: 1000
         build:
           nodes:
             - name: Lower Case Action
@@ -6754,9 +6739,6 @@ components:
                 - name: String
                   value: payload.data
           startNode: 111f07fc-aa74-4949-be5b-6d282e91010a
-        canvas:
-          width: 700
-          height: 500
     DesignDto:
       properties:
         _id:
@@ -6788,9 +6770,6 @@ components:
         designHash:
           type: string
           description: The hash of the design
-        canvas:
-          $ref: '#/components/schemas/CanvasDimensions'
-          description: The dimensions of the SDS canvas
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -6803,7 +6782,6 @@ components:
         - space
         - organization
         - designHash
-        - canvas
         - createDate
       example:
         _id: 63c7e6f0eae82d8001b65310
@@ -6896,6 +6874,9 @@ components:
               to:
                 nodeUuid: 111f07fc-aa74-4949-be5b-6d282e91010a
                 connectorUuid: 12fd770c-45d1-42ce-b88b-f463a4d46cf1
+          canvas:
+            width: 1000
+            height: 1000
         streamId: 63c7e6eceae82d8001b6530b
         event:
           _id: 63c7e6e4eae82d8001b65305
@@ -6913,9 +6894,6 @@ components:
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         designHash: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
-        canvas:
-          width: 700
-          height: 500
         createDate: 1674045168
     DesignOperation:
       anyOf:
