@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1629
+  version: 0.0.107-1631
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -107,7 +107,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -219,7 +219,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -333,7 +333,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -447,7 +447,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -541,7 +541,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -632,7 +632,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -727,7 +727,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -829,7 +829,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -943,7 +943,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least EXECUTE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -1048,7 +1048,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least EXECUTE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -1151,8 +1151,6 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
           content:
@@ -1231,7 +1229,7 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                WebhookNotFoundException:
                   $ref: '#/components/examples/WebhookNotFoundException'
         default:
           description: Unexpected error
@@ -1326,32 +1324,50 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/High5ExecutionLogDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                OrganizationNotFoundException:
+                Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
@@ -1391,32 +1407,59 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/High5ExecutionStatusDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                OrganizationNotFoundException:
+                Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
@@ -1470,26 +1513,66 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/High5ExecutionLogDto'
-        '401':
-          description: Not Authorized
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/streams/logs/{streamLogId}:
@@ -1534,27 +1617,47 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/High5ExecutionLogDto'
-        '401':
-          description: Not Authorized
+                $ref: '#/components/schemas/High5ExecutionPatchLogDto'
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
           content:
@@ -1564,6 +1667,10 @@ paths:
               examples:
                 ExecutionLogNotFoundException:
                   $ref: '#/components/examples/ExecutionLogNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/streams/status/{streamStatusId}:
@@ -1602,26 +1709,46 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/High5ExecutionStatusDto'
-        '401':
-          description: Not Authorized
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
           content:
@@ -1631,6 +1758,10 @@ paths:
               examples:
                 ExecutionLogNotFoundException:
                   $ref: '#/components/examples/ExecutionLogNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/streams/{streamSecret}:
@@ -1686,25 +1817,34 @@ paths:
               examples:
                 StreamExecutionException:
                   $ref: '#/components/examples/StreamExecutionException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
         '404':
           description: Not Found
@@ -1715,6 +1855,8 @@ paths:
               examples:
                 ExecutionLogNotFoundException:
                   $ref: '#/components/examples/ExecutionLogNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/{high5ExecutionId}/cancel:
@@ -1761,25 +1903,38 @@ paths:
               examples:
                 High5ExecutionCancelException:
                   $ref: '#/components/examples/High5ExecutionCancelException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least EXECUTE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -1788,14 +1943,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                StreamNotFoundException:
-                  $ref: '#/components/examples/StreamNotFoundException'
-                SpaceNotFoundException:
-                  $ref: '#/components/examples/SpaceNotFoundException'
                 High5ExecutionNotFoundException:
                   $ref: '#/components/examples/High5ExecutionNotFoundException'
                 High5ExecutionStatusNotFoundException:
                   $ref: '#/components/examples/High5ExecutionStatusNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/join/token:
@@ -2154,7 +2309,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -2244,7 +2399,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -2338,7 +2493,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -2427,7 +2582,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -2525,7 +2680,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -2547,6 +2702,11 @@ paths:
       tags:
         - Node
       summary: Get nodes content as plain text javascript by a secret
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
       parameters:
         - name: orgName
           in: path
@@ -2613,7 +2773,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -2638,7 +2798,7 @@ paths:
       description: |-
 
         Required organization role: MEMBER\
-        Required space permission: MANAGE\
+        Required space permission: READ\
         Required scopes: HIGH5_SPACE_WRITE
       security:
         - BearerAuth: []
@@ -2721,7 +2881,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -2744,7 +2904,7 @@ paths:
       description: |-
 
         Required organization role: MEMBER\
-        Required space permission: MANAGE\
+        Required space permission: WRITE\
         Required scopes: HIGH5_SPACE_WRITE
       security:
         - BearerAuth: []
@@ -2812,7 +2972,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -2846,7 +3006,7 @@ paths:
       description: |-
 
         Required organization role: MEMBER\
-        Required space permission: MANAGE\
+        Required space permission: WRITE\
         Required scopes: HIGH5_SPACE_WRITE
       security:
         - BearerAuth: []
@@ -2920,7 +3080,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -2944,7 +3104,7 @@ paths:
       description: |-
 
         Required organization role: MEMBER\
-        Required space permission: MANAGE\
+        Required space permission: WRITE\
         Required scopes: HIGH5_SPACE_WRITE
       security:
         - BearerAuth: []
@@ -3009,7 +3169,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -3102,7 +3262,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -3233,7 +3393,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -3345,7 +3505,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -3478,7 +3638,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -3598,7 +3758,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -3710,7 +3870,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -3895,7 +4055,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -3976,7 +4136,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least OWNER:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -4161,7 +4321,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -4255,7 +4415,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -4342,7 +4502,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -4436,7 +4596,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -4525,7 +4685,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -4615,7 +4775,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -4723,7 +4883,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -4784,23 +4944,65 @@ paths:
                 items:
                   $ref: '#/components/schemas/SpaceEntityPermissionDto'
         '400':
-          description: Invalid filter
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InvalidFilterException:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
                   $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
         '401':
-          description: Not Authorized exception
+          description: There was an error while evaluating the user's credentials
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/permissions/user:
@@ -4841,34 +5043,56 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
@@ -4911,25 +5135,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/SpaceEntityPermissionDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                SpaceInsufficientPermissionException:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found exception
@@ -4938,10 +5182,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
-                  $ref: '#/components/examples/SpaceNotFoundException'
                 TeamNotFoundException:
                   $ref: '#/components/examples/TeamNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/search:
@@ -5041,7 +5287,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5143,7 +5389,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -5244,7 +5490,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5349,7 +5595,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -5461,7 +5707,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5570,7 +5816,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5686,7 +5932,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5804,7 +6050,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -5918,7 +6164,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -6026,7 +6272,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
@@ -6118,7 +6364,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least READ:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -6218,7 +6464,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -6307,7 +6553,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -6401,7 +6647,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Not Found
@@ -6496,7 +6742,7 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient:
+                Space permission is insufficient. Must be at least WRITE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
                 License quota exceeded:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
@@ -6556,34 +6802,56 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/WebhookLogDto'
-        '401':
-          description: Not Authorized exception
+        '400':
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
                 NotAuthorizedException:
                   $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
         '403':
-          description: Forbidden
+          description: Missing required scope for operation
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceInsufficientPermissionException:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-                InsufficientAccessRightException:
+                Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found exception
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNotFoundException:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
