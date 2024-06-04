@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1823
+  version: 0.0.143-1824
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -89,12 +89,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -182,12 +179,9 @@ paths:
                   $ref: '#/components/examples/LicenseQuotaExceededException'
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: User does not exist
@@ -286,12 +280,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Domain does not exist
@@ -398,12 +389,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Domain does not exist
@@ -448,7 +436,7 @@ paths:
       summary: Get the current license applied to the organization
       description: |-
 
-        Required scopes: IDP_ORGANIZATION_READ
+        Required scopes: IDP_ORGANIZATION_READ\
         Required role: MEMBER
       security:
         - BearerAuth: []
@@ -512,13 +500,8 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
           content:
@@ -536,7 +519,7 @@ paths:
       summary: Update the license of the organization
       description: |-
 
-        Required scopes: IDP_ORGANIZATION_ADMIN
+        Required scopes: IDP_ORGANIZATION_ADMIN\
         Required role: OWNER
       security:
         - BearerAuth: []
@@ -610,12 +593,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least OWNER:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -1421,13 +1401,8 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
           content:
@@ -1516,12 +1491,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -1603,9 +1575,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least OWNER:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -1704,13 +1676,8 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
           content:
@@ -1813,9 +1780,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -1912,9 +1879,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -1937,7 +1904,7 @@ paths:
       summary: Get an organization member by the user ID
       description: |-
 
-        Required organization role: MANAGER\
+        Required organization role: MEMBER\
         Required scopes: IDP_ORGANIZATION_READ
       security:
         - BearerAuth: []
@@ -2009,13 +1976,8 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
           content:
@@ -2034,9 +1996,17 @@ paths:
       tags:
         - Organization.Members
       summary: Set whether or not this user should be considered an execution target
-      description: |-
+      description: >-
+        A member can set its execution target to true or false.
 
-        Required organization role: MEMBER\
+        A manager of an organization can set the execution target of any other
+        member to false, but not to true.
+
+        Only the member itself (when userId is the same as the ID of the request
+        user) can set to true.\
+
+        Required organization role: MEMBER | MANAGER\
+
         Required scopes: IDP_ORGANIZATION_WRITE
       security:
         - BearerAuth: []
@@ -2116,12 +2086,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least MANAGER:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -2205,13 +2172,8 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
           content:
@@ -2320,9 +2282,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least MANAGER:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -2418,9 +2380,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Resource not exists
@@ -2492,8 +2454,6 @@ paths:
                   $ref: '#/components/examples/InvitationAlreadyRespondedException'
                 Invalid invitationId path parameter:
                   $ref: '#/components/examples/InvalidParameterException'
-                Invalid path parameter for organization name:
-                  $ref: '#/components/examples/InvalidParameterException'
         '401':
           description: There was an error while evaluating the user's credentials
           content:
@@ -2530,13 +2490,6 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Resource not exists
           content:
@@ -2548,7 +2501,7 @@ paths:
                   $ref: '#/components/examples/UserNotFoundException'
                 InvitationNotFoundException:
                   $ref: '#/components/examples/InvitationNotFoundException'
-                Organization not found:
+                OrganizationNotFoundException:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
@@ -2632,9 +2585,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -2643,6 +2596,8 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                InvitationNotFoundException:
+                  $ref: '#/components/examples/InvitationNotFoundException'
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         '409':
@@ -2743,9 +2698,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -2849,12 +2804,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -2943,12 +2895,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: User does not exist
@@ -3051,12 +3000,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: oAuthApp does not exist
@@ -3154,12 +3100,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: oAuthApp does not exist
@@ -3258,12 +3201,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: oAuthApp does not exist
@@ -3362,12 +3302,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: oAuthApp does not exist
@@ -3476,12 +3413,9 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: oAuthApp does not exist
@@ -3581,10 +3515,12 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
+                License quota exceeded:
+                  $ref: '#/components/examples/LicenseQuotaExceededException'
         '404':
           description: User does not exist
           content:
@@ -3685,9 +3621,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Team does not exist
@@ -3788,9 +3724,9 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least MANAGER:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -3898,10 +3834,8 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
           content:
@@ -4024,10 +3958,8 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
           content:
@@ -4136,10 +4068,8 @@ paths:
                 Operation disabled for user organizations:
                   $ref: >-
                     #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
           content:
@@ -4406,12 +4336,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not Found
@@ -4526,12 +4453,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -4645,12 +4569,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -4736,12 +4657,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
@@ -4847,12 +4765,9 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Operation disabled for user organizations:
-                  $ref: >-
-                    #/components/examples/UserOrganizationOperationDisabledException
-                Insufficient rights:
+                Not a member of the organization:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role:
+                Insufficient organization role. Must be at least ADMIN:
                   $ref: '#/components/examples/OrganizationInsufficientRoleException'
         '404':
           description: Not found
