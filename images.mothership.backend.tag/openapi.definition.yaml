@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-126
+  version: 0.0.1-131
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -181,6 +181,126 @@ paths:
                   $ref: '#/components/examples/AgentNotFoundException'
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/connect/{email}:
+    delete:
+      tags:
+        - Disconnect
+      summary: Disconnect from a given organization
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: email
+          in: path
+          description: Email of the target representing the connection
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentNotConnectedException:
+                  $ref: '#/components/examples/AgentNotConnectedException'
+                Authentication token is missing:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Agent unauthorized:
+                  $ref: '#/components/examples/NotAuthorizedException'
+        '403':
+          description: Organization role is insufficient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/connect/{email}:
+    delete:
+      tags:
+        - Disconnect
+      summary: Disconnect as a target
+      parameters:
+        - name: email
+          in: path
+          description: Email of the target representing the connection
+          required: true
+          schema:
+            type: string
+      security:
+        - BearerAuth: []
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Authentication token is missing
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Authentication token is missing:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+        '401':
+          description: Unauthorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Agent unauthorized:
+                  $ref: '#/components/examples/NotAuthorizedException'
         '500':
           description: Internal Server Error
           content:
