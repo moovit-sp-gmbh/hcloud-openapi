@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-801
+  version: 0.0.4-804
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1970,6 +1970,9 @@ components:
         lastTriggered:
           type: number
           description: Last triggered date of the cronjob as unix timestamp
+        hmacSettings:
+          $ref: '#/components/schemas/HmacSettingsIncomingDto'
+          description: HMAC settings of the new cronjob
       required:
         - name
         - expression
@@ -2052,6 +2055,9 @@ components:
         lastTriggered:
           type: number
           description: Last triggered date of the cronjob as unix timestamp
+        hmacSettings:
+          $ref: '#/components/schemas/HmacSettingsDto'
+          description: HMAC settings for this cronjob
       required:
         - _id
         - name
@@ -2186,6 +2192,42 @@ components:
         - error
         - message
       example: null
+    HmacSettingsDto:
+      properties:
+        headerName:
+          type: string
+          description: Name of the header containing the HMAC
+        algorithm:
+          $ref: '#/components/schemas/HmacHashingAlgo'
+          description: Hashing algorithm used in the HMAC
+        secret:
+          type: string
+          description: Base64 encoded secret used in the HMAC
+      required:
+        - headerName
+        - algorithm
+        - secret
+      example:
+        headerName: X-HMAC-hcloud
+        algorithm: SHA-256
+        secret: CiXbc2Vao5Bova7onoOpBeyVopvwcsunsfor+HzSSLs=
+    HmacSettingsIncomingDto:
+      properties:
+        headerName:
+          type: string
+          description: Name of the header used in the request sent out by the cronjob
+        secret:
+          type: string
+          description: Base64 encoded secret used in the HMAC
+        algorithm:
+          $ref: '#/components/schemas/HmacHashingAlgo'
+          description: Hashing algorithm used in the HMAC
+      required:
+        - headerName
+        - algorithm
+      example:
+        headerName: X-HMAC-hcloud
+        algorithm: SHA-256
     HttpMethodEnum:
       enum:
         - GET
