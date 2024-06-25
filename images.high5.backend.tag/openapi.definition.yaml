@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1677
+  version: 0.0.107-1686
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
