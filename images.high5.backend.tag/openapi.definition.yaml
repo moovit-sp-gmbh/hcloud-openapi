@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1704
+  version: 0.0.107-1705
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9177,6 +9177,7 @@ components:
           description: Optional security headers
         networkSettings:
           $ref: '#/components/schemas/WebhookNetworkSettingsDto'
+          description: Optional settings to white/black list IP addresses
       required:
         - name
         - target
@@ -9246,6 +9247,9 @@ components:
           description: >-
             Specifies the sub type of the webhook, e.g. the event id for a
             generic webhook
+        networkSettings:
+          $ref: '#/components/schemas/NetworkSettings'
+          description: IP white/black list settings
       required:
         - _id
         - name
@@ -9515,6 +9519,7 @@ components:
             true 'securityHeaders' will be ignored
         networkSettings:
           $ref: '#/components/schemas/WebhookNetworkSettingsDto'
+          description: Optional settings to white/black list IP addresses
       example:
         name: webhook-blue
         target: account@moovit-sp.com
