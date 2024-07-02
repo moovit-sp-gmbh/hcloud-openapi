@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1705
+  version: 0.0.107-1706
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8345,6 +8345,9 @@ components:
         value:
           type: string
           description: Secret value.
+        description:
+          type: string
+          description: Secret description.
         encrypted:
           type: boolean
           description: >-
@@ -8367,6 +8370,9 @@ components:
         value:
           type: string
           description: Secret value. Only present if encrypted is false.
+        description:
+          type: string
+          description: Secret description
         encrypted:
           type: boolean
           description: >-
@@ -8401,6 +8407,9 @@ components:
         value:
           type: string
           description: Secret value.
+        description:
+          type: string
+          description: Secret description.
         encrypted:
           type: boolean
           description: >-
