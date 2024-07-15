@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1910
+  version: 0.0.143-1913
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
