@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1748
+  version: 0.0.107-1751
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7999,6 +7999,18 @@ components:
         event:
           _id: 63c7e6e4eae82d8001b65305
           name: helmut4.webhook.test
+    IncomingWebhookNetworkSettingsDto:
+      properties:
+        addressWhiteList:
+          type: array
+          items:
+            type: string
+          description: List of address to white list
+        addressBlackList:
+          type: array
+          items:
+            type: string
+          description: List of address to black list
     JoinTokenDto:
       properties:
         _id:
@@ -9185,7 +9197,7 @@ components:
             $ref: '#/components/schemas/SecurityHeaderDto'
           description: Optional security headers
         networkSettings:
-          $ref: '#/components/schemas/WebhookNetworkSettingsDto'
+          $ref: '#/components/schemas/IncomingWebhookNetworkSettingsDto'
           description: Optional settings to white/black list IP addresses
       required:
         - name
@@ -9257,7 +9269,7 @@ components:
             Specifies the sub type of the webhook, e.g. the event id for a
             generic webhook
         networkSettings:
-          $ref: '#/components/schemas/NetworkSettings'
+          $ref: '#/components/schemas/WebhookNetworkSettingsDto'
           description: IP white/black list settings
       required:
         - _id
@@ -9471,12 +9483,12 @@ components:
           type: array
           items:
             type: string
-          description: List of address to white list
+          description: List of addresses to white list
         addressBlackList:
           type: array
           items:
             type: string
-          description: List of address to black list
+          description: List of addresses to black list
     WebhookType:
       enum:
         - EVENT
@@ -9527,7 +9539,7 @@ components:
             Optional parameter to delete existing security header settings. If
             true 'securityHeaders' will be ignored
         networkSettings:
-          $ref: '#/components/schemas/WebhookNetworkSettingsDto'
+          $ref: '#/components/schemas/IncomingWebhookNetworkSettingsDto'
           description: Optional settings to white/black list IP addresses
       example:
         name: webhook-blue
