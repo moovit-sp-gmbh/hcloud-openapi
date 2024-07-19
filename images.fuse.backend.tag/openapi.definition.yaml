@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-839
+  version: 0.0.4-840
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2192,6 +2192,14 @@ components:
         - error
         - message
       example: null
+    HmacHashingAlgo:
+      enum:
+        - SHA-1
+        - SHA-256
+      type: string
+      description: |
+        * SHA-1 - SHA1 hashing algorithm
+        * SHA-256 - SHA256 hashing algorithm
     HmacSettingsDto:
       properties:
         headerName:
