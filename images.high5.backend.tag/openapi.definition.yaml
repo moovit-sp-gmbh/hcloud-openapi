@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1783
+  version: 0.0.107-1788
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7755,9 +7755,11 @@ components:
                 - name: String
                   originalValue: '{{payload.data}}'
                   value: '{"FOO":"BAR"}'
+                  type: STRING
               outputs:
                 - name: String
                   value: '{"foo":"bar"}'
+                  type: STRING
     High5ExecutionPatchLogDto:
       properties:
         streamId:
@@ -7784,9 +7786,11 @@ components:
               - name: String
                 originalValue: '{{payload.data}}'
                 value: '{"FOO":"BAR"}'
+                type: STRING
             outputs:
               - name: String
                 value: '{"foo":"bar"}'
+                type: STRING
     High5ExecutionPatchStatusDto:
       properties:
         streamId:
