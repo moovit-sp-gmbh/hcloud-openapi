@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1960
+  version: 0.0.143-1961
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7146,9 +7146,6 @@ components:
         captcha:
           type: string
           description: Valid google reCAPTCHAV2
-        regionId:
-          type: string
-          description: Define the region the user is registered in.
         targetUrl:
           type: string
           description: >-
@@ -7160,7 +7157,6 @@ components:
       example:
         email: hmc@helmut.cloud
         captcha: captcha
-        regionId: eu-central-1
         targetUrl: app.helmut.cloud
     FullSAMLProviderDto:
       properties:
@@ -8833,9 +8829,6 @@ components:
         timezone:
           type: string
           description: Define the users timezone
-        regionId:
-          type: string
-          description: Define the region the user should be added to
         targetUrl:
           type: string
           description: >-
@@ -8854,16 +8847,12 @@ components:
         captcha: captcha
         language: de
         timezone: Europe/Berlin
-        regionId: eu-central-1
         targetUrl: app.helmut.cloud
     UserResendRegistrationEmailDto:
       properties:
         email:
           type: string
           description: Email of the user
-        regionId:
-          type: string
-          description: Define the region the user should be added to
         targetUrl:
           type: string
           description: >-
@@ -8873,7 +8862,6 @@ components:
         - email
       example:
         email: hmc@helmut.cloud
-        regionId: eu-central-1
         targetUrl: app.helmut.cloud
     UserResetPasswordDto:
       properties:
