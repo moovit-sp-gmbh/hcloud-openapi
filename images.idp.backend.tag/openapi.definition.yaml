@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1956
+  version: 0.0.143-1960
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1097,6 +1097,106 @@ paths:
           schema:
             type: string
       responses:
+        '302':
+          description: >-
+            Redirects to the redirect URL with the authorization code in the
+            query string
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/login/oauth/info:
+    get:
+      tags:
+        - Login.OAuth
+      summary: OAuth Preflight Info Endpoint
+      description: |-
+        This endpoint servers as a pseudo **authorize endpoint**.
+                     It allows obtaining information about an OAuth App if the user has not given permission to it yet or
+                     it will redirect like the **authorize endpoint** if the user has already consented to the scopes specified.\
+        Required scopes: HCLOUD_FULL
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: response_type
+          in: query
+          description: >-
+            Tells the authorization server which grant to execute. Currently
+            only "code" is supported.
+          required: false
+          schema:
+            type: string
+        - name: client_id
+          in: query
+          description: The ID of the application that is asking for authorization
+          required: false
+          schema:
+            type: string
+        - name: redirect_uri
+          in: query
+          description: A successful response will redirect to this URI
+          required: false
+          schema:
+            type: string
+        - name: scope
+          in: query
+          description: >-
+            Space-delimited list of hcloud permissions that the application
+            requires as well as openId if required.
+          required: false
+          schema:
+            type: string
+        - name: state
+          in: query
+          description: >-
+            Optional value, used for security purposes (XSRF) or to store
+            non-sensitive information between requests.
+                                           If this request parameter is set in the request, then it is returned to the application as part of the redirect_uri with no changes.
+          required: false
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OAuth app. Case where the user has not yet consented to every scope
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthAppDto'
         '302':
           description: >-
             Redirects to the redirect URL with the authorization code in the
