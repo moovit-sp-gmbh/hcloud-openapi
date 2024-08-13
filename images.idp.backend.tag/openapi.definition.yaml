@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1961
+  version: 0.0.143-1962
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -413,20 +413,6 @@ paths:
               examples:
                 InternalServerErrorException:
                   $ref: '#/components/examples/InternalServerErrorException'
-        default:
-          description: Unexpected error
-  /v1/config:
-    get:
-      tags:
-        - Config
-      summary: Get the public config
-      responses:
-        '200':
-          description: Config object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/PublicConfig'
         default:
           description: Unexpected error
   /v1/org/{orgName}/license:
@@ -9115,48 +9101,6 @@ components:
         used: false
         createDate: 1673527923628
         modifyDate: 1673527923628
-    PublicConfig:
-      properties:
-        reCAPTCHA:
-          type: string
-          description: The re captcha info
-        regions:
-          type: array
-          items:
-            $ref: '#/components/schemas/Region'
-          description: The region definitions
-        oidcProviders:
-          type: array
-          items:
-            type: string
-          description: The available OpenID Connect providers
-        umami:
-          description: Information related to the Umami service
-          type: object
-          properties:
-            id:
-              description: Umami ID
-              type: string
-      required:
-        - reCAPTCHA
-        - regions
-        - oidcProviders
-        - umami
-      example:
-        reCAPTCHA: reCAPTCHA string like 6LfgyeIjAAAAAFRVDd_NrWfTh7bBzKKz1e7AVAQ5
-        regions:
-          - name: EU-West
-            id: eu-west
-            server: https://eu-west.helmut.cloud
-          - name: NA-Central
-            id: na-central
-            server: https://na-central.helmut.cloud
-        umami:
-          id: 1373386c-838b-4866-b9d0-3fe901cc64a9
-        oidcProviders:
-          - github
-          - google
-          - frameio
     ReducedOrganization:
       properties:
         _id:
