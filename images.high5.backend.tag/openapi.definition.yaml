@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1792
+  version: 0.0.107-1797
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -960,6 +960,15 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
                 Stream not found:
                   $ref: '#/components/examples/StreamNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ExecutionTargetNotMemberException:
+                  $ref: '#/components/examples/ExecutionTargetNotMemberException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execute/event/name/{eventName}:
@@ -1065,6 +1074,15 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
                 Event not found:
                   $ref: '#/components/examples/EventNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ExecutionTargetNotMemberException:
+                  $ref: '#/components/examples/ExecutionTargetNotMemberException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execute/stream/id/{streamId}/package/{secret}:
@@ -1231,6 +1249,15 @@ paths:
               examples:
                 WebhookNotFoundException:
                   $ref: '#/components/examples/WebhookNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ExecutionTargetNotMemberException:
+                  $ref: '#/components/examples/ExecutionTargetNotMemberException'
         default:
           description: Unexpected error
     get:
@@ -10182,6 +10209,11 @@ components:
         code: 002.001.0003
         error: wrong.auth.token
         message: Your authentication token is invalid
+    ExecutionTargetNotMemberException:
+      value:
+        code: 002.015.0004
+        error: execution.target.not.member
+        message: Requested target {{target}} is not a member of the organization
   parameters:
     LimitParameter:
       in: query
