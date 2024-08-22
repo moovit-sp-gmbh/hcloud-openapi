@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-1970
+  version: 0.0.143-1979
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5191,7 +5191,9 @@ paths:
     get:
       tags:
         - User
-      summary: Authorize user against nats message bus server
+      summary: >-
+        Get NATS permissions of the user (which subjects he is allowed to
+        publish and subscribe to)
       description: |-
 
         Required scopes: HCLOUD_FULL
