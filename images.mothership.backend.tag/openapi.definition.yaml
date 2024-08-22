@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-173
+  version: 0.0.1-179
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -525,6 +525,9 @@ components:
         modifyDate:
           type: number
           description: Date of the agent's last communication to the mothership
+        bundleVersion:
+          type: string
+          description: Version of the agent bundle
       required:
         - _id
         - uuid
@@ -601,6 +604,9 @@ components:
         nickname:
           type: string
           description: Nickname for the agent
+        bundleVersion:
+          type: string
+          description: Version of the agent bundle
       required:
         - cpuUtilization
         - memoryUsed
@@ -611,6 +617,7 @@ components:
         memoryUsed: 34007285760
         uptime: 288273
         status: BUSY
+        bundleVersion: 1.0.0
     AgentRegisterDto:
       properties:
         uuid:
@@ -893,6 +900,9 @@ components:
         modifyDate:
           type: number
           description: Date of the agent's last communication to the mothership
+        bundleVersion:
+          type: string
+          description: Version of the agent bundle
         targetEmail:
           type: string
           description: Email address that can be used as a target for stream execution
