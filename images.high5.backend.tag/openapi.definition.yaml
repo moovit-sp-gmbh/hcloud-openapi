@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1806
+  version: 0.0.107-1813
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7030,6 +7030,9 @@ components:
               uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
               path: file://./wave-nodes/src/nodes/actions/string/LowerCaseAction.js
               bypass: false
+              catalog:
+                url: https://example.org/catalog
+                version: 1.0.0
               inputs:
                 - name: String
                   value: payload.data
@@ -8902,85 +8905,27 @@ components:
           nodes:
             - name: Trigger
               uuid: '0'
-              kind: NODE
-              type: TRIGGER
-              color: '#acacac'
-              connectors:
-                - io: OUTPUT
-                  name: Trigger
-                  uuid: '0'
-                  type: SUCCESS
-                  description: ''
-                - io: OUTPUT
-                  name: Global fail
-                  uuid: '1'
-                  type: FAIL
-                  description: ''
-              coords:
-                currentX: 20
-                currentY: 20
-                initialX: 20
-                initialY: 20
-                xOffset: 20
-                yOffset: 20
+              bypass: false
+              startNode: true
+              catalog:
+                url: https://example.org/catalog
+                version: 1.0.0
               inputs:
                 - name: Event
                   value: sevtest.circuit
-                  type: STRING_READONLY
-                  description: The trigger acts as a starting point for this stream
-                  uuid: '0'
-                  example: ''
-              version:
-                major: 1
-                minor: 0
-                patch: 0
-                changelog:
-                  - Add global fail output
               path: ''
-              description: The starting point for this stream
             - name: Lower Case Action
               uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
-              kind: NODE
-              type: ACTION
-              color: '#40b5a1'
-              connectors:
-                - name: Input
-                  uuid: 12fd770c-45d1-42ce-b88b-f463a4d46cf1
-                  io: INPUT
-                  type: TRIGGER
-                  description: ''
-                - name: Success
-                  uuid: 118852bc-97c6-4283-adf5-17aea8171c47
-                  io: OUTPUT
-                  type: SUCCESS
-                  description: ''
-                - name: Fail
-                  uuid: 1b8a6fa1-695c-4178-9008-4566452d2610
-                  io: OUTPUT
-                  type: FAIL
-                  description: ''
+              onSuccess: 118852bc-97c6-4283-adf5-17aea8171c47
+              onFail: 1b8a6fa1-695c-4178-9008-4566452d2610
+              bypass: false
+              catalog:
+                url: https://example.org/catalog
+                version: 1.0.0
               inputs:
-                - uuid: dcad1be7-fa3d-4f09-9183-d7f29e3a4d98
-                  name: String
-                  description: The string to lower case
-                  type: STRING
+                - name: String
                   value: payload.data
-                  example: FOO-BAR
-                  mandatory: true
               path: file://./wave-nodes/src/nodes/actions/string/LowerCaseAction.js
-              description: Transform a string to lower case
-              version:
-                major: 1
-                minor: 0
-                patch: 0
-                changelog: []
-              coords:
-                currentX: 326
-                currentY: 319
-                initialX: 326
-                initialY: 319
-                xOffset: 326
-                yOffset: 319
           startNode: 111f07fc-aa74-4949-be5b-6d282e91010a
         payload:
           type: JSON
