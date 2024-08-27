@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1835
+  version: 0.0.107-1836
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4729,6 +4729,7 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/wave/catalog/{catalogId}:
     delete:
       tags:
         - Space.Wave
@@ -4754,9 +4755,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: catalogUrl
-          in: query
-          description: Url of the catalog
+        - name: catalogId
+          in: path
+          description: Id of the catalog
           required: true
           schema:
             type: string
