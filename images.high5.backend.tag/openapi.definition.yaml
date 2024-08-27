@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1833
+  version: 0.0.107-1834
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4755,9 +4755,9 @@ paths:
           required: true
           schema:
             type: string
-        - name: catalogId
+        - name: catalogUrl
           in: path
-          description: Id of the catalog
+          description: Url of the catalog
           required: true
           schema:
             type: string
