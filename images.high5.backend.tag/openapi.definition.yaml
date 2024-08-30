@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1837
+  version: 0.0.107-1843
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -348,6 +348,108 @@ paths:
                   $ref: '#/components/examples/DesignNodeNotFoundException'
                 DesignLinkNotFoundException:
                   $ref: '#/components/examples/DesignLinkNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Event not found:
+                  $ref: '#/components/examples/EventNotFoundException'
+                Stream not found:
+                  $ref: '#/components/examples/StreamNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/{streamId}/design/publish:
+    put:
+      tags:
+        - Design
+      summary: Publish the design of a stream
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: orgName
+          in: path
+          description: Name of the organization
+          required: true
+          schema:
+            type: string
+        - name: spaceName
+          in: path
+          description: Name of the space
+          required: true
+          schema:
+            type: string
+        - name: eventName
+          in: path
+          description: Name of the event
+          required: true
+          schema:
+            type: string
+        - name: streamId
+          in: path
+          description: ID of the stream
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid event name:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid stream ID:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
@@ -6927,7 +7029,7 @@ components:
             SDS
         build:
           type: object
-          description: Object containing information needed for stream exection
+          description: Deprecated. This property will be ignored.
       required:
         - name
         - content
@@ -6940,6 +7042,7 @@ components:
               kind: NODE
               type: TRIGGER
               color: '#acacac'
+              catalog: {}
               connectors:
                 - io: OUTPUT
                   name: Trigger
@@ -6977,6 +7080,7 @@ components:
               uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
               kind: NODE
               color: '#40b5a1'
+              catalog: {}
               connectors:
                 - name: Input
                   uuid: 12fd770c-45d1-42ce-b88b-f463a4d46cf1
@@ -7024,19 +7128,6 @@ components:
           canvas:
             width: 1000
             height: 1000
-        build:
-          nodes:
-            - name: Lower Case Action
-              uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
-              path: file://./wave-nodes/src/nodes/actions/string/LowerCaseAction.js
-              bypass: false
-              catalog:
-                url: https://example.org/catalog
-                version: 1.0.0
-              inputs:
-                - name: String
-                  value: payload.data
-          startNode: 111f07fc-aa74-4949-be5b-6d282e91010a
     DesignDto:
       properties:
         _id:
@@ -7091,6 +7182,7 @@ components:
               kind: NODE
               type: TRIGGER
               color: '#acacac'
+              catalog: {}
               connectors:
                 - io: OUTPUT
                   name: Trigger
@@ -7128,6 +7220,7 @@ components:
               uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
               kind: NODE
               color: '#40b5a1'
+              catalog: {}
               connectors:
                 - name: Input
                   uuid: 12fd770c-45d1-42ce-b88b-f463a4d46cf1
@@ -7212,6 +7305,13 @@ components:
                   type: string
                 description:
                   type: string
+                catalog:
+                  type: object
+                  properties:
+                    version:
+                      type: string
+                    url:
+                      type: string
                 customDescription:
                   type: string
                 kind:
@@ -7365,6 +7465,7 @@ components:
               required:
                 - name
                 - description
+                - catalog
                 - kind
                 - color
                 - version
