@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-179
+  version: 0.0.1-185
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -528,6 +528,9 @@ components:
         bundleVersion:
           type: string
           description: Version of the agent bundle
+        installerVersion:
+          type: string
+          description: Version of the agent installer
       required:
         - _id
         - uuid
@@ -607,6 +610,9 @@ components:
         bundleVersion:
           type: string
           description: Version of the agent bundle
+        installerVersion:
+          type: string
+          description: Version of the agent installer
       required:
         - cpuUtilization
         - memoryUsed
@@ -903,6 +909,9 @@ components:
         bundleVersion:
           type: string
           description: Version of the agent bundle
+        installerVersion:
+          type: string
+          description: Version of the agent installer
         targetEmail:
           type: string
           description: Email address that can be used as a target for stream execution
