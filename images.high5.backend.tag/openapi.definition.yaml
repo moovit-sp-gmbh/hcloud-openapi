@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1848
+  version: 0.0.107-1859
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -397,8 +397,8 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OK
+        '204':
+          description: No Content
         '400':
           description: Organization name is invalid
           content:
