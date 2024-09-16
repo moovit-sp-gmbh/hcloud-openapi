@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-185
+  version: 0.0.1-187
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -613,6 +613,9 @@ components:
         installerVersion:
           type: string
           description: Version of the agent installer
+        ip:
+          type: string
+          description: IP of the agent. If omitted will be derived from the network stack.
       required:
         - cpuUtilization
         - memoryUsed
