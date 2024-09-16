@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2004
+  version: 0.0.143-2015
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1252,25 +1252,6 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OAuthTokenEndpointErrorResponseDto'
-              examples:
-                OAuthTokenEndpointInvalidGrantErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointInvalidGrantErrorResponseDto
-                OAuthTokenEndpointInvalidClientErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointInvalidClientErrorResponseDto
-                OAuthTokenEndpointInvalidScopeErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointInvalidScopeErrorResponseDto
-                OAuthTokenEndpointInvalidRequestErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointInvalidRequestErrorResponseDto
-                OAuthTokenEndpointUnsupportedGrantErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointUnsupportedGrantErrorResponseDto
-                OAuthTokenEndpointUnauthorizedClientErrorResponseDto:
-                  $ref: >-
-                    #/components/examples/OAuthTokenEndpointUnauthorizedClientErrorResponseDto
         '415':
           description: Unsupported Media Type exception
           content:
