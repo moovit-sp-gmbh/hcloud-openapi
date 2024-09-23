@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1876
+  version: 0.0.107-1879
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8832,6 +8832,9 @@ components:
         url:
           type: string
           description: Url to the catalog
+        minimumEngineVersion:
+          type: string
+          description: Minimum engine version the catalog can run against
       required:
         - version
         - url
