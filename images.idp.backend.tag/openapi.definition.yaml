@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2026
+  version: 0.0.143-2031
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5869,6 +5869,71 @@ paths:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
         default:
           description: Unexpected error
+  /v1/user/settings/general/lastVisit:
+    patch:
+      tags:
+        - User.Settings.General
+      summary: Patch the last view and / or last URL of the logged in user
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GeneralSettingsLastVisitPatchDto'
+      responses:
+        '200':
+          description: User's updated settings
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/GeneralSettingsDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+        default:
+          description: Unexpected error
   /v1/user/settings/notifications:
     get:
       tags:
@@ -7205,6 +7270,17 @@ components:
         dateFormat: YYYY-MM-DD hh:mm:ss a
         theme: SYSTEM_DEFAULT
         entrypoint: HIGH5
+    GeneralSettingsLastVisitPatchDto:
+      properties:
+        lastUrl:
+          type: string
+          description: Last URL visited by the user
+        lastView:
+          $ref: '#/components/schemas/Views'
+          description: Last view the user was in
+      example:
+        lastUrl: /account/settings
+        lastView: /account
     GeneralSettingsPatchDto:
       properties:
         lastUrl:
