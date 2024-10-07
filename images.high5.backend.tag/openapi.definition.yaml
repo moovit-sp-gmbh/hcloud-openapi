@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1905
+  version: 0.0.107-1907
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6998,6 +6998,15 @@ components:
       in: header
       name: Authorization
   schemas:
+    AvatarDto:
+      properties:
+        url:
+          type: string
+          description: URL to the avatar
+      required:
+        - url
+      example:
+        url: https://pub-1e0d69034e2942f79ef26dae05343340.r2.dev/image.webp
     CustomError:
       properties:
         code:
