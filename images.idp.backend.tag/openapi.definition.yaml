@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2031
+  version: 0.0.143-2043
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7039,6 +7039,15 @@ components:
       type: http
       scheme: basic
   schemas:
+    AvatarDto:
+      properties:
+        url:
+          type: string
+          description: URL to the avatar
+      required:
+        - url
+      example:
+        url: https://pub-1e0d69034e2942f79ef26dae05343340.r2.dev/image.webp
     ConnectionSettingsDto:
       properties:
         connections:
