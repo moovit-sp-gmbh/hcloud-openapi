@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1918
+  version: 0.0.107-1919
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7889,6 +7889,7 @@ components:
               progress: 100
               message: Successfully converted input to lower case
           message: Execution successful
+          startDate: 1727351468.96689
         high5ExecutionPatchLog:
           streamId: 63d25fd476a3b9de98d49ea3
           nodeResults:
@@ -7957,11 +7958,18 @@ components:
         message:
           type: string
           description: Optional message describing the status and outcome
+        startDate:
+          type: number
+          description: Start date of execution
+        endDate:
+          type: number
+          description: End date of execution
       required:
         - streamId
         - state
         - outcome
         - runningNodes
+        - startDate
       example:
         streamId: 63d25fd476a3b9de98d49ea3
         state: QUEUED
@@ -7972,6 +7980,7 @@ components:
             progress: 100
             message: Successfully converted input to lower case
         message: Execution successful
+        startDate: 1727351468.96689
     High5ExecutionPayload:
       properties:
         type:
