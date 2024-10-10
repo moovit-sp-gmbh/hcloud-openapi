@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2043
+  version: 0.0.143-2046
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2434,12 +2434,14 @@ paths:
                   $ref: '#/components/examples/AuthenticationTokenMissingException'
                   summary: The Authorization header is empty
         '403':
-          description: Basic auth cannot be used because 2FA is enabled
+          description: Forbidden
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                OrganizationInsufficientRoleException:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
                 Missing required scope for operation:
