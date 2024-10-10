@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-387
+  version: 0.0.28-391
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -122,6 +122,9 @@ components:
   schemas:
     AuditLogDtoWithOrgName:
       properties:
+        _id:
+          type: string
+          description: Unique identifier of this log
         origin:
           $ref: '#/components/schemas/Origin'
           description: Origin of the log (idp, high5, auditor, ...)
@@ -155,6 +158,7 @@ components:
           type: string
           description: Ip of the client of the initial request
       required:
+        - _id
         - origin
         - level
         - organizationName
@@ -164,6 +168,7 @@ components:
         - correlationId
         - requestorIp
       example:
+        _id: 63cff8cbf4d8003cdf93d532
         origin: idp
         level: debug
         organizationName: OrgName
