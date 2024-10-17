@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1923
+  version: 0.0.107-1932
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7969,7 +7969,6 @@ components:
         - state
         - outcome
         - runningNodes
-        - startDate
       example:
         streamId: 63d25fd476a3b9de98d49ea3
         state: QUEUED
