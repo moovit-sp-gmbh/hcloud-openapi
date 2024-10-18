@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1941
+  version: 0.0.107-1943
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8890,12 +8890,16 @@ components:
         url:
           type: string
           description: Url to the engine
+        latest:
+          type: boolean
+          description: Flag to use latest engine. Will be auto updated
       required:
         - version
         - url
       example:
         version: 0.0.14
         url: https://wave.s3.helmut.cloud/engines/default/0.0.14/Engine_v0.0.14.tar
+        latest: false
     SpaceTeamPermissionDto:
       properties:
         teamName:
@@ -9259,6 +9263,9 @@ components:
         md5:
           type: string
           description: Md5 hash of the file
+        latest:
+          type: boolean
+          description: Latest flag
       required:
         - _id
         - version
