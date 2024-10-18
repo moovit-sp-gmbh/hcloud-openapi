@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2063
+  version: 0.0.143-2074
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1132,7 +1132,7 @@ paths:
       summary: OAuth Preflight Info Endpoint
       description: |-
         This endpoint servers as a pseudo **authorize endpoint**.
-                     It allows obtaining information about an OAuth App if the user has not given permission to it yet or
+                     It will return an error if the user has not given permission to it yet or
                      it will redirect like the **authorize endpoint** if the user has already consented to the scopes specified.\
         Required scopes: HCLOUD_FULL
       security:
@@ -1177,23 +1177,19 @@ paths:
           schema:
             type: string
       responses:
-        '200':
-          description: OAuth app. Case where the user has not yet consented to every scope
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OAuthAppDto'
         '302':
           description: >-
             Redirects to the redirect URL with the authorization code in the
             query string
         '401':
-          description: There was an error while evaluating the user's credentials
+          description: Unauthorized
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                OAuthConsentNotGivenException:
+                  $ref: '#/components/examples/OAuthConsentNotGivenException'
                 WrongAuthenticationTokenException:
                   $ref: '#/components/examples/WrongAuthenticationTokenException'
                   summary: The JWT payload has an invalid format
@@ -1261,6 +1257,75 @@ paths:
               examples:
                 OAuthInvalidContentTypeException:
                   $ref: '#/components/examples/OAuthInvalidContentTypeException'
+        default:
+          description: Unexpected error
+  /v1/login/oauth/app/{clientId}:
+    get:
+      tags:
+        - Login.OAuth
+      summary: OAuth App public info by clientId
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: clientId
+          in: path
+          description: Client ID of the OAuth application
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthAppWithConsentDto'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: OAuth app does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthAppNotFoundException:
+                  $ref: '#/components/examples/OAuthAppNotFoundException'
         default:
           description: Unexpected error
   /v1/org:
@@ -7696,7 +7761,6 @@ components:
         - avatarUrl
         - createDate
         - modifyDate
-        - scopes
       example:
         _id: 63ca7c7683160ed3ad9162ff
         name: SevTest
