@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1953
+  version: 0.0.107-1966
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -34,30 +34,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       responses:
         '200':
           description: Design object
@@ -141,30 +121,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -252,30 +212,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -372,30 +312,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       responses:
         '204':
           description: No Content
@@ -474,18 +394,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -578,24 +488,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       responses:
         '200':
           description: Event object
@@ -673,24 +568,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       responses:
         '204':
           description: No content
@@ -765,18 +645,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -858,24 +728,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       requestBody:
         content:
           application/json:
@@ -971,24 +826,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -1087,24 +927,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       requestBody:
         content:
           application/json:
@@ -1196,24 +1021,9 @@ paths:
 
         Required organization role: MEMBER
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/StreamID'
         - name: secret
           in: path
           description: >-
@@ -1301,24 +1111,9 @@ paths:
 
         objects.
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: webhookToken
-          in: path
-          description: Last path segment of the webhook URL (128 char long hex string)
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/WebhookToken'
       responses:
         '204':
           description: No content
@@ -1372,24 +1167,9 @@ paths:
 
         objects.
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: webhookToken
-          in: path
-          description: Last path segment of the webhook URL (128 char long hex string)
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/WebhookToken'
         - name: challenge
           in: query
           description: >-
@@ -1420,12 +1200,7 @@ paths:
         Required organization role: MEMBER\
         Required Scope: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
         - name: payload
@@ -1510,12 +1285,7 @@ paths:
         Required organization role: MEMBER\
         Required Scope: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -1603,18 +1373,8 @@ paths:
         Required space permission: READ\
         Required Scope: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: payload
           in: query
           description: Optional parameter to include the payload in the response
@@ -1715,18 +1475,8 @@ paths:
         Required space permission: READ\
         Required Scope: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: streamLogId
           in: path
           description: ID of the execution log
@@ -1813,18 +1563,8 @@ paths:
         Required space permission: READ\
         Required Scope: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: streamStatusId
           in: path
           description: ID of the execution result
@@ -1908,18 +1648,8 @@ paths:
 
         Required Scope: HIGH5_SPACE_EXECUTE
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: streamSecret
           in: path
           description: >-
@@ -2002,18 +1732,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: high5ExecutionId
           in: path
           description: ID of the execution
@@ -2098,12 +1818,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -2178,12 +1893,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       responses:
@@ -2257,12 +1967,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: tokenId
           in: path
           description: ID of the token
@@ -2375,18 +2080,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       responses:
@@ -2466,18 +2161,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -2559,18 +2244,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: nodeId
           in: path
           description: ID of the node
@@ -2652,18 +2327,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: nodeId
           in: path
           description: ID of the node
@@ -2741,18 +2406,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: nodeId
           in: path
           description: ID of the node
@@ -2837,18 +2492,8 @@ paths:
         Required space permission: READ\
         Required scopes: HIGH5_SPACE_READ
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: secret
           in: path
           description: Secret that got generated on node creation
@@ -2933,18 +2578,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -3039,18 +2674,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -3141,24 +2766,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: secretKey
-          in: path
-          description: Key of the secret
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/SecretKey'
       requestBody:
         content:
           application/json:
@@ -3239,24 +2849,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: secretKey
-          in: path
-          description: Key of the secret
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/SecretKey'
       responses:
         '204':
           description: No content
@@ -3328,24 +2923,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: secretKey
-          in: path
-          description: Key of the secret
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/SecretKey'
       responses:
         '200':
           description: Secret details
@@ -3422,30 +3002,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
         - name: content
           in: query
           description: >-
@@ -3555,30 +3115,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -3680,30 +3220,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
         - name: snapshotId
           in: path
           description: ID of the snapshot
@@ -3810,30 +3330,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
         - name: snapshotId
           in: path
           description: ID of the snapshot
@@ -3922,30 +3422,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
         - name: snapshotId
           in: path
           description: ID of the snapshot
@@ -4035,12 +3515,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -4127,18 +3602,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '200':
           description: Space object
@@ -4212,18 +3677,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '204':
           description: No content
@@ -4293,12 +3748,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -4385,18 +3835,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -4481,18 +3921,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -4574,18 +4004,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '200':
           description: Wave Engine
@@ -4662,18 +4082,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -4755,18 +4165,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '200':
           description: Wave catalogs
@@ -4845,18 +4245,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: catalogId
           in: path
           description: Id of the catalog
@@ -4937,18 +4327,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -5044,18 +4424,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -5148,18 +4518,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -5239,18 +4599,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -5333,24 +4683,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -5447,30 +4782,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       responses:
         '200':
           description: Stream object
@@ -5550,30 +4865,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       responses:
         '204':
           description: No content
@@ -5654,24 +4949,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       requestBody:
         content:
           application/json:
@@ -5757,24 +5037,9 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
       requestBody:
         description: >-
           Array of streamPatchOrder objects. All streams belonging to the event
@@ -5867,30 +5132,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -5978,30 +5223,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -6098,30 +5323,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -6212,30 +5417,10 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: eventName
-          in: path
-          description: Name of the event
-          required: true
-          schema:
-            type: string
-        - name: streamId
-          in: path
-          description: ID of the stream
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/EventName'
+        - $ref: '#/components/parameters/StreamID'
       requestBody:
         content:
           application/json:
@@ -6326,18 +5511,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -6430,18 +5605,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: webhookId
           in: path
           description: ID of the webhook
@@ -6523,18 +5688,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: webhookId
           in: path
           description: ID of the webhook
@@ -6623,18 +5778,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: webhookId
           in: path
           description: ID of the webhook
@@ -6713,18 +5858,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: webhookId
           in: path
           description: ID of the webhook
@@ -6807,18 +5942,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -6902,18 +6027,8 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
         - name: webhookId
           in: path
           description: ID of the webhook
@@ -7030,7 +6145,9 @@ components:
       properties:
         name:
           type: string
-          description: Name of the design
+          description: >-
+            Name of the design (only alphabet characters, hyphens and
+            underscores are allowed, it should contain between 1 and 64 symbols)
         content:
           type: object
           description: >-
@@ -7141,10 +6258,10 @@ components:
       properties:
         _id:
           type: string
-          description: The mongo database id of the design object
+          description: Database id of the design object
         name:
           type: string
-          description: The name of the design
+          description: Name of the design
         content:
           type: object
           description: >-
@@ -7658,7 +6775,10 @@ components:
       properties:
         name:
           type: string
-          description: The name of the event
+          description: >-
+            Name of the event (only alphanumeric characters, hyphens,
+            underscores and periods are allowed, it should contain between 1 and
+            128 symbols)
       required:
         - name
       example:
@@ -7667,19 +6787,19 @@ components:
       properties:
         _id:
           type: string
-          description: The events mongo database id
+          description: Database object id of the event
         name:
           type: string
-          description: The events name
+          description: Name of the event
         space:
           $ref: '#/components/schemas/ReducedSpace'
           description: Space the event belongs to
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the event belongs to
+          description: Organization the event belongs to
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the event
+          description: Creator of the event
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -7709,7 +6829,10 @@ components:
       properties:
         name:
           type: string
-          description: The new name of the event
+          description: >-
+            The new name of the event (only alphanumeric characters, hyphens,
+            underscores and periods are allowed, it should contain between 1 and
+            128 symbols)
       required:
         - name
       example:
@@ -7798,7 +6921,7 @@ components:
       properties:
         _id:
           type: string
-          description: Id of this ExecutionLog
+          description: Database id of this ExecutionLog
         streamId:
           type: string
           description: Id of the stream executed.
@@ -8057,7 +7180,7 @@ components:
       properties:
         _id:
           type: string
-          description: Id of this ExecutionSate
+          description: Id of this ExecutionStatus
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
           description: Organization the stream belongs to
@@ -8221,7 +7344,9 @@ components:
       properties:
         name:
           type: string
-          description: Name of the join token
+          description: >-
+            Name of the join token (only alphanumeric characters, hyphens,
+            underscores and periods are allowed)
       required:
         - name
       example:
@@ -8258,28 +7383,28 @@ components:
       properties:
         _id:
           type: string
-          description: The database id of the node
+          description: Database id of the node
         secret:
           type: string
           description: A generated secret
         category:
           type: string
-          description: The category the node belongs to
+          description: Category the node belongs to
         archived:
           type: boolean
           description: A flag that indicates whether the node got archived or not
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the node belongs to
+          description: Organization the node belongs to
         space:
           $ref: '#/components/schemas/ReducedSpace'
           description: Space the node belongs to
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the node
+          description: Creator of the node
         specification:
           type: string
-          description: The specification of the node as a base64 string
+          description: Specification of the node as a base64 string
         createDate:
           type: number
           description: Date of creation as  unix timestamp
@@ -8323,28 +7448,28 @@ components:
       properties:
         _id:
           type: string
-          description: The database id of the node
+          description: Database id of the node
         secret:
           type: string
           description: A generated secret
         category:
           type: string
-          description: The category the node belongs to
+          description: Category the node belongs to
         archived:
           type: boolean
           description: A flag that indicates whether the node got archived or not
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the node belongs to
+          description: Organization the node belongs to
         space:
           $ref: '#/components/schemas/ReducedSpace'
           description: Space the node belongs to
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the node
+          description: Creator of the node
         specification:
           type: string
-          description: The specification of the node as a base64 string
+          description: Specification of the node as a base64 string
         typescript:
           type: string
           description: Node content as typescript, base64 encoded
@@ -8512,19 +7637,22 @@ components:
       properties:
         key:
           type: string
-          description: Key that maps to the secret value.
+          description: >-
+            Key that maps to the secret value (only alphanumeric characters,
+            hyphens, underscores and periods are allowed, it should contain
+            between 1 and 32 symbols)
         value:
           type: string
-          description: Secret value.
+          description: Secret value (maximum length is 1024 symbols)
         description:
           type: string
-          description: Secret description.
+          description: Secret description (maximum length is 80 symbols)
         encrypted:
           type: boolean
           description: >-
             Flag to determine if the value should be stored encrypted. Only
             unencrypted values can be read again outside of the
-            StreamExecutionPackage. Defaults to false.
+            StreamExecutionPackage. Defaults to false
       required:
         - key
         - value
@@ -8577,16 +7705,16 @@ components:
       properties:
         value:
           type: string
-          description: Secret value.
+          description: Secret value (maximum length is 1024 symbols)
         description:
           type: string
-          description: Secret description.
+          description: Secret description (maximum length is 80 symbols)
         encrypted:
           type: boolean
           description: >-
             Flag to determine if the value should be stored encrypted. Only
             unencrypted values can be read again outside of the
-            StreamExecutionPackage. Defaults to false.
+            StreamExecutionPackage. Defaults to false
       required:
         - value
       example:
@@ -8610,7 +7738,9 @@ components:
       properties:
         name:
           type: string
-          description: Name of the snapshot
+          description: >-
+            Name of the snapshot (only alphanumeric characters, hyphens,
+            underscores and spaces are allowed)
       required:
         - name
       example:
@@ -8619,10 +7749,10 @@ components:
       properties:
         _id:
           type: string
-          description: The mongo database id of the snapshot object
+          description: Database id of the snapshot object
         name:
           type: string
-          description: The name of the snapshot
+          description: Name of the snapshot
         content:
           $ref: '#/components/schemas/StreamDesign'
           description: >-
@@ -8639,10 +7769,10 @@ components:
           description: Space the snapshot belongs to
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the snapshot belongs to
+          description: Organization the snapshot belongs to
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the snapshot
+          description: Creator of the snapshot
         designHash:
           type: string
           description: The hash of the design
@@ -8694,7 +7824,9 @@ components:
       properties:
         name:
           type: string
-          description: Name of the snapshot
+          description: >-
+            Name of the snapshot (only alphanumeric characters, hyphens,
+            underscores and spaces are allowed)
       required:
         - name
       example:
@@ -8733,7 +7865,10 @@ components:
       properties:
         name:
           type: string
-          description: The name of the new Space
+          description: >-
+            Name of the new Space (only alphanumeric characters, hyphens,
+            underscores and periods are allowed, it should contain between 1 and
+            32 symbols)
       required:
         - name
       example:
@@ -8742,19 +7877,19 @@ components:
       properties:
         _id:
           type: string
-          description: The mongo id of the space object
+          description: Database id of the space object
         name:
           type: string
-          description: The name of the space
+          description: Name of the space
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the space belongs to
+          description: Organization the space belongs to
         avatarUrl:
           type: string
-          description: The URL of the avatar
+          description: URL of the avatar
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the space
+          description: Creator of the space
         highestPermissionOfUser:
           $ref: '#/components/schemas/SpacePermission'
           description: >-
@@ -8800,7 +7935,7 @@ components:
       properties:
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the space belongs to
+          description: Organization the space belongs to
         space:
           $ref: '#/components/schemas/ReducedSpace'
           description: Space the design belongs to
@@ -8886,7 +8021,9 @@ components:
       properties:
         version:
           type: string
-          description: Version that should be used to execute streams for this space
+          description: >-
+            Version that should be used to execute streams for this space
+            (examples of valid formats - 1.0.0 or 1.2.5-dev-17)
         url:
           type: string
           description: Url to the engine
@@ -8904,7 +8041,10 @@ components:
       properties:
         teamName:
           type: string
-          description: The name of the team
+          description: >-
+            The name of the team (only alphanumeric characters, hyphens and
+            underscores are allowed, it should contain between 3 and 255
+            symbols)
         permission:
           $ref: '#/components/schemas/SpacePermission'
           description: The permission the team has within the space
@@ -8932,7 +8072,11 @@ components:
       properties:
         name:
           type: string
-          description: Name of the stream
+          description: >-
+            Name of the stream (only alphanumeric characters, hyphens,
+            underscores, periods and spaces are allowed, it should contain
+            between 1 and 64 symbols, periods and spaces are allowed only inside
+            a name)
         streamId:
           type: string
           description: ID of the stream wich will be duplicated
@@ -8944,22 +8088,22 @@ components:
       properties:
         _id:
           type: string
-          description: The id of the stream
+          description: Database id of the stream
         name:
           type: string
-          description: The name of the stream
+          description: Name of the stream
         event:
           $ref: '#/components/schemas/ReducedEvent'
           description: Event the stream belongs to
         space:
           $ref: '#/components/schemas/ReducedSpace'
-          description: The space the stream belongs to
+          description: Space the stream belongs to
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the stream belongs to
+          description: Organization the stream belongs to
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the stream
+          description: Creator of the stream
         order:
           type: number
           description: The current stream order number
@@ -9005,10 +8149,10 @@ components:
       properties:
         design:
           $ref: '#/components/schemas/DesignBuild'
-          description: The published design definition
+          description: Published design definition
         payload:
           $ref: '#/components/schemas/High5ExecutionPayload'
-          description: The stream execution payload
+          description: Stream execution payload
         dry:
           type: boolean
           description: Selector for running stream in dry mode or not.
@@ -9073,7 +8217,10 @@ components:
       properties:
         eventName:
           type: string
-          description: Name of the new event
+          description: >-
+            Name of the new event (only alphanumeric characters, hyphens,
+            underscores and periods are allowed, it should contain between 1 and
+            128 symbols)
         order:
           type: number
           description: >-
@@ -9095,7 +8242,11 @@ components:
       properties:
         name:
           type: string
-          description: New name of the stream
+          description: >-
+            New name of the stream (only alphanumeric characters, hyphens,
+            underscores, periods and spaces are allowed, it should contain
+            between 1 and 64 symbols, periods and spaces are allowed only inside
+            a name)
       required:
         - name
       example:
@@ -9282,7 +8433,10 @@ components:
       properties:
         name:
           type: string
-          description: Name of the webhook
+          description: >-
+            Name of the webhook (only alphanumeric characters, hyphens,
+            underscores, periods and spaces are allowed, it should contain
+            between 1 and 128 symbols)
         target:
           type: string
           description: The target where the webhook should be executed at
@@ -9332,10 +8486,10 @@ components:
       properties:
         _id:
           type: string
-          description: The id of the webhook
+          description: Database id of the webhook
         name:
           type: string
-          description: The name of the webhook
+          description: Name of the webhook
         relativeUrl:
           type: string
           description: The relative webhook url
@@ -9355,13 +8509,13 @@ components:
           description: Space the webhook belongs to
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the webhook belongs to
+          description: Organization the webhook belongs to
         target:
           type: string
           description: The target where the webhook should be executed at
         creator:
           $ref: '#/components/schemas/ReducedUser'
-          description: The creator of the webhook
+          description: Creator of the webhook
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -9438,7 +8592,7 @@ components:
             webhook url request
         hmacSecret:
           type: string
-          description: The hmac secreat
+          description: The hmac secret
       required:
         - hmacHeaderName
         - hmacAlgorithm
@@ -9468,19 +8622,19 @@ components:
       properties:
         _id:
           type: string
-          description: The id of the webhook log object
+          description: Database id of the webhook log object
         webhookId:
           type: string
-          description: The id of the webhook
+          description: Database id of the webhook
         space:
           $ref: '#/components/schemas/ReducedSpace'
-          description: The space the webhook log belongs to
+          description: Space the webhook log belongs to
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
-          description: The organization the webhook log belongs to
+          description: Organization the webhook log belongs to
         event:
           $ref: '#/components/schemas/ReducedEvent'
-          description: The event the webhook belongs to
+          description: Event the webhook belongs to
         executeDate:
           type: number
           description: Date of creation of the log as unix timestamp
@@ -9614,7 +8768,10 @@ components:
       properties:
         name:
           type: string
-          description: Name of the webhook
+          description: >-
+            Name of the webhook (only alphanumeric characters, hyphens,
+            underscores, periods and spaces are allowed, it should contain
+            between 1 and 128 symbols)
         target:
           type: string
           description: The target where the webhook should be executed at
@@ -10297,6 +9454,7 @@ components:
         minimum: 1
         maximum: 100
         default: 25
+        example: 50
       required: false
       description: Max number of items to return. Integer between 1 and 100.
     PageParameter:
@@ -10306,5 +9464,80 @@ components:
         type: integer
         minimum: 0
         default: 0
+        example: 3
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w\-@.]+$/
+        example: MoovIT-Software-Products_GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens,
+        underscores, periods and '@' are allowed, it should contain between 3
+        and 255 symbols).
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        pattern: /^[\w\-.]+$/
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens, underscores
+        and periods are allowed, it should contain between 1 and 32 symbols).
+    EventName:
+      in: path
+      name: eventName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: /^[\w\-.]+$/
+        example: Dev_Camp-2024
+      required: true
+      description: >-
+        Name of the event (only alphanumeric characters, hyphens, underscores
+        and periods are allowed, it should contain between 1 and 128 symbols).
+    StreamID:
+      in: path
+      name: streamId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 76194791721d55d3a5051092
+      required: true
+      description: >-
+        ID of the stream (the database object ID should contain 24 hexadecimal
+        characters).
+    SecretKey:
+      in: path
+      name: secretKey
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        pattern: /^[\d-.]+$/
+        example: Helmut4-dev.api_key
+      required: true
+      description: >-
+        Key of the secret (only alphanumeric characters, hyphens, underscores
+        and periods are allowed, it should contain between 1 and 32 symbols)}
+    WebhookToken:
+      in: path
+      name: webhookToken
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{128}$/
+        example: >-
+          DD85EABD4CAF4F34AAA8F476676B7B20302B2E2E9F7A5322D4B8E740ED1A7467F4D49B1848560592083C8AD331909C559FF1012B1C5B29490C820FE7AA8B34F8
+      required: true
+      description: Last path segment of the webhook URL (128 char long hex string).
