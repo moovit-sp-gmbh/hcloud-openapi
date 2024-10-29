@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1966
+  version: 0.0.107-1969
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6122,6 +6122,20 @@ components:
         - url
       example:
         url: https://pub-1e0d69034e2942f79ef26dae05343340.r2.dev/image.webp
+    Catalog:
+      properties:
+        version:
+          type: string
+          description: Version of the release
+        url:
+          type: string
+          description: Url to the save location on s3 storage
+      required:
+        - version
+        - url
+      example:
+        version: https://wave.s3.helmut.cloud/catalogs/default/
+        url: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
     CustomError:
       properties:
         code:
@@ -8162,7 +8176,7 @@ components:
         waveCatalogs:
           type: array
           items:
-            $ref: '#/components/schemas/WaveCatalogDto'
+            $ref: '#/components/schemas/Catalog'
           description: All catalogs that will be used for execution
       required:
         - design
@@ -8208,11 +8222,8 @@ components:
           changeLog: []
           md5: 0c45d566c9fabb19e34dc1c32c20af79
         waveCatalogs:
-          - _id: 63c7e6f0eae82d8001b65310
-            version: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
-            url: https://wave.s3.helmut.cloud/catalogs/default/
-            changeLog:
-              - 2024-01-08 13:44:11 - FEATURE - Add global fail output
+          - version: https://wave.s3.helmut.cloud/catalogs/default/
+            url: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
     StreamMoveDto:
       properties:
         eventName:
