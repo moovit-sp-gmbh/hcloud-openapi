@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1971
+  version: 0.0.107-1975
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8178,12 +8178,16 @@ components:
           items:
             $ref: '#/components/schemas/Catalog'
           description: All catalogs that will be used for execution
+        info:
+          $ref: '#/components/schemas/StreamInfo'
+          description: Information about the stream to be executed
       required:
         - design
         - payload
         - dry
         - waveEngine
         - waveCatalogs
+        - info
       example:
         design:
           nodes:
@@ -8224,6 +8228,22 @@ components:
         waveCatalogs:
           - version: https://wave.s3.helmut.cloud/catalogs/default/
             url: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
+        info:
+          target: example@email.com
+    StreamInfo:
+      properties:
+        target:
+          type: string
+          description: Target of the stream execution
+        webhook:
+          $ref: '#/components/schemas/WebhookInfo'
+          description: >-
+            Information about the webhook that triggered this stream if it was
+            triggered by a webhook
+      required:
+        - target
+      example:
+        target: example@email.com
     StreamMoveDto:
       properties:
         eventName:
@@ -8612,6 +8632,13 @@ components:
         hmacHeaderName: x-hub-signature-256
         hmacAlgorithm: sha256
         hmacSecret: 649180269bdc11b1fe807938
+    WebhookInfo:
+      properties:
+        callbackUrl:
+          type: string
+          description: Callback URL of the webhook
+      example:
+        callbackUrl: https://example.com
     WebhookLastTriggeredDto:
       properties:
         timestamp:
