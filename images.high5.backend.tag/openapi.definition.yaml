@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1975
+  version: 0.0.107-1981
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6923,6 +6923,8 @@ components:
                 - name: String
                   originalValue: '{{payload.data}}'
                   value: '{"FOO":"BAR"}'
+                  error: false
+                  errorMessage: ''
               outputs:
                 - name: String
                   value: '{"foo":"bar"}'
@@ -6986,6 +6988,8 @@ components:
               - name: String
                 originalValue: '{{payload.data}}'
                 value: '{"FOO":"BAR"}'
+                error: false
+                errorMessage: ''
             outputs:
               - name: String
                 value: '{"foo":"bar"}'
@@ -8352,8 +8356,8 @@ components:
             $ref: '#/components/schemas/StreamNodeOutput'
           description: Nodes outputs
         error:
-          $ref: '#/components/schemas/StreamNodeResultError'
-          description: Error if the node failed
+          type: boolean
+          description: Indicates if the input has an error
         duration:
           type: number
           description: Duration the node took for execution in ms
