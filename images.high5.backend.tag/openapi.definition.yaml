@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1982
+  version: 0.0.107-1986
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1188,6 +1188,64 @@ paths:
             text/plain:
               schema:
                 type: string
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/execute/webhook/{webhookToken}/callback/{callbackUUID}:
+    post:
+      tags:
+        - Webhook
+      summary: Webhook callback URL to send a non-generic response to webhook triggerer
+      description: >-
+        Forwards the incoming request defined the in the request body to the
+        webhook triggerer via HTTP response
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/WebhookToken'
+        - name: callbackUUID
+          in: path
+          description: Webhook execution unique identifier
+          required: true
+          schema:
+            type: string
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WebhookCallbackDto'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                High5ExecutionNotFoundException:
+                  $ref: '#/components/examples/High5ExecutionNotFoundException'
+        '410':
+          description: Gone
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WebhookCallbackExpiredException:
+                  $ref: '#/components/examples/WebhookCallbackExpiredException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/execution/logs/search:
@@ -8464,6 +8522,29 @@ components:
         url: https://wave.s3.helmut.cloud/engines/default/0.0.1/Engine_v0.0.1.tar
         changeLog: []
         md5: 0c45d566c9fabb19e34dc1c32c20af79
+    WebhookCallbackDto:
+      properties:
+        status:
+          type: number
+          description: HTTP status code
+        headers:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Record<string, string'
+              - $ref: '#/components/schemas/string>'
+          description: HTTP headers
+        body:
+          type: string
+          description: HTTP body
+      required:
+        - status
+        - headers
+      example:
+        status: 200
+        headers:
+          authorization: apikey
+        body: '{"a":"b"}'
     WebhookCreateDto:
       properties:
         name:
@@ -9487,6 +9568,11 @@ components:
         code: 002.015.0004
         error: execution.target.not.member
         message: Requested target {{target}} is not a member of the organization
+    WebhookCallbackExpiredException:
+      value:
+        code: 002.011.0011
+        error: webhook.callback.expired
+        message: The callback window for this webhook execution has expired
   parameters:
     LimitParameter:
       in: query
