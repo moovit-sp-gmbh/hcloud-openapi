@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-876
+  version: 0.0.4-887
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -183,8 +183,6 @@ paths:
               examples:
                 CronjobInvalidExpressionException:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
-                CronjobInvalidTimezoneException:
-                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
                 Space name is invalid:
@@ -499,8 +497,6 @@ paths:
               examples:
                 CronjobInvalidExpressionException:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
-                CronjobInvalidTimezoneException:
-                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
                 Space name is invalid:
@@ -918,8 +914,6 @@ paths:
               examples:
                 CronjobInvalidExpressionException:
                   $ref: '#/components/examples/CronjobInvalidExpressionException'
-                CronjobInvalidTimezoneException:
-                  $ref: '#/components/examples/CronjobInvalidTimezoneException'
         '401':
           description: There was an error while evaluating the user's credentials
           content:
@@ -1371,8 +1365,6 @@ paths:
               examples:
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
-                Space name is invalid:
-                  $ref: '#/components/examples/InvalidParameterException'
                 Invalid body:
                   $ref: '#/components/examples/InvalidBodyException'
                   summary: Invalid body
@@ -1409,8 +1401,6 @@ paths:
                   $ref: '#/components/examples/InsufficientAccessRightException'
                 User is not member of organization or role is insufficient:
                   $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient. Must be at least READ:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
           description: Organization not found
           content:
@@ -1420,8 +1410,6 @@ paths:
               examples:
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
-                Space not found:
-                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces:
@@ -2710,11 +2698,6 @@ components:
           Given cronjob expression is either not a valid quartz format, uses
           advanced expressions that are not supported or holds a value other
           than 0 for the 'seconds' field (seconds are currently not allowed)
-    CronjobInvalidTimezoneException:
-      value:
-        code: 003.020.0002
-        error: cronjob.invalid.timezone
-        message: Given cronjob timezone is not a valid IANA format
     CronjobLogNotFoundException:
       value:
         code: 003.020.0004
