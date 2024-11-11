@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-1988
+  version: 0.0.107-1992
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4275,14 +4275,12 @@ paths:
                 Space permission is insufficient. Must be at least MANAGE:
                   $ref: '#/components/examples/SpaceInsufficientPermissionException'
         '404':
-          description: Not Found
+          description: Organization not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                WaveCatalogNotFoundException:
-                  $ref: '#/components/examples/WaveCatalogNotFoundException'
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
