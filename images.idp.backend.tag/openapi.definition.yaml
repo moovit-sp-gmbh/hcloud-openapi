@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2086
+  version: 0.0.143-2089
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -3875,6 +3875,15 @@ paths:
                   $ref: '#/components/examples/OrganizationMemberNotFoundException'
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
+        '409':
+          description: Team already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                TeamAlreadyExistException:
+                  $ref: '#/components/examples/TeamAlreadyExistException'
         default:
           description: Unexpected error
     get:
