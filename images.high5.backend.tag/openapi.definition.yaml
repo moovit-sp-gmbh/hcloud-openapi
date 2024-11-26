@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2011
+  version: 0.0.107-2013
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -6200,6 +6200,27 @@ components:
       example:
         version: https://wave.s3.helmut.cloud/catalogs/default/
         url: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
+    CatalogInfo:
+      properties:
+        name:
+          type: string
+          description: Name of the input
+        _id:
+          type: string
+          description: Catalog _id
+        url:
+          type: string
+          description: Catalog URL
+        version:
+          type: string
+          description: Catalog version
+      required:
+        - url
+        - version
+      example:
+        name: default
+        url: https://example.com
+        version: 1.0.0
     CustomError:
       properties:
         code:
@@ -6978,6 +6999,11 @@ components:
                 - name: Progress
                   value: 100
               endTimestamp: 1692272567734
+              info:
+                runTime: 30395
+                catalog:
+                  url: https://example.com
+                  version: 1.0.0
             - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
               nodeUuid: f076bb6f-05e0-4371-8ce9-4056bfb09ef1
               failed: false
@@ -7043,6 +7069,11 @@ components:
               - name: Progress
                 value: 100
             endTimestamp: 1692272567734
+            info:
+              runTime: 30395
+              catalog:
+                url: https://example.com
+                version: 1.0.0
           - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
             nodeUuid: f076bb6f-05e0-4371-8ce9-4056bfb09ef1
             failed: false
@@ -7596,6 +7627,23 @@ components:
           aW1wb3J0IEN1c3RvbU5vZGUgZnJvbSAiLi4vQ3VzdG9tTm9kZSI7CmltcG9ydCB7CiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb24sIAogIFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZSwgCiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb25QYWNrYWdlLCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbkNhdGVnb3J5LCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbklucHV0T3V0cHV0VHlwZQp9IGZyb20gIi4uLy4uLy4uL21vZGVscy9TdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiI7CmltcG9ydCAqIGFzIFN0cmVhbU5vZGVFcnJvciBmcm9tICIuLi8uLi8uLi9lcnJvcnMvU3RyZWFtTm9kZUVycm9ycyI7CgppbXBvcnQgYXhpb3MgZnJvbSAiYXhpb3MiCmltcG9ydCAqIGFzIGNoaWxkIGZyb20gJ2NoaWxkX3Byb2Nlc3MnOwoKZXhwb3J0IGRlZmF1bHQgY2xhc3MgTmV3Q3VzdG9tTm9kZSBleHRlbmRzIEN1c3RvbU5vZGUgewogIC8vc3BlYzpzdGFydAogIHByb3RlY3RlZCBzcGVjaWZpY2F0aW9uOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiA9IHsKICAgIG5hbWU6ICJFeGVjdXRlIHB5dGhvbiIsCiAgICBkZXNjcmlwdGlvbjogImV4ZWMgcHl0aG9uIiwKICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZS5BQ1RJT04sCiAgICBwYWNrYWdlOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvblBhY2thZ2UuQ1VTVE9NLAogICAgY2F0ZWdvcnk6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uQ2F0ZWdvcnkuT1RIRVIsCiAgICB2ZXJzaW9uOiB7CiAgICAgIG1ham9yOiAwLAogICAgICBtaW5vcjogMCwKICAgICAgcGF0Y2g6IDEsCiAgICAgIGNoYW5nZWxvZzogWyJJbml0aWFsIG5vZGUiXSwKICAgIH0sCiAgICBhdXRob3I6IHsKICAgICAgbmFtZTogIk1vb3ZJVCBTUCIsCiAgICAgIGVtYWlsOiAiYWNjb3VudEBtb292aXQtc3AuY29tIiwKICAgICAgY29tcGFueTogIiIsCiAgICB9LAogICAgaW5wdXRzOiBbXSwKICAgIG91dHB1dHM6IFsKICAgICB7CiAgICAgIG5hbWU6ICJSZXN1bHQiLAogICAgICBkZXNjcmlwdGlvbjogIlRoZSBGcmFtZUlPIHJlc3VsdCIsCiAgICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uSW5wdXRPdXRwdXRUeXBlLlNUUklORywKICAgICAgZXhhbXBsZTogInt9IiwKICAgIH0KICAgIF0sCiAgfTsKICAvL3NwZWM6ZW5kCgogIGFzeW5jIGV4ZWN1dGUoKTogUHJvbWlzZTx2b2lkPiB7CiAgICBjb25zdCB0ZWxlZ3JhbUNoYXRJZHMgPSB7IHNzOiAiNDE2ODk4MDcyIiwgaGVsbXV0Y2xvdWQ6ICItMTAwMTc0MzQ0NjU4MCIsIGRtOiAiNjg2NzMxNTkxIiwgaWJjMjAyMjogIi03NjUyOTI0NzkiIH07CiAgICBjb25zdCBwYXlsb2FkID0gdGhpcy5zdHJlYW1SZXF1ZXN0LnBheWxvYWQ7Cgpjb25zb2xlLmxvZygib2theSIpCgogICAgIGF3YWl0IGNoaWxkLmV4ZWMoYC91c3IvYmluL3B5dGhvbiAvaG9tZS9waS9kaXNwbGF5XzQyMC9zY3JpcHQucHkgIiR7cGF5bG9hZC5sMX0iICIke3BheWxvYWQubDJ9IiAiJHtwYXlsb2FkLmwzfSIgIiR7cGF5bG9hZC5sNH0iYCwgKGVycm9yOiBzdHJpbmcsIHN0ZG91dDogc3RyaW5nLCBzdGRlcnI6IHN0cmluZykgPT4gewogICAgICAgY29uc29sZS5sb2coInJlc3VsdDogIiwgZXJyb3IsIHN0ZG91dCwgc3RkZXJyKQogICAgICAgICAgICB0aGlzLmFkZE91cHV0KHRoaXMuZ2V0Tm9kZVNwZWNpZmljYXRpb24oKS5vdXRwdXRzPy5bMF0sIHN0ZG91dCk7CiAgICAgICAgfSk7OwoKICAgICAgYXhpb3MucG9zdChgaHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdDU0MTkzMzY5ODI6QUFFNlRUSVJlbVNCVUxibXZISno1MkhHUDIxMFR0UGZBTVkvc2VuZE1lc3NhZ2VgLCB7CiAgICAgICAgY2hhdF9pZDogdGVsZWdyYW1DaGF0SWRzLnNzLAogICAgICAgIHRleHQ6IGBEaXNwbGF5IGNoYW5nZWQgdG8gJHtwYXlsb2FkLmwxfSArICR7cGF5bG9hZC5sMn0gKyAke3BheWxvYWQubDN9ICsgJHtwYXlsb2FkLmw0fWAKICAgICAgfSk7ICAgIAogIH0KfQ==
         createDate: 1674224764
         modifyDate: 1674225854
+    NodeInfo:
+      properties:
+        runTime:
+          type: number
+          description: Total runtime of the node
+        catalog:
+          $ref: '#/components/schemas/CatalogInfo'
+          description: Catalog containing the node
+      required:
+        - runTime
+        - catalog
+      example:
+        runTime: 500
+        catalog:
+          name: default
+          url: https://example.com
+          version: 1.0.0
     NodePatchDto:
       properties:
         specification:
@@ -8433,6 +8481,11 @@ components:
           items:
             $ref: '#/components/schemas/StreamSingleNodeResultDto'
           description: Nested results of the executed nodes from additional adapters
+        info:
+          type: array
+          items:
+            $ref: '#/components/schemas/NodeInfo'
+          description: Information about the node
       required:
         - uuid
         - nodeUuid
