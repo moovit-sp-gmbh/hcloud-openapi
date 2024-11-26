@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2005
+  version: 0.0.107-2011
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8438,7 +8438,6 @@ components:
         - nodeUuid
         - failed
         - startTimestamp
-        - endTimestamp
       example:
         uuid: 1ea87ea6-d5af-4d55-bfb8-8eb4169b0d15
         nodeUuid: 1ea87ea6-d5af-4d55-bfb8-8eb4169b0d16
