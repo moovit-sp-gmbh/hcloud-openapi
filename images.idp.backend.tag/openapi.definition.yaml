@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2089
+  version: 0.0.143-2106
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4236,6 +4236,15 @@ paths:
           application/json:
             schema:
               $ref: '#/components/schemas/UserRegistrationDto'
+      parameters:
+        - name: validationCode
+          in: query
+          description: >-
+            Optional validation code (required for complete registration that
+            was not triggered before).
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: >-
@@ -4265,6 +4274,9 @@ paths:
               examples:
                 UserEmailNotAllowedException:
                   $ref: '#/components/examples/UserEmailNotAllowedException'
+                RegistrationVerificationCodeInvalidException:
+                  $ref: >-
+                    #/components/examples/RegistrationVerificationCodeInvalidException
         '409':
           description: User already exists
           content:
@@ -4323,46 +4335,6 @@ paths:
               examples:
                 UserNotFoundException:
                   $ref: '#/components/examples/UserNotFoundException'
-        default:
-          description: Unexpected error
-  /v1/register/complete:
-    patch:
-      tags:
-        - Register
-      summary: >-
-        Complete a registration that was not triggered by /v1/register, e.g. via
-        an organization invitation
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/UserCompleteRegistrationDto'
-      responses:
-        '200':
-          description: User object
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/UserDto'
-        '400':
-          description: Invalid body
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InvalidBodyException:
-                  $ref: '#/components/examples/InvalidBodyException'
-        '403':
-          description: Registration verification failed
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                RegistrationVerificationCodeInvalidException:
-                  $ref: >-
-                    #/components/examples/RegistrationVerificationCodeInvalidException
         default:
           description: Unexpected error
   /v1/register/resendRegistrationEmail:
@@ -8864,41 +8836,6 @@ components:
         old: the old password
         new: the new password
         token: '217180'
-    UserCompleteRegistrationDto:
-      properties:
-        email:
-          type: string
-          description: Email of the user
-        verificationCode:
-          type: string
-        name:
-          type: string
-          description: Name of the user
-        password:
-          type: string
-          description: Password of the user
-        company:
-          type: string
-          description: Optional field holding the company of the user
-        language:
-          $ref: '#/components/schemas/Language'
-          description: Define the users language
-        timezone:
-          type: string
-          description: Define the users timezone
-      required:
-        - email
-        - verificationCode
-        - name
-        - password
-      example:
-        email: newuser@moovit-sp.com
-        verificationCode: 519a05a8-40b4-47d1-a703-d1db160569bb
-        name: New User
-        password: newUserPass123!
-        company: User's company
-        language: en
-        timezone: Europe/Lisbon
     UserDto:
       properties:
         _id:
@@ -9010,7 +8947,7 @@ components:
           type: string
           description: Valid google reCAPTCHAV2
         language:
-          type: string
+          $ref: '#/components/schemas/Language'
           description: Define the users language
         timezone:
           type: string
@@ -9031,8 +8968,8 @@ components:
         password: hidden
         company: Moovit Software Products
         captcha: captcha
-        language: de
-        timezone: Europe/Berlin
+        language: en
+        timezone: Europe/Lisbon
         targetUrl: app.helmut.cloud
     UserResendRegistrationEmailDto:
       properties:
