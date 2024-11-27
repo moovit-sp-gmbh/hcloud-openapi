@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2013
+  version: 0.0.107-2016
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2628,6 +2628,563 @@ paths:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/pools/{poolName}:
+    get:
+      tags:
+        - Pool
+      summary: Fetch a pool by its name
+      description: |-
+
+        Required organization role: MANAGER
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNotFoundException:
+                  $ref: '#/components/examples/PoolNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - Pool
+      summary: Replace an agent pool
+      description: |-
+
+        Required organization role: MANAGER
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolCreateDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolChangeDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNotFoundException:
+                  $ref: '#/components/examples/PoolNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNameInUseException:
+                  $ref: '#/components/examples/PoolNameInUseException'
+        default:
+          description: Unexpected error
+    patch:
+      tags:
+        - Pool
+      summary: Patch an agent pool
+      description: |-
+
+        Required organization role: MANAGER
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolPatchDto'
+        required: true
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolChangeDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNotFoundException:
+                  $ref: '#/components/examples/PoolNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNameInUseException:
+                  $ref: '#/components/examples/PoolNameInUseException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Pool
+      summary: Delete an agent pool
+      description: |-
+
+        Required organization role: MANAGER
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNotFoundException:
+                  $ref: '#/components/examples/PoolNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/pools/search:
+    post:
+      tags:
+        - Pool
+      summary: Search pools of a space
+      description: |-
+
+        Required organization role: MANAGER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of pools that match the search filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoolDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/pools:
+    post:
+      tags:
+        - Pool
+      summary: Create a new agent pool
+      description: |-
+        Create a new agent pool. An agent pool is a pool of execution targets.
+        Required organization role: MANAGER
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PoolCreateDto'
+        required: true
+      responses:
+        '201':
+          description: Created
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolChangeDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNameInUseException:
+                  $ref: '#/components/examples/PoolNameInUseException'
+        default:
+          description: Unexpected error
+  /v1/pools:
+    get:
+      tags:
+        - Pool
+      summary: Get all pools the user assigned to
+      description: Get all pools the user assigned to. Used mostly by the agent
+      responses:
+        '200':
+          description: OK
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PoolDto'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/secrets/search:
@@ -6177,6 +6734,16 @@ components:
       in: header
       name: Authorization
   schemas:
+    ArrayOperation:
+      enum:
+        - ADD
+        - REMOVE
+        - REPLACE
+      type: string
+      description: |
+        * ADD - Add elements to the array
+        * REMOVE - Remove elements from the array
+        * REPLACE - Replace the current elements of the array with new ones
     AvatarDto:
       properties:
         url:
@@ -7406,6 +7973,25 @@ components:
           items:
             type: string
           description: List of address to black list
+    InvalidTargets:
+      properties:
+        notMember:
+          type: array
+          items:
+            type: string
+        notExecutionTarget:
+          type: array
+          items:
+            type: string
+          description: Emails of non-execution-target members
+      required:
+        - notMember
+        - notExecutionTarget
+      example:
+        notMember:
+          - example@helmut.cloud
+        notExecutionTarget:
+          - exampletwo@helmut.cloud
     JoinTokenDto:
       properties:
         _id:
@@ -7656,6 +8242,156 @@ components:
           eyJuYW1lIjoiRXhlY3V0ZSBweXRob24iLCJkZXNjcmlwdGlvbiI6ImV4ZWMgcHl0aG9uIiwidHlwZSI6IkFDVElPTiIsInBhY2thZ2UiOiJDVVNUT00iLCJjYXRlZ29yeSI6Ik90aGVyIiwidmVyc2lvbiI6eyJtYWpvciI6MCwibWlub3IiOjAsInBhdGNoIjoxLCJjaGFuZ2Vsb2ciOlsiSW5pdGlhbCBub2RlIl19LCJhdXRob3IiOnsibmFtZSI6Ik1vb3ZJVCBTUCIsImVtYWlsIjoiYWNjb3VudEBtb292aXQtc3AuY29tIiwiY29tcGFueSI6IiJ9LCJpbnB1dHMiOltdLCJvdXRwdXRzIjpbeyJuYW1lIjoiUmVzdWx0IiwiZGVzY3JpcHRpb24iOiJUaGUgRnJhbWVJTyByZXN1bHQiLCJ0eXBlIjoiU1RSSU5HIiwiZXhhbXBsZSI6Int9In1dLCJwYXRoIjoiaHR0cHM6Ly9kZXYuYXBwLmhlbG11dC5jbG91ZDo0NDMvYXBpL2hpZ2g1L3YxL25vZGUvMjE5NmYyOGQ0MWU2NWRlMDQ5Y2RkMDg4ODM0YjI2ZmM0NDAwZjIxZDZmMjQ2M2U5NDk0NTIxMjhiOWIwZDlmNDBjYzdkMDg4ZTk1YzdjOWFkYzEwMjA4M2UwOWFjZjMzZWVjYjM0MTk4NWVhNDBlMGZjNDkzNTQ1YTM2OTg3NjgvY29udGVudCIsImN1c3RvbU5vZGUiOnsiX2lkIjoiNjNjYWE4YmU4MTJjYzFlYjE1N2M5N2RhIn19
         typescript: >-
           aW1wb3J0IEN1c3RvbU5vZGUgZnJvbSAiLi4vQ3VzdG9tTm9kZSI7CmltcG9ydCB7CiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb24sIAogIFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZSwgCiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb25QYWNrYWdlLCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbkNhdGVnb3J5LCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbklucHV0T3V0cHV0VHlwZQp9IGZyb20gIi4uLy4uLy4uL21vZGVscy9TdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiI7CmltcG9ydCAqIGFzIFN0cmVhbU5vZGVFcnJvciBmcm9tICIuLi8uLi8uLi9lcnJvcnMvU3RyZWFtTm9kZUVycm9ycyI7CgppbXBvcnQgYXhpb3MgZnJvbSAiYXhpb3MiCmltcG9ydCAqIGFzIGNoaWxkIGZyb20gJ2NoaWxkX3Byb2Nlc3MnOwoKZXhwb3J0IGRlZmF1bHQgY2xhc3MgTmV3Q3VzdG9tTm9kZSBleHRlbmRzIEN1c3RvbU5vZGUgewogIC8vc3BlYzpzdGFydAogIHByb3RlY3RlZCBzcGVjaWZpY2F0aW9uOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiA9IHsKICAgIG5hbWU6ICJFeGVjdXRlIHB5dGhvbiIsCiAgICBkZXNjcmlwdGlvbjogImV4ZWMgcHl0aG9uIiwKICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZS5BQ1RJT04sCiAgICBwYWNrYWdlOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvblBhY2thZ2UuQ1VTVE9NLAogICAgY2F0ZWdvcnk6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uQ2F0ZWdvcnkuT1RIRVIsCiAgICB2ZXJzaW9uOiB7CiAgICAgIG1ham9yOiAwLAogICAgICBtaW5vcjogMCwKICAgICAgcGF0Y2g6IDEsCiAgICAgIGNoYW5nZWxvZzogWyJJbml0aWFsIG5vZGUiXSwKICAgIH0sCiAgICBhdXRob3I6IHsKICAgICAgbmFtZTogIk1vb3ZJVCBTUCIsCiAgICAgIGVtYWlsOiAiYWNjb3VudEBtb292aXQtc3AuY29tIiwKICAgICAgY29tcGFueTogIiIsCiAgICB9LAogICAgaW5wdXRzOiBbXSwKICAgIG91dHB1dHM6IFsKICAgICB7CiAgICAgIG5hbWU6ICJSZXN1bHQiLAogICAgICBkZXNjcmlwdGlvbjogIlRoZSBGcmFtZUlPIHJlc3VsdCIsCiAgICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uSW5wdXRPdXRwdXRUeXBlLlNUUklORywKICAgICAgZXhhbXBsZTogInt9IiwKICAgIH0KICAgIF0sCiAgfTsKICAvL3NwZWM6ZW5kCgogIGFzeW5jIGV4ZWN1dGUoKTogUHJvbWlzZTx2b2lkPiB7CiAgICBjb25zdCB0ZWxlZ3JhbUNoYXRJZHMgPSB7IHNzOiAiNDE2ODk4MDcyIiwgaGVsbXV0Y2xvdWQ6ICItMTAwMTc0MzQ0NjU4MCIsIGRtOiAiNjg2NzMxNTkxIiwgaWJjMjAyMjogIi03NjUyOTI0NzkiIH07CiAgICBjb25zdCBwYXlsb2FkID0gdGhpcy5zdHJlYW1SZXF1ZXN0LnBheWxvYWQ7Cgpjb25zb2xlLmxvZygib2theSIpCgogICAgIGF3YWl0IGNoaWxkLmV4ZWMoYC91c3IvYmluL3B5dGhvbiAvaG9tZS9waS9kaXNwbGF5XzQyMC9zY3JpcHQucHkgIiR7cGF5bG9hZC5sMX0iICIke3BheWxvYWQubDJ9IiAiJHtwYXlsb2FkLmwzfSIgIiR7cGF5bG9hZC5sNH0iYCwgKGVycm9yOiBzdHJpbmcsIHN0ZG91dDogc3RyaW5nLCBzdGRlcnI6IHN0cmluZykgPT4gewogICAgICAgY29uc29sZS5sb2coInJlc3VsdDogIiwgZXJyb3IsIHN0ZG91dCwgc3RkZXJyKQogICAgICAgICAgICB0aGlzLmFkZE91cHV0KHRoaXMuZ2V0Tm9kZVNwZWNpZmljYXRpb24oKS5vdXRwdXRzPy5bMF0sIHN0ZG91dCk7CiAgICAgICAgfSk7OwoKICAgICAgYXhpb3MucG9zdChgaHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdDU0MTkzMzY5ODI6QUFFNlRUSVJlbVNCVUxibXZISno1MkhHUDIxMFR0UGZBTVkvc2VuZE1lc3NhZ2VgLCB7CiAgICAgICAgY2hhdF9pZDogdGVsZWdyYW1DaGF0SWRzLnNzLAogICAgICAgIHRleHQ6IGBEaXNwbGF5IGNoYW5nZWQgdG8gJHtwYXlsb2FkLmwxfSArICR7cGF5bG9hZC5sMn0gKyAke3BheWxvYWQubDN9ICsgJHtwYXlsb2FkLmw0fWAKICAgICAgfSk7ICAgIAogIH0KfQ
+    PoolChangeDto:
+      properties:
+        _id:
+          type: string
+          description: Pool identifier
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Pool's organization
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Pool's space
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Pool's creator
+        name:
+          type: string
+          description: Pool's name
+        targets:
+          type: array
+          items:
+            type: string
+          description: Pool's targets
+        invalidTargets:
+          $ref: '#/components/schemas/InvalidTargets'
+          description: Targets that did not pass validation
+      required:
+        - _id
+        - organization
+        - space
+        - name
+        - targets
+        - invalidTargets
+      example:
+        _id: 6732220f7105d6ee407d5ab5
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        space:
+          _id: 63c7e6dfeae82d8001b652fb
+          name: Helmut4
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        name: name
+        targets:
+          - alice@helmut.cloud
+          - bob@helmut.cloud
+        invalidTargets:
+          notMember:
+            - example@helmut.cloud
+          notExecutionTarget:
+            - exampletwo@helmut.cloud
+    PoolCreateDto:
+      properties:
+        name:
+          type: string
+          description: Name of the pool
+        targets:
+          type: array
+          items:
+            type: string
+          description: Targets of the pool
+      required:
+        - name
+        - targets
+      example:
+        name: name
+        targets:
+          - alice@helmut.cloud
+          - bob@helmut.cloud
+    PoolDto:
+      properties:
+        _id:
+          type: string
+          description: Pool identifier
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Pool's organization
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Pool's space
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Pool's creator
+        name:
+          type: string
+          description: Pool's name
+        targets:
+          type: array
+          items:
+            type: string
+          description: Pool's targets
+      required:
+        - _id
+        - name
+        - targets
+      example:
+        _id: 6732220f7105d6ee407d5ab5
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        space:
+          _id: 63c7e6dfeae82d8001b652fb
+          name: Helmut4
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        name: name
+        targets:
+          - alice@helmut.cloud
+          - bob@helmut.cloud
+    PoolPatchDto:
+      properties:
+        name:
+          type: string
+          description: Pool's new name
+        targets:
+          $ref: '#/components/schemas/PoolTargetPatch'
+          description: Email and operations to apply on the pool's targets
+      example:
+        name: name
+        targets:
+          identifiers:
+            - alice@helmut.cloud
+            - bob@helmut.cloud
+          operation: ADD
+    PoolTargetPatch:
+      properties:
+        identifiers:
+          type: array
+          items:
+            type: string
+          description: Target emails to add, replace or remove
+        operation:
+          $ref: '#/components/schemas/ArrayOperation'
+          description: Operation to perform on the pool's target
+      required:
+        - identifiers
+        - operation
+      example:
+        identifiers:
+          - alice@helmut.cloud
+          - bob@helmut.cloud
+        operation: ADD
     Search:
       properties:
         filters:
@@ -9631,6 +10367,16 @@ components:
         code: 002.011.0011
         error: webhook.callback.expired
         message: The callback window for this webhook execution has expired
+    PoolNameInUseException:
+      value:
+        code: 002.033.0001
+        error: pool.name.in.use
+        message: Pool name {{name}} is already in use
+    PoolNotFoundException:
+      value:
+        code: 002.033.0002
+        error: pool.not.found
+        message: Pool not found
   parameters:
     LimitParameter:
       in: query
@@ -9727,3 +10473,12 @@ components:
           DD85EABD4CAF4F34AAA8F476676B7B20302B2E2E9F7A5322D4B8E740ED1A7467F4D49B1848560592083C8AD331909C559FF1012B1C5B29490C820FE7AA8B34F8
       required: true
       description: Last path segment of the webhook URL (128 char long hex string).
+    PoolName:
+      in: path
+      name: poolName
+      schema:
+        type: string
+        pattern: /^[0-9a-zA-Z_.-]{128}$/
+        example: my_pool
+      required: true
+      description: Name of the pool
