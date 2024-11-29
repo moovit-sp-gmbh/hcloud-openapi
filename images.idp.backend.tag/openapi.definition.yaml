@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2109
+  version: 0.0.143-2111
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8776,37 +8776,45 @@ components:
       properties:
         activated:
           type: boolean
-        otpAuthUrl:
-          type: string
-          description: OTP Auth URL
-        qrcode:
-          type: string
-          description: Base64 representation of a PNG image
         secret:
           type: string
           description: TOTP secret
         createDate:
           type: number
-          description: Creation date of the totp
+          description: Creation date of the TOTP
         modifyDate:
           type: number
           description: Date of last modification
+        algorithm:
+          type: string
+          description: Algorithm used for TOTP
+        digits:
+          type: number
+          description: Number of digits in the TOTP
+        period:
+          type: number
+          description: Time period for TOTP validity in seconds
+        issuer:
+          type: string
+          description: Issuer of the TOTP
       required:
         - activated
-        - otpAuthUrl
-        - qrcode
         - secret
         - createDate
         - modifyDate
+        - algorithm
+        - digits
+        - period
+        - issuer
       example:
         activated: false
-        otpAuthUrl: >-
-          otpauth://totp/example@helmut.cloud?secret=MUWES4KBJ54DUURPIB3GCVLHHY4GGLST&issuer=localhost&algorithm=SHA1&digits=6&period=30
-        qrcode: >-
-          data:image/png;base64,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
         secret: MUWES4KBJ54DUURPIB3GCVLHHY4GGLST
         createDate: 1685096723820
         modifyDate: 1685096723820
+        algorithm: SHA1
+        digits: 6
+        period: 30
+        issuer: localhost
     User2FADto:
       properties:
         totp:
