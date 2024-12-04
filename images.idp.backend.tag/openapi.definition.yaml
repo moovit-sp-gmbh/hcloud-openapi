@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2115
+  version: 0.0.143-2123
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5290,6 +5290,65 @@ paths:
               examples:
                 InternalServerErrorException:
                   $ref: '#/components/examples/InternalServerErrorException'
+  /v1/user/ping:
+    get:
+      tags:
+        - User
+      summary: Keep user online
+      description: |-
+
+        Required scopes: HCLOUD_FULL
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      responses:
+        '204':
+          description: No Content
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
   /v1/user/password/reset:
     post:
       tags:
@@ -8059,6 +8118,9 @@ components:
           description: >-
             Flag that represents whether or not this user is a valid execution
             target for this organization
+        lastActive:
+          type: number
+          description: Last activity of the user
       required:
         - _id
         - email
@@ -8066,6 +8128,7 @@ components:
         - avatarUrl
         - role
         - executionTarget
+        - lastActive
       example:
         _id: 6284c915f173f39d71bb8b83
         email: hmc@helmut.cloud
@@ -8073,6 +8136,7 @@ components:
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         role: MEMBER
         executionTarget: false
+        lastActive: 1666361487534
     OrganizationMemberInvitationDto:
       properties:
         _id:
@@ -8877,6 +8941,9 @@ components:
         isAgent:
           type: boolean
           description: Boolean flag marking the user as an agent
+        lastActive:
+          type: number
+          description: Time of the last activity of the user
       required:
         - _id
         - name
@@ -8885,6 +8952,7 @@ components:
         - avatarUrl
         - createDate
         - modifyDate
+        - lastActive
       example:
         _id: 6284c915f173f39d71bb8b83
         name: Helmut Mc Cloud
@@ -8896,6 +8964,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        lastActive: 1666361487534
     UserLoginDto:
       properties:
         email:
@@ -9106,6 +9175,9 @@ components:
         isAgent:
           type: boolean
           description: Boolean flag marking the user as an agent
+        lastActive:
+          type: number
+          description: Time of the last activity of the user
       required:
         - _id
         - name
@@ -9114,6 +9186,7 @@ components:
         - avatarUrl
         - createDate
         - modifyDate
+        - lastActive
       example:
         _id: 6284c915f173f39d71bb8b83
         name: Helmut Mc Cloud
@@ -9127,6 +9200,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        lastActive: 1666361487534
     UsersEmailDto:
       properties:
         email:
