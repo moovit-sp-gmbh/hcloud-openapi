@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-887
+  version: 0.0.4-893
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -31,12 +31,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization the cronjob belongs to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space the cronjob belongs to
@@ -135,12 +130,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the space
@@ -246,12 +236,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -341,12 +326,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -454,12 +434,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -557,12 +532,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -670,12 +640,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -783,12 +748,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -946,12 +906,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1060,12 +1015,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1164,12 +1114,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1251,12 +1196,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1334,12 +1274,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -1425,12 +1360,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -1511,12 +1441,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1610,12 +1535,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1714,12 +1634,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -1808,12 +1723,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the Organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: spaceName
           in: path
           description: Name of the Space
@@ -2782,3 +2692,17 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w-+@. ]+$/
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, periods,
+        underscores, +, -, @ symbols, and spaces are allowed; it should contain
+        between 3 and 255 characters).
