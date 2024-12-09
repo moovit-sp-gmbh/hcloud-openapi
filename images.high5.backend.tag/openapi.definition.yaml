@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2044
+  version: 0.0.107-2047
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10406,13 +10406,13 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w\-@.]+$/
-        example: MoovIT-Software-Products_GmbH
+        pattern: /^[\w-+@. ]+$/
+        example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, hyphens,
-        underscores, periods and '@' are allowed, it should contain between 3
-        and 255 symbols).
+        Name of the organization (only alphanumeric characters, periods,
+        underscores, +, -, @ symbols, and spaces are allowed; it should contain
+        between 3 and 255 characters).
     SpaceName:
       in: path
       name: spaceName
