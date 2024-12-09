@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-188
+  version: 0.0.1-197
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -23,12 +23,7 @@ paths:
         - Connect
       summary: Search the available execution targets for a given organization
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       security:
@@ -118,12 +113,7 @@ paths:
         - Connect
       summary: Connect to a given organization
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       security:
         - BearerAuth: []
       requestBody:
@@ -198,12 +188,7 @@ paths:
         - Disconnect
       summary: Disconnect from a given organization
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: email
           in: path
           description: Email of the target representing the connection
@@ -1090,3 +1075,17 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w-+@. ]+$/
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, periods,
+        underscores, +, -, @ symbols, and spaces are allowed; it should contain
+        between 3 and 255 characters).
