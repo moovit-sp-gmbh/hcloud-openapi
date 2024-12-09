@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2133
+  version: 0.0.143-2136
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -31,12 +31,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       responses:
         '200':
           description: List of domains
@@ -114,12 +109,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -216,12 +206,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Domain name (FQDN)
@@ -329,12 +314,7 @@ paths:
       security:
         - BearerAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Domain name (FQDN)
@@ -428,12 +408,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       responses:
         '200':
           description: License
@@ -511,12 +486,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -1439,12 +1409,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: teamsOfUser
           in: query
           description: >-
@@ -1558,12 +1523,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -1650,12 +1610,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       responses:
         '204':
           description: No content
@@ -1735,12 +1690,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -1834,12 +1784,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be added to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: userId
           in: path
           description: ID of the user
@@ -1944,12 +1889,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be removed from
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: userId
           in: path
           description: ID of user that should be removed
@@ -2042,12 +1982,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: userId
           in: path
           description: ID of the user from IDP, not the member ID
@@ -2144,12 +2079,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: userId
           in: path
           description: ID of the user from IDP, not the member ID
@@ -2248,12 +2178,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be deleted from
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       responses:
         '204':
           description: No Content
@@ -2335,12 +2260,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -2442,12 +2362,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be added to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -2552,12 +2467,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be added to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: invitationId
           in: path
           description: ID of the invitation
@@ -2652,12 +2562,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be added to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: invitationId
           in: path
           description: ID of the invitation
@@ -2767,12 +2672,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of organization the user should be added to
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: invitationId
           in: path
           description: ID of the invitation
@@ -2862,12 +2762,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -2966,12 +2861,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -3068,12 +2958,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: oAuthAppId
           in: path
           description: ID of the oAuthApp
@@ -3163,12 +3048,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: oAuthAppId
           in: path
           description: ID of the oAuthApp
@@ -3273,12 +3153,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: oauthAppId
           in: path
           description: ID of the oAuthApp
@@ -3365,12 +3240,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: oauthAppId
           in: path
           description: ID of the oAuthApp
@@ -3475,12 +3345,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: oauthAppId
           in: path
           description: ID of the oAuthApp
@@ -3579,12 +3444,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       requestBody:
         content:
           application/json:
@@ -3690,12 +3550,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: teamName
           in: path
           description: Name of the team
@@ -3784,12 +3639,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: teamName
           in: path
           description: Name of the team
@@ -3898,12 +3748,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: teamName
           in: path
           description: Name of the team
@@ -4007,12 +3852,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: totalMemberCount
           in: query
           description: >-
@@ -4127,12 +3967,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: teamName
           in: path
           description: Name of the team
@@ -4393,12 +4228,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
       responses:
         '200':
           description: Available SAML IdPs
@@ -4489,12 +4319,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Name of the domain
@@ -4607,12 +4432,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Name of the domain
@@ -4712,12 +4532,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Name of the domain
@@ -4803,12 +4618,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OrgName'
         - name: domainName
           in: path
           description: Name of the domain
@@ -9804,3 +9614,17 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w-+@. ]+$/
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, periods,
+        underscores, +, -, @ symbols, and spaces are allowed; it should contain
+        between 3 and 255 characters).
