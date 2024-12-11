@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2136
+  version: 0.0.143-2139
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1250,7 +1250,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/OAuthAppWithConsentDto'
+                $ref: '#/components/schemas/OAuthAppPublicInfoDto'
         '401':
           description: There was an error while evaluating the user's credentials
           content:
@@ -7571,6 +7571,62 @@ components:
             createDate: 1673527923628
             modifyDate: 1673527923628
             _id: 63c002732d9cdb53e6032aec
+        createDate: 1673527923627
+        modifyDate: 1673527923627
+    OAuthAppPublicInfoDto:
+      properties:
+        _id:
+          type: string
+          description: ID of the OAuthApp
+        name:
+          type: string
+          description: Name of the OAuthApp
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the OAuth app belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the OAuthApp
+        avatarUrl:
+          type: string
+          description: URL of the OAuthApp avatar
+        clientId:
+          type: string
+          description: Client ID to be used in the connected backend
+        description:
+          type: string
+          description: Optional description of the OAuthApp
+        homepage:
+          type: string
+          description: Optional homepage URL for the OAuthApp
+        createDate:
+          type: number
+          description: Creation date of the OAuthApp
+        modifyDate:
+          type: number
+          description: Last modification date of the OAuthApp
+      required:
+        - _id
+        - name
+        - avatarUrl
+        - clientId
+        - createDate
+        - modifyDate
+      example:
+        _id: 63ca7c7683160ed3ad9162ff
+        name: SevTest
+        organization:
+          _id: 6284c915f173f39d71bb8b83
+          name: Helmut Mc Cloud
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 6284c915f173f39d71bb8b83
+          name: Helmut Mc Cloud
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        clientId: 30ed05e3-4065-4c2c-b537-e4c411854b6f
+        description: A test OAuthApp
+        homepage: https://github.com/
         createDate: 1673527923627
         modifyDate: 1673527923627
     OAuthAppWithConsentDto:
