@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2152
+  version: 0.0.143-2158
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4761,8 +4761,6 @@ paths:
               examples:
                 BasicAuthDisabledInFavorOf2FAException:
                   $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Missing required scope for operation:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
         default:
           description: Unexpected error
   /v1/user:
@@ -9387,6 +9385,11 @@ components:
         code: 001.006.0001
         error: oauthApp.already.exists
         message: OAuth app with given name already exists
+    OAuthConsentNotGivenException:
+      value:
+        code: 001.006.0013
+        error: consent.not.given
+        message: The user has not consented to the specified scopes
     OAuthAppNotFoundException:
       value:
         code: 001.006.0002
