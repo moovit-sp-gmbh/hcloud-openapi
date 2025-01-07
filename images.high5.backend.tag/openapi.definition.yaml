@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2053
+  version: 0.0.107-2058
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1048,14 +1048,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/StreamExecutionPackage'
         '400':
-          description: Bad Request
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Stream has no published design:
-                  $ref: '#/components/examples/StreamExecutionException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
                 Space name is invalid:
@@ -1734,14 +1732,12 @@ paths:
         '204':
           description: No Content
         '400':
-          description: Bad Request exception
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                StreamExecutionException:
-                  $ref: '#/components/examples/StreamExecutionException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
         '401':
@@ -10254,13 +10250,6 @@ components:
         code: 002.023.0001
         error: search.invalid.filter
         message: The value of the filter property 'field' is invalid
-    StreamExecutionException:
-      value:
-        code: 002.015.0002
-        error: stream.execution.failed
-        message: >-
-          Failed to execute given stream - 'Detailed message describing the
-          problem'
     High5ExecutionNotFoundException:
       value:
         code: 002.025.0003
