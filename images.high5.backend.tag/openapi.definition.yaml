@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2065
+  version: 0.0.107-2068
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9202,6 +9202,10 @@ components:
         error:
           type: boolean
           description: Indicates if the input has an error
+        logs:
+          type: array
+          items:
+            type: string
         duration:
           type: number
           description: Duration the node took for execution in ms
