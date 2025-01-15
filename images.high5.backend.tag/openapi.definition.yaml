@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2068
+  version: 0.0.107-2073
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2975,6 +2975,22 @@ paths:
         - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
+        - name: totalTargetCount
+          in: query
+          description: >-
+            If true, an additional property holding the total target count of
+            the pool will be returned.
+          required: false
+          schema:
+            type: boolean
+        - name: targetsSample
+          in: query
+          description: >-
+            If set, an additional property holding a sample of targets will be
+            returned. The provided number represents the max size of the sample.
+          required: false
+          schema:
+            type: number
       requestBody:
         content:
           application/json:
@@ -3181,6 +3197,103 @@ paths:
               examples:
                 Missing required scope for operation:
                   $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/pools/{poolName}/targets/search:
+    post:
+      tags:
+        - Pool
+      summary: Search the targets of a pool
+      description: |-
+
+        Required organization role: MANAGER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of pools that match the search filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationMember'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PoolNotFoundException:
+                  $ref: '#/components/examples/PoolNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/secrets/search:
@@ -7975,19 +8088,11 @@ components:
           type: array
           items:
             type: string
-        notExecutionTarget:
-          type: array
-          items:
-            type: string
-          description: Emails of non-execution-target members
       required:
         - notMember
-        - notExecutionTarget
       example:
         notMember:
           - example@helmut.cloud
-        notExecutionTarget:
-          - exampletwo@helmut.cloud
     JoinTokenDto:
       properties:
         _id:
@@ -8238,6 +8343,59 @@ components:
           eyJuYW1lIjoiRXhlY3V0ZSBweXRob24iLCJkZXNjcmlwdGlvbiI6ImV4ZWMgcHl0aG9uIiwidHlwZSI6IkFDVElPTiIsInBhY2thZ2UiOiJDVVNUT00iLCJjYXRlZ29yeSI6Ik90aGVyIiwidmVyc2lvbiI6eyJtYWpvciI6MCwibWlub3IiOjAsInBhdGNoIjoxLCJjaGFuZ2Vsb2ciOlsiSW5pdGlhbCBub2RlIl19LCJhdXRob3IiOnsibmFtZSI6Ik1vb3ZJVCBTUCIsImVtYWlsIjoiYWNjb3VudEBtb292aXQtc3AuY29tIiwiY29tcGFueSI6IiJ9LCJpbnB1dHMiOltdLCJvdXRwdXRzIjpbeyJuYW1lIjoiUmVzdWx0IiwiZGVzY3JpcHRpb24iOiJUaGUgRnJhbWVJTyByZXN1bHQiLCJ0eXBlIjoiU1RSSU5HIiwiZXhhbXBsZSI6Int9In1dLCJwYXRoIjoiaHR0cHM6Ly9kZXYuYXBwLmhlbG11dC5jbG91ZDo0NDMvYXBpL2hpZ2g1L3YxL25vZGUvMjE5NmYyOGQ0MWU2NWRlMDQ5Y2RkMDg4ODM0YjI2ZmM0NDAwZjIxZDZmMjQ2M2U5NDk0NTIxMjhiOWIwZDlmNDBjYzdkMDg4ZTk1YzdjOWFkYzEwMjA4M2UwOWFjZjMzZWVjYjM0MTk4NWVhNDBlMGZjNDkzNTQ1YTM2OTg3NjgvY29udGVudCIsImN1c3RvbU5vZGUiOnsiX2lkIjoiNjNjYWE4YmU4MTJjYzFlYjE1N2M5N2RhIn19
         typescript: >-
           aW1wb3J0IEN1c3RvbU5vZGUgZnJvbSAiLi4vQ3VzdG9tTm9kZSI7CmltcG9ydCB7CiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb24sIAogIFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZSwgCiAgU3RyZWFtTm9kZVNwZWNpZmljYXRpb25QYWNrYWdlLCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbkNhdGVnb3J5LCAKICBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbklucHV0T3V0cHV0VHlwZQp9IGZyb20gIi4uLy4uLy4uL21vZGVscy9TdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiI7CmltcG9ydCAqIGFzIFN0cmVhbU5vZGVFcnJvciBmcm9tICIuLi8uLi8uLi9lcnJvcnMvU3RyZWFtTm9kZUVycm9ycyI7CgppbXBvcnQgYXhpb3MgZnJvbSAiYXhpb3MiCmltcG9ydCAqIGFzIGNoaWxkIGZyb20gJ2NoaWxkX3Byb2Nlc3MnOwoKZXhwb3J0IGRlZmF1bHQgY2xhc3MgTmV3Q3VzdG9tTm9kZSBleHRlbmRzIEN1c3RvbU5vZGUgewogIC8vc3BlYzpzdGFydAogIHByb3RlY3RlZCBzcGVjaWZpY2F0aW9uOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvbiA9IHsKICAgIG5hbWU6ICJFeGVjdXRlIHB5dGhvbiIsCiAgICBkZXNjcmlwdGlvbjogImV4ZWMgcHl0aG9uIiwKICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uVHlwZS5BQ1RJT04sCiAgICBwYWNrYWdlOiBTdHJlYW1Ob2RlU3BlY2lmaWNhdGlvblBhY2thZ2UuQ1VTVE9NLAogICAgY2F0ZWdvcnk6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uQ2F0ZWdvcnkuT1RIRVIsCiAgICB2ZXJzaW9uOiB7CiAgICAgIG1ham9yOiAwLAogICAgICBtaW5vcjogMCwKICAgICAgcGF0Y2g6IDEsCiAgICAgIGNoYW5nZWxvZzogWyJJbml0aWFsIG5vZGUiXSwKICAgIH0sCiAgICBhdXRob3I6IHsKICAgICAgbmFtZTogIk1vb3ZJVCBTUCIsCiAgICAgIGVtYWlsOiAiYWNjb3VudEBtb292aXQtc3AuY29tIiwKICAgICAgY29tcGFueTogIiIsCiAgICB9LAogICAgaW5wdXRzOiBbXSwKICAgIG91dHB1dHM6IFsKICAgICB7CiAgICAgIG5hbWU6ICJSZXN1bHQiLAogICAgICBkZXNjcmlwdGlvbjogIlRoZSBGcmFtZUlPIHJlc3VsdCIsCiAgICAgIHR5cGU6IFN0cmVhbU5vZGVTcGVjaWZpY2F0aW9uSW5wdXRPdXRwdXRUeXBlLlNUUklORywKICAgICAgZXhhbXBsZTogInt9IiwKICAgIH0KICAgIF0sCiAgfTsKICAvL3NwZWM6ZW5kCgogIGFzeW5jIGV4ZWN1dGUoKTogUHJvbWlzZTx2b2lkPiB7CiAgICBjb25zdCB0ZWxlZ3JhbUNoYXRJZHMgPSB7IHNzOiAiNDE2ODk4MDcyIiwgaGVsbXV0Y2xvdWQ6ICItMTAwMTc0MzQ0NjU4MCIsIGRtOiAiNjg2NzMxNTkxIiwgaWJjMjAyMjogIi03NjUyOTI0NzkiIH07CiAgICBjb25zdCBwYXlsb2FkID0gdGhpcy5zdHJlYW1SZXF1ZXN0LnBheWxvYWQ7Cgpjb25zb2xlLmxvZygib2theSIpCgogICAgIGF3YWl0IGNoaWxkLmV4ZWMoYC91c3IvYmluL3B5dGhvbiAvaG9tZS9waS9kaXNwbGF5XzQyMC9zY3JpcHQucHkgIiR7cGF5bG9hZC5sMX0iICIke3BheWxvYWQubDJ9IiAiJHtwYXlsb2FkLmwzfSIgIiR7cGF5bG9hZC5sNH0iYCwgKGVycm9yOiBzdHJpbmcsIHN0ZG91dDogc3RyaW5nLCBzdGRlcnI6IHN0cmluZykgPT4gewogICAgICAgY29uc29sZS5sb2coInJlc3VsdDogIiwgZXJyb3IsIHN0ZG91dCwgc3RkZXJyKQogICAgICAgICAgICB0aGlzLmFkZE91cHV0KHRoaXMuZ2V0Tm9kZVNwZWNpZmljYXRpb24oKS5vdXRwdXRzPy5bMF0sIHN0ZG91dCk7CiAgICAgICAgfSk7OwoKICAgICAgYXhpb3MucG9zdChgaHR0cHM6Ly9hcGkudGVsZWdyYW0ub3JnL2JvdDU0MTkzMzY5ODI6QUFFNlRUSVJlbVNCVUxibXZISno1MkhHUDIxMFR0UGZBTVkvc2VuZE1lc3NhZ2VgLCB7CiAgICAgICAgY2hhdF9pZDogdGVsZWdyYW1DaGF0SWRzLnNzLAogICAgICAgIHRleHQ6IGBEaXNwbGF5IGNoYW5nZWQgdG8gJHtwYXlsb2FkLmwxfSArICR7cGF5bG9hZC5sMn0gKyAke3BheWxvYWQubDN9ICsgJHtwYXlsb2FkLmw0fWAKICAgICAgfSk7ICAgIAogIH0KfQ
+    OrganizationMember:
+      properties:
+        _id:
+          type: string
+          description: User ID
+        email:
+          type: string
+          description: User email
+        name:
+          type: string
+          description: User name
+        avatarUrl:
+          type: string
+          description: User avatar's URL
+        role:
+          $ref: '#/components/schemas/OrganizationRole'
+          description: User role in the organization
+        executionTarget:
+          type: boolean
+          description: User is execution target flag
+      required:
+        - _id
+        - email
+        - name
+        - avatarUrl
+        - role
+        - executionTarget
+      example:
+        _id: 64180bfafe4fbcd791493ef4
+        email: account@moovit-sp.com
+        name: Account MSP
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        role: MEMBER
+        executionTarget: true
+    OrganizationRole:
+      enum:
+        - MEMBER
+        - MANAGER
+        - ADMIN
+        - OWNER
+      type: string
+      description: >
+        * MEMBER - Standard member of an organization.
+
+        * MANAGER - Member of an organization that has the ability to manage
+        certain aspects of the organization's members.
+
+        * ADMIN - Member of an organization that has the ability to manage all
+        aspects of the organization's members.
+
+        * OWNER - Member of an organization that has the ability to manage all
+        aspects of the organization's members. Only this member can delete the
+        organization.
     PoolChangeDto:
       properties:
         _id:
@@ -8291,8 +8449,6 @@ components:
         invalidTargets:
           notMember:
             - example@helmut.cloud
-          notExecutionTarget:
-            - exampletwo@helmut.cloud
     PoolCreateDto:
       properties:
         name:
@@ -8328,15 +8484,17 @@ components:
         name:
           type: string
           description: Pool's name
-        targets:
+        numberOfTargets:
+          type: number
+          description: Number of targets in the pool
+        targetSample:
           type: array
           items:
-            type: string
-          description: Pool's targets
+            $ref: '#/components/schemas/ReducedUser'
+          description: Sample of targets in the pool
       required:
         - _id
         - name
-        - targets
       example:
         _id: 6732220f7105d6ee407d5ab5
         organization:
@@ -8352,9 +8510,6 @@ components:
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         name: name
-        targets:
-          - alice@helmut.cloud
-          - bob@helmut.cloud
     PoolPatchDto:
       properties:
         name:
