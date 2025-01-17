@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-424
+  version: 0.0.5-431
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -33,12 +33,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: appId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/AppID'
       responses:
         '201':
           description: Public URL of the created avatar
@@ -119,12 +114,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: appId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/AppID'
       responses:
         '204':
           description: No content
@@ -197,12 +187,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: appId
-          in: path
-          description: ID of the application
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/AppID'
       requestBody:
         description: >-
           custom image must be send in request body as multipart/form-data as
@@ -211,6 +196,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -315,12 +301,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '201':
           description: Public URL of the created avatar
@@ -408,12 +389,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '204':
           description: No content
@@ -493,12 +469,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         description: >-
           custom image must be send in request body as multipart/form-data as
@@ -507,6 +478,298 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
+      responses:
+        '200':
+          description: Public URL of the uploaded avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarDto'
+        '400':
+          description: >-
+            Invalid parameter or request body, processing/uploading avatar
+            exceptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                FileTransferErrorException:
+                  $ref: '#/components/examples/FileTransferErrorException'
+                ImageProcessingErrorException:
+                  $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
+                  $ref: '#/components/examples/InvalidFileSizeException'
+        '415':
+          description: Invalid file type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid file type:
+                  $ref: '#/components/examples/InvalidFileTypeException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/avatar/org/{orgName}/spaces/high5/{spaceName}/pools/{poolName}:
+    post:
+      tags:
+        - High5.Pool.Avatar
+      summary: Create a new avatar for the High5 pool
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      responses:
+        '201':
+          description: Public URL of the created avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarDto'
+        '400':
+          description: Validation error, processing and uploading avatar exceptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                FileTransferErrorException:
+                  $ref: '#/components/examples/FileTransferErrorException'
+                ImageProcessingErrorException:
+                  $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - High5.Pool.Avatar
+      summary: Delete avatar for the High5 pool
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_DELETE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - High5.Pool.Avatar
+      summary: Upload custom avatar for the High5 pool
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/PoolName'
+      requestBody:
+        description: >-
+          custom image must be send in request body as multipart/form-data as
+          file!
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -617,12 +880,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '201':
           description: Public URL of the created avatar
@@ -710,12 +968,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '204':
           description: No content
@@ -795,12 +1048,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         description: >-
           custom image must be send in request body as multipart/form-data as
@@ -809,6 +1057,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -1078,6 +1327,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -1181,12 +1431,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
       responses:
         '201':
           description: Public URL of the created avatar
@@ -1267,12 +1512,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
       responses:
         '204':
           description: No content
@@ -1345,12 +1585,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
       requestBody:
         description: >-
           custom image must be send in request body as multipart/form-data as
@@ -1359,6 +1594,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -1586,6 +1822,7 @@ paths:
           multipart/form-data:
             schema:
               $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
       responses:
         '200':
           description: Public URL of the uploaded avatar
@@ -1791,10 +2028,60 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]+$/
+        pattern: /^[\w-+@. ]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
         Name of the organization (only alphanumeric characters, periods,
         underscores, +, -, @ symbols, and spaces are allowed; it should contain
         between 3 and 255 characters).
+    TeamName:
+      in: path
+      name: teamName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w-]{3,255}$/
+        example: Research_and_development_department-1
+      required: true
+      description: >-
+        Name of the team (only alphanumeric characters, underscores and dashes
+        are allowed; it should contain between 3 and 255 characters).
+    AppID:
+      in: path
+      name: appId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 60d5ec49c2fa070014ab4c3b
+      required: true
+      description: >-
+        ID of the OAuth application (ObjectId identifier, consists of 24
+        hexadecimal digits).
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        pattern: /^[\w\-.]{32}$/
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens, underscores
+        and periods are allowed, it should contain between 1 and 32 symbols).
+    PoolName:
+      in: path
+      name: poolName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: /^[\w.-]{128}$/
+        example: my_pool
+      required: true
+      description: >-
+        Name of the pool (only alphanumeric characters, periods, underscores and
+        dashes are allowed; it should contain between 1 and 128 characters).
