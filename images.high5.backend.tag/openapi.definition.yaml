@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2077
+  version: 0.0.107-2081
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8363,6 +8363,9 @@ components:
         executionTarget:
           type: boolean
           description: User is execution target flag
+        lastActive:
+          type: number
+          description: Last activity of the user
       required:
         - _id
         - email
@@ -8370,6 +8373,7 @@ components:
         - avatarUrl
         - role
         - executionTarget
+        - lastActive
       example:
         _id: 64180bfafe4fbcd791493ef4
         email: account@moovit-sp.com
@@ -8377,6 +8381,7 @@ components:
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         role: MEMBER
         executionTarget: true
+        lastActive: 1666361487537
     OrganizationRole:
       enum:
         - MEMBER
@@ -8421,6 +8426,9 @@ components:
         invalidTargets:
           $ref: '#/components/schemas/InvalidTargets'
           description: Targets that did not pass validation
+        avatarUrl:
+          type: string
+          description: URL of the avatar
       required:
         - _id
         - organization
@@ -8428,6 +8436,7 @@ components:
         - name
         - targets
         - invalidTargets
+        - avatarUrl
       example:
         _id: 6732220f7105d6ee407d5ab5
         organization:
@@ -8449,6 +8458,7 @@ components:
         invalidTargets:
           notMember:
             - example@helmut.cloud
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     PoolCreateDto:
       properties:
         name:
@@ -8484,6 +8494,9 @@ components:
         name:
           type: string
           description: Pool's name
+        avatarUrl:
+          type: string
+          description: URL of the avatar
         numberOfTargets:
           type: number
           description: Number of targets in the pool
@@ -8495,6 +8508,7 @@ components:
       required:
         - _id
         - name
+        - avatarUrl
       example:
         _id: 6732220f7105d6ee407d5ab5
         organization:
@@ -8510,6 +8524,7 @@ components:
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         name: name
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     PoolPatchDto:
       properties:
         name:
@@ -9764,6 +9779,7 @@ components:
             accountStatus: ACTIVE
             createDate: 1679297530231
             modifyDate: 1679297530231
+            lastActive: 1679297530231
             lastUrl: /account
             lastView: /account
             language: en
