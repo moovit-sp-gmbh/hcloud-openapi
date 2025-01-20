@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2086
+  version: 0.0.107-2089
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1797,6 +1797,85 @@ paths:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/execution/streams/{streamSecret}/crash:
+    patch:
+      tags:
+        - Execute.Status
+      summary: Mark a stream has failed with an optional message
+      description: |-
+        Mark a stream has failed with a message. To be used on for some reason
+                     regular logging is not possible.
+        Required organization role: MEMBER\
+        Required Scope: HIGH5_SPACE_EXECUTE
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - name: streamSecret
+          in: path
+          description: >-
+            Secret that got generated on execution package creation at one of
+            the POST execute endpoints
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/High5ExecutionCrashDto'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ExecutionLogNotFoundException:
+                  $ref: '#/components/examples/ExecutionLogNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execution/streams/{streamSecret}:
@@ -7751,6 +7830,13 @@ components:
         - name
       example:
         name: helmut4.webhook.test
+    High5ExecutionCrashDto:
+      properties:
+        message:
+          type: string
+          description: Crash log
+      example:
+        message: this is a crash message
     High5ExecutionLogAndStatusDto:
       properties:
         status:
