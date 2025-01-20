@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2081
+  version: 0.0.107-2086
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -834,7 +834,15 @@ paths:
           description: |-
             If this is true, then the last saved design
                                          will be executed instead of the published snapshot
-          required: true
+          required: false
+          schema:
+            type: boolean
+        - name: debug
+          in: query
+          description: |-
+            If this is true, then the execution will be done in debug mode.
+                                         Design must be true when debug is true.
+          required: false
           schema:
             type: boolean
       requestBody:
@@ -860,6 +868,8 @@ paths:
               examples:
                 StreamInactiveException:
                   $ref: '#/components/examples/StreamInactiveException'
+                InvalidExecutionConfigurationException:
+                  $ref: '#/components/examples/InvalidExecutionConfigurationException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
                 Space name is invalid:
@@ -1252,6 +1262,98 @@ paths:
               examples:
                 WebhookCallbackExpiredException:
                   $ref: '#/components/examples/WebhookCallbackExpiredException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/execute/{executionId}/debug:
+    post:
+      tags:
+        - Execute
+      summary: >-
+        Issue a command to the debug client of the agent executing a certain
+        stream
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: EXECUTE\
+        Required scopes: HIGH5_SPACE_EXECUTE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - name: executionId
+          in: path
+          description: ID of the execution
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/IssueDebugCommandDto'
+        required: true
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                NoDebugModeException:
+                  $ref: '#/components/examples/NoDebugModeException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SingleUserDebugException:
+                  $ref: '#/components/examples/SingleUserDebugException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least EXECUTE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                High5ExecutionNotFoundException:
+                  $ref: '#/components/examples/High5ExecutionNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/execution/logs/search:
@@ -6897,6 +6999,18 @@ components:
         name: default
         url: https://example.com
         version: 1.0.0
+    CommandType:
+      enum:
+        - STEP_FORWARD
+        - CONTINUE
+        - STEP_BACK
+        - SET_VALUE
+      type: string
+      description: |
+        * STEP_FORWARD - Continue execution until the next node
+        * CONTINUE - Continue execution until a breakpoint is hit
+        * STEP_BACK - Revert the previous node's execution
+        * SET_VALUE - Alter the state of the stream without advancing execution
     CustomError:
       properties:
         code:
@@ -6924,12 +7038,26 @@ components:
             Name of the design (only alphabet characters, hyphens and
             underscores are allowed, it should contain between 1 and 64 symbols)
         content:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: >-
             Object containing all information needed to visualize the design in
             SDS
         build:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: Deprecated. This property will be ignored.
       required:
         - name
@@ -7038,7 +7166,14 @@ components:
           type: string
           description: Name of the design
         content:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: >-
             Object containing all information needed to visualize the design in
             SDS
@@ -7364,6 +7499,8 @@ components:
                       type: string
                   required:
                     - _id
+                breakpoint:
+                  type: boolean
               required:
                 - name
                 - description
@@ -7425,6 +7562,8 @@ components:
                 color:
                   type: string
                 bypass:
+                  type: boolean
+                breakpoint:
                   type: boolean
           required:
             - target
@@ -7830,6 +7969,10 @@ components:
           items:
             $ref: '#/components/schemas/StreamSingleNodeResultDto'
           description: List of single node results
+        nodeResultsToRemove:
+          type: array
+          items:
+            type: string
       required:
         - streamId
         - nodeResults
@@ -8093,6 +8236,31 @@ components:
       example:
         notMember:
           - example@helmut.cloud
+    IssueDebugCommandDto:
+      properties:
+        type:
+          $ref: '#/components/schemas/CommandType'
+          description: Command type
+        uuid:
+          type: string
+          description: Node result UUID
+        key:
+          type: string
+          description: Key to set in the SET_VALUE command
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
+          description: Value to set in the SET_VALUE command
+      required:
+        - type
+      example:
+        type: CONTINUE
     JoinTokenDto:
       properties:
         _id:
@@ -9199,6 +9367,9 @@ components:
         info:
           $ref: '#/components/schemas/StreamInfo'
           description: Information about the stream to be executed
+        debug:
+          type: boolean
+          description: Flag to mark execution in debug mode
       required:
         - design
         - payload
@@ -9206,6 +9377,7 @@ components:
         - waveEngine
         - waveCatalogs
         - info
+        - debug
       example:
         design:
           nodes:
@@ -9248,6 +9420,7 @@ components:
             url: 0.0.2-1238f8fcf8f1dd8651fb6499aa09184af213494b
         info:
           target: example@email.com
+        debug: false
     StreamInfo:
       properties:
         target:
@@ -9346,7 +9519,14 @@ components:
           type: string
           description: UUID of the result
         nodeUuid:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: UUID of the node
         failed:
           type: boolean
@@ -9382,6 +9562,9 @@ components:
         bypassed:
           type: boolean
           description: Indicates if the node was bypassed
+        waiting:
+          type: boolean
+          description: Indicates if the node is waiting
         nodeResults:
           type: array
           items:
@@ -9729,7 +9912,14 @@ components:
           type: string
           description: Ip of the source the webhook got executed at
         completeHeader:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: All used headers
         requestBody:
           type: string
@@ -9738,7 +9928,14 @@ components:
           type: number
           description: Response code of the webhook execution
         responseBody:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: Response body of the webhook execution
       required:
         - _id
@@ -9774,21 +9971,7 @@ components:
           creator:
             _id: 64180bfafe4fbcd791493ef4
             name: Account MSP
-            email: account@moovit-sp.com
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
-            accountStatus: ACTIVE
-            createDate: 1679297530231
-            modifyDate: 1679297530231
-            lastActive: 1679297530231
-            lastUrl: /account
-            lastView: /account
-            language: en
-            timezone: Europe/Berlin
-            session: 74ae852a-e9a3-4607-8926-db7ce66c2f6e
-            activeOrganization: account@moovit-sp.com
-            emailValidationCode: 491012e3-2c41-4dd5-93fb-e300986a9fa2
-            activeScopes:
-              - hcloud:full
           createDate: 1681308569768
           modifyDate: 1681308569768
           roleOfUser: MEMBER
@@ -10541,6 +10724,23 @@ components:
         code: 002.033.0002
         error: pool.not.found
         message: Pool not found
+    InvalidExecutionConfigurationException:
+      value:
+        code: 002.015.0006
+        error: invalid.execution.configuration
+        message: 'invalid execution configuration: {{reason}}'
+    NoDebugModeException:
+      value:
+        code: 002.015.0008
+        error: no.debug.mode
+        message: >-
+          Debug commands can only be issued to executions of designs started in
+          debug mode
+    SingleUserDebugException:
+      value:
+        code: 002.015.0007
+        error: single.user.debug
+        message: Only the user that started an execution can issue debug commands to it
   parameters:
     LimitParameter:
       in: query
