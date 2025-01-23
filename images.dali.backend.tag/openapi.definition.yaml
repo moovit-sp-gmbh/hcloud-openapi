@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-444
+  version: 0.0.5-447
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
