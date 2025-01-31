@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2178
+  version: 0.0.143-2185
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -207,12 +207,7 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Domain name (FQDN)
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       responses:
         '200':
           description: Verified domain
@@ -315,12 +310,7 @@ paths:
         - BearerAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Domain name (FQDN)
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       responses:
         '204':
           description: No Content
@@ -1785,12 +1775,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: userId
-          in: path
-          description: ID of the user
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserID'
       requestBody:
         content:
           application/json:
@@ -1890,12 +1875,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: userId
-          in: path
-          description: ID of user that should be removed
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserID'
       responses:
         '204':
           description: No content
@@ -1983,12 +1963,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: userId
-          in: path
-          description: ID of the user from IDP, not the member ID
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserID'
       responses:
         '200':
           description: Organization member object
@@ -2080,12 +2055,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: userId
-          in: path
-          description: ID of the user from IDP, not the member ID
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/UserID'
       requestBody:
         content:
           application/json:
@@ -2468,12 +2438,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: invitationId
-          in: path
-          description: ID of the invitation
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/InvitationID'
       requestBody:
         content:
           application/json:
@@ -2563,12 +2528,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: invitationId
-          in: path
-          description: ID of the invitation
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/InvitationID'
       responses:
         '204':
           description: No content
@@ -2673,12 +2633,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: invitationId
-          in: path
-          description: ID of the invitation
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/InvitationID'
       responses:
         '204':
           description: No Content
@@ -2959,12 +2914,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: oAuthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
       responses:
         '200':
           description: Requested oAuthApp
@@ -3049,12 +2999,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: oAuthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
       requestBody:
         content:
           application/json:
@@ -3154,12 +3099,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: oauthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
       responses:
         '204':
           description: No content
@@ -3241,12 +3181,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: oauthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
       requestBody:
         content:
           application/json:
@@ -3346,12 +3281,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: oauthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
         - name: name
           in: path
           description: Name of the secret to delete
@@ -3551,12 +3481,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
       responses:
         '204':
           description: No content
@@ -3640,12 +3565,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
       requestBody:
         content:
           application/json:
@@ -3749,12 +3669,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
         - name: membersLimit
           in: query
           description: >-
@@ -3968,12 +3883,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: teamName
-          in: path
-          description: Name of the team
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TeamName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -4320,12 +4230,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Name of the domain
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       requestBody:
         description: >-
           Important note regarding the example request body shown below:
@@ -4433,12 +4338,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Name of the domain
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       requestBody:
         description: >-
           Important note regarding the example request body shown below:
@@ -4533,12 +4433,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Name of the domain
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       responses:
         '204':
           description: No content
@@ -4619,12 +4514,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: domainName
-          in: path
-          description: Name of the domain
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/DomainName'
       requestBody:
         description: >-
           Important note regarding the example request body shown below: Data
@@ -6055,12 +5945,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: oAuthAppId
-          in: path
-          description: ID of the oAuthApp
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/OAuthAppID'
       responses:
         '204':
           description: No content
@@ -6207,12 +6092,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: patId
-          in: path
-          description: ID of the Pat
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/PatID'
       responses:
         '200':
           description: Pat object without the patToken
@@ -6287,12 +6167,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: patId
-          in: path
-          description: ID of the Pat
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/PatID'
       requestBody:
         content:
           .application/json:
@@ -6378,12 +6253,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: patId
-          in: path
-          description: ID of the Pat
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/PatID'
       responses:
         '204':
           description: No content
@@ -6580,12 +6450,7 @@ paths:
         - BearerAuth: []
         - BasicAuth: []
       parameters:
-        - name: patId
-          in: path
-          description: ID of the Pat
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/PatID'
       requestBody:
         content:
           application/json:
@@ -9680,10 +9545,76 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]+$/
+        pattern: /^[a-zA-Z0-9-.]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, periods and
+        dashes are allowed; it should contain between 3 and 255 characters).
+    TeamName:
+      in: path
+      name: teamName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 255
+        pattern: /^[\w-]{3,255}$/
+        example: Research_and_development_department-1
+      required: true
+      description: >-
+        Name of the team (only alphanumeric characters, underscores and dashes
+        are allowed; it should contain between 3 and 255 characters).
+    DomainName:
+      in: path
+      name: domainName
+      schema:
+        type: string
+        minLength: 4
+        maxLength: 254
+        pattern: >-
+          /^(?=.{1,254}$)(?=(^.{1,63}\.|^.{1,63}\.)*)(^([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,63}$)$/
+        example: helmut.cloud
+      required: true
+      description: Fully qualified domain name (FQDN).
+    UserID:
+      in: path
+      name: userId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 671b7de208337dc792b65f93
+      required: true
+      description: ID of the user (ObjectId identifier, consists of 24 hexadecimal digits).
+    InvitationID:
+      in: path
+      name: invitationId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 961b7de208337dc792b65f57
+      required: true
+      description: >-
+        ID of the invitation (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    OAuthAppID:
+      in: path
+      name: oAuthAppId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 291b7de208337dc792b65f76
+      required: true
+      description: >-
+        ID of the OAuth application (ObjectId identifier, consists of 24
+        hexadecimal digits).
+    PatID:
+      in: path
+      name: patId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 381b5de208337dc792b65f67
+      required: true
+      description: >-
+        ID of the personal Access Token (PAT, ObjectId identifier, consists of
+        24 hexadecimal digits).
