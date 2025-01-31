@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2117
+  version: 0.0.107-2129
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4584,89 +4584,6 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
-    patch:
-      tags:
-        - Space
-      summary: Rename a Space or change enable dev state
-      description: |-
-
-        Required organization role: ADMIN\
-        Required space permission: MANAGE\
-        Required scopes: HIGH5_SPACE_WRITE
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - $ref: '#/components/parameters/OrgName'
-        - $ref: '#/components/parameters/SpaceName'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/SpacePatchDto'
-        required: true
-      responses:
-        '200':
-          description: Updated Space
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SpaceDto'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SpaceNameInUseException:
-                  $ref: '#/components/examples/SpaceNameInUseException'
-                Organization name is invalid:
-                  $ref: '#/components/examples/InvalidParameterException'
-                Space name is invalid:
-                  $ref: '#/components/examples/InvalidParameterException'
-        '401':
-          description: There was an error while evaluating the user's credentials
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                WrongAuthenticationTokenException:
-                  $ref: '#/components/examples/WrongAuthenticationTokenException'
-                  summary: The JWT payload has an invalid format
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                  summary: The credentials were incorrect
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
-                  summary: The Authorization header is empty
-        '403':
-          description: Missing required scope for operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Missing required scope for operation:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                User is not member of organization or role is insufficient:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                Space permission is insufficient. Must be at least MANAGE:
-                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  $ref: '#/components/examples/OrganizationNotFoundException'
-                Space not found:
-                  $ref: '#/components/examples/SpaceNotFoundException'
-        default:
-          description: Unexpected error
   /v1/org/{orgName}/spaces:
     post:
       tags:
@@ -4751,6 +4668,176 @@ paths:
               examples:
                 FailedDependencyException:
                   $ref: '#/components/examples/FailedDependencyException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/name:
+    patch:
+      tags:
+        - Space
+      summary: Rename a Space
+      description: |-
+
+        Required organization role: ADMIN\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpacePatchNameDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNameInUseException:
+                  $ref: '#/components/examples/SpaceNameInUseException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/dev:
+    patch:
+      tags:
+        - Space
+      summary: >-
+        Specifies to the front-end whether to display the versions under
+        development of Wave Engines and Node Catalogs
+      description: |-
+
+        Required organization role: ADMIN\
+        Required space permission: MANAGE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpacePatchDevDto'
+        required: true
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SpaceNameInUseException:
+                  $ref: '#/components/examples/SpaceNameInUseException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/wave/engine:
@@ -9069,6 +9156,7 @@ components:
         - name
       example:
         name: Helmut4
+        enableDev: true
     SpaceDto:
       properties:
         _id:
@@ -9123,6 +9211,7 @@ components:
           name: Account MSP
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         highestPermissionOfUser: OWNER
+        enableDev: true
         createDate: 1674045151
         modifyDate: 1674045151
     SpaceEntity:
@@ -9195,15 +9284,21 @@ components:
       example:
         version: 0.0.13-5423cebe30b958a2720ba7bd34d3cb82d35f3aca
         url: https://wave.s3.helmut.cloud/catalogs/default/
-    SpacePatchDto:
+    SpacePatchDevDto:
       properties:
-        newSpaceName:
-          type: string
         enableDev:
           type: boolean
           description: >-
             Specifies to the front-end whether to display the versions under
             development of Wave Engines and Node Catalogs
+      required:
+        - enableDev
+      example:
+        enableDev: true
+    SpacePatchNameDto:
+      properties:
+        newSpaceName:
+          type: string
       required:
         - newSpaceName
       example:
@@ -9964,6 +10059,7 @@ components:
           name: Helmut4
           organizationId: 63c7e64ff912d31ffa27a5c4
           creatorId: 63c7e64ff912d31ffa27a5b4
+          enableDev: true
           createDate: 1674045151
           modifyDate: 1674045151
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
