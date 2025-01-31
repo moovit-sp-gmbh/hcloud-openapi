@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2104
+  version: 0.0.107-2117
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1042,14 +1042,7 @@ paths:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/StreamID'
-        - name: secret
-          in: path
-          description: >-
-            Secret that got generated on execution package creation at one of
-            the POST execute endpoints
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ExecutionSecret'
       responses:
         '200':
           description: Stream execution package
@@ -1643,12 +1636,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: streamLogId
-          in: path
-          description: ID of the execution log
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/StreamLogID'
         - name: payload
           in: query
           description: Optional parameter to include the payload in the response
@@ -1731,12 +1719,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: streamStatusId
-          in: path
-          description: ID of the execution result
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/StreamStatusID'
       responses:
         '200':
           description: Execution result
@@ -1895,14 +1878,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: streamSecret
-          in: path
-          description: >-
-            Secret that got generated on execution package creation at one of
-            the POST execute endpoints
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/ExecutionSecret'
       requestBody:
         content:
           application/json:
@@ -1977,12 +1953,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: high5ExecutionId
-          in: path
-          description: ID of the execution
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/High5ExecutionID'
       responses:
         '204':
           description: No content
@@ -2211,12 +2182,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: tokenId
-          in: path
-          description: ID of the token
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/JoinTokenID'
       responses:
         '204':
           description: No Content
@@ -2489,12 +2455,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/NodeID'
       responses:
         '200':
           description: Node object
@@ -2572,12 +2533,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/NodeID'
       responses:
         '204':
           description: No content
@@ -2651,12 +2607,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: nodeId
-          in: path
-          description: ID of the node
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/NodeID'
       requestBody:
         content:
           application/json:
@@ -4137,12 +4088,7 @@ paths:
         - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/EventName'
         - $ref: '#/components/parameters/StreamID'
-        - name: snapshotId
-          in: path
-          description: ID of the snapshot
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SnapshotID'
       requestBody:
         content:
           application/json:
@@ -4247,12 +4193,7 @@ paths:
         - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/EventName'
         - $ref: '#/components/parameters/StreamID'
-        - name: snapshotId
-          in: path
-          description: ID of the snapshot
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SnapshotID'
       responses:
         '204':
           description: No Content
@@ -4339,12 +4280,7 @@ paths:
         - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/EventName'
         - $ref: '#/components/parameters/StreamID'
-        - name: snapshotId
-          in: path
-          description: ID of the snapshot
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SnapshotID'
       responses:
         '204':
           description: No Content
@@ -5157,12 +5093,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: catalogId
-          in: path
-          description: Id of the catalog
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/CatalogID'
       responses:
         '204':
           description: No content
@@ -6517,12 +6448,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: webhookId
-          in: path
-          description: ID of the webhook
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/WebhookID'
       responses:
         '200':
           description: Webhook object
@@ -6600,12 +6526,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: webhookId
-          in: path
-          description: ID of the webhook
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/WebhookID'
       requestBody:
         content:
           application/json:
@@ -6690,12 +6611,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: webhookId
-          in: path
-          description: ID of the webhook
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/WebhookID'
       responses:
         '204':
           description: No content
@@ -6770,12 +6686,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: webhookId
-          in: path
-          description: ID of the webhook
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/WebhookID'
       responses:
         '200':
           description: Webhook object
@@ -6939,12 +6850,7 @@ paths:
       parameters:
         - $ref: '#/components/parameters/OrgName'
         - $ref: '#/components/parameters/SpaceName'
-        - name: webhookId
-          in: path
-          description: ID of the webhook
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/WebhookID'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       responses:
@@ -10871,13 +10777,12 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]+$/
+        pattern: /^[a-zA-Z0-9-.]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, periods and
+        dashes are allowed; it should contain between 3 and 255 characters).
     SpaceName:
       in: path
       name: spaceName
@@ -10913,8 +10818,93 @@ components:
         example: 76194791721d55d3a5051092
       required: true
       description: >-
-        ID of the stream (the database object ID should contain 24 hexadecimal
-        characters).
+        ID of the stream (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    ExecutionSecret:
+      in: path
+      name: secret
+      schema:
+        type: string
+        example: A-top-top-top-secret-superspy-Secret
+      required: true
+      description: >-
+        Secret that got generated on execution package creation at one of the
+        POST execute endpoints.
+    High5ExecutionID:
+      in: path
+      name: high5ExecutionId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 749b7de208337dc792b65f16
+      required: true
+      description: >-
+        ID of the execution (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    StreamLogID:
+      in: path
+      name: streamLogId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 671b7de208337dc792b65f93
+      required: true
+      description: >-
+        ID of the execution log (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    StreamStatusID:
+      in: path
+      name: streamStatusId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 835b7de208337dc792b65f42
+      required: true
+      description: >-
+        ID of the execution result (ObjectId identifier, consists of 24
+        hexadecimal digits).
+    JoinTokenID:
+      in: path
+      name: tokenId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 356b7de208337dc792b65f84
+      required: true
+      description: >-
+        ID of the join token (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    NodeID:
+      in: path
+      name: nodeId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 934b7de208337dc792b65f76
+      required: true
+      description: ID of the node (ObjectId identifier, consists of 24 hexadecimal digits).
+    SnapshotID:
+      in: path
+      name: snapshotId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 658b7de208337dc792b65f49
+      required: true
+      description: >-
+        ID of the snapshot (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    CatalogID:
+      in: path
+      name: catalogId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 873b7de208337dc792b65f21
+      required: true
+      description: >-
+        ID of the catalog (ObjectId identifier, consists of 24 hexadecimal
+        digits).
     SecretKey:
       in: path
       name: secretKey
@@ -10927,7 +10917,18 @@ components:
       required: true
       description: >-
         Key of the secret (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 32 symbols)}
+        and periods are allowed, it should contain between 1 and 32 symbols).
+    WebhookID:
+      in: path
+      name: webhookId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 549b7de208337dc792b65f37
+      required: true
+      description: >-
+        ID of the webhook (ObjectId identifier, consists of 24 hexadecimal
+        digits).
     WebhookToken:
       in: path
       name: webhookToken
@@ -10946,4 +10947,4 @@ components:
         pattern: /^[0-9a-zA-Z_.-]{128}$/
         example: my_pool
       required: true
-      description: Name of the pool
+      description: Name of the pool.
