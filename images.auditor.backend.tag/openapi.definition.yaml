@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-399
+  version: 0.0.28-404
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -144,7 +144,14 @@ components:
           type: number
           description: Timestamp in unix format
         message:
-          type: object
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
           description: Actual message
         correlationId:
           type: string
