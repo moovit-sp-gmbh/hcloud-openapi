@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-197
+  version: 0.0.1-205
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -189,12 +189,7 @@ paths:
       summary: Disconnect from a given organization
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: email
-          in: path
-          description: Email of the target representing the connection
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TargetEmail'
       security:
         - BearerAuth: []
       responses:
@@ -257,12 +252,7 @@ paths:
         - Disconnect
       summary: Disconnect as a target
       parameters:
-        - name: email
-          in: path
-          description: Email of the target representing the connection
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/TargetEmail'
       security:
         - BearerAuth: []
       responses:
@@ -1018,6 +1008,11 @@ components:
         code: 009.007.0001
         error: organization.not.found
         message: Organization not found
+    AgentNotConnectedException:
+      value:
+        code: 009.030.0005
+        error: agent.not.connected
+        message: Agent not connected
     AgentAlreadyConnectedException:
       value:
         code: 009.030.0004
@@ -1082,10 +1077,18 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]+$/
+        pattern: /^[a-zA-Z0-9-.]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, periods and
+        dashes are allowed; it should contain between 3 and 255 characters).
+    TargetEmail:
+      in: path
+      name: email
+      schema:
+        type: string
+        format: email
+        example: target@example.com
+      required: true
+      description: Email of the target representing the connection.
