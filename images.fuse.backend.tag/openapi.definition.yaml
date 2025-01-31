@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-893
+  version: 0.0.4-904
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -32,27 +32,9 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space the cronjob belongs to
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
+        - $ref: '#/components/parameters/NextExecution'
       responses:
         '200':
           description: Cronjob object
@@ -131,27 +113,9 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the cronjob
-          required: true
-          schema:
-            type: string
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
+        - $ref: '#/components/parameters/NextExecution'
       requestBody:
         content:
           application/json:
@@ -237,18 +201,8 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
       responses:
         '204':
           description: No content
@@ -327,23 +281,10 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/NextExecution'
       requestBody:
         content:
           application/json:
@@ -435,21 +376,8 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/NextExecution'
       requestBody:
         content:
           application/json:
@@ -533,27 +461,9 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
+        - $ref: '#/components/parameters/NextExecution'
       requestBody:
         content:
           application/json:
@@ -641,27 +551,9 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
-        - name: nextExecution
-          in: query
-          description: >-
-            Optional - Alongside the cronjob also retrieve the timestamps for
-            three next executions (for the specified timezone, in milliseconds)
-          required: false
-          schema:
-            type: boolean
-            default: 'false'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
+        - $ref: '#/components/parameters/NextExecution'
       requestBody:
         content:
           application/json:
@@ -749,18 +641,8 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
         - name: amount
           in: query
           description: >-
@@ -907,18 +789,8 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the cronjob
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -1016,24 +888,9 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
-        - name: cronjobId
-          in: path
-          description: ID of the Cronjob
-          required: true
-          schema:
-            type: string
-        - name: cronjobLogId
-          in: path
-          description: ID of the Cronjob log
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/CronjobID'
+        - $ref: '#/components/parameters/CronjobLogID'
       responses:
         '200':
           description: Cronjob log object
@@ -1115,12 +972,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '200':
           description: Space object
@@ -1197,12 +1049,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       responses:
         '204':
           description: No content
@@ -1442,12 +1289,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -1536,12 +1378,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
         - $ref: '#/components/parameters/LimitParameter'
         - $ref: '#/components/parameters/PageParameter'
       requestBody:
@@ -1635,12 +1472,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -1724,12 +1556,7 @@ paths:
         - BasicAuth: []
       parameters:
         - $ref: '#/components/parameters/OrgName'
-        - name: spaceName
-          in: path
-          description: Name of the Space
-          required: true
-          schema:
-            type: string
+        - $ref: '#/components/parameters/SpaceName'
       requestBody:
         content:
           application/json:
@@ -2699,10 +2526,54 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]+$/
+        pattern: /^[a-zA-Z0-9-.]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, periods and
+        dashes are allowed; it should contain between 3 and 255 characters).
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        pattern: /^[\w\-.]{32}$/
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens, underscores
+        and periods are allowed, it should contain between 1 and 32 symbols).
+    CronjobID:
+      in: path
+      name: cronjobId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 70d5ec35c2fa070014ab8c3b
+      required: true
+      description: >-
+        ID of the Cronjob (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    CronjobLogID:
+      in: path
+      name: cronjobLogId
+      schema:
+        type: string
+        pattern: /^[0-9a-fA-F]{24}$/
+        example: 31d5ec35c2fa070014ab8c7b
+      required: true
+      description: >-
+        ID of the Cronjob log (ObjectId identifier, consists of 24 hexadecimal
+        digits).
+    NextExecution:
+      in: query
+      name: nextExecution
+      schema:
+        type: boolean
+        default: false
+      required: false
+      description: >-
+        Alongside the cronjob also retrieve the timestamps for three next
+        executions (for the specified timezone, in milliseconds).
