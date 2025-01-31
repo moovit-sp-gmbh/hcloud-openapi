@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-453
+  version: 0.0.5-457
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2028,13 +2028,12 @@ components:
         type: string
         minLength: 3
         maxLength: 255
-        pattern: /^[\w-+@. ]{3,255}$/
+        pattern: /^[a-zA-Z0-9-.]{3,255}$/
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, periods and
+        dashes are allowed; it should contain between 3 and 255 characters).
     TeamName:
       in: path
       name: teamName
