@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2132
+  version: 0.0.107-2143
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7652,8 +7652,12 @@ components:
               enum:
                 - MOVE
             uuid:
-              type: string
-              format: uuid
+              anyOf:
+                - type: string
+                  format: uuid
+                - type: string
+                  enum:
+                    - '0'
             newCoords:
               type: object
               properties:
@@ -7689,11 +7693,19 @@ components:
                   type: object
                   properties:
                     nodeUuid:
-                      type: string
-                      format: uuid
+                      anyOf:
+                        - type: string
+                          format: uuid
+                        - type: string
+                          enum:
+                            - '0'
                     connectorUuid:
-                      type: string
-                      format: uuid
+                      anyOf:
+                        - type: string
+                          format: uuid
+                        - type: string
+                          enum:
+                            - '0'
                   required:
                     - nodeUuid
                     - connectorUuid
@@ -7701,11 +7713,19 @@ components:
                   type: object
                   properties:
                     nodeUuid:
-                      type: string
-                      format: uuid
+                      anyOf:
+                        - type: string
+                          format: uuid
+                        - type: string
+                          enum:
+                            - '0'
                     connectorUuid:
-                      type: string
-                      format: uuid
+                      anyOf:
+                        - type: string
+                          format: uuid
+                        - type: string
+                          enum:
+                            - '0'
                   required:
                     - nodeUuid
                     - connectorUuid
