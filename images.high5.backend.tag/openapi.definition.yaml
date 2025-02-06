@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2151
+  version: 0.0.107-2174
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9736,6 +9736,11 @@ components:
           description: >-
             Information about the webhook that triggered this stream if it was
             triggered by a webhook
+        triggerDetails:
+          $ref: '#/components/schemas/TriggerDetails'
+          description: >-
+            Information about the source, ip and country of the instance that
+            triggered the stream
       required:
         - target
       example:
