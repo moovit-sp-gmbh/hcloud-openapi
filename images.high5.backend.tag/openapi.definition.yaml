@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2174
+  version: 0.0.107-2177
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4786,14 +4786,12 @@ paths:
               schema:
                 $ref: '#/components/schemas/SpaceDto'
         '400':
-          description: Bad Request
+          description: Organization name is invalid
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                SpaceNameInUseException:
-                  $ref: '#/components/examples/SpaceNameInUseException'
                 Organization name is invalid:
                   $ref: '#/components/examples/InvalidParameterException'
                 Space name is invalid:
