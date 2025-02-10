@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2188
+  version: 0.0.107-2190
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7064,12 +7064,19 @@ components:
         - CONTINUE
         - STEP_BACK
         - SET_VALUE
+        - REPLACE_NODE
       type: string
-      description: |
+      description: >
         * STEP_FORWARD - Continue execution until the next node
+
         * CONTINUE - Continue execution until a breakpoint is hit
+
         * STEP_BACK - Revert the previous node's execution
+
         * SET_VALUE - Alter the state of the stream without advancing execution
+
+        * REPLACE_NODE - Replace a node in a design only for a specific
+        execution
     CustomError:
       properties:
         code:
@@ -8526,6 +8533,9 @@ components:
             - type: number
             - type: boolean
           description: Value to set in the SET_VALUE command
+        node:
+          $ref: '#/components/schemas/DesignerNode'
+          description: Stream node to replace
       required:
         - type
       example:
