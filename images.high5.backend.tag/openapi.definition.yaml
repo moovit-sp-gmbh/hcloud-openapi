@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2177
+  version: 0.0.107-2180
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7014,16 +7014,6 @@ components:
       in: header
       name: Authorization
   schemas:
-    ArrayOperation:
-      enum:
-        - ADD
-        - REMOVE
-        - REPLACE
-      type: string
-      description: |
-        * ADD - Add elements to the array
-        * REMOVE - Remove elements from the array
-        * REPLACE - Replace the current elements of the array with new ones
     AvatarDto:
       properties:
         url:
@@ -8868,7 +8858,7 @@ components:
         targets:
           type: array
           items:
-            type: string
+            $ref: '#/components/schemas/ReducedUser'
           description: Pool's targets
         invalidTargets:
           $ref: '#/components/schemas/InvalidTargets'
@@ -8876,6 +8866,12 @@ components:
         avatarUrl:
           type: string
           description: URL of the avatar
+        createDate:
+          type: number
+          description: Creation date of the pool
+        modifyDate:
+          type: number
+          description: Date of the last modification of the pool
       required:
         - _id
         - organization
@@ -8884,6 +8880,8 @@ components:
         - targets
         - invalidTargets
         - avatarUrl
+        - createDate
+        - modifyDate
       example:
         _id: 6732220f7105d6ee407d5ab5
         organization:
@@ -8900,12 +8898,15 @@ components:
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         name: name
         targets:
-          - alice@helmut.cloud
-          - bob@helmut.cloud
+          - _id: 64180bfafe4fbcd791493ef4
+            name: Account MSP
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         invalidTargets:
           notMember:
             - example@helmut.cloud
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        createDate: 1738751664185
+        modifyDate: 1738751664185
     PoolCreateDto:
       properties:
         name:
@@ -8952,10 +8953,18 @@ components:
           items:
             $ref: '#/components/schemas/ReducedUser'
           description: Sample of targets in the pool
+        createDate:
+          type: number
+          description: Creation date of the pool
+        modifyDate:
+          type: number
+          description: Date of the last modification of the pool
       required:
         - _id
         - name
         - avatarUrl
+        - createDate
+        - modifyDate
       example:
         _id: 6732220f7105d6ee407d5ab5
         organization:
@@ -8972,6 +8981,8 @@ components:
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         name: name
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        createDate: 1738751664185
+        modifyDate: 1738751664185
     PoolPatchDto:
       properties:
         name:
@@ -8995,7 +9006,7 @@ components:
             type: string
           description: Target emails to add, replace or remove
         operation:
-          $ref: '#/components/schemas/ArrayOperation'
+          $ref: '#/components/schemas/TeamUsersPatchOperation'
           description: Operation to perform on the pool's target
       required:
         - identifiers
@@ -9916,6 +9927,16 @@ components:
         - direction
       example:
         direction: UP
+    TeamUsersPatchOperation:
+      enum:
+        - ADD
+        - REMOVE
+        - SET
+      type: string
+      description: |
+        * ADD - Add elements to the array
+        * REMOVE - Remove elements from the array
+        * SET - Replace the current elements of the array with new ones
     WaveCatalogDto:
       properties:
         _id:
