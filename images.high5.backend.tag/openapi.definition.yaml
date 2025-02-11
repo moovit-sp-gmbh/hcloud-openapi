@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2190
+  version: 0.0.107-2193
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8940,7 +8940,7 @@ components:
           type: array
           items:
             type: string
-          description: Targets of the pool
+          description: IDs of the targets of the pool
       required:
         - name
         - targets
@@ -9014,7 +9014,7 @@ components:
           description: Pool's new name
         targets:
           $ref: '#/components/schemas/PoolTargetPatch'
-          description: Email and operations to apply on the pool's targets
+          description: ID and operations to apply on the pool's targets
       example:
         name: name
         targets:
@@ -9028,7 +9028,7 @@ components:
           type: array
           items:
             type: string
-          description: Target emails to add, replace or remove
+          description: Target IDs to add, replace or remove
         operation:
           $ref: '#/components/schemas/TeamUsersPatchOperation'
           description: Operation to perform on the pool's target
