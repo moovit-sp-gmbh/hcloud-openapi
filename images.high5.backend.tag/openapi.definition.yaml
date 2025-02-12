@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2193
+  version: 0.0.107-2197
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10087,11 +10087,23 @@ components:
         networkSettings:
           $ref: '#/components/schemas/IncomingWebhookNetworkSettingsDto'
           description: Optional settings to white/black list IP addresses
+        callbackEnabled:
+          type: boolean
+          description: >-
+            If enabled, no immediate response will be send to the webhook
+            initiator. Instead, a temporary callback endpoint will be opened for
+            30 seconds, which allows requests to define a custom http response.
+            If a request is received within the time limit, the provided custom
+            response will be send to the webhook initiator, otherwise a default
+            204 response will be send. This option can be overwritten via a
+            '?callback=false' query paramater inside the webhook execution
+            request
       required:
         - name
         - target
         - type
         - sub
+        - callbackEnabled
       example:
         name: webhook-blue
         target: account@moovit-sp.com
@@ -10105,6 +10117,7 @@ components:
         securityHeaders:
           - key: x-custom-security-header
             value: secret
+        callbackEnabled: false
     WebhookDto:
       properties:
         _id:
@@ -10159,6 +10172,9 @@ components:
         networkSettings:
           $ref: '#/components/schemas/WebhookNetworkSettingsDto'
           description: IP white/black list settings
+        callbackEnabled:
+          type: boolean
+          description: Shows if callback is enabled
       required:
         - _id
         - name
@@ -10170,6 +10186,7 @@ components:
         - createDate
         - modifyDate
         - sub
+        - callbackEnabled
       example:
         _id: 64c8d262f31c30ae5fab3704
         name: webhook-blue
@@ -10203,6 +10220,7 @@ components:
           statusCode: 204
         sub:
           eventName: test-Camp
+        callbackEnabled: false
     WebhookEncryptionSettingsDto:
       properties:
         hmacHeaderName:
@@ -10441,6 +10459,12 @@ components:
         networkSettings:
           $ref: '#/components/schemas/IncomingWebhookNetworkSettingsDto'
           description: Optional settings to white/black list IP addresses
+        callbackEnabled:
+          type: boolean
+          description: >-
+            Global setting to enable/disable callbacks that can just be
+            overwritten by ?callback=false query param in the webhook execution
+            endpoint
       example:
         name: webhook-blue
         target: account@moovit-sp.com
@@ -10454,6 +10478,7 @@ components:
         securityHeaders:
           - key: x-custom-security-header
             value: secret
+        callbackEnabled: false
     DesignBuild:
       properties:
         nodes:
