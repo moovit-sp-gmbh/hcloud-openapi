@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-411
+  version: 0.0.28-415
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -446,6 +446,18 @@ components:
         error: invalid.body
         message: <detailed cause of the validation fail>
   parameters:
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
     LimitParameter:
       in: query
       name: limit
@@ -465,17 +477,3 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[\w-+@. ]+$/
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, periods,
-        underscores, +, -, @ symbols, and spaces are allowed; it should contain
-        between 3 and 255 characters).
