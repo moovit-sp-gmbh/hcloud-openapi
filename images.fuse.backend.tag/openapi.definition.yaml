@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-913
+  version: 0.0.4-916
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2500,6 +2500,30 @@ components:
         error: space.invalid.owner
         message: A team cannot be the owner of a space
   parameters:
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 1 and 32 characters)
     LimitParameter:
       in: query
       name: limit
@@ -2519,32 +2543,6 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[a-zA-Z0-9-.]{3,255}$/
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, periods and
-        dashes are allowed; it should contain between 3 and 255 characters).
-    SpaceName:
-      in: path
-      name: spaceName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
-        pattern: /^[\w\-.]{32}$/
-        example: Helmut4
-      required: true
-      description: >-
-        Name of the space (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 32 symbols).
     CronjobID:
       in: path
       name: cronjobId
