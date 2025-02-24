@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-214
+  version: 0.0.1-219
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1051,6 +1051,18 @@ components:
         error: wrong.auth.token
         message: Your authentication token is invalid
   parameters:
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
     LimitParameter:
       in: query
       name: limit
@@ -1070,19 +1082,6 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[a-zA-Z0-9-.]{3,255}$/
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, periods and
-        dashes are allowed; it should contain between 3 and 255 characters).
     TargetEmail:
       in: path
       name: email
