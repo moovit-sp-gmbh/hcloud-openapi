@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2208
+  version: 0.0.143-2213
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9519,6 +9519,30 @@ components:
       value:
         error: unsupported_grant_type
   parameters:
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
+    TeamName:
+      in: path
+      name: teamName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: Research-and-development-department.1
+      required: true
+      description: >-
+        Name of the team (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 3 and 64 characters)
     LimitParameter:
       in: query
       name: limit
@@ -9538,32 +9562,6 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[a-zA-Z0-9-.]{3,255}$/
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, periods and
-        dashes are allowed; it should contain between 3 and 255 characters).
-    TeamName:
-      in: path
-      name: teamName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[\w-]{3,255}$/
-        example: Research_and_development_department-1
-      required: true
-      description: >-
-        Name of the team (only alphanumeric characters, underscores and dashes
-        are allowed; it should contain between 3 and 255 characters).
     DomainName:
       in: path
       name: domainName
