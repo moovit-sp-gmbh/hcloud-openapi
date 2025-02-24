@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-466
+  version: 0.0.5-469
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2027,26 +2027,48 @@ components:
       schema:
         type: string
         minLength: 3
-        maxLength: 255
-        pattern: /^[a-zA-Z0-9-.]{3,255}$/
+        maxLength: 64
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
-        Name of the organization (only alphanumeric characters, periods and
-        dashes are allowed; it should contain between 3 and 255 characters).
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
+    PoolName:
+      in: path
+      name: poolName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        example: My-Pool
+      required: true
+      description: >-
+        Name of the pool (only alphanumeric characters, underscores, hyphens and
+        dots are allowed; it should contain between 1 and 128 characters)
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 1 and 32 characters)
     TeamName:
       in: path
       name: teamName
       schema:
         type: string
         minLength: 3
-        maxLength: 255
-        pattern: /^[\w-]{3,255}$/
-        example: Research_and_development_department-1
+        maxLength: 64
+        example: Research-and-development-department.1
       required: true
       description: >-
-        Name of the team (only alphanumeric characters, underscores and dashes
-        are allowed; it should contain between 3 and 255 characters).
+        Name of the team (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 3 and 64 characters)
     AppID:
       in: path
       name: appId
@@ -2058,29 +2080,3 @@ components:
       description: >-
         ID of the OAuth application (ObjectId identifier, consists of 24
         hexadecimal digits).
-    SpaceName:
-      in: path
-      name: spaceName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
-        pattern: /^[\w\-.]{32}$/
-        example: Helmut4
-      required: true
-      description: >-
-        Name of the space (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 32 symbols).
-    PoolName:
-      in: path
-      name: poolName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 128
-        pattern: /^[\w.-]{128}$/
-        example: my_pool
-      required: true
-      description: >-
-        Name of the pool (only alphanumeric characters, periods, underscores and
-        dashes are allowed; it should contain between 1 and 128 characters).
