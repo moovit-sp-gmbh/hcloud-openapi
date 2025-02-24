@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2213
+  version: 0.0.107-2217
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7960,7 +7960,7 @@ components:
           type: string
           description: >-
             Name of the event (only alphanumeric characters, hyphens,
-            underscores and periods are allowed, it should contain between 1 and
+            underscores and dots are allowed, it should contain between 1 and
             128 symbols)
       required:
         - name
@@ -8014,7 +8014,7 @@ components:
           type: string
           description: >-
             The new name of the event (only alphanumeric characters, hyphens,
-            underscores and periods are allowed, it should contain between 1 and
+            underscores and dots are allowed, it should contain between 1 and
             128 symbols)
       required:
         - name
@@ -8593,7 +8593,7 @@ components:
           type: string
           description: >-
             Name of the join token (only alphanumeric characters, hyphens,
-            underscores and periods are allowed)
+            underscores and dots are allowed)
       required:
         - name
       example:
@@ -9153,8 +9153,8 @@ components:
           type: string
           description: >-
             Key that maps to the secret value (only alphanumeric characters,
-            hyphens, underscores and periods are allowed, it should contain
-            between 1 and 32 symbols)
+            hyphens, underscores and dots are allowed, it should contain between
+            1 and 32 symbols)
         value:
           type: string
           description: Secret value (maximum length is 1024 symbols)
@@ -9339,8 +9339,8 @@ components:
         name:
           type: string
           description: >-
-            Name of the snapshot (only alphanumeric characters, hyphens,
-            underscores and spaces are allowed)
+            Name of the snapshot (only alphanumeric characters, underscores,
+            hyphens, dots and spaces are allowed)
       required:
         - name
       example:
@@ -9380,9 +9380,8 @@ components:
         name:
           type: string
           description: >-
-            Name of the new Space (only alphanumeric characters, hyphens,
-            underscores and periods are allowed, it should contain between 1 and
-            32 symbols)
+            Name of the new Space (only alphanumeric characters, hyphens and
+            dots are allowed, it should contain between 1 and 32 symbols)
         enableDev:
           type: boolean
           description: >-
@@ -9580,9 +9579,8 @@ components:
         teamName:
           type: string
           description: >-
-            The name of the team (only alphanumeric characters, hyphens and
-            underscores are allowed, it should contain between 3 and 255
-            symbols)
+            Name of the team (only alphanumeric characters, hyphens and dots are
+            allowed, it should contain between 1 and 64 symbols)
         permission:
           $ref: '#/components/schemas/SpacePermission'
           description: The permission the team has within the space
@@ -9612,9 +9610,9 @@ components:
           type: string
           description: >-
             Name of the stream (only alphanumeric characters, hyphens,
-            underscores, periods and spaces are allowed, it should contain
-            between 1 and 64 symbols, periods and spaces are allowed only inside
-            a name)
+            underscores, dots and spaces are allowed, it should contain between
+            1 and 128 symbols, periods and spaces are allowed only inside a
+            name)
         streamId:
           type: string
           description: ID of the stream wich will be duplicated
@@ -9784,7 +9782,7 @@ components:
           type: string
           description: >-
             Name of the new event (only alphanumeric characters, hyphens,
-            underscores and periods are allowed, it should contain between 1 and
+            underscores and dots are allowed, it should contain between 1 and
             128 symbols)
         order:
           type: number
@@ -9809,9 +9807,9 @@ components:
           type: string
           description: >-
             New name of the stream (only alphanumeric characters, hyphens,
-            underscores, periods and spaces are allowed, it should contain
-            between 1 and 64 symbols, periods and spaces are allowed only inside
-            a name)
+            underscores, dots and spaces are allowed, it should contain between
+            1 and 128 symbols, periods and spaces are allowed only inside a
+            name)
       required:
         - name
       example:
@@ -10058,8 +10056,8 @@ components:
           type: string
           description: >-
             Name of the webhook (only alphanumeric characters, hyphens,
-            underscores, periods and spaces are allowed, it should contain
-            between 1 and 128 symbols)
+            underscores, dots and spaces are allowed, it should contain between
+            1 and 128 symbols)
         target:
           type: string
           description: The target where the webhook should be executed at
@@ -10420,8 +10418,8 @@ components:
           type: string
           description: >-
             Name of the webhook (only alphanumeric characters, hyphens,
-            underscores, periods and spaces are allowed, it should contain
-            between 1 and 128 symbols)
+            underscores, dots and spaces are allowed, it should contain between
+            1 and 128 symbols)
         target:
           type: string
           description: The target where the webhook should be executed at
@@ -11128,6 +11126,66 @@ components:
         error: single.user.debug
         message: Only the user that started an execution can issue debug commands to it
   parameters:
+    EventName:
+      in: path
+      name: eventName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        example: Dev_Camp-2025.1
+      required: true
+      description: >-
+        Name of the event (only alphanumeric characters, underscores, hyphens
+        and dots are allowed; it should contain between 1 and 128 characters)
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
+    PoolName:
+      in: path
+      name: poolName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        example: My-Pool
+      required: true
+      description: >-
+        Name of the pool (only alphanumeric characters, underscores, hyphens and
+        dots are allowed; it should contain between 1 and 128 characters)
+    SecretKey:
+      in: path
+      name: secretKey
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: Helmut4-dev.api_key
+      required: true
+      description: >-
+        Key of the secret (only alphanumeric characters, underscores, hyphens
+        and dots are allowed; it should contain between 1 and 32 characters)
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 1 and 32 characters)
     LimitParameter:
       in: query
       name: limit
@@ -11149,45 +11207,6 @@ components:
         example: 3
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 255
-        pattern: /^[a-zA-Z0-9-.]{3,255}$/
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, periods and
-        dashes are allowed; it should contain between 3 and 255 characters).
-    SpaceName:
-      in: path
-      name: spaceName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
-        pattern: /^[\w\-.]+$/
-        example: Helmut4
-      required: true
-      description: >-
-        Name of the space (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 32 symbols).
-    EventName:
-      in: path
-      name: eventName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 128
-        pattern: /^[\w\-.]+$/
-        example: Dev_Camp-2024
-      required: true
-      description: >-
-        Name of the event (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 128 symbols).
     StreamID:
       in: path
       name: streamId
@@ -11284,19 +11303,6 @@ components:
       description: >-
         ID of the catalog (ObjectId identifier, consists of 24 hexadecimal
         digits).
-    SecretKey:
-      in: path
-      name: secretKey
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
-        pattern: /^[\d-.]+$/
-        example: Helmut4-dev.api_key
-      required: true
-      description: >-
-        Key of the secret (only alphanumeric characters, hyphens, underscores
-        and periods are allowed, it should contain between 1 and 32 symbols).
     WebhookID:
       in: path
       name: webhookId
@@ -11318,12 +11324,3 @@ components:
           DD85EABD4CAF4F34AAA8F476676B7B20302B2E2E9F7A5322D4B8E740ED1A7467F4D49B1848560592083C8AD331909C559FF1012B1C5B29490C820FE7AA8B34F8
       required: true
       description: Last path segment of the webhook URL (128 char long hex string).
-    PoolName:
-      in: path
-      name: poolName
-      schema:
-        type: string
-        pattern: /^[0-9a-zA-Z_.-]{128}$/
-        example: my_pool
-      required: true
-      description: Name of the pool.
