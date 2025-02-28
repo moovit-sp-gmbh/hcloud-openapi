@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2220
+  version: 0.0.107-2223
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8346,6 +8346,15 @@ components:
           description: >-
             Definition wether he execution should be a dry run or not. Standard
             is false
+        parents:
+          type: array
+          items:
+            type: string
+          description: >-
+            Optional array holding the execution id's of the parent stream
+            execution(s). This information enables tracing the connection
+            between parent and child streams, for example in the context of a
+            TriggerStream node
       required:
         - payload
         - target
@@ -8427,6 +8436,13 @@ components:
         dry:
           type: boolean
           description: Selector for running stream in dry mode or not
+        parents:
+          type: array
+          items:
+            type: string
+          description: >-
+            Array holding the execution id's of the parent stream execution(s).
+            Present for example if execution was triggered by TriggerStream node
         createDate:
           type: number
           description: Date of creation as unix timestamp
