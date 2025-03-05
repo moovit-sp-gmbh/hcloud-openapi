@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2223
+  version: 0.0.107-2228
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7065,6 +7065,7 @@ components:
         - STEP_BACK
         - SET_VALUE
         - REPLACE_NODE
+        - RESTART
       type: string
       description: >
         * STEP_FORWARD - Continue execution until the next node
@@ -7077,6 +7078,8 @@ components:
 
         * REPLACE_NODE - Replace a node in a design only for a specific
         execution
+
+        * RESTART - Restart execution
     CustomError:
       properties:
         code:
@@ -8387,11 +8390,13 @@ components:
       enum:
         - QUEUED
         - RUNNING
+        - WAITING
         - COMPLETED
       type: string
       description: |
         * QUEUED - Execution is queued
         * RUNNING - Execution is running
+        * WAITING - Execution is waiting for a debug command
         * COMPLETED - Execution is completed
     High5ExecutionStatusDto:
       properties:
@@ -8455,6 +8460,9 @@ components:
         event:
           $ref: '#/components/schemas/ReducedEvent'
           description: Event the stream belongs to
+        debug:
+          type: boolean
+          description: Flag for debug mode execution
       required:
         - _id
         - organization
