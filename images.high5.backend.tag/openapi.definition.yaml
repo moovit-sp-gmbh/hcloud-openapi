@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2228
+  version: 0.0.107-2230
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -286,8 +286,6 @@ paths:
                   $ref: '#/components/examples/DesignNotFoundException'
                 DesignNodeNotFoundException:
                   $ref: '#/components/examples/DesignNodeNotFoundException'
-                DesignLinkNotFoundException:
-                  $ref: '#/components/examples/DesignLinkNotFoundException'
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
