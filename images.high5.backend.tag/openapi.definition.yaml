@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2233
+  version: 0.0.107-2235
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8790,7 +8790,9 @@ components:
           description: Total runtime of the node
         catalog:
           $ref: '#/components/schemas/CatalogInfo'
-          description: Catalog containing the node
+          description: >-
+            Catalog containing the node. During node development this will be
+            undefined.
         color:
           type: string
           description: Color of the node on the canvas
@@ -8799,7 +8801,6 @@ components:
           description: Type of the node
       required:
         - runTime
-        - catalog
       example:
         runTime: 500
         catalog:
@@ -9931,9 +9932,7 @@ components:
             $ref: '#/components/schemas/StreamSingleNodeResultDto'
           description: Nested results of the executed nodes from additional adapters
         info:
-          type: array
-          items:
-            $ref: '#/components/schemas/NodeInfo'
+          $ref: '#/components/schemas/NodeInfo'
           description: Information about the node
       required:
         - uuid
@@ -9960,12 +9959,12 @@ components:
           detail: An http request failed with status code 400
           trace: Detailed trace of the error
         info:
-          - runTime: 30395
-            catalog:
-              url: https://example.com
-              version: 1.0.0
-            color: '#FF0000'
-            nodeType: CATALOG
+          runTime: 30395
+          catalog:
+            url: https://example.com
+            version: 1.0.0
+          color: '#FF0000'
+          nodeType: CATALOG
     StreamSinglePatchOrderDto:
       properties:
         direction:
