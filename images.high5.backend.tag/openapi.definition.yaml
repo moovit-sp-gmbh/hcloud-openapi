@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2237
+  version: 0.0.107-2238
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9726,6 +9726,9 @@ components:
         debug:
           type: boolean
           description: Flag to mark execution in debug mode
+        executionId:
+          type: string
+          description: ID of the execution
       required:
         - design
         - payload
@@ -9734,6 +9737,7 @@ components:
         - waveCatalogs
         - info
         - debug
+        - executionId
       example:
         design:
           nodes:
@@ -9777,6 +9781,7 @@ components:
         info:
           target: example@email.com
         debug: false
+        executionId: '1234567679'
     StreamInfo:
       properties:
         target:
