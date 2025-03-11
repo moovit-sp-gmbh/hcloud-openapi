@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-4
+  version: 0.0.1-5
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1617,9 +1617,7 @@ paths:
     delete:
       tags:
         - Space
-      summary: >-
-        Deletes a Space by its name along with all related cronjobs and cronjob
-        logs.
+      summary: Deletes a Space by its name.
       description: |-
 
         Required organization role: MEMBER\
