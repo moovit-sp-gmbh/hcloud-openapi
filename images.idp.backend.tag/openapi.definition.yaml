@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2213
+  version: 0.0.143-2218
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -4599,6 +4599,623 @@ paths:
                   $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
+  /v1/org/{orgName}/service-accounts:
+    post:
+      tags:
+        - Organization.Service Accounts
+      summary: Create a new service account
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAccountCreateDto'
+      responses:
+        '201':
+          description: Created service account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+                License quota exceeded:
+                  $ref: '#/components/examples/LicenseQuotaExceededException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '409':
+          description: Conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ServiceAccountAlreadyExistsException:
+                  $ref: '#/components/examples/ServiceAccountAlreadyExistsException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/service-accounts/{serviceAccountId}:
+    delete:
+      tags:
+        - Organization.Service Accounts
+      summary: Delete service account
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - name: serviceAccountId
+          in: path
+          description: ID of the service account
+          required: true
+          schema:
+            type: string
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid service account ID:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ServiceAccountNotFoundException:
+                  $ref: '#/components/examples/ServiceAccountNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+    get:
+      tags:
+        - Organization.Service Accounts
+      summary: Get a service account by its ID
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - name: serviceAccountId
+          in: path
+          description: ID of the service account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: ServiceAccount object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid service account ID:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ServiceAccountNotFoundException:
+                  $ref: '#/components/examples/ServiceAccountNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/service-accounts/search:
+    post:
+      tags:
+        - Organization.Service Accounts
+      summary: >-
+        Search all service accounts by organization name and the supplied
+        filters
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+        required: true
+      responses:
+        '200':
+          description: List of serviceAccounts
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ServiceAccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidFilterException:
+                  $ref: '#/components/examples/InvalidFilterException'
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                Invalid query parameters (limit, page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/service-accounts/{serviceAccountId}/regenerate:
+    patch:
+      tags:
+        - Organization.Service Accounts
+      summary: Regenerate a service account's access token
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - name: serviceAccountId
+          in: path
+          description: Service account ID
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid service account ID:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ServiceAccountNotFoundException:
+                  $ref: '#/components/examples/ServiceAccountNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/service-accounts/{serviceAccountId}/name:
+    patch:
+      tags:
+        - Organization.Service Accounts
+      summary: Rename a service account
+      description: |-
+
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - name: serviceAccountId
+          in: path
+          description: Service account ID
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ServiceAccountCreateDto'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ServiceAccountDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid service account ID:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: ServiceAccount does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                ServiceAccountNotFoundException:
+                  $ref: '#/components/examples/ServiceAccountNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
   /v1/user/email:
     get:
       tags:
@@ -7722,6 +8339,9 @@ components:
         excludeTeamByName:
           type: string
           description: Name of team whos members shall not be returned
+        excludeServiceAccounts:
+          type: boolean
+          description: Exclude service accounts from search result
       example:
         filters:
           - type: DATE
@@ -7734,6 +8354,7 @@ components:
             - name
             - company
         excludeTeamByName: SomeTeamName
+        excludeServiceAccounts: true
     OrganizationCreateDto:
       properties:
         name:
@@ -7850,6 +8471,9 @@ components:
         lastActive:
           type: number
           description: Last activity of the user
+        serviceAccount:
+          type: boolean
+          description: Is service account
       required:
         - _id
         - email
@@ -7858,6 +8482,7 @@ components:
         - role
         - executionTarget
         - lastActive
+        - serviceAccount
       example:
         _id: 6284c915f173f39d71bb8b83
         email: hmc@helmut.cloud
@@ -7866,6 +8491,7 @@ components:
         role: MEMBER
         executionTarget: false
         lastActive: 1666361487534
+        serviceAccount: false
     OrganizationMemberInvitationDto:
       properties:
         _id:
@@ -8367,6 +8993,44 @@ components:
         * NUMBER - Filter by a numeric value
         * DATE - Filter by a Date value
         * BOOLEAN - Filter by a boolean flag
+    ServiceAccountCreateDto:
+      properties:
+        name:
+          type: string
+          description: Service account name
+      required:
+        - name
+      example:
+        name: account name
+    ServiceAccountDto:
+      properties:
+        _id:
+          type: string
+          description: Account ID
+        name:
+          type: string
+          description: Account name
+        email:
+          type: string
+          description: Account email
+        avatarUrl:
+          type: string
+          description: Account avatar URL
+        token:
+          type: string
+          description: Account authentication token
+      required:
+        - _id
+        - name
+        - email
+        - avatarUrl
+        - token
+      example:
+        _id: 6284c915f173f39d71bb8b83
+        name: Helmut Mc Cloud
+        email: hmc@helmut.cloud
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        token: hlmc_p_8332629108ba293471c7bb8631a12d8b
     SortDirection:
       enum:
         - ASC
@@ -9500,6 +10164,16 @@ components:
         code: 001.006.0012
         error: oauth.secret.already.exists
         message: OAuth app secret already exists.
+    ServiceAccountAlreadyExistsException:
+      value:
+        code: 001.034.0002
+        error: service.account.already.exists
+        message: Service account {name} already exists
+    ServiceAccountNotFoundException:
+      value:
+        code: 001.034.0001
+        error: service.account.not.found
+        message: Service account not found
     OAuthTokenEndpointInvalidGrantErrorResponseDto:
       value:
         error: invalid_grant
