@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-5
+  version: 0.0.1-8
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2894,27 +2894,27 @@ components:
         message: You do not have the required permission
     DatabaseNotFoundException:
       value:
-        code: 010.034.0001
+        code: 010.035.0001
         error: database.not.found
         message: Given database not found
     DatabaseNameInUseException:
       value:
-        code: 010.034.0002
+        code: 010.035.0002
         error: database.name.in.use
         message: Given database name is already in use
     DocumentAlreadyExistWithKeyException:
       value:
-        code: 010.035.0003
+        code: 010.036.0003
         error: document.already.exists
         message: Document with given key already exists within a space
     DocumentNotFoundException:
       value:
-        code: 010.035.0002
+        code: 010.036.0002
         error: document.not.found
         message: Given document not found
     DocumentTypeMismatchException:
       value:
-        code: 010.035.0001
+        code: 010.036.0001
         error: document.type.mismatch
         message: Data type of the value does not match the existing documents data type
     InvalidFilterException:
