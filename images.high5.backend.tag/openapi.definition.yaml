@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2238
+  version: 0.0.107-2255
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8296,6 +8296,9 @@ components:
         endDate:
           type: number
           description: End date of execution
+        agentInfo:
+          $ref: '#/components/schemas/AgentInfoDto'
+          description: Info about the Agent
       required:
         - streamId
         - state
@@ -8341,7 +8344,7 @@ components:
           description: Stream execution payload
         target:
           type: string
-          description: Target where the stream should be executed
+          description: Target that executes the stream. Can be a user email or pool name.
         dry:
           type: boolean
           description: >-
@@ -8435,7 +8438,10 @@ components:
           description: Status of currently running nodes
         target:
           type: string
-          description: Email of the user account where the stream gets executed
+          description: Target that executes the stream. Can be a user email or pool name.
+        isPoolExecution:
+          type: boolean
+          description: Defines wether this execution is part of a pool or not
         dry:
           type: boolean
           description: Selector for running stream in dry mode or not
@@ -8461,6 +8467,12 @@ components:
         debug:
           type: boolean
           description: Flag for debug mode execution
+        waveEngineVersion:
+          type: string
+          description: Version of the wave engine used for execution
+        agentInfo:
+          $ref: '#/components/schemas/AgentInfoDto'
+          description: Info about the Agent
       required:
         - _id
         - organization
