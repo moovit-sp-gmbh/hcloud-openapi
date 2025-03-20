@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2255
+  version: 0.0.107-2257
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7520,12 +7520,12 @@ components:
                                   type: string
                               - type: object
                                 additionalProperties:
-                                  type: string
+                                  nullable: true
                               - type: array
                                 items:
                                   type: object
                                   additionalProperties:
-                                    type: string
+                                    nullable: true
                           value:
                             anyOf:
                               - type: string
@@ -7536,12 +7536,12 @@ components:
                                   type: string
                               - type: object
                                 additionalProperties:
-                                  type: string
+                                  nullable: true
                               - type: array
                                 items:
                                   type: object
                                   additionalProperties:
-                                    type: string
+                                    nullable: true
                           mandatory:
                             type: boolean
                         required:
@@ -7695,12 +7695,12 @@ components:
                                   type: string
                               - type: object
                                 additionalProperties:
-                                  type: string
+                                  nullable: true
                               - type: array
                                 items:
                                   type: object
                                   additionalProperties:
-                                    type: string
+                                    nullable: true
                           value:
                             anyOf:
                               - type: string
@@ -7711,12 +7711,12 @@ components:
                                   type: string
                               - type: object
                                 additionalProperties:
-                                  type: string
+                                  nullable: true
                               - type: array
                                 items:
                                   type: object
                                   additionalProperties:
-                                    type: string
+                                    nullable: true
                           mandatory:
                             type: boolean
                         required:
