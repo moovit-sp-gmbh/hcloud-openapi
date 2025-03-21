@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2232
+  version: 0.0.143-2234
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8841,6 +8841,10 @@ components:
         - fuse:space:execute
         - fuse:space:write
         - fuse:space:delete
+        - friday:space:read
+        - friday:space:execute
+        - friday:space:write
+        - friday:space:delete
       type: string
       description: >
         * hcloud:full - Full access to HCloud
@@ -8885,6 +8889,16 @@ components:
         * fuse:space:write - Access to read and write operations of spaces
 
         * fuse:space:delete - Access to read, write and delete operations of
+        spaces
+
+        * friday:space:read - Access to read operations of spaces
+
+        * friday:space:execute - Access to the ability to start execution of
+        streams of spaces
+
+        * friday:space:write - Access to read and write operations of spaces
+
+        * friday:space:delete - Access to read, write and delete operations of
         spaces
     Search:
       properties:
@@ -10193,6 +10207,42 @@ components:
       value:
         error: unsupported_grant_type
   parameters:
+    DomainName:
+      in: path
+      name: domainName
+      schema:
+        type: string
+        minLength: 4
+        maxLength: 254
+        example: helmut.cloud
+      required: true
+      description: >-
+        Fully qualified domain name - FQDN (it should contain between 4 and 254
+        characters)
+    InvitationID:
+      in: path
+      name: invitationId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 961b7de208337dc792b65f57
+      required: true
+      description: >-
+        ID of the invitation (ObjectId identifier, consists of 24 hexadecimal
+        digits)
+    OAuthAppID:
+      in: path
+      name: oAuthAppId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 291b7de208337dc792b65f76
+      required: true
+      description: >-
+        ID of the OAuth application (ObjectId identifier, consists of 24
+        hexadecimal digits)
     OrgName:
       in: path
       name: orgName
@@ -10205,6 +10255,18 @@ components:
       description: >-
         Name of the organization (only alphanumeric characters, hyphens and dots
         are allowed; it should contain between 3 and 64 characters)
+    PatID:
+      in: path
+      name: patId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 381b5de208337dc792b65f67
+      required: true
+      description: >-
+        ID of the personal Access Token (PAT, ObjectId identifier, consists of
+        24 hexadecimal digits)
     TeamName:
       in: path
       name: teamName
@@ -10217,6 +10279,16 @@ components:
       description: >-
         Name of the team (only alphanumeric characters, hyphens and dots are
         allowed; it should contain between 3 and 64 characters)
+    UserID:
+      in: path
+      name: userId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 671b7de208337dc792b65f93
+      required: true
+      description: ID of the user (ObjectId identifier, consists of 24 hexadecimal digits)
     LimitParameter:
       in: query
       name: limit
@@ -10236,57 +10308,3 @@ components:
         default: 0
       required: false
       description: Designates the current page, when using a limit. Minimum value is 0.
-    DomainName:
-      in: path
-      name: domainName
-      schema:
-        type: string
-        minLength: 4
-        maxLength: 254
-        pattern: >-
-          /^(?=.{1,254}$)(?=(^.{1,63}\.|^.{1,63}\.)*)(^([a-zA-Z0-9-]{1,63}\.)+[a-zA-Z]{2,63}$)$/
-        example: helmut.cloud
-      required: true
-      description: Fully qualified domain name (FQDN).
-    UserID:
-      in: path
-      name: userId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 671b7de208337dc792b65f93
-      required: true
-      description: ID of the user (ObjectId identifier, consists of 24 hexadecimal digits).
-    InvitationID:
-      in: path
-      name: invitationId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 961b7de208337dc792b65f57
-      required: true
-      description: >-
-        ID of the invitation (ObjectId identifier, consists of 24 hexadecimal
-        digits).
-    OAuthAppID:
-      in: path
-      name: oAuthAppId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 291b7de208337dc792b65f76
-      required: true
-      description: >-
-        ID of the OAuth application (ObjectId identifier, consists of 24
-        hexadecimal digits).
-    PatID:
-      in: path
-      name: patId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 381b5de208337dc792b65f67
-      required: true
-      description: >-
-        ID of the personal Access Token (PAT, ObjectId identifier, consists of
-        24 hexadecimal digits).
