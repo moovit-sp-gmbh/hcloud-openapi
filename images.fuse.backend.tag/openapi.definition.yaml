@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-916
+  version: 0.0.4-922
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2396,6 +2396,84 @@ components:
         key: name
         comparator: starts with
         value: Editor-
+  parameters:
+    CronjobID:
+      in: path
+      name: cronjobId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 70d5ec35c2fa070014ab8c3b
+      required: true
+      description: >-
+        ID of the Cronjob (ObjectId identifier, consists of 24 hexadecimal
+        digits)
+    CronjobLogID:
+      in: path
+      name: cronjobLogId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        example: 31d5ec35c2fa070014ab8c7b
+      required: true
+      description: >-
+        ID of the Cronjob log (ObjectId identifier, consists of 24 hexadecimal
+        digits)
+    OrgName:
+      in: path
+      name: orgName
+      schema:
+        type: string
+        minLength: 3
+        maxLength: 64
+        example: MoovIT-Software-Products-GmbH
+      required: true
+      description: >-
+        Name of the organization (only alphanumeric characters, hyphens and dots
+        are allowed; it should contain between 3 and 64 characters)
+    SpaceName:
+      in: path
+      name: spaceName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 32
+        example: Helmut4
+      required: true
+      description: >-
+        Name of the space (only alphanumeric characters, hyphens and dots are
+        allowed; it should contain between 1 and 32 characters)
+    LimitParameter:
+      in: query
+      name: limit
+      schema:
+        type: integer
+        minimum: 1
+        maximum: 100
+        default: 25
+      required: false
+      description: Max number of items to return. Integer between 1 and 100.
+    PageParameter:
+      in: query
+      name: page
+      schema:
+        type: integer
+        minimum: 0
+        default: 0
+      required: false
+      description: Designates the current page, when using a limit. Minimum value is 0.
+    NextExecution:
+      in: query
+      name: nextExecution
+      schema:
+        type: boolean
+        default: false
+      required: false
+      description: >-
+        Alongside the cronjob also retrieve the timestamps for three next
+        executions (for the specified timezone, in milliseconds).
   examples:
     NotAuthorizedException:
       value:
@@ -2499,79 +2577,3 @@ components:
         code: 003.010.0004
         error: space.invalid.owner
         message: A team cannot be the owner of a space
-  parameters:
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 64
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, hyphens and dots
-        are allowed; it should contain between 3 and 64 characters)
-    SpaceName:
-      in: path
-      name: spaceName
-      schema:
-        type: string
-        minLength: 1
-        maxLength: 32
-        example: Helmut4
-      required: true
-      description: >-
-        Name of the space (only alphanumeric characters, hyphens and dots are
-        allowed; it should contain between 1 and 32 characters)
-    LimitParameter:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 25
-      required: false
-      description: Max number of items to return. Integer between 1 and 100.
-    PageParameter:
-      in: query
-      name: page
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-      required: false
-      description: Designates the current page, when using a limit. Minimum value is 0.
-    CronjobID:
-      in: path
-      name: cronjobId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 70d5ec35c2fa070014ab8c3b
-      required: true
-      description: >-
-        ID of the Cronjob (ObjectId identifier, consists of 24 hexadecimal
-        digits).
-    CronjobLogID:
-      in: path
-      name: cronjobLogId
-      schema:
-        type: string
-        pattern: /^[0-9a-fA-F]{24}$/
-        example: 31d5ec35c2fa070014ab8c7b
-      required: true
-      description: >-
-        ID of the Cronjob log (ObjectId identifier, consists of 24 hexadecimal
-        digits).
-    NextExecution:
-      in: query
-      name: nextExecution
-      schema:
-        type: boolean
-        default: false
-      required: false
-      description: >-
-        Alongside the cronjob also retrieve the timestamps for three next
-        executions (for the specified timezone, in milliseconds).
