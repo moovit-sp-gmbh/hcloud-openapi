@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-416
+  version: 0.0.28-422
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
