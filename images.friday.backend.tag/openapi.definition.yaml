@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-12
+  version: 0.0.1-13
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
