@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-14
+  version: 0.0.1-15
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2410,7 +2410,8 @@ components:
             - type: boolean
           description: >-
             Document value (data type must match the type specified in the type
-            field of the existing document)
+            field of the existing document, for *_LIST types or mixed ARRAY it
+            should be Array<T>)
       required:
         - value
       example:
