@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-15
+  version: 0.0.1-16
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2397,25 +2397,6 @@ components:
         value: 647931
         createDate: 1774045156
         modifyDate: 1774047958
-    DocumentPatchDto:
-      properties:
-        value:
-          oneOf:
-            - type: object
-              additionalProperties: true
-            - type: array
-              items: {}
-            - type: string
-            - type: number
-            - type: boolean
-          description: >-
-            Document value (data type must match the type specified in the type
-            field of the existing document, for *_LIST types or mixed ARRAY it
-            should be Array<T>)
-      required:
-        - value
-      example:
-        value: 647931
     DocumentType:
       enum:
         - STRING
