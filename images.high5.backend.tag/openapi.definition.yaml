@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2260
+  version: 0.0.107-2265
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7885,6 +7885,9 @@ components:
                         - type: string
                           enum:
                             - '0'
+                        - type: string
+                          enum:
+                            - '1'
                   required:
                     - nodeUuid
                     - connectorUuid
@@ -7905,6 +7908,9 @@ components:
                         - type: string
                           enum:
                             - '0'
+                        - type: string
+                          enum:
+                            - '1'
                   required:
                     - nodeUuid
                     - connectorUuid
