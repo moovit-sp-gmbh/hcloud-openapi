@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2283
+  version: 0.0.107-2284
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2006,6 +2006,85 @@ paths:
               examples:
                 High5ExecutionNotFoundException:
                   $ref: '#/components/examples/High5ExecutionNotFoundException'
+                High5ExecutionStatusNotFoundException:
+                  $ref: '#/components/examples/High5ExecutionStatusNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/execution/streams/executionTree/{streamStatusId}:
+    get:
+      tags:
+        - Execute.Status
+      summary: >-
+        Retrieve the complete executionTree the stream execution is part of. An
+        executionTree represents the hierarchical structure of stream executions
+        initiated by a 'Trigger Stream' node.
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required Scope: HIGH5_SPACE_READ
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/StreamStatusID'
+      responses:
+        '200':
+          description: ExecutionTree
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ExecutionTreeDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
                 High5ExecutionStatusNotFoundException:
                   $ref: '#/components/examples/High5ExecutionStatusNotFoundException'
                 Organization not found:
@@ -8199,6 +8278,64 @@ components:
         - name
       example:
         name: helmut4.webhook.test
+    ExecutionTreeDto:
+      properties:
+        root:
+          $ref: '#/components/schemas/ExecutionTreeNodeDto'
+          description: >-
+            Root of the execution tree, containing information about the first
+            execution as well as about all subsequent executions inside its
+            'childrens' property.
+      required:
+        - root
+      example:
+        root:
+          executionStatusId: 649180269bdc11b1fe807939
+          orgName: account@moovit-sp.com
+          spaceName: test-benchmark
+          eventName: myEvent
+          streamName: stream-bandwidth
+          streamId: 649180269bdc11b1fe807938
+          state: COMPLETED
+          outcome: SUCCESS
+          runningNodes:
+            - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+              name: Lower Case Action Node
+              progress: 100
+              message: Successfully converted input to lower case
+          target: account@moovit-sp.com
+          triggerSource: api
+          startDate: 1692275019340
+          endDate: 1692275028520
+          children:
+            - executionStatusId: 67f3a5b8e25c9d7d0a4f852a
+              orgName: account@moovit-sp.com
+              spaceName: test-benchmark
+              eventName: myEvent
+              streamName: stream2
+              streamId: 67f3a54be25c9d7d0a4f828d
+              state: COMPLETED
+              outcome: SUCCESS
+              runningNodes: []
+              target: account@moovit-sp.com
+              triggerSource: stream
+              startDate: 1744020920397
+              endDate: 1744020922582
+              children:
+                - executionStatusId: 67f3a5b8e25c9d7d0a4f8553
+                  orgName: account@moovit-sp.com
+                  spaceName: test-benchmark
+                  eventName: myEvent
+                  streamName: stream3
+                  streamId: 67f3a54de25c9d7d0a4f82a4
+                  state: COMPLETED
+                  outcome: SUCCESS
+                  runningNodes: []
+                  target: account@moovit-sp.com
+                  triggerSource: stream
+                  startDate: 1744020920526
+                  endDate: 1744020920580
+                  children: []
     High5ExecutionCrashDto:
       properties:
         message:
@@ -8528,15 +8665,11 @@ components:
           description: >-
             Definition wether he execution should be a dry run or not. Standard
             is false
-        parents:
-          type: array
-          items:
-            type: string
+        parentExecutionSecret:
+          type: string
           description: >-
-            Optional array holding the execution id's of the parent stream
-            execution(s). This information enables tracing the connection
-            between parent and child streams, for example in the context of a
-            TriggerStream node
+            Secret of the parent execution, present when Execution is triggered
+            in Trigger Stream node
       required:
         - payload
         - target
@@ -8620,16 +8753,14 @@ components:
         isPoolExecution:
           type: boolean
           description: Defines wether this execution is part of a pool or not
+        triggerSource:
+          $ref: '#/components/schemas/TriggerSource'
+          description: >-
+            Source that triggered the stream execution. One of 'webhook' | 'api'
+            | 'sdk' | 'stream'
         dry:
           type: boolean
           description: Selector for running stream in dry mode or not
-        parents:
-          type: array
-          items:
-            type: string
-          description: >-
-            Array holding the execution id's of the parent stream execution(s).
-            Present for example if execution was triggered by TriggerStream node
         createDate:
           type: number
           description: Date of creation as unix timestamp
