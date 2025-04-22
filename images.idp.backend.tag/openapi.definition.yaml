@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2234
+  version: 0.0.143-2237
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9032,13 +9032,14 @@ components:
           description: Account avatar URL
         token:
           type: string
-          description: Account authentication token
+          description: >-
+            Account authentication token. This will be defined only on account
+            creation and on account regeneration
       required:
         - _id
         - name
         - email
         - avatarUrl
-        - token
       example:
         _id: 6284c915f173f39d71bb8b83
         name: Helmut Mc Cloud
