@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-226
+  version: 0.0.1-229
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -17,6 +17,45 @@ servers:
   - url: http://localhost/api/mothership
     description: Localhost
 paths:
+  /v1/agent:
+    delete:
+      tags:
+        - Agent
+      summary: Delete a registered agent. Requires an hello to obtain the token.
+      security:
+        - BearerAuth: []
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                AgentNotFoundException:
+                  $ref: '#/components/examples/AgentNotFoundException'
+        '500':
+          description: Internal Server Error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
   /v1/org/{orgName}/connect/search:
     post:
       tags:
