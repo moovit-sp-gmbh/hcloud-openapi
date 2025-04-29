@@ -479,6 +479,21 @@ components:
           - name: my space
             type: SPACE
             id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+    LocationDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the location
+          example: 6471393c-6dc5-4ab4-a390-a1568b7d1689
+        name:
+          type: string
+          description: Name of the location
+          example: My location
+      required:
+        - id
+        - name
     FolderDto:
       type: object
       properties:
@@ -1214,7 +1229,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/locations:
+  /v1/org/{orgName}/spaces/{spaceId}/locations:
     post:
       security:
         - bearerAuth:
@@ -1223,7 +1238,30 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      summary: Create a location
+      tags:
+        - Location
       parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
         - schema:
             type: string
           required: true
@@ -1236,6 +1274,35 @@ paths:
             schema:
               $ref: '#/components/schemas/LocationCreateDto'
       responses:
+        '200':
+          description: Create a location within a space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/LocationDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1320,7 +1387,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/locations/:locationId/assets/search:
+  /v1/org/{orgName}/spaces/{spaceId}/locations/{locationId}/assets/search:
     post:
       security:
         - bearerAuth:
@@ -1329,7 +1396,36 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      summary: Search assets of location
+      tags:
+        - Location
       parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: locationId
+          in: path
         - schema:
             type: string
           required: true
@@ -1342,6 +1438,43 @@ paths:
             schema:
               $ref: '#/components/schemas/AssetSearchDto'
       responses:
+        '200':
+          description: Array of filtered assets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'locationId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'locationId':
+                  summary: Failed to validate 'path' parameter 'locationId'
+                  description: Failed to validate 'path' parameter 'locationId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'locationId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1401,7 +1534,7 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found
+          description: Organization not found | Given space not found | Location not found
           content:
             application/json:
               schema:
@@ -1413,6 +1546,18 @@ paths:
                     code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Location not found:
+                  summary: Location not found
+                  value:
+                    code: 011.042.0001
+                    error: location.not.found
+                    message: Location not found
         '500':
           description: something went wrong
           content:
