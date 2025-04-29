@@ -95,68 +95,6 @@ components:
           example:
             - tag1
             - tag2
-    AssetCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Asset name
-          example: my-asset
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID
-          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
-        tags:
-          type: array
-          items:
-            type: string
-          description: Asset tags
-          example:
-            - tag1
-            - tag2
-        categories:
-          type: array
-          items:
-            type: string
-          description: Asset categories
-          example:
-            - category1
-            - category2
-      required:
-        - name
-        - parentId
-        - parentType
-      example:
-        name: my-asset
-        parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType: SPACE
-        tags:
-          - tag1
-          - tag2
-        categories:
-          - category1
-          - category2
-    LocationCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-      required:
-        - name
     AssetSearchDto:
       type: object
       properties:
@@ -390,6 +328,68 @@ components:
           description: field filters
       required:
         - filters
+    AssetCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Asset name
+          example: my-asset
+        parentId:
+          type: string
+          format: uuid
+          description: Parent ID
+          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+        parentType:
+          type: string
+          enum:
+            - ASSET
+            - SPACE
+            - PRODUCTION
+            - PROJECT
+            - FOLDER
+          description: Parent Type
+          example: SPACE
+        tags:
+          type: array
+          items:
+            type: string
+          description: Asset tags
+          example:
+            - tag1
+            - tag2
+        categories:
+          type: array
+          items:
+            type: string
+          description: Asset categories
+          example:
+            - category1
+            - category2
+      required:
+        - name
+        - parentId
+        - parentType
+      example:
+        name: my-asset
+        parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+        parentType: SPACE
+        tags:
+          - tag1
+          - tag2
+        categories:
+          - category1
+          - category2
+    LocationCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+      required:
+        - name
     ProductionCreateDto:
       type: object
       properties:
@@ -409,76 +409,6 @@ components:
           example: My Namespace
       required:
         - name
-    AssetDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        assetType:
-          type: string
-          enum:
-            - VIDEO
-            - IMAGE
-            - DOCUMENT
-            - UNKNOWN
-        breadcrumb:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: Item ID
-              name:
-                type: string
-                description: Item name
-              type:
-                type: string
-                enum:
-                  - ASSET
-                  - SPACE
-                  - PRODUCTION
-                  - PROJECT
-                  - FOLDER
-                description: Item type
-            required:
-              - id
-              - name
-              - type
-        upload:
-          type: object
-          properties:
-            url:
-              type: string
-              format: uri
-            token:
-              type: string
-            expiration:
-              type: number
-            libraryId:
-              type: number
-            videoId:
-              type: string
-          required:
-            - url
-            - token
-            - expiration
-      required:
-        - id
-        - name
-        - assetType
-      example:
-        id: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-        name: asset name
-        assetType: VIDEO
-        breadcrumb:
-          - name: my space
-            type: SPACE
-            id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
     LocationDto:
       type: object
       properties:
@@ -899,6 +829,240 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceId}/assets/search:
+    post:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      summary: Search assets of space
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetSearchDto'
+      responses:
+        '200':
+          description: Array of filtered assets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/:orgName/spaces/:spaceId/assets:
     post:
       security:
@@ -1048,7 +1212,77 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetDto'
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1167,7 +1401,77 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetDto'
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1443,7 +1747,77 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetDto'
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
