@@ -1,21 +1,578 @@
 openapi: 3.0.0
 info:
-  title: 'hcloud - '
-  version: 0.0.1
+  title: hcloud - Cosmo
+  description: Cosmo is a Media Asset Management platform.
+  version: 1.0.0
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
     email: info@moovit-sp.com
-  description: ''
 servers:
-  - url: https://eu-central-1.helmut.cloud
+  - url: https://eu-central-1.helmut.cloud/api/cosmo
     description: EU-Central production server
-  - url: https://na-west-1.helmut.cloud
+  - url: https://na-west-1.helmut.cloud/api/cosmo
     description: NA-West production server
-  - url: https://eu-dev-1.app.helmut.cloud
+  - url: https://eu-dev-1.app.helmut.cloud/api/cosmo
     description: EU development server
-  - url: http://localhost
+  - url: http://localhost/api/cosmo
     description: Localhost
+components:
+  securitySchemes:
+    bearerAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: JWT
+    patAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: PAT
+    basicAuth:
+      type: http
+      scheme: basic
+  schemas:
+    CustomError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error name
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      required:
+        - error
+        - code
+        - message
+      description: API errors obey this shape
+    SpaceCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          description: Name for the created space
+      required:
+        - name
+    AssetPatchLocationDto:
+      type: object
+      properties:
+        locationId:
+          type: string
+          format: uuid
+          description: Location ID
+      required:
+        - locationId
+    MoveAssetDto:
+      type: object
+      properties:
+        parentId:
+          type: string
+          format: uuid
+          description: Parent ID
+      required:
+        - parentId
+    AssetPatchDto:
+      type: object
+      properties:
+        categories:
+          type: array
+          items:
+            type: string
+          description: New categories
+          example:
+            - cat1
+            - cat2
+        tags:
+          type: array
+          items:
+            type: string
+          description: New tags
+          example:
+            - tag1
+            - tag2
+    AssetCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Asset name
+          example: my-asset
+        parentId:
+          type: string
+          format: uuid
+          description: Parent ID
+          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+        parentType:
+          type: string
+          enum:
+            - ASSET
+            - SPACE
+            - PRODUCTION
+            - PROJECT
+            - FOLDER
+          description: Parent Type
+          example: SPACE
+        tags:
+          type: array
+          items:
+            type: string
+          description: Asset tags
+          example:
+            - tag1
+            - tag2
+        categories:
+          type: array
+          items:
+            type: string
+          description: Asset categories
+          example:
+            - category1
+            - category2
+      required:
+        - name
+        - parentId
+        - parentType
+      example:
+        name: my-asset
+        parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+        parentType: SPACE
+        tags:
+          - tag1
+          - tag2
+        categories:
+          - category1
+          - category2
+    LocationCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+      required:
+        - name
+    AssetSearchDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            oneOf:
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - type
+                      type:
+                        type: string
+                        enum:
+                          - STRING
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                    description: STRING for type
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - type
+                      type:
+                        type: string
+                        enum:
+                          - SELECT
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                      - allowedValues
+                    description: SELECT for type
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - type
+                      type:
+                        type: string
+                        enum:
+                          - TYPEAHEAD
+                      value:
+                        type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                      - allowedValues
+                    description: TYPEAHEAD for type
+                description: type filters
+              - type: object
+                properties:
+                  key:
+                    type: string
+                    enum:
+                      - id
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: array
+                        items:
+                          type: string
+                  operator:
+                    type: string
+                    enum:
+                      - is
+                      - is not
+                required:
+                  - key
+                  - type
+                  - value
+                  - operator
+                description: id filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - name
+                      type:
+                        type: string
+                        enum:
+                          - STRING
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                    description: STRING for name
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - name
+                      type:
+                        type: string
+                        enum:
+                          - SELECT
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                      - allowedValues
+                    description: SELECT for name
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - name
+                      type:
+                        type: string
+                        enum:
+                          - TYPEAHEAD
+                      value:
+                        type: string
+                      operator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - operator
+                      - allowedValues
+                    description: TYPEAHEAD for name
+                description: name filters
+          description: field filters
+      required:
+        - filters
+    ProductionCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+      required:
+        - name
+    NamespaceCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Namespace name
+          example: My Namespace
+      required:
+        - name
+    AssetDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        assetType:
+          type: string
+          enum:
+            - VIDEO
+            - IMAGE
+            - DOCUMENT
+            - UNKNOWN
+        breadcrumb:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: Item ID
+              name:
+                type: string
+                description: Item name
+              type:
+                type: string
+                enum:
+                  - ASSET
+                  - SPACE
+                  - PRODUCTION
+                  - PROJECT
+                  - FOLDER
+                description: Item type
+            required:
+              - id
+              - name
+              - type
+        upload:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            token:
+              type: string
+            expiration:
+              type: number
+            libraryId:
+              type: number
+            videoId:
+              type: string
+          required:
+            - url
+            - token
+            - expiration
+      required:
+        - id
+        - name
+        - assetType
+      example:
+        id: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
+        name: asset name
+        assetType: VIDEO
+        breadcrumb:
+          - name: my space
+            type: SPACE
+            id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+    FolderDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: Folder ID
+        name:
+          type: string
+          description: Folder name
+      required:
+        - id
+        - name
+      example:
+        name: my-name
+        id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
+    FolderCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          description: Folder name
+          example: my folder
+        parentId:
+          type: string
+          format: uuid
+          description: Parent ID
+          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
+        parentType:
+          type: string
+          enum:
+            - ASSET
+            - SPACE
+            - PRODUCTION
+            - PROJECT
+            - FOLDER
+          description: Parent Type
+          example: SPACE
+      required:
+        - name
+        - parentId
+        - parentType
+    FolderMoveDto:
+      type: object
+      properties:
+        parentId:
+          type: string
+          format: uuid
+          description: Parent ID
+          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
+        parentType:
+          type: string
+          enum:
+            - ASSET
+            - SPACE
+            - PRODUCTION
+            - PROJECT
+            - FOLDER
+          description: Parent Type
+          example: SPACE
+      required:
+        - parentId
+        - parentType
+    FolderRenameDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          description: Folder name
+          example: my folder
+      required:
+        - name
+    NamespaceDto:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Namespace name
+          example: My Namespace
+        id:
+          type: string
+          format: uuid
+          description: Namespace ID
+          example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+      required:
+        - name
+        - id
+  parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
     post:
@@ -1973,567 +2530,3 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      bearerFormat: JWT
-      scheme: bearer
-    BasicAuth:
-      type: http
-      scheme: basic
-    bearerAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: JWT
-    patAuth:
-      type: http
-      scheme: bearer
-      bearerFormat: PAT
-    basicAuth:
-      type: http
-      scheme: basic
-  schemas:
-    CustomError:
-      type: object
-      properties:
-        error:
-          type: string
-          description: Error name
-        code:
-          type: string
-          description: Error code
-        message:
-          type: string
-          description: Error message
-      required:
-        - error
-        - code
-        - message
-      description: API errors obey this shape
-    SpaceCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-          description: Name for the created space
-      required:
-        - name
-    AssetPatchLocationDto:
-      type: object
-      properties:
-        locationId:
-          type: string
-          format: uuid
-          description: Location ID
-      required:
-        - locationId
-    MoveAssetDto:
-      type: object
-      properties:
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID
-      required:
-        - parentId
-    AssetPatchDto:
-      type: object
-      properties:
-        categories:
-          type: array
-          items:
-            type: string
-          description: New categories
-          example:
-            - cat1
-            - cat2
-        tags:
-          type: array
-          items:
-            type: string
-          description: New tags
-          example:
-            - tag1
-            - tag2
-    AssetCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Asset name
-          example: my-asset
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID
-          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
-        tags:
-          type: array
-          items:
-            type: string
-          description: Asset tags
-          example:
-            - tag1
-            - tag2
-        categories:
-          type: array
-          items:
-            type: string
-          description: Asset categories
-          example:
-            - category1
-            - category2
-      required:
-        - name
-        - parentId
-        - parentType
-      example:
-        name: my-asset
-        parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType: SPACE
-        tags:
-          - tag1
-          - tag2
-        categories:
-          - category1
-          - category2
-    LocationCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-      required:
-        - name
-    AssetSearchDto:
-      type: object
-      properties:
-        filters:
-          type: array
-          items:
-            oneOf:
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - type
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                    description: STRING for type
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - type
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                      - allowedValues
-                    description: SELECT for type
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - type
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                      - allowedValues
-                    description: TYPEAHEAD for type
-                description: type filters
-              - type: object
-                properties:
-                  key:
-                    type: string
-                    enum:
-                      - id
-                  type:
-                    type: string
-                    enum:
-                      - STRING
-                  value:
-                    anyOf:
-                      - type: string
-                      - type: array
-                        items:
-                          type: string
-                  operator:
-                    type: string
-                    enum:
-                      - is
-                      - is not
-                required:
-                  - key
-                  - type
-                  - value
-                  - operator
-                description: id filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                    description: STRING for name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                      - allowedValues
-                    description: SELECT for name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      operator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - operator
-                      - allowedValues
-                    description: TYPEAHEAD for name
-                description: name filters
-          description: field filters
-      required:
-        - filters
-    ProductionCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-      required:
-        - name
-    NamespaceCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Namespace name
-          example: My Namespace
-      required:
-        - name
-    AssetDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-        name:
-          type: string
-        assetType:
-          type: string
-          enum:
-            - VIDEO
-            - IMAGE
-            - DOCUMENT
-            - UNKNOWN
-        breadcrumb:
-          type: array
-          items:
-            type: object
-            properties:
-              id:
-                type: string
-                format: uuid
-                description: Item ID
-              name:
-                type: string
-                description: Item name
-              type:
-                type: string
-                enum:
-                  - ASSET
-                  - SPACE
-                  - PRODUCTION
-                  - PROJECT
-                  - FOLDER
-                description: Item type
-            required:
-              - id
-              - name
-              - type
-        upload:
-          type: object
-          properties:
-            url:
-              type: string
-              format: uri
-            token:
-              type: string
-            expiration:
-              type: number
-            libraryId:
-              type: number
-            videoId:
-              type: string
-          required:
-            - url
-            - token
-            - expiration
-      required:
-        - id
-        - name
-        - assetType
-      example:
-        id: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-        name: asset name
-        assetType: VIDEO
-        breadcrumb:
-          - name: my space
-            type: SPACE
-            id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
-    FolderDto:
-      type: object
-      properties:
-        id:
-          type: string
-          format: uuid
-          description: Folder ID
-        name:
-          type: string
-          description: Folder name
-      required:
-        - id
-        - name
-      example:
-        name: my-name
-        id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
-    FolderCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-          description: Folder name
-          example: my folder
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID
-          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
-      required:
-        - name
-        - parentId
-        - parentType
-    FolderMoveDto:
-      type: object
-      properties:
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID
-          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
-      required:
-        - parentId
-        - parentType
-    FolderRenameDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
-          description: Folder name
-          example: my folder
-      required:
-        - name
-    NamespaceDto:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Namespace name
-          example: My Namespace
-        id:
-          type: string
-          format: uuid
-          description: Namespace ID
-          example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-      required:
-        - name
-        - id
-  parameters: {}
