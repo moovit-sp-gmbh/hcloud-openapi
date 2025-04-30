@@ -1045,6 +1045,11 @@ paths:
                         - id
                         - name
                         - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
                   upload:
                     type: object
                     properties:
@@ -1378,6 +1383,11 @@ paths:
                         - id
                         - name
                         - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
                   upload:
                     type: object
                     properties:
@@ -1567,6 +1577,11 @@ paths:
                         - id
                         - name
                         - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
                   upload:
                     type: object
                     properties:
@@ -1913,6 +1928,11 @@ paths:
                         - id
                         - name
                         - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
                   upload:
                     type: object
                     properties:
