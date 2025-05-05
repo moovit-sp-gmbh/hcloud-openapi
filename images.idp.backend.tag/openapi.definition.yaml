@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2240
+  version: 0.0.143-2244
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7571,12 +7571,14 @@ components:
         - DEFAULT
         - HIGH5
         - FUSE
+        - COSMO
         - LAST_VISITED
       type: string
       description: |
         * DEFAULT - The default entrypoint.
         * HIGH5 - Have High5 as the entrypoint.
         * FUSE - Have Fuse as the entrypoint
+        * COSMO - Have Cosmo as the entrypoint
         * LAST_VISITED - Have the last visited view as the entrypoint.
     ForgotPasswordDto:
       properties:
@@ -9644,12 +9646,14 @@ components:
         - /account
         - /high5
         - /fuse
+        - /cosmo
       type: string
       description: |
         * save_last_view - Set the last view to the last accessed view.
         * /account - Set the last view to Account.
         * /high5 - Set the last view to High5.
         * /fuse - Set the last view to Fuse.
+        * /cosmo - Set the last view to Cosmo.
     LicenseQuota:
       properties:
         fuse:
