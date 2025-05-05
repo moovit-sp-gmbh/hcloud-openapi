@@ -437,6 +437,265 @@ components:
       required:
         - id
         - name
+    Unknown:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: original
+        url:
+          type: string
+          format: uri
+          description: URL to the media
+          example: https://example.com
+        type:
+          type: string
+          enum:
+            - UNKNOWN
+          description: Media type
+          example: UNKNOWN
+      required:
+        - name
+        - url
+        - type
+    Image:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: thumbnail
+        url:
+          type: string
+          format: uri
+          description: URL to the media
+          example: https://example.com
+        type:
+          type: string
+          enum:
+            - IMAGE
+          description: Media type
+          example: IMAGE
+      required:
+        - name
+        - url
+        - type
+    AudioMetadata:
+      type: object
+      properties:
+        codec:
+          type: string
+          example: aac
+        channels:
+          type: number
+          example: 6
+        channelLayout:
+          type: string
+          example: '5.1'
+        bitRate:
+          type: number
+          example: 383960
+        sampleRate:
+          type: number
+          example: 48000
+      required:
+        - codec
+        - channels
+        - channelLayout
+        - bitRate
+        - sampleRate
+    VideoMetadata:
+      type: object
+      properties:
+        codec:
+          type: string
+          example: h264
+        frameRate:
+          type: number
+          example: 25
+        pixelFormat:
+          type: string
+          example: yuv420p
+        aspectRatio:
+          type: string
+          example: '16:9'
+        colorSpace:
+          type: string
+        width:
+          type: number
+          example: 1280
+        height:
+          type: number
+          example: 720
+        fieldOrder:
+          type: string
+        duration:
+          type: string
+          example: '29.560000'
+        tcIn:
+          type: string
+          example: '0.000000'
+        tcOut:
+          type: string
+        noOfFrames:
+          type: number
+          example: 739
+        formatLongName:
+          type: string
+          example: QuickTime / MOV
+      required:
+        - codec
+        - frameRate
+        - pixelFormat
+        - aspectRatio
+        - width
+        - height
+        - fieldOrder
+        - duration
+        - tcIn
+        - tcOut
+        - noOfFrames
+        - formatLongName
+      description: Video metadata
+    AssetDetailedDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+        name:
+          type: string
+        type:
+          type: string
+          enum:
+            - ASSET
+            - SPACE
+            - PRODUCTION
+            - PROJECT
+            - FOLDER
+          description: Item type
+        assetType:
+          type: string
+          enum:
+            - VIDEO
+            - IMAGE
+            - DOCUMENT
+            - UNKNOWN
+        breadcrumb:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+                description: Item ID
+              name:
+                type: string
+                description: Item name
+              type:
+                type: string
+                enum:
+                  - ASSET
+                  - SPACE
+                  - PRODUCTION
+                  - PROJECT
+                  - FOLDER
+                description: Item type
+            required:
+              - id
+              - name
+              - type
+        thumbnailUrl:
+          type: string
+          format: uri
+          description: URL of the thumbnail
+          example: https://example.com/thumbnail.jpg
+        upload:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            token:
+              type: string
+            expiration:
+              type: number
+            libraryId:
+              type: number
+            videoId:
+              type: string
+          required:
+            - url
+            - token
+            - expiration
+        media:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Unknown'
+              - $ref: '#/components/schemas/Image'
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to the media
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - AUDIO
+                    description: Media type
+                    example: AUDIO
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AudioMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - url
+                  - type
+                  - metadata
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: URL to the media
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - VIDEO
+                    description: Media type
+                    example: VIDEO
+                  metadata:
+                    type: array
+                    items:
+                      anyOf:
+                        - $ref: '#/components/schemas/AudioMetadata'
+                        - $ref: '#/components/schemas/VideoMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - url
+                  - type
+                  - metadata
+      required:
+        - id
+        - name
+        - type
     LocationDto:
       type: object
       properties:
@@ -1792,6 +2051,111 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    get:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      summary: Fetch an asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: Detailed asset
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetDetailedDto'
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
                 Asset not found:
                   summary: Asset not found
                   value:
