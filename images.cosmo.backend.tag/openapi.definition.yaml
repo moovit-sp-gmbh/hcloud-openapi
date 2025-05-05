@@ -1293,7 +1293,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -1509,7 +1508,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1758,7 +1756,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1984,7 +1981,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '400':
           description: Failed to validate 'query' parameter 'token'
           content:
@@ -2120,7 +2116,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2471,7 +2466,6 @@ paths:
                   - id
                   - name
                   - type
-                  - assetType
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
