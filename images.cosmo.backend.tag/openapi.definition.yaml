@@ -56,6 +56,7 @@ components:
           maxLength: 32
           pattern: ^[a-zA-Z0-9-.]{1,32}$
           description: Name for the created space
+          example: my_space
       required:
         - name
     AssetPatchLocationDto:
@@ -409,6 +410,21 @@ components:
           example: My Namespace
       required:
         - name
+    SpaceDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the space
+          example: 641fa07a-2812-4d07-8de7-cd20daade955
+        name:
+          type: string
+          description: Name of the space
+          example: My Space
+      required:
+        - id
+        - name
     LocationDto:
       type: object
       properties:
@@ -421,6 +437,21 @@ components:
           type: string
           description: Name of the location
           example: My location
+      required:
+        - id
+        - name
+    ProductionDto:
+      type: object
+      properties:
+        id:
+          type: string
+          format: uuid
+          description: ID of the production
+          example: 641fa07a-2812-4d07-8de7-cd20daade955
+        name:
+          type: string
+          description: Name of the production
+          example: My Production
       required:
         - id
         - name
@@ -646,6 +677,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      summary: Create a space
+      tags:
+        - Space
       parameters:
         - schema:
             anyOf:
@@ -679,6 +713,12 @@ paths:
             schema:
               $ref: '#/components/schemas/SpaceCreateDto'
       responses:
+        '201':
+          description: Created space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
         '400':
           description: >-
             Failed to validate 'query' parameter 'noAvatar' | Failed to validate
@@ -794,6 +834,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      summary: List spaces
+      tags:
+        - Space
       parameters:
         - schema:
             anyOf:
@@ -832,6 +875,14 @@ paths:
           name: authorization
           in: header
       responses:
+        '200':
+          description: Spaces of organization
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/SpaceDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -1192,6 +1243,9 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
+      summary: Create an asset
+      tags:
+        - Asset
       parameters:
         - schema:
             type: string
@@ -1205,6 +1259,87 @@ paths:
             schema:
               $ref: '#/components/schemas/AssetCreateDto'
       responses:
+        '201':
+          description: Created asset with an upload URL
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1234,6 +1369,19 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '404':
+          description: Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
         '500':
           description: something went wrong
           content:
@@ -1253,6 +1401,9 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
+      summary: Attack an asset to a location
+      tags:
+        - Asset
       parameters:
         - schema:
             type: string
@@ -1266,6 +1417,8 @@ paths:
             schema:
               $ref: '#/components/schemas/AssetPatchLocationDto'
       responses:
+        '204':
+          description: No content
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1295,6 +1448,31 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '404':
+          description: Given space not found | Asset not found | Location not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+                Location not found:
+                  summary: Location not found
+                  value:
+                    code: 011.042.0001
+                    error: location.not.found
+                    message: Location not found
         '500':
           description: something went wrong
           content:
@@ -1466,8 +1644,89 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    delete:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      summary: Delete an asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '204':
+          description: No content
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '404':
+          description: Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/assets/upload:
     put:
+      summary: Upload an asset
+      tags:
+        - Asset
       parameters:
         - schema:
             type: string
@@ -1475,6 +1734,87 @@ paths:
           name: token
           in: query
       responses:
+        '200':
+          description: Uploaded asset
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+                  - assetType
         '400':
           description: Failed to validate 'query' parameter 'token'
           content:
@@ -1490,7 +1830,7 @@ paths:
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'token' - {error}
         '500':
-          description: something went wrong
+          description: something went wrong | TODO
           content:
             application/json:
               schema:
@@ -1502,6 +1842,12 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+                TODO:
+                  summary: TODO
+                  value:
+                    code: TODO
+                    error: TODO
+                    message: TODO
   /v1/org/:orgName/spaces/:spaceId/assets/:assetId/move:
     put:
       security:
@@ -2092,6 +2438,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      summary: Create a production
+      tags:
+        - Production
       parameters:
         - schema:
             type: string
@@ -2105,6 +2454,12 @@ paths:
             schema:
               $ref: '#/components/schemas/ProductionCreateDto'
       responses:
+        '201':
+          description: Created production
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/ProductionDto'
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2164,7 +2519,7 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found
+          description: Organization not found | Given space not found
           content:
             application/json:
               schema:
@@ -2176,6 +2531,12 @@ paths:
                     code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
         '500':
           description: something went wrong
           content:
