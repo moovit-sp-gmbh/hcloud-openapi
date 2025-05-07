@@ -809,20 +809,71 @@ components:
         - name
         - id
     CommentDto:
-      type: object
-      properties:
-        text:
-          type: string
-          description: Comment Text
-          example: My Comment
-        id:
-          type: string
-          format: uuid
-          description: Comment ID
-          example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-      required:
-        - text
-        - id
+      allOf:
+        - type: object
+          properties:
+            text:
+              type: string
+              description: Comment Text
+              example: My Comment
+            id:
+              type: string
+              format: uuid
+              description: Comment ID
+              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+            createDate:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Comment creation date
+              example: 1746608457170
+          required:
+            - text
+            - id
+            - createDate
+        - oneOf:
+            - type: object
+              properties:
+                temporalReference:
+                  type: string
+                  enum:
+                    - INSTANT
+                frameNumber:
+                  type: number
+                  minimum: 0
+                  exclusiveMinimum: true
+              required:
+                - temporalReference
+                - frameNumber
+            - type: object
+              properties:
+                temporalReference:
+                  type: string
+                  enum:
+                    - RANGE
+                  description: Kind of temporal reference
+                frameNumber:
+                  type: number
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: Number of the starting frame
+                duration:
+                  type: number
+                  minimum: 0
+                  exclusiveMinimum: true
+                  description: Number of frames
+              required:
+                - temporalReference
+                - frameNumber
+                - duration
+            - type: object
+              properties:
+                temporalReference:
+                  type: string
+                  enum:
+                    - NONE
+              required:
+                - temporalReference
     CommentCreateDto:
       allOf:
         - type: object
@@ -1134,6 +1185,7 @@ paths:
           in: query
         - schema:
             type: number
+            nullable: true
             minimum: 0
             default: 0
             description: Page index
@@ -4207,6 +4259,268 @@ paths:
                   summary: >-
                     User's organization role is insufficient. Must be at least
                     ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Item not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 011.037.0001
+                    error: item.not.found
+                    message: Item not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      summary: List comments
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: namespaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: ID of the entity the comments should refer to
+          required: true
+          name: refId
+          in: query
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: Comments of an entity
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+              examples:
+                NONE TemporalReference:
+                  description: NONE TemporalReference
+                  value:
+                    text: My Comment
+                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+                    createDate: 1746608457170
+                    temporalReference: NONE
+                INSTANT TemporalReference:
+                  description: INSTANT TemporalReference
+                  value:
+                    text: My Comment
+                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+                    createDate: 1746608457170
+                    temporalReference: INSTANT
+                    frameNumber: 1
+                RANGE TemporalReference:
+                  description: RANGE TemporalReference
+                  value:
+                    text: My Comment
+                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+                    createDate: 1746608457170
+                    temporalReference: RANGE
+                    frameNumber: 1
+                    duration: 1
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'namespaceId' | Failed to validate 'query' parameter 'refId' |
+            Failed to validate 'query' parameter 'limit' | Failed to validate
+            'query' parameter 'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceId':
+                  summary: Failed to validate 'path' parameter 'namespaceId'
+                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceId' -
+                      {error}
+                Failed to validate 'query' parameter 'refId':
+                  summary: Failed to validate 'query' parameter 'refId'
+                  description: Failed to validate 'query' parameter 'refId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'refId' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
