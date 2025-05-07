@@ -4863,3 +4863,199 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      summary: Delete Comment
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: namespaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: commentId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '204':
+          description: Comment deleted successfully
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'namespaceId' | Failed to validate 'path' parameter 'commentId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceId':
+                  summary: Failed to validate 'path' parameter 'namespaceId'
+                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceId' -
+                      {error}
+                Failed to validate 'path' parameter 'commentId':
+                  summary: Failed to validate 'path' parameter 'commentId'
+                  description: Failed to validate 'path' parameter 'commentId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'commentId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Comment not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Comment not found:
+                  summary: Comment not found
+                  value:
+                    code: 011.043.0001
+                    error: comment.not.found
+                    message: Comment not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
