@@ -823,9 +823,14 @@ components:
         - name
         - id
     CommentDto:
-      allOf:
+      oneOf:
         - type: object
           properties:
+            temporalReference:
+              type: string
+              enum:
+                - NONE
+              description: Kind of temporal reference
             text:
               type: string
               description: Comment Text
@@ -842,56 +847,91 @@ components:
               description: Comment creation date
               example: 1746608457170
           required:
+            - temporalReference
             - text
             - id
             - createDate
-        - oneOf:
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - INSTANT
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-              required:
-                - temporalReference
-                - frameNumber
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - RANGE
-                  description: Kind of temporal reference
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of the starting frame
-                duration:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of frames
-              required:
-                - temporalReference
-                - frameNumber
-                - duration
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - NONE
-              required:
-                - temporalReference
-    CommentCreateDto:
-      allOf:
         - type: object
           properties:
+            temporalReference:
+              type: string
+              enum:
+                - INSTANT
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the instant
+            text:
+              type: string
+              description: Comment Text
+              example: My Comment
+            id:
+              type: string
+              format: uuid
+              description: Comment ID
+              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+            createDate:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Comment creation date
+              example: 1746608457170
+          required:
+            - temporalReference
+            - second
+            - text
+            - id
+            - createDate
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - RANGE
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the start of the range
+            duration:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Number of seconds
+            text:
+              type: string
+              description: Comment Text
+              example: My Comment
+            id:
+              type: string
+              format: uuid
+              description: Comment ID
+              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+            createDate:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Comment creation date
+              example: 1746608457170
+          required:
+            - temporalReference
+            - second
+            - duration
+            - text
+            - id
+            - createDate
+    CommentCreateDto:
+      oneOf:
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - NONE
+              description: Kind of temporal reference
             text:
               type: string
               maxLength: 2048
@@ -903,105 +943,134 @@ components:
               description: ID of the item referenced
               example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
           required:
+            - temporalReference
             - text
             - refId
-        - oneOf:
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - INSTANT
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-              required:
-                - temporalReference
-                - frameNumber
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - RANGE
-                  description: Kind of temporal reference
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of the starting frame
-                duration:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of frames
-              required:
-                - temporalReference
-                - frameNumber
-                - duration
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - NONE
-              required:
-                - temporalReference
-    CommentEditDto:
-      allOf:
         - type: object
           properties:
+            temporalReference:
+              type: string
+              enum:
+                - INSTANT
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the instant
+            text:
+              type: string
+              maxLength: 2048
+              description: Comment text
+              example: This is my comment
+            refId:
+              type: string
+              format: uuid
+              description: ID of the item referenced
+              example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
+          required:
+            - temporalReference
+            - second
+            - text
+            - refId
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - RANGE
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the start of the range
+            duration:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Number of seconds
+            text:
+              type: string
+              maxLength: 2048
+              description: Comment text
+              example: This is my comment
+            refId:
+              type: string
+              format: uuid
+              description: ID of the item referenced
+              example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
+          required:
+            - temporalReference
+            - second
+            - duration
+            - text
+            - refId
+    CommentEditDto:
+      oneOf:
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - NONE
+              description: Kind of temporal reference
             text:
               type: string
               maxLength: 2048
               description: Comment text
               example: This is my comment
           required:
+            - temporalReference
             - text
-        - oneOf:
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - INSTANT
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-              required:
-                - temporalReference
-                - frameNumber
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - RANGE
-                  description: Kind of temporal reference
-                frameNumber:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of the starting frame
-                duration:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
-                  description: Number of frames
-              required:
-                - temporalReference
-                - frameNumber
-                - duration
-            - type: object
-              properties:
-                temporalReference:
-                  type: string
-                  enum:
-                    - NONE
-              required:
-                - temporalReference
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - INSTANT
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the instant
+            text:
+              type: string
+              maxLength: 2048
+              description: Comment text
+              example: This is my comment
+          required:
+            - temporalReference
+            - second
+            - text
+        - type: object
+          properties:
+            temporalReference:
+              type: string
+              enum:
+                - RANGE
+              description: Kind of temporal reference
+            second:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Second that marks the start of the range
+            duration:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Number of seconds
+            text:
+              type: string
+              maxLength: 2048
+              description: Comment text
+              example: This is my comment
+          required:
+            - temporalReference
+            - second
+            - duration
+            - text
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
