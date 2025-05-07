@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-922
+  version: 0.0.4-930
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1481,7 +1481,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Updated Space
+          description: Updated space entity permission
           content:
             application/json:
               schema:
@@ -1565,7 +1565,7 @@ paths:
         required: true
       responses:
         '200':
-          description: Updated Space
+          description: Updated space entity permission
           content:
             application/json:
               schema:
@@ -2198,6 +2198,9 @@ components:
         avatarUrl:
           type: string
           description: URL of the entity's avatar
+        serviceAccount:
+          type: boolean
+          description: Is service account
       required:
         - organization
         - space
@@ -2220,6 +2223,7 @@ components:
         type: user
         permission: OWNER
         avatarUrl: https://dali.s3.helmut.cloud/no_avatar.webp
+        serviceAccount: false
     SpacePatchDto:
       properties:
         newSpaceName:
