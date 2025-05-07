@@ -831,254 +831,113 @@ components:
         - name
         - id
     CommentDto:
-      oneOf:
-        - type: object
+      type: object
+      properties:
+        text:
+          type: string
+          description: Comment Text
+          example: My Comment
+        id:
+          type: string
+          format: uuid
+          description: Comment ID
+          example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+        createDate:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          description: Comment creation date
+          example: 1746608457170
+        timestamp:
+          type: object
           properties:
-            temporalReference:
-              type: string
-              enum:
-                - NONE
-              description: Kind of temporal reference
-            text:
-              type: string
-              description: Comment Text
-              example: My Comment
-            id:
-              type: string
-              format: uuid
-              description: Comment ID
-              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-            createDate:
+            in:
               type: number
               minimum: 0
               exclusiveMinimum: true
-              description: Comment creation date
-              example: 1746608457170
+              description: Timecode IN
+            out:
+              type: number
+              minimum: 0
+              exclusiveMinimum: true
+              description: Timecode OUT
+            color:
+              type: string
+              description: Comment color
           required:
-            - temporalReference
-            - text
-            - id
-            - createDate
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - INSTANT
-              description: Kind of temporal reference
-            second:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Second that marks the instant
-            text:
-              type: string
-              description: Comment Text
-              example: My Comment
-            id:
-              type: string
-              format: uuid
-              description: Comment ID
-              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-            createDate:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Comment creation date
-              example: 1746608457170
-          required:
-            - temporalReference
-            - second
-            - text
-            - id
-            - createDate
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - RANGE
-              description: Kind of temporal reference
-            second:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Second that marks the start of the range
-            duration:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Number of seconds
-            text:
-              type: string
-              description: Comment Text
-              example: My Comment
-            id:
-              type: string
-              format: uuid
-              description: Comment ID
-              example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-            createDate:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Comment creation date
-              example: 1746608457170
-          required:
-            - temporalReference
-            - second
-            - duration
-            - text
-            - id
-            - createDate
+            - in
+            - color
+          description: Timestamp the comment refers to
+      required:
+        - text
+        - id
+        - createDate
     CommentCreateDto:
-      oneOf:
-        - type: object
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 2048
+          description: Comment text
+          example: This is my comment
+        refId:
+          type: string
+          format: uuid
+          description: ID of the item referenced
+          example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
+        timestamp:
+          type: object
           properties:
-            temporalReference:
-              type: string
-              enum:
-                - NONE
-              description: Kind of temporal reference
-            text:
-              type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
-            refId:
-              type: string
-              format: uuid
-              description: ID of the item referenced
-              example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
-          required:
-            - temporalReference
-            - text
-            - refId
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - INSTANT
-              description: Kind of temporal reference
-            second:
+            in:
               type: number
               minimum: 0
               exclusiveMinimum: true
-              description: Second that marks the instant
-            text:
-              type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
-            refId:
-              type: string
-              format: uuid
-              description: ID of the item referenced
-              example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
-          required:
-            - temporalReference
-            - second
-            - text
-            - refId
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - RANGE
-              description: Kind of temporal reference
-            second:
+              description: Timecode IN
+            out:
               type: number
               minimum: 0
               exclusiveMinimum: true
-              description: Second that marks the start of the range
-            duration:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Number of seconds
-            text:
+              description: Timecode OUT
+            color:
               type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
-            refId:
-              type: string
-              format: uuid
-              description: ID of the item referenced
-              example: 8a5cd9be-f983-4a1c-bfdb-3868152a87fe
+              description: Comment color
           required:
-            - temporalReference
-            - second
-            - duration
-            - text
-            - refId
+            - in
+            - color
+          description: Timestamp the comment refers to
+      required:
+        - text
+        - refId
     CommentEditDto:
-      oneOf:
-        - type: object
+      type: object
+      properties:
+        text:
+          type: string
+          maxLength: 2048
+          description: Comment text
+          example: This is my comment
+        timestamp:
+          type: object
           properties:
-            temporalReference:
-              type: string
-              enum:
-                - NONE
-              description: Kind of temporal reference
-            text:
-              type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
-          required:
-            - temporalReference
-            - text
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - INSTANT
-              description: Kind of temporal reference
-            second:
+            in:
               type: number
               minimum: 0
               exclusiveMinimum: true
-              description: Second that marks the instant
-            text:
-              type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
-          required:
-            - temporalReference
-            - second
-            - text
-        - type: object
-          properties:
-            temporalReference:
-              type: string
-              enum:
-                - RANGE
-              description: Kind of temporal reference
-            second:
+              description: Timecode IN
+            out:
               type: number
               minimum: 0
               exclusiveMinimum: true
-              description: Second that marks the start of the range
-            duration:
-              type: number
-              minimum: 0
-              exclusiveMinimum: true
-              description: Number of seconds
-            text:
+              description: Timecode OUT
+            color:
               type: string
-              maxLength: 2048
-              description: Comment text
-              example: This is my comment
+              description: Comment color
           required:
-            - temporalReference
-            - second
-            - duration
-            - text
+            - in
+            - color
+          description: Timestamp the comment refers to
+      required:
+        - text
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
@@ -4826,31 +4685,6 @@ paths:
                 type: array
                 items:
                   $ref: '#/components/schemas/CommentDto'
-              examples:
-                NONE TemporalReference:
-                  description: NONE TemporalReference
-                  value:
-                    text: My Comment
-                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-                    createDate: 1746608457170
-                    temporalReference: NONE
-                INSTANT TemporalReference:
-                  description: INSTANT TemporalReference
-                  value:
-                    text: My Comment
-                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-                    createDate: 1746608457170
-                    temporalReference: INSTANT
-                    frameNumber: 1
-                RANGE TemporalReference:
-                  description: RANGE TemporalReference
-                  value:
-                    text: My Comment
-                    id: 254b0fb5-7567-47a8-b655-d09a40c91b2f
-                    createDate: 1746608457170
-                    temporalReference: RANGE
-                    frameNumber: 1
-                    duration: 1
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
