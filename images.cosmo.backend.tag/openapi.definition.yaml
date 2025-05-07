@@ -447,7 +447,9 @@ components:
         url:
           type: string
           format: uri
-          description: URL to the media
+          description: >-
+            URL to the media. Can be undefined if the media is still being
+            uploaded
           example: https://example.com
         type:
           type: string
@@ -457,7 +459,6 @@ components:
           example: UNKNOWN
       required:
         - name
-        - url
         - type
     Image:
       type: object
@@ -469,7 +470,9 @@ components:
         url:
           type: string
           format: uri
-          description: URL to the media
+          description: >-
+            URL to the media. Can be undefined if the media is still being
+            uploaded
           example: https://example.com
         type:
           type: string
@@ -479,11 +482,15 @@ components:
           example: IMAGE
       required:
         - name
-        - url
         - type
     AudioMetadata:
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - AUDIO
+          example: AUDIO
         codec:
           type: string
           example: aac
@@ -500,6 +507,7 @@ components:
           type: number
           example: 48000
       required:
+        - type
         - codec
         - channels
         - channelLayout
@@ -508,6 +516,11 @@ components:
     VideoMetadata:
       type: object
       properties:
+        type:
+          type: string
+          enum:
+            - VIDEO
+          example: VIDEO
         codec:
           type: string
           example: h264
@@ -545,6 +558,7 @@ components:
           type: string
           example: QuickTime / MOV
       required:
+        - type
         - codec
         - frameRate
         - pixelFormat
@@ -645,7 +659,9 @@ components:
                   url:
                     type: string
                     format: uri
-                    description: URL to the media
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
                     example: https://example.com
                   type:
                     type: string
@@ -660,9 +676,7 @@ components:
                     description: Media metadata
                 required:
                   - name
-                  - url
                   - type
-                  - metadata
               - type: object
                 properties:
                   name:
@@ -672,7 +686,9 @@ components:
                   url:
                     type: string
                     format: uri
-                    description: URL to the media
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
                     example: https://example.com
                   type:
                     type: string
@@ -689,9 +705,7 @@ components:
                     description: Media metadata
                 required:
                   - name
-                  - url
                   - type
-                  - metadata
       required:
         - id
         - name
