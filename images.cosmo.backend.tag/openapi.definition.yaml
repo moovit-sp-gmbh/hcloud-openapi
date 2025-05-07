@@ -544,8 +544,8 @@ components:
         fieldOrder:
           type: string
         duration:
-          type: string
-          example: '29.560000'
+          type: number
+          example: 29.56
         tcIn:
           type: string
           example: '0.000000'
@@ -621,6 +621,14 @@ components:
               - id
               - name
               - type
+        duration:
+          type: number
+          description: Duration of the video if the asset is a video asset
+          example: 29.56
+        frameRate:
+          type: number
+          description: Frame rate of the video if the asset is a video asset
+          example: 25
         thumbnailUrl:
           type: string
           format: uri
@@ -1660,6 +1668,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -1875,6 +1891,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -2123,6 +2147,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -2453,6 +2485,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -2588,6 +2628,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -2938,6 +2986,14 @@ paths:
                         - id
                         - name
                         - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
                   thumbnailUrl:
                     type: string
                     format: uri
@@ -4010,6 +4066,305 @@ paths:
                     code: 011.037.0001
                     error: item.not.found
                     message: Item not found
+                Folder not found:
+                  summary: Folder not found
+                  value:
+                    code: 011.039.0001
+                    error: folder.not.found
+                    message: Folder not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceId}/folders/{folderId}/assets/search:
+    post:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      summary: Search assets of folder
+      tags:
+        - Folder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: folderId
+          in: path
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetSearchDto'
+      responses:
+        '200':
+          description: Array of filtered assets
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                    description: Item type
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                  breadcrumb:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        id:
+                          type: string
+                          format: uuid
+                          description: Item ID
+                        name:
+                          type: string
+                          description: Item name
+                        type:
+                          type: string
+                          enum:
+                            - ASSET
+                            - SPACE
+                            - PRODUCTION
+                            - PROJECT
+                            - FOLDER
+                          description: Item type
+                      required:
+                        - id
+                        - name
+                        - type
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                required:
+                  - id
+                  - name
+                  - type
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'folderId' | Failed to validate 'query' parameter 'limit' | Failed
+            to validate 'query' parameter 'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'folderId':
+                  summary: Failed to validate 'path' parameter 'folderId'
+                  description: Failed to validate 'path' parameter 'folderId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'folderId' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Folder not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
                 Folder not found:
                   summary: Folder not found
                   value:
