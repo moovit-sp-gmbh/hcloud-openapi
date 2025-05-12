@@ -830,6 +830,27 @@ components:
       required:
         - name
         - id
+    ReducedUser:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hex
+          description: User ID
+          example: 67336a3f31ed8ecdc24e0080
+        name:
+          type: string
+          description: User Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the user's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
     CommentDto:
       type: object
       properties:
@@ -868,10 +889,13 @@ components:
             - in
             - color
           description: Timestamp the comment refers to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
       required:
         - text
         - id
         - createDate
+        - creator
     CommentCreateDto:
       type: object
       properties:
@@ -973,11 +997,6 @@ paths:
           required: false
           name: noAvatar
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -1142,11 +1161,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Spaces of organization
@@ -1304,11 +1318,6 @@ paths:
           required: true
           name: spaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -1462,11 +1471,6 @@ paths:
           required: true
           name: spaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -1684,12 +1688,6 @@ paths:
       summary: Create an asset
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -1849,12 +1847,6 @@ paths:
       summary: Attack an asset to a location
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -1940,12 +1932,6 @@ paths:
       summary: Patch an asset
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -2104,12 +2090,6 @@ paths:
       summary: Fetch an asset
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Detailed asset
@@ -2209,12 +2189,6 @@ paths:
       summary: Delete an asset
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No content
@@ -2421,12 +2395,6 @@ paths:
       summary: Move an asset
       tags:
         - Asset
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -2616,11 +2584,6 @@ paths:
           required: true
           name: spaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -2780,11 +2743,6 @@ paths:
           required: true
           name: locationId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -3019,12 +2977,6 @@ paths:
       summary: Create a production
       tags:
         - Production
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -3159,11 +3111,6 @@ paths:
           required: true
           name: spaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -3310,11 +3257,6 @@ paths:
           required: true
           name: folderId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -3475,11 +3417,6 @@ paths:
           required: true
           name: folderId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Folder
@@ -3642,11 +3579,6 @@ paths:
           required: false
           name: force
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -3834,11 +3766,6 @@ paths:
           required: true
           name: folderId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -4001,11 +3928,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -4276,11 +4198,6 @@ paths:
           required: true
           name: spaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -4453,11 +4370,6 @@ paths:
           required: true
           name: namespaceId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -4671,11 +4583,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Comments of an entity
@@ -4890,11 +4797,6 @@ paths:
           required: true
           name: commentId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -5096,11 +4998,6 @@ paths:
           required: true
           name: commentId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: Comment deleted successfully
