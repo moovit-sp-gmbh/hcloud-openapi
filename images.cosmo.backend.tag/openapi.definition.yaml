@@ -875,12 +875,10 @@ components:
             in:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode IN
             out:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode OUT
             color:
               type: string
@@ -915,12 +913,10 @@ components:
             in:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode IN
             out:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode OUT
             color:
               type: string
@@ -946,12 +942,10 @@ components:
             in:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode IN
             out:
               type: number
               minimum: 0
-              exclusiveMinimum: true
               description: Timecode OUT
             color:
               type: string
