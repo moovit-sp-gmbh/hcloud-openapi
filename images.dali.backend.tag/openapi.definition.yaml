@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Dali
-  version: 0.0.5-478
+  version: 0.0.5-486
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -257,6 +257,294 @@ paths:
               examples:
                 Organization not found:
                   $ref: '#/components/examples/OrganizationNotFoundException'
+        '413':
+          description: File size too large
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                File size too large:
+                  $ref: '#/components/examples/InvalidFileSizeException'
+        '415':
+          description: Invalid file type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid file type:
+                  $ref: '#/components/examples/InvalidFileTypeException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/avatar/org/{orgName}/spaces/cosmo/{spaceName}:
+    post:
+      tags:
+        - Cosmo.Avatar
+      summary: Create a new avatar for the Cosmo Space
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: COSMO_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      responses:
+        '201':
+          description: Public URL of the created avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarDto'
+        '400':
+          description: Validation error, processing and uploading avatar exceptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                FileTransferErrorException:
+                  $ref: '#/components/examples/FileTransferErrorException'
+                ImageProcessingErrorException:
+                  $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Cosmo.Avatar
+      summary: Delete avatar for the Cosmo Space
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: COSMO_SPACE_DELETE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        '500':
+          description: Internal Server Error (something went wrong)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - Cosmo.Avatar
+      summary: Upload custom avatar for the Cosmo Space
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: MANAGE\
+        Required scopes: COSMO_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      requestBody:
+        description: >-
+          custom image must be send in request body as multipart/form-data as
+          file!
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+        required: true
+      responses:
+        '200':
+          description: Public URL of the uploaded avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarDto'
+        '400':
+          description: >-
+            Invalid parameter or request body, processing/uploading avatar
+            exceptions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                FileTransferErrorException:
+                  $ref: '#/components/examples/FileTransferErrorException'
+                ImageProcessingErrorException:
+                  $ref: '#/components/examples/ImageProcessingErrorException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                No avatar in the request body:
+                  $ref: '#/components/examples/InvalidBodyException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least MANAGE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
         '413':
           description: File size too large
           content:
@@ -1715,90 +2003,6 @@ paths:
                   $ref: '#/components/examples/InternalServerErrorException'
         default:
           description: Unexpected error
-  /v1/avatar/org/{orgName}/service-accounts:
-    delete:
-      tags:
-        - ServiceAccount.Avatar
-      summary: Delete avatar for the service account
-      description: |-
-
-        Required organization role: MEMBER\
-        Required scopes: IDP_ORGANIZATION_DELETE
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - name: orgName
-          in: path
-          description: Name of the organization
-          required: true
-          schema:
-            type: string
-        - name: ids
-          in: query
-          description: IDs of the service accounts
-          required: true
-          schema:
-            type: string
-      responses:
-        '204':
-          description: No content
-        '400':
-          description: Organization name is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization name is invalid:
-                  $ref: '#/components/examples/InvalidParameterException'
-        '401':
-          description: There was an error while evaluating the user's credentials
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                WrongAuthenticationTokenException:
-                  $ref: '#/components/examples/WrongAuthenticationTokenException'
-                  summary: The JWT payload has an invalid format
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                  summary: The credentials were incorrect
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
-                  summary: The Authorization header is empty
-        '403':
-          description: Missing required scope for operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Missing required scope for operation:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                User is not member of organization or role is insufficient:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  $ref: '#/components/examples/OrganizationNotFoundException'
-        '500':
-          description: Internal Server Error (something went wrong)
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InternalServerErrorException:
-                  $ref: '#/components/examples/InternalServerErrorException'
-        default:
-          description: Unexpected error
   /v1/avatar/org/{orgName}/teams/{teamName}:
     post:
       tags:
@@ -2410,6 +2614,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
@@ -2422,6 +2627,7 @@ components:
         type: string
         minLength: 1
         maxLength: 128
+        pattern: /^[\w-.]{1,128}$/i
         example: My-Pool
       required: true
       description: >-
@@ -2434,6 +2640,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
+        pattern: /^[a-zA-Z0-9-.]{1,32}$/i
         example: Helmut4
       required: true
       description: >-
@@ -2446,6 +2653,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: Research-and-development-department.1
       required: true
       description: >-
