@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2301
+  version: 0.0.107-2307
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10260,6 +10260,12 @@ components:
         info:
           $ref: '#/components/schemas/NodeInfo'
           description: Information about the node
+        additionalConnectorRoot:
+          type: string
+          description: >-
+            If node is part of a node chain that was triggered by an additional
+            connector, this field will hold the UUID of the root node (the one
+            with the additional connector)
       required:
         - uuid
         - nodeUuid
