@@ -4598,7 +4598,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceId}/comments:
+  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments:
     post:
       security:
         - bearerAuth:
@@ -4632,10 +4632,18 @@ paths:
           name: spaceId
           in: path
         - schema:
-            type: string
-            format: uuid
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
           required: true
-          name: namespaceId
+          name: namespaceName
           in: path
       requestBody:
         required: true
@@ -4654,7 +4662,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceId' | Failed to validate 'path' parameter
-            'namespaceId'
+            'namespaceName'
           content:
             application/json:
               schema:
@@ -4674,14 +4682,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceId' - {error}
-                Failed to validate 'path' parameter 'namespaceId':
-                  summary: Failed to validate 'path' parameter 'namespaceId'
-                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'path' parameter 'namespaceId' -
+                      Failed to validate 'path' parameter 'namespaceName' -
                       {error}
         '401':
           description: >-
@@ -4820,10 +4830,18 @@ paths:
           name: spaceId
           in: path
         - schema:
-            type: string
-            format: uuid
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
           required: true
-          name: namespaceId
+          name: namespaceName
           in: path
         - schema:
             type: string
@@ -4863,7 +4881,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceId' | Failed to validate 'path' parameter
-            'namespaceId' | Failed to validate 'query' parameter 'refId' |
+            'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page'
           content:
@@ -4885,14 +4903,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceId' - {error}
-                Failed to validate 'path' parameter 'namespaceId':
-                  summary: Failed to validate 'path' parameter 'namespaceId'
-                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'path' parameter 'namespaceId' -
+                      Failed to validate 'path' parameter 'namespaceName' -
                       {error}
                 Failed to validate 'query' parameter 'refId':
                   summary: Failed to validate 'query' parameter 'refId'
@@ -5019,7 +5039,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceId}/comments/{commentId}:
+  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments/{commentId}:
     patch:
       security:
         - bearerAuth:
@@ -5053,10 +5073,18 @@ paths:
           name: spaceId
           in: path
         - schema:
-            type: string
-            format: uuid
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
           required: true
-          name: namespaceId
+          name: namespaceName
           in: path
         - schema:
             type: string
@@ -5081,7 +5109,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceId' | Failed to validate 'path' parameter
-            'namespaceId' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
               schema:
@@ -5101,14 +5129,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceId' - {error}
-                Failed to validate 'path' parameter 'namespaceId':
-                  summary: Failed to validate 'path' parameter 'namespaceId'
-                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'path' parameter 'namespaceId' -
+                      Failed to validate 'path' parameter 'namespaceName' -
                       {error}
                 Failed to validate 'path' parameter 'commentId':
                   summary: Failed to validate 'path' parameter 'commentId'
@@ -5254,10 +5284,18 @@ paths:
           name: spaceId
           in: path
         - schema:
-            type: string
-            format: uuid
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
           required: true
-          name: namespaceId
+          name: namespaceName
           in: path
         - schema:
             type: string
@@ -5272,7 +5310,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceId' | Failed to validate 'path' parameter
-            'namespaceId' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
               schema:
@@ -5292,14 +5330,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceId' - {error}
-                Failed to validate 'path' parameter 'namespaceId':
-                  summary: Failed to validate 'path' parameter 'namespaceId'
-                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'path' parameter 'namespaceId' -
+                      Failed to validate 'path' parameter 'namespaceName' -
                       {error}
                 Failed to validate 'path' parameter 'commentId':
                   summary: Failed to validate 'path' parameter 'commentId'
@@ -5412,7 +5452,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceId}/comments/{commentId}/text:
+  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments/{commentId}/text:
     patch:
       security:
         - bearerAuth:
@@ -5446,10 +5486,18 @@ paths:
           name: spaceId
           in: path
         - schema:
-            type: string
-            format: uuid
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
           required: true
-          name: namespaceId
+          name: namespaceName
           in: path
         - schema:
             type: string
@@ -5482,7 +5530,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceId' | Failed to validate 'path' parameter
-            'namespaceId' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
               schema:
@@ -5502,14 +5550,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceId' - {error}
-                Failed to validate 'path' parameter 'namespaceId':
-                  summary: Failed to validate 'path' parameter 'namespaceId'
-                  description: Failed to validate 'path' parameter 'namespaceId' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'path' parameter 'namespaceId' -
+                      Failed to validate 'path' parameter 'namespaceName' -
                       {error}
                 Failed to validate 'path' parameter 'commentId':
                   summary: Failed to validate 'path' parameter 'commentId'
