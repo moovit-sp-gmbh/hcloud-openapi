@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-233
+  version: 0.0.1-237
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1097,7 +1097,6 @@ components:
         type: string
         minLength: 3
         maxLength: 64
-        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
