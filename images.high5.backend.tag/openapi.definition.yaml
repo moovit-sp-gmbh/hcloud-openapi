@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2307
+  version: 0.0.107-2315
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8353,7 +8353,7 @@ components:
         - log
       example:
         status:
-          _id: 649180269bdc11b1fe807939
+          _id: 653d3e0f5ecb9e1d5a9337d9
           organization:
             _id: 6436bb9988821e8f6400c2f8
             name: DEV-software
@@ -8378,6 +8378,7 @@ components:
               progress: 100
               message: Successfully converted input to lower case
           target: account@moovit-sp.com
+          triggerSource: api
           dry: false
           createDate: 1692274988700
           startDate: 1692275019340
@@ -8693,7 +8694,7 @@ components:
         - logId
       example:
         high5ExecutionId: 64de112c68ba356266e2757a
-        statusId: 649180269bdc11b1fe807939
+        statusId: 653d3e0f5ecb9e1d5a9337d9
         logId: 649180269bdc11b1fe807938
     High5ExecutionState:
       enum:
@@ -8797,7 +8798,7 @@ components:
         - endDate
         - event
       example:
-        _id: 649180269bdc11b1fe807939
+        _id: 653d3e0f5ecb9e1d5a9337d9
         organization:
           _id: 6436bb9988821e8f6400c2f8
           name: DEV-software
@@ -8822,6 +8823,7 @@ components:
             progress: 100
             message: Successfully converted input to lower case
         target: account@moovit-sp.com
+        triggerSource: api
         dry: false
         createDate: 1692274988700
         startDate: 1692275019340
@@ -11215,6 +11217,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 873b7de208337dc792b65f21
       required: true
       description: >-
@@ -11227,6 +11230,7 @@ components:
         type: string
         minLength: 1
         maxLength: 128
+        pattern: /^[\w-.]{1,128}$/i
         example: Dev_Camp-2025.1
       required: true
       description: >-
@@ -11251,6 +11255,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 749b7de208337dc792b65f16
       required: true
       description: >-
@@ -11263,6 +11268,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 356b7de208337dc792b65f84
       required: true
       description: >-
@@ -11275,6 +11281,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 934b7de208337dc792b65f76
       required: true
       description: ID of the node (ObjectId identifier, consists of 24 hexadecimal digits)
@@ -11285,6 +11292,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
@@ -11297,6 +11305,7 @@ components:
         type: string
         minLength: 1
         maxLength: 128
+        pattern: /^[\w-.]{1,128}$/i
         example: My-Pool
       required: true
       description: >-
@@ -11309,6 +11318,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
+        pattern: /^[\w-.]{1,32}$/i
         example: Helmut4-dev.api_key
       required: true
       description: >-
@@ -11321,6 +11331,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 658b7de208337dc792b65f49
       required: true
       description: >-
@@ -11333,6 +11344,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
+        pattern: /^[a-zA-Z0-9-.]{1,32}$/i
         example: Helmut4
       required: true
       description: >-
@@ -11345,6 +11357,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 76194791721d55d3a5051092
       required: true
       description: >-
@@ -11357,6 +11370,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 671b7de208337dc792b65f93
       required: true
       description: >-
@@ -11369,6 +11383,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 835b7de208337dc792b65f42
       required: true
       description: >-
@@ -11381,6 +11396,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 549b7de208337dc792b65f37
       required: true
       description: >-
@@ -11393,6 +11409,7 @@ components:
         type: string
         minLength: 128
         maxLength: 128
+        pattern: /^[a-fA-F0-9]{128}$/i
         example: >-
           DD85EABD4CAF4F34AAA8F476676B7B20302B2E2E9F7A5322D4B8E740ED1A7467F4D49B1848560592083C8AD331909C559FF1012B1C5B29490C820FE7AA8B34F8
       required: true
