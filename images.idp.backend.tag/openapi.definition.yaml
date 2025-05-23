@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2244
+  version: 0.0.143-2252
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8847,6 +8847,10 @@ components:
         - friday:space:execute
         - friday:space:write
         - friday:space:delete
+        - cosmo:space:read
+        - cosmo:space:execute
+        - cosmo:space:write
+        - cosmo:space:delete
       type: string
       description: >
         * hcloud:full - Full access to HCloud
@@ -8901,6 +8905,16 @@ components:
         * friday:space:write - Access to read and write operations of spaces
 
         * friday:space:delete - Access to read, write and delete operations of
+        spaces
+
+        * cosmo:space:read - Access to read operations of spaces
+
+        * cosmo:space:execute - Access to the ability to start execution of
+        streams of spaces
+
+        * cosmo:space:write - Access to read and write operations of spaces
+
+        * cosmo:space:delete - Access to read, write and delete operations of
         spaces
     Search:
       properties:
@@ -10231,6 +10245,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 961b7de208337dc792b65f57
       required: true
       description: >-
@@ -10243,6 +10258,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 291b7de208337dc792b65f76
       required: true
       description: >-
@@ -10255,6 +10271,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
@@ -10267,6 +10284,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 381b5de208337dc792b65f67
       required: true
       description: >-
@@ -10279,6 +10297,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: Research-and-development-department.1
       required: true
       description: >-
@@ -10291,6 +10310,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 671b7de208337dc792b65f93
       required: true
       description: ID of the user (ObjectId identifier, consists of 24 hexadecimal digits)
