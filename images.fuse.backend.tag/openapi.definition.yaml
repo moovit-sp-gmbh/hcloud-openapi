@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-930
+  version: 0.0.4-938
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2408,6 +2408,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 70d5ec35c2fa070014ab8c3b
       required: true
       description: >-
@@ -2420,6 +2421,7 @@ components:
         type: string
         minLength: 24
         maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
         example: 31d5ec35c2fa070014ab8c7b
       required: true
       description: >-
@@ -2432,6 +2434,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
@@ -2444,6 +2447,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
+        pattern: /^[a-zA-Z0-9-.]{1,32}$/i
         example: Helmut4
       required: true
       description: >-
