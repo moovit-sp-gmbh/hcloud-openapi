@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Friday
-  version: 0.0.1-16
+  version: 0.0.1-22
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2917,6 +2917,7 @@ components:
         type: string
         minLength: 1
         maxLength: 128
+        pattern: /^[\w-.]{1,128}$/i
         example: Helmut4-Storage
       required: true
       description: >-
@@ -2929,6 +2930,7 @@ components:
         type: string
         minLength: 1
         maxLength: 64
+        pattern: /^[\w-.]{1,64}$/i
         example: My_personal_web-page_address.1
       required: true
       description: >-
@@ -2941,6 +2943,7 @@ components:
         type: string
         minLength: 3
         maxLength: 64
+        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
         example: MoovIT-Software-Products-GmbH
       required: true
       description: >-
@@ -2953,6 +2956,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
+        pattern: /^[a-zA-Z0-9-.]{1,32}$/i
         example: Helmut4
       required: true
       description: >-
