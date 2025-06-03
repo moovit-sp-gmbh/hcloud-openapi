@@ -444,6 +444,10 @@ components:
           type: string
           description: Name of the space
           example: My Space
+        createDate:
+          type: number
+          description: Creation date of the space as millisecond timestamp
+          example: 1633072800000
         avatarUrl:
           type: string
           format: uri
@@ -452,6 +456,7 @@ components:
       required:
         - id
         - name
+        - createDate
         - avatarUrl
     ItemDto:
       type: object
