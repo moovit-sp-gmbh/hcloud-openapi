@@ -432,6 +432,27 @@ components:
             - rejected
       required:
         - status
+    ReducedUser:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hex
+          description: User ID
+          example: 67336a3f31ed8ecdc24e0080
+        name:
+          type: string
+          description: User Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the user's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
     SpaceDto:
       type: object
       properties:
@@ -448,6 +469,8 @@ components:
           type: number
           description: Creation date of the space as millisecond timestamp
           example: 1633072800000
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
         avatarUrl:
           type: string
           format: uri
@@ -457,6 +480,7 @@ components:
         - id
         - name
         - createDate
+        - creator
         - avatarUrl
     ItemDto:
       type: object
@@ -485,27 +509,6 @@ components:
         name: my space
         type: SPACE
         id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
-    ReducedUser:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: hex
-          description: User ID
-          example: 67336a3f31ed8ecdc24e0080
-        name:
-          type: string
-          description: User Name
-          example: Bob
-        avatarUrl:
-          type: string
-          format: uri
-          description: URL to the user's avatar
-          example: https://example.com
-      required:
-        - _id
-        - name
-        - avatarUrl
     Unknown:
       type: object
       properties:
