@@ -89,6 +89,27 @@ components:
           description: Parent ID
       required:
         - parentId
+    BulkMoveAssetsDto:
+      type: object
+      properties:
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: List of asset/folder IDs to move
+          example:
+            - uuid-1
+            - uuid-2
+        parentId:
+          type: string
+          format: uuid
+          description: ID of the target parent
+          example: uuid-parent
+      required:
+        - assetIds
+        - parentId
     AssetPatchDto:
       type: object
       properties:
@@ -2245,6 +2266,204 @@ paths:
                     code: 011.010.0001
                     error: space.not.found
                     message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/:orgName/spaces/:spaceId/assets/bulk-move:
+    put:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      summary: Bulk move multiple assets
+      tags:
+        - Asset
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/BulkMoveAssetsDto'
+      responses:
+        '200':
+          description: List of moved assets
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    id:
+                      type: string
+                      format: uuid
+                      description: Asset ID
+                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
+                    name:
+                      type: string
+                      description: Asset Name
+                      example: myasset.mov
+                    type:
+                      type: string
+                      enum:
+                        - ASSET
+                        - SPACE
+                        - PRODUCTION
+                        - PROJECT
+                        - FOLDER
+                      description: Item type
+                    assetType:
+                      type: string
+                      enum:
+                        - VIDEO
+                        - IMAGE
+                        - DOCUMENT
+                        - UNKNOWN
+                      description: Asset Type
+                      example: VIDEO
+                    breadcrumb:
+                      type: array
+                      items:
+                        $ref: '#/components/schemas/ItemDto'
+                    duration:
+                      type: number
+                      description: Duration of the video if the asset is a video asset
+                      example: 29.56
+                    frameRate:
+                      type: number
+                      description: Frame rate of the video if the asset is a video asset
+                      example: 25
+                    thumbnailUrl:
+                      type: string
+                      format: uri
+                      description: URL of the thumbnail
+                      example: https://example.com/thumbnail.jpg
+                    previewUrl:
+                      type: string
+                      format: uri
+                      description: URL of the preview
+                      example: https://example.com/preview.jpg
+                    createDate:
+                      type: number
+                      minimum: 0
+                      description: Date of creation
+                      format: UNIX timestamp
+                      example: 1747142773233
+                    creator:
+                      $ref: '#/components/schemas/ReducedUser'
+                    upload:
+                      type: object
+                      properties:
+                        url:
+                          type: string
+                          format: uri
+                        token:
+                          type: string
+                        expiration:
+                          type: number
+                        libraryId:
+                          type: number
+                        videoId:
+                          type: string
+                      required:
+                        - url
+                        - token
+                        - expiration
+                  required:
+                    - id
+                    - name
+                    - type
+                    - createDate
+                    - creator
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Item not found |
+            Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 011.037.0001
+                    error: item.not.found
+                    message: Item not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
         '500':
           description: something went wrong
           content:
