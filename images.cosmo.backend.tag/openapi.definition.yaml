@@ -860,6 +860,24 @@ components:
         - type
         - createDate
         - creator
+    AssetPermissionsDto:
+      type: object
+      additionalProperties:
+        type: array
+        items:
+          type: string
+          enum:
+            - READ
+            - WRITE
+            - CREATE
+            - COMMENT
+            - CONTRIBUTE
+            - DOWNLOAD
+            - DELETE
+            - READ_DETAILS
+      example:
+        37fd2155-98f7-4154-b2ed-a43715937f6a:
+          - READ
     LocationDto:
       type: object
       properties:
@@ -2020,7 +2038,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/assets:
+  /v1/org/{orgName}/spaces/{spaceId}/assets:
     post:
       security:
         - bearerAuth: []
@@ -2029,6 +2047,27 @@ paths:
       summary: Create an asset
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
       requestBody:
         required: true
         content:
@@ -2124,6 +2163,29 @@ paths:
                   - type
                   - createDate
                   - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2179,7 +2241,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/assets/bulk-move:
+  /v1/org/{orgName}/spaces/{spaceId}/assets/bulk-move:
     put:
       security:
         - bearerAuth: []
@@ -2188,6 +2250,27 @@ paths:
       summary: Bulk move multiple assets
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
       requestBody:
         required: true
         content:
@@ -2285,6 +2368,29 @@ paths:
                     - type
                     - createDate
                     - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2377,7 +2483,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/assets/:assetId/location:
+  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}/location:
     patch:
       security:
         - bearerAuth: []
@@ -2386,6 +2492,33 @@ paths:
       summary: Attack an asset to a location
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
       requestBody:
         required: true
         content:
@@ -2395,6 +2528,37 @@ paths:
       responses:
         '204':
           description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2462,7 +2626,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/assets/:assetId:
+  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}:
     patch:
       security:
         - bearerAuth: []
@@ -2471,6 +2635,33 @@ paths:
       summary: Patch an asset
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
       requestBody:
         required: true
         content:
@@ -2566,6 +2757,37 @@ paths:
                   - type
                   - createDate
                   - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2629,6 +2851,33 @@ paths:
       summary: Fetch an asset
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
       responses:
         '200':
           description: Detailed asset
@@ -2636,6 +2885,37 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/AssetDetailedDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2728,9 +3008,67 @@ paths:
       summary: Delete an asset
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
       responses:
         '204':
           description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2931,7 +3269,7 @@ paths:
                     code: TODO
                     error: TODO
                     message: TODO
-  /v1/org/:orgName/spaces/:spaceId/assets/:assetId/move:
+  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}/move:
     put:
       security:
         - bearerAuth: []
@@ -2940,6 +3278,33 @@ paths:
       summary: Move an asset
       tags:
         - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
       requestBody:
         required: true
         content:
@@ -3035,6 +3400,37 @@ paths:
                   - type
                   - createDate
                   - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -3083,6 +3479,163 @@ paths:
                     code: 011.037.0001
                     error: item.not.found
                     message: Item not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceId}/assets/permissions:
+    post:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: The permissions are related to the user making the request.
+      summary: Fetch permissions for a group of assets.
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: array
+              items:
+                type: string
+                format: uuid
+                example: 37fd2155-98f7-4154-b2ed-a43715937f6a
+              minItems: 1
+              description: Asset (asset/folder) IDs to get the permissions for
+      responses:
+        '200':
+          description: Map of the permissions available for each asset.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetPermissionsDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
                 Asset not found:
                   summary: Asset not found
                   value:
@@ -4669,9 +5222,7 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER
+          description: Required scopes ['high5:space:read'] not included in authorization
           content:
             application/json:
               schema:
@@ -4681,16 +5232,6 @@ paths:
                   summary: >-
                     Required scopes ['high5:space:read'] not included in
                     authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
