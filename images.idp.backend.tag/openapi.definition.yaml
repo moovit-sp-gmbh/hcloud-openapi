@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2264
+  version: 0.0.143-2287
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1434,6 +1434,15 @@ paths:
           required: false
           schema:
             type: boolean
+        - name: userId
+          in: query
+          description: >-
+            If set, the organization role included in the response will of this
+            user instead of the one associated with the token used in the
+            request.
+          required: false
+          schema:
+            type: string
       responses:
         '200':
           description: Requested organization
