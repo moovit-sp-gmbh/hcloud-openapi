@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2297
+  version: 0.0.143-2299
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -902,6 +902,300 @@ paths:
                   $ref: '#/components/examples/LoginStateNotFoundException'
                 SAMLProviderNotFoundException:
                   $ref: '#/components/examples/SAMLProviderNotFoundException'
+  /v1/messages/search:
+    post:
+      tags:
+        - Messages
+      summary: >-
+        Retrieves all messages to the specified user that match the provided
+        search filter. Will return all user messages if no filter provided.
+      description: ''
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageID'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of message objects that match the provided search filters
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/MessageDto'
+        '400':
+          description: Invalid body or search filter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+        default:
+          description: Unexpected error
+  /v1/messages/{messageId}:
+    get:
+      tags:
+        - Message
+      summary: Retrieves a message by it's ID
+      description: ''
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageID'
+      responses:
+        '200':
+          description: Requested message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDto'
+        '400':
+          description: Invalid query parameters
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidParameterException:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Insufficient access right
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                MessageNotFoundException:
+                  $ref: '#/components/examples/MessageNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Message
+      summary: Delete message by ID
+      description: ''
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageID'
+      responses:
+        '204':
+          description: No content
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Insufficient access right
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                MessageNotFoundException:
+                  $ref: '#/components/examples/MessageNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/messages/{messageId}/read:
+    patch:
+      tags:
+        - Message
+      summary: Set the status of the received message as read or unread
+      description: ''
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/MessageID'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/MessagePatchDto'
+      responses:
+        '200':
+          description: Updated message
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/MessageDto'
+        '400':
+          description: Invalid body
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Insufficient access right
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InsufficientAccessRightException:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+        '404':
+          description: Message not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                MessageNotFoundException:
+                  $ref: '#/components/examples/MessageNotFoundException'
+        default:
+          description: Unexpected error
   /v1/login/oauth/authorize:
     get:
       tags:
@@ -7895,6 +8189,108 @@ components:
         - path
       example:
         path: LOGIN
+    MessageCreateDto:
+      properties:
+        to:
+          type: string
+          description: Email address of the receipient
+        recipient:
+          $ref: '#/components/schemas/RecipientType'
+          description: Message recipient type (single user or group of users)
+        orgName:
+          type: string
+          description: >-
+            Optional name of the organization (should be specified only when
+            sending message to team members)
+        title:
+          type: string
+          description: Optional title of the message
+        subject:
+          type: string
+          description: Optional subject of the message
+        message:
+          type: string
+          description: Content of the message
+      required:
+        - to
+        - message
+      example:
+        to: videoEditors
+        recipient: TEAM
+        orgName: Broadcasters1
+        title: Software updates
+        subject: Latest changes
+        message: Some important message!
+    MessageDto:
+      properties:
+        _id:
+          type: string
+          description: Unique identifier of the message
+        from:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Sender of the message
+        to:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Recipient of the message
+        title:
+          type: string
+          description: Title of the message
+        subject:
+          type: string
+          description: Subject of the message
+        message:
+          type: string
+          description: Content of the message
+        read:
+          type: boolean
+          description: Indicates whether the message has been read
+        type:
+          $ref: '#/components/schemas/MessageType'
+          description: Defines the message type (system or user)
+        createDate:
+          type: number
+          description: Creation date of the message
+      required:
+        - _id
+        - from
+        - to
+        - message
+        - read
+        - type
+        - createDate
+      example:
+        _id: 7354c915f173f39d71bb8a75
+        from:
+          _id: 6284c915f173f39d71bb8b83
+          name: Helmut Mc Cloud
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        to:
+          _id: 73d25431614a64c2974c7152
+          name: John Doe
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        title: Software updates
+        subject: Latest changes
+        message: Some important message!
+        read: false
+        type: USER
+        createDate: 1675569825179
+    MessagePatchDto:
+      properties:
+        read:
+          type: boolean
+          description: Indicates whether the message has been read
+      required:
+        - read
+      example:
+        read: true
+    MessageType:
+      enum:
+        - SYSTEM
+        - USER
+      type: string
+      description: |
+        * SYSTEM - Internal system message
+        * USER - Message from the user registered in the system
     NatsDto:
       properties:
         email:
@@ -8730,6 +9126,16 @@ components:
         expiration: -1
         scopes:
           - hcloud:full
+    RecipientType:
+      enum:
+        - USER
+        - TEAM
+        - ORGANIZATION
+      type: string
+      description: |
+        * USER - Message to user
+        * TEAM - Message to team members
+        * ORGANIZATION - Message to all members of organization
     ReducedTeamDto:
       properties:
         _id:
@@ -10216,6 +10622,11 @@ components:
         code: 001.034.0001
         error: service.account.not.found
         message: Service account not found
+    MessageNotFoundException:
+      value:
+        code: 001.044.0001
+        error: message.not.found
+        message: The specified message does not exist.
     OAuthTokenEndpointInvalidGrantErrorResponseDto:
       value:
         error: invalid_grant
