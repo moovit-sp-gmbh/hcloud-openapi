@@ -103,7 +103,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
           description: Name for the space
           example: my_space
       required:
@@ -115,7 +115,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
           description: Name for the space
           example: my_space
       required:
@@ -423,16 +423,6 @@ components:
           format: uuid
           description: Parent ID
           example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
         tags:
           type: array
           items:
@@ -452,11 +442,9 @@ components:
       required:
         - name
         - parentId
-        - parentType
       example:
         name: my-asset
         parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        parentType: SPACE
         tags:
           - tag1
           - tag2
@@ -470,7 +458,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
       required:
         - name
     ProductionCreateDto:
@@ -480,7 +468,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
       required:
         - name
     NamespaceCreateDto:
@@ -933,7 +921,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
           description: Folder name
           example: my folder
         parentId:
@@ -941,20 +929,9 @@ components:
           format: uuid
           description: Parent ID
           example: 4ba38673-c8bb-4541-b123-b542f91d5f07
-        parentType:
-          type: string
-          enum:
-            - ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-          description: Parent Type
-          example: SPACE
       required:
         - name
         - parentId
-        - parentType
     FolderRenameDto:
       type: object
       properties:
@@ -962,7 +939,7 @@ components:
           type: string
           minLength: 1
           maxLength: 32
-          pattern: ^[a-zA-Z0-9-.]{1,32}$
+          pattern: ^[\w-.]{1,32}$
           description: Folder name
           example: my folder
       required:
@@ -1428,7 +1405,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}:
+  /v1/org/{orgName}/spaces/{spaceName}:
     get:
       security:
         - bearerAuth:
@@ -1457,9 +1434,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       responses:
         '200':
@@ -1471,7 +1451,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -1484,13 +1464,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1581,7 +1561,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/name:
+  /v1/org/{orgName}/spaces/{spaceName}/name:
     patch:
       security:
         - bearerAuth:
@@ -1610,9 +1590,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -1630,7 +1613,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -1643,13 +1626,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1740,7 +1723,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets/search:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/search:
     post:
       security:
         - bearerAuth:
@@ -1769,9 +1752,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: number
@@ -1905,7 +1891,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'query' parameter
+            'path' parameter 'spaceName' | Failed to validate 'query' parameter
             'limit' | Failed to validate 'query' parameter 'page' | Failed to
             validate 'query' parameter 'recursive'
           content:
@@ -1920,13 +1906,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
@@ -2038,7 +2024,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets:
+  /v1/org/{orgName}/spaces/{spaceName}/assets:
     post:
       security:
         - bearerAuth: []
@@ -2064,9 +2050,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -2166,7 +2155,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -2179,13 +2168,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2215,13 +2204,36 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
-        '404':
-          description: Given space not found
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
                 Given space not found:
                   summary: Given space not found
                   value:
@@ -2241,7 +2253,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets/bulk-move:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-move:
     put:
       security:
         - bearerAuth: []
@@ -2267,9 +2279,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -2371,7 +2386,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -2384,13 +2399,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -2483,7 +2498,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}/location:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/location:
     patch:
       security:
         - bearerAuth: []
@@ -2509,9 +2524,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -2531,7 +2549,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId'
           content:
             application/json:
@@ -2545,13 +2563,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'assetId':
                   summary: Failed to validate 'path' parameter 'assetId'
                   description: Failed to validate 'path' parameter 'assetId' - {error}
@@ -2588,13 +2606,38 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
-        '404':
-          description: Given space not found | Asset not found | Location not found
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Asset not found |
+            Location not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
                 Given space not found:
                   summary: Given space not found
                   value:
@@ -2626,7 +2669,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}:
     patch:
       security:
         - bearerAuth: []
@@ -2652,9 +2695,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -2760,7 +2806,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId'
           content:
             application/json:
@@ -2774,13 +2820,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'assetId':
                   summary: Failed to validate 'path' parameter 'assetId'
                   description: Failed to validate 'path' parameter 'assetId' - {error}
@@ -2817,13 +2863,36 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
-        '404':
-          description: Asset not found
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
                 Asset not found:
                   summary: Asset not found
                   value:
@@ -2868,9 +2937,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -2888,7 +2960,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId'
           content:
             application/json:
@@ -2902,13 +2974,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'assetId':
                   summary: Failed to validate 'path' parameter 'assetId'
                   description: Failed to validate 'path' parameter 'assetId' - {error}
@@ -3025,9 +3097,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -3041,7 +3116,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId'
           content:
             application/json:
@@ -3055,13 +3130,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'assetId':
                   summary: Failed to validate 'path' parameter 'assetId'
                   description: Failed to validate 'path' parameter 'assetId' - {error}
@@ -3269,7 +3344,7 @@ paths:
                     code: TODO
                     error: TODO
                     message: TODO
-  /v1/org/{orgName}/spaces/{spaceId}/assets/{assetId}/move:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/move:
     put:
       security:
         - bearerAuth: []
@@ -3295,9 +3370,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -3403,7 +3481,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId'
           content:
             application/json:
@@ -3417,13 +3495,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'assetId':
                   summary: Failed to validate 'path' parameter 'assetId'
                   description: Failed to validate 'path' parameter 'assetId' - {error}
@@ -3498,7 +3576,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/assets/permissions:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/permissions:
     post:
       security:
         - bearerAuth: []
@@ -3525,9 +3603,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -3551,7 +3632,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -3564,13 +3645,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -3655,7 +3736,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/locations:
+  /v1/org/{orgName}/spaces/{spaceName}/locations:
     post:
       security:
         - bearerAuth:
@@ -3684,9 +3765,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -3704,7 +3788,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -3717,13 +3801,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -3808,7 +3892,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/locations/{locationId}/assets/search:
+  /v1/org/{orgName}/spaces/{spaceName}/locations/{locationId}/assets/search:
     post:
       security:
         - bearerAuth:
@@ -3837,9 +3921,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -3945,7 +4032,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'locationId'
           content:
             application/json:
@@ -3959,13 +4046,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'locationId':
                   summary: Failed to validate 'path' parameter 'locationId'
                   description: Failed to validate 'path' parameter 'locationId' - {error}
@@ -4069,7 +4156,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/:orgName/spaces/:spaceId/productions:
+  /v1/org/:orgName/spaces/:spaceName/productions:
     post:
       security:
         - bearerAuth:
@@ -4184,7 +4271,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/folders:
+  /v1/org/{orgName}/spaces/{spaceName}/folders:
     post:
       security:
         - bearerAuth: []
@@ -4210,10 +4297,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
-            description: Space ID
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space Name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -4231,7 +4320,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -4244,13 +4333,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -4306,7 +4395,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/folders/{folderId}/name:
+  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/name:
     patch:
       security:
         - bearerAuth: []
@@ -4332,10 +4421,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
-            description: Space ID
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space Name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -4360,7 +4451,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'folderId'
           content:
             application/json:
@@ -4374,13 +4465,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'folderId':
                   summary: Failed to validate 'path' parameter 'folderId'
                   description: Failed to validate 'path' parameter 'folderId' - {error}
@@ -4466,7 +4557,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/folders/{folderId}:
+  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}:
     get:
       security:
         - bearerAuth: []
@@ -4492,10 +4583,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
-            description: Space ID
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space Name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -4514,7 +4607,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'folderId'
           content:
             application/json:
@@ -4528,13 +4621,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'folderId':
                   summary: Failed to validate 'path' parameter 'folderId'
                   description: Failed to validate 'path' parameter 'folderId' - {error}
@@ -4651,10 +4744,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
-            description: Space ID
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space Name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -4684,7 +4779,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'folderId' | Failed to validate 'query' parameter 'force'
           content:
             application/json:
@@ -4698,13 +4793,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'folderId':
                   summary: Failed to validate 'path' parameter 'folderId'
                   description: Failed to validate 'path' parameter 'folderId' - {error}
@@ -4829,7 +4924,7 @@ paths:
                     code: 011.000.0006
                     error: not.implemented
                     message: Feature not implemented
-  /v1/org/{orgName}/spaces/{spaceId}/folders/{folderId}/move:
+  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/move:
     put:
       security:
         - bearerAuth: []
@@ -4855,9 +4950,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -4881,7 +4979,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'folderId'
           content:
             application/json:
@@ -4895,13 +4993,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'folderId':
                   summary: Failed to validate 'path' parameter 'folderId'
                   description: Failed to validate 'path' parameter 'folderId' - {error}
@@ -4938,13 +5036,36 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
-        '404':
-          description: Item not found | Folder not found
+        '403':
+          description: User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Item not found | Folder not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
                 Item not found:
                   summary: Item not found
                   value:
@@ -4970,7 +5091,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/folders/{folderId}/assets/search:
+  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/assets/search:
     post:
       security:
         - bearerAuth:
@@ -4999,9 +5120,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -5141,7 +5265,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'folderId' | Failed to validate 'query' parameter 'limit' | Failed
             to validate 'query' parameter 'page' | Failed to validate 'query'
             parameter 'recursive'
@@ -5157,13 +5281,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'folderId':
                   summary: Failed to validate 'path' parameter 'folderId'
                   description: Failed to validate 'path' parameter 'folderId' - {error}
@@ -5276,7 +5400,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces:
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces:
     post:
       security:
         - bearerAuth:
@@ -5305,9 +5429,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -5332,7 +5459,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -5345,13 +5472,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -5442,7 +5569,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/ref/{refId}/status:
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/ref/{refId}/status:
     patch:
       security:
         - bearerAuth: []
@@ -5468,9 +5595,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -5598,7 +5728,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'refId' | Failed to validate 'path' parameter 'namespaceName'
           content:
             application/json:
@@ -5612,13 +5742,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'refId':
                   summary: Failed to validate 'path' parameter 'refId'
                   description: Failed to validate 'path' parameter 'refId' - {error}
@@ -5666,13 +5796,38 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
-        '404':
-          description: Item not found | Given space not found | Namespace not found
+        '403':
+          description: User's organization role is insufficient. Must be at least ADMIN
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Item not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
                 Item not found:
                   summary: Item not found
                   value:
@@ -5704,7 +5859,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments:
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments:
     post:
       security:
         - bearerAuth:
@@ -5733,9 +5888,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             anyOf:
@@ -5767,7 +5925,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName'
           content:
             application/json:
@@ -5781,13 +5939,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'namespaceName':
                   summary: Failed to validate 'path' parameter 'namespaceName'
                   description: >-
@@ -5919,9 +6077,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             anyOf:
@@ -5974,7 +6135,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page'
@@ -5990,13 +6151,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'namespaceName':
                   summary: Failed to validate 'path' parameter 'namespaceName'
                   description: >-
@@ -6121,7 +6282,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments/{commentId}:
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments/{commentId}:
     patch:
       security:
         - bearerAuth:
@@ -6150,9 +6311,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             anyOf:
@@ -6190,7 +6354,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
@@ -6204,13 +6368,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'namespaceName':
                   summary: Failed to validate 'path' parameter 'namespaceName'
                   description: >-
@@ -6361,9 +6525,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             anyOf:
@@ -6391,7 +6558,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
@@ -6405,13 +6572,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'namespaceName':
                   summary: Failed to validate 'path' parameter 'namespaceName'
                   description: >-
@@ -6534,7 +6701,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/namespaces/{namespaceName}/comments/{commentId}/text:
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments/{commentId}/text:
     patch:
       security:
         - bearerAuth:
@@ -6563,9 +6730,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             anyOf:
@@ -6611,7 +6781,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName' | Failed to validate 'path' parameter 'commentId'
           content:
             application/json:
@@ -6625,13 +6795,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'namespaceName':
                   summary: Failed to validate 'path' parameter 'namespaceName'
                   description: >-
@@ -6754,7 +6924,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/shares:
+  /v1/org/{orgName}/spaces/{spaceName}/shares:
     post:
       security:
         - bearerAuth:
@@ -6783,9 +6953,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
       requestBody:
         required: true
@@ -6818,7 +6991,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId'
+            'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -6831,13 +7004,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -6945,7 +7118,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceId}/shares/{shareId}:
+  /v1/org/{orgName}/spaces/{spaceName}/shares/{shareId}:
     put:
       security:
         - bearerAuth:
@@ -6977,9 +7150,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -7012,7 +7188,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'shareId'
           content:
             application/json:
@@ -7026,13 +7202,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'shareId':
                   summary: Failed to validate 'path' parameter 'shareId'
                   description: Failed to validate 'path' parameter 'shareId' - {error}
@@ -7153,9 +7329,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -7286,7 +7465,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'shareId' | Failed to validate 'query' parameter 'limit' | Failed to
             validate 'query' parameter 'page' | Failed to validate 'query'
             parameter 'namespace'
@@ -7302,13 +7481,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'shareId':
                   summary: Failed to validate 'path' parameter 'shareId'
                   description: Failed to validate 'path' parameter 'shareId' - {error}
