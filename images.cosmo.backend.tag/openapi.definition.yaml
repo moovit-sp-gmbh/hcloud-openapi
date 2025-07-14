@@ -135,9 +135,8 @@ components:
         parentId:
           type: string
           format: uuid
-          description: Parent ID
-      required:
-        - parentId
+          description: Parent ID. If omitted, the asset will be placed at the root level.
+          example: 24b9fe00-8cc2-4f15-bde7-72a8b2e3c7ef
     BulkMoveAssetsDto:
       type: object
       properties:
@@ -154,11 +153,12 @@ components:
         parentId:
           type: string
           format: uuid
-          description: ID of the target parent
-          example: uuid-parent
+          description: >-
+            ID of the target parent. If omitted, the assets will be placed at
+            the root level.
+          example: 24b9fe00-8cc2-4f15-bde7-72a8b2e3c7ef
       required:
         - assetIds
-        - parentId
     AssetPatchDto:
       type: object
       properties:
@@ -421,7 +421,7 @@ components:
         parentId:
           type: string
           format: uuid
-          description: Parent ID
+          description: Parent ID. If omitted, the asset will be placed at the root level.
           example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
         tags:
           type: array
@@ -441,7 +441,6 @@ components:
             - category2
       required:
         - name
-        - parentId
       example:
         name: my-asset
         parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
@@ -949,11 +948,10 @@ components:
         parentId:
           type: string
           format: uuid
-          description: Parent ID
-          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
+          description: Parent ID. If omitted, the asset will be placed at the root level.
+          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
       required:
         - name
-        - parentId
     FolderRenameDto:
       type: object
       properties:
@@ -972,10 +970,8 @@ components:
         parentId:
           type: string
           format: uuid
-          description: Parent ID
-          example: 4ba38673-c8bb-4541-b123-b542f91d5f07
-      required:
-        - parentId
+          description: Parent ID. If omitted, the asset will be placed at the root level.
+          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
     NamespaceDto:
       type: object
       properties:
