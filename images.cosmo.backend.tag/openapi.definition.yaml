@@ -941,8 +941,7 @@ components:
         name:
           type: string
           minLength: 1
-          maxLength: 32
-          pattern: ^[\w-.]{1,32}$
+          maxLength: 128
           description: Folder name
           example: my folder
         parentId:
@@ -958,8 +957,7 @@ components:
         name:
           type: string
           minLength: 1
-          maxLength: 32
-          pattern: ^[\w-.]{1,32}$
+          maxLength: 128
           description: Folder name
           example: my folder
       required:
