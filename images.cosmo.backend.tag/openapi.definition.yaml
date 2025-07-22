@@ -53,6 +53,16 @@ components:
         name:
           type: string
           description: Share name
+        password:
+          type: string
+          description: Share password
+          example: super-safe
+        expires:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          description: UTC timestamp in milliseconds marking when the share should expire
+          example: 1752057295637
         items:
           type: object
           additionalProperties:
@@ -96,6 +106,13 @@ components:
       required:
         - name
         - items
+    ShareLinkDto:
+      type: object
+      properties:
+        password:
+          type: string
+          description: Share password
+          example: super-safe
     SpaceCreateDto:
       type: object
       properties:
@@ -8210,6 +8227,28 @@ paths:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
                     type: number
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                          - READ
+                          - WRITE
+                          - CREATE
+                          - COMMENT
+                          - CONTRIBUTE
+                          - DOWNLOAD
+                          - DELETE
+                          - READ_DETAILS
+                    description: >-
+                      Map of asset ID to the desired permissions that the share
+                      members will have relative to it. All shared assets have
+                      baseline READ permission,
+                    example: &ref_1
+                      ae13321a-522d-48da-9733-27c97bcab124:
+                        - READ
                 required:
                   - id
                   - name
@@ -8218,7 +8257,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | A share must contain at least one
+            asset or folder on creation.
           content:
             application/json:
               schema:
@@ -8238,6 +8278,16 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                A share must contain at least one asset or folder on creation.:
+                  summary: >-
+                    A share must contain at least one asset or folder on
+                    creation.
+                  value:
+                    code: 011.045.0002
+                    error: empty.share
+                    message: >-
+                      A share must contain at least one asset or folder on
+                      creation.
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8390,6 +8440,12 @@ paths:
           required: true
           name: shareId
           in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareLinkDto'
       responses:
         '200':
           description: Share object
@@ -8407,6 +8463,26 @@ paths:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
                     type: number
+                  items:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum:
+                          - READ
+                          - WRITE
+                          - CREATE
+                          - COMMENT
+                          - CONTRIBUTE
+                          - DOWNLOAD
+                          - DELETE
+                          - READ_DETAILS
+                    description: >-
+                      Map of asset ID to the desired permissions that the share
+                      members will have relative to it. All shared assets have
+                      baseline READ permission,
+                    example: *ref_1
                 required:
                   - id
                   - name
@@ -8473,7 +8549,10 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['cosmo:space:write'] not included in authorization
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | The provided password does not match the share's password.
           content:
             application/json:
               schema:
@@ -8489,6 +8568,22 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                The provided password does not match the share's password.:
+                  summary: The provided password does not match the share's password.
+                  value:
+                    code: 011.045.0003
+                    error: invalid.password
+                    message: The provided password does not match the share's password.
         '404':
           description: Organization not found | Given space not found | Share not found
           content:
@@ -8773,7 +8868,9 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['cosmo:space:read'] not included in authorization
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -8783,6 +8880,186 @@ paths:
                   summary: >-
                     Required scopes ['cosmo:space:read'] not included in
                     authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Share not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Share not found:
+                  summary: Share not found
+                  value:
+                    code: 011.045.0001
+                    error: share.not.found
+                    message: Share not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/:spaceName/shares/{shareId}:
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:delete
+        - basicAuth:
+            - cosmo:space:delete
+        - patAuth:
+            - cosmo:space:delete
+      description: Deletes a share, revoking any access that it previously granted.
+      summary: Delete Share
+      tags:
+        - Share
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: spaceId
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: shareId
+          in: path
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'shareId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceId':
+                  summary: Failed to validate 'path' parameter 'spaceId'
+                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'shareId':
+                  summary: Failed to validate 'path' parameter 'shareId'
+                  description: Failed to validate 'path' parameter 'shareId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'shareId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:delete'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:delete'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
