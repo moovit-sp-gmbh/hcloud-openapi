@@ -137,6 +137,24 @@ components:
           example: my_space
       required:
         - name
+    High5SpaceInfoDto:
+      type: object
+      properties:
+        high5_spaceName:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[\w-.]{1,32}$
+          description: Name for the space
+          example: my_space
+        executionTarget:
+          type: string
+          format: email
+          description: Email address for the space
+          example: hmc@helmut.cloud
+      required:
+        - high5_spaceName
+        - executionTarget
     AssetPatchLocationDto:
       type: object
       properties:
@@ -439,7 +457,7 @@ components:
         - name
       example:
         name: my-asset
-    BulkDownloadUrls:
+    BulkDownloadUrlsDto:
       type: object
       properties:
         assetIds:
@@ -608,6 +626,15 @@ components:
           format: uri
           description: URL of the avatar
           example: https://example.com/avatar.jpg
+        high5_spaceName:
+          type: string
+          description: Name of the linked high5 space
+          example: cosmo_space
+        high5_executionTarget:
+          type: string
+          format: email
+          description: Email address of the execution target for the high5 space
+          example: hmc@helmut.cloud
       required:
         - id
         - name
@@ -632,6 +659,7 @@ components:
             - PRODUCTION
             - PROJECT
             - FOLDER
+            - COMMENT
           description: Item type
       required:
         - id
@@ -796,6 +824,7 @@ components:
             - PRODUCTION
             - PROJECT
             - FOLDER
+            - COMMENT
           description: Item type
         assetType:
           type: string
@@ -804,6 +833,7 @@ components:
             - IMAGE
             - DOCUMENT
             - UNKNOWN
+            - FOLDER
           description: Asset Type
           example: VIDEO
         breadcrumb:
@@ -1084,6 +1114,11 @@ components:
           description: Timestamp the comment refers to
         creator:
           $ref: '#/components/schemas/ReducedUser'
+        annotation:
+          type: string
+          description: Optional annotation for the comment
+          example: >-
+            PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
       required:
         - text
         - id
@@ -1120,6 +1155,11 @@ components:
             - in
             - color
           description: Timestamp the comment refers to
+        annotation:
+          type: string
+          description: Optional annotation for the comment
+          example: >-
+            PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
       required:
         - text
         - refId
@@ -1149,8 +1189,23 @@ components:
             - in
             - color
           description: Timestamp the comment refers to
+        annotation:
+          type: string
+          description: Optional annotation for the comment
+          example: >-
+            PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
       required:
         - text
+    CommentEditAnnotationDto:
+      type: object
+      properties:
+        annotation:
+          type: string
+          description: New annotation for the comment
+          example: >-
+            PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
+      required:
+        - annotation
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
@@ -1943,6 +1998,341 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/high5/link/space:
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      summary: Link a high5 space to a cosmo space
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - $ref: '#/components/schemas/SpaceRenameDto'
+                - properties:
+                    high5_spaceName:
+                      type: string
+                      minLength: 1
+                      maxLength: 32
+                      pattern: ^[\w-.]{1,32}$
+                      description: Name for the space
+                      example: my_space
+                    executionTarget:
+                      type: string
+                      format: email
+                      description: Email address for the space
+                      example: hmc@helmut.cloud
+                  required:
+                    - high5_spaceName
+                    - executionTarget
+      responses:
+        '200':
+          description: LiUpdated space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least OWNER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least OWNER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    OWNER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/high5/unlink/space:
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      summary: Unlink a high5 space from a cosmo space
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+      responses:
+        '200':
+          description: Updated space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least OWNER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least OWNER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    OWNER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/assets/search:
     post:
       security:
@@ -2044,6 +2434,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -2052,6 +2443,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -2313,6 +2705,7 @@ paths:
                         - PRODUCTION
                         - PROJECT
                         - FOLDER
+                        - COMMENT
                       description: Item type
                     assetType:
                       type: string
@@ -2321,6 +2714,7 @@ paths:
                         - IMAGE
                         - DOCUMENT
                         - UNKNOWN
+                        - FOLDER
                       description: Asset Type
                       example: VIDEO
                     breadcrumb:
@@ -2573,6 +2967,7 @@ paths:
                         - PRODUCTION
                         - PROJECT
                         - FOLDER
+                        - COMMENT
                       description: Item type
                     assetType:
                       type: string
@@ -2581,6 +2976,7 @@ paths:
                         - IMAGE
                         - DOCUMENT
                         - UNKNOWN
+                        - FOLDER
                       description: Asset Type
                       example: VIDEO
                     breadcrumb:
@@ -2866,6 +3262,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -2874,6 +3271,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -3124,6 +3522,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -3132,6 +3531,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -3355,6 +3755,7 @@ paths:
                         - PRODUCTION
                         - PROJECT
                         - FOLDER
+                        - COMMENT
                       description: Item type
                     assetType:
                       type: string
@@ -3363,6 +3764,7 @@ paths:
                         - IMAGE
                         - DOCUMENT
                         - UNKNOWN
+                        - FOLDER
                       description: Asset Type
                       example: VIDEO
                     breadcrumb:
@@ -3775,6 +4177,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -3783,6 +4186,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -4285,7 +4689,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkDownloadUrls'
+              $ref: '#/components/schemas/BulkDownloadUrlsDto'
       responses:
         '200':
           description: Map of asset ID to download URL
@@ -4440,6 +4844,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -4448,6 +4853,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -4607,6 +5013,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -4615,6 +5022,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -5000,6 +5408,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -5008,6 +5417,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -5391,6 +5801,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -5399,6 +5810,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -6624,6 +7036,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -6632,6 +7045,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -7079,6 +7493,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -7087,6 +7502,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
@@ -7289,11 +7705,11 @@ paths:
     post:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Create Comment
       tags:
         - Comment
@@ -7335,6 +7751,12 @@ paths:
           required: true
           name: namespaceName
           in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
       requestBody:
         required: true
         content:
@@ -7352,7 +7774,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'namespaceName'
+            'namespaceName' | Failed to validate 'query' parameter 'annotation'
           content:
             application/json:
               schema:
@@ -7382,6 +7804,15 @@ paths:
                     error: invalid.parameter
                     message: >-
                       Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
                       {error}
         '401':
           description: >-
@@ -7413,15 +7844,15 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['high5:space:write'] not included in authorization
+          description: Required scopes ['cosmo:space:write'] not included in authorization
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -7478,11 +7909,11 @@ paths:
     get:
       security:
         - bearerAuth:
-            - high5:space:read
+            - cosmo:space:read
         - basicAuth:
-            - high5:space:read
+            - cosmo:space:read
         - patAuth:
-            - high5:space:read
+            - cosmo:space:read
       summary: List comments
       tags:
         - Comment
@@ -7549,6 +7980,12 @@ paths:
           required: false
           name: page
           in: query
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
       responses:
         '200':
           description: Comments of an entity
@@ -7564,7 +8001,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
-            'query' parameter 'page'
+            'query' parameter 'page' | Failed to validate 'query' parameter
+            'annotation'
           content:
             application/json:
               schema:
@@ -7616,6 +8054,15 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -7646,15 +8093,15 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['high5:space:read'] not included in authorization
+          description: Required scopes ['cosmo:space:read'] not included in authorization
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:read'] not included in authorization:
+                Required scopes ['cosmo:space:read'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:read'] not included in
+                    Required scopes ['cosmo:space:read'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -7712,11 +8159,11 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Edit Comment
       tags:
         - Comment
@@ -7764,6 +8211,12 @@ paths:
           required: true
           name: commentId
           in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
       requestBody:
         required: true
         content:
@@ -7781,7 +8234,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'namespaceName' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
+            Failed to validate 'query' parameter 'annotation'
           content:
             application/json:
               schema:
@@ -7819,6 +8273,15 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'commentId' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -7850,16 +8313,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -7923,14 +8386,234 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    get:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Get single comment by id
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: commentId
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
+      responses:
+        '200':
+          description: Comment by ID
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
+            Failed to validate 'query' parameter 'annotation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'path' parameter 'commentId':
+                  summary: Failed to validate 'path' parameter 'commentId'
+                  description: Failed to validate 'path' parameter 'commentId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'commentId' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Item not found | Given space not found |
+            Namespace not found | Comment not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 011.037.0001
+                    error: item.not.found
+                    message: Item not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+                Comment not found:
+                  summary: Comment not found
+                  value:
+                    code: 011.043.0001
+                    error: comment.not.found
+                    message: Comment not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
     delete:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Delete Comment
       tags:
         - Comment
@@ -7978,6 +8661,12 @@ paths:
           required: true
           name: commentId
           in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
       responses:
         '204':
           description: Comment deleted successfully
@@ -7985,7 +8674,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'namespaceName' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
+            Failed to validate 'query' parameter 'annotation'
           content:
             application/json:
               schema:
@@ -8023,6 +8713,15 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'commentId' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8053,28 +8752,16 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
+          description: Required scopes ['cosmo:space:write'] not included in authorization
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -8131,11 +8818,11 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Edit Comment text
       tags:
         - Comment
@@ -8183,6 +8870,12 @@ paths:
           required: true
           name: commentId
           in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
       requestBody:
         required: true
         content:
@@ -8208,7 +8901,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'namespaceName' | Failed to validate 'path' parameter 'commentId'
+            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
+            Failed to validate 'query' parameter 'annotation'
           content:
             application/json:
               schema:
@@ -8246,6 +8940,15 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'commentId' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8277,16 +8980,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -8298,6 +9001,225 @@ paths:
                   summary: >-
                     User's organization role is insufficient. Must be at least
                     MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Comment not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Comment not found:
+                  summary: Comment not found
+                  value:
+                    code: 011.043.0001
+                    error: comment.not.found
+                    message: Comment not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments/{commentId}/annotation:
+    patch:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Edit Comment annotation
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: commentId
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentEditAnnotationDto'
+      responses:
+        '200':
+          description: Edited comment
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
+            Failed to validate 'query' parameter 'annotation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'path' parameter 'commentId':
+                  summary: Failed to validate 'path' parameter 'commentId'
+                  description: Failed to validate 'path' parameter 'commentId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'commentId' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -8902,6 +9824,7 @@ paths:
                         - PRODUCTION
                         - PROJECT
                         - FOLDER
+                        - COMMENT
                       description: Item type
                     assetType:
                       type: string
@@ -8910,6 +9833,7 @@ paths:
                         - IMAGE
                         - DOCUMENT
                         - UNKNOWN
+                        - FOLDER
                       description: Asset Type
                       example: VIDEO
                     breadcrumb:
@@ -9362,6 +10286,7 @@ paths:
                       - PRODUCTION
                       - PROJECT
                       - FOLDER
+                      - COMMENT
                     description: Item type
                   assetType:
                     type: string
@@ -9370,6 +10295,7 @@ paths:
                       - IMAGE
                       - DOCUMENT
                       - UNKNOWN
+                      - FOLDER
                     description: Asset Type
                     example: VIDEO
                   breadcrumb:
