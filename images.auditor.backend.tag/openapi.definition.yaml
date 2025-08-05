@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-431
+  version: 0.0.28-443
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -159,6 +159,11 @@ components:
         requestorIp:
           type: string
           description: Ip of the client of the initial request
+        assetId:
+          type: string
+          description: >-
+            Optional asset Id that is just present for events around assets
+            (e.g. asset add, comment add to asset, ...)
       required:
         - _id
         - origin
