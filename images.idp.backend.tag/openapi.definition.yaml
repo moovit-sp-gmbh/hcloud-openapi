@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2316
+  version: 0.0.143-2319
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8336,6 +8336,9 @@ components:
         systemNotifications:
           type: boolean
           description: Enable/disable system notifications
+        cosmoNotifications:
+          type: boolean
+          description: Enable/disable cosmo notifications
       required:
         - _id
         - user
@@ -8346,6 +8349,7 @@ components:
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         organizationInvitationEmail: true
         systemNotifications: false
+        cosmoNotifications: false
     NotificationSettingsPatchDto:
       properties:
         organizationInvitationEmail:
@@ -8354,6 +8358,9 @@ components:
         systemNotifications:
           type: boolean
           description: Enable/disable system notifications
+        cosmoNotifications:
+          type: boolean
+          description: Enable/disable cosmo notifications
       example:
         organizationInvitationEmail: true
         systemNotifications: false
