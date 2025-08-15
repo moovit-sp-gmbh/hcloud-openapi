@@ -482,6 +482,21 @@ components:
       required:
         - assetIds
         - resolution
+    AssetIdsDto:
+      type: object
+      properties:
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: List of asset IDs to get download Urls from
+          example:
+            - uuid-1
+            - uuid-2
+      required:
+        - assetIds
     AssetCreateDto:
       type: object
       properties:
@@ -3942,7 +3957,7 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
-      summary: Attack an asset to a location
+      summary: Attach an asset to a location
       tags:
         - Asset
       parameters:
@@ -5216,13 +5231,7 @@ paths:
         content:
           application/json:
             schema:
-              type: array
-              items:
-                type: string
-                format: uuid
-                example: 37fd2155-98f7-4154-b2ed-a43715937f6a
-              minItems: 1
-              description: Asset (asset/folder) IDs to get the permissions for
+              $ref: '#/components/schemas/AssetIdsDto'
       responses:
         '200':
           description: Map of the permissions available for each asset.
@@ -6763,7 +6772,7 @@ paths:
                     error: not.implemented
                     message: Feature not implemented
   /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/move:
-    put:
+    patch:
       security:
         - bearerAuth: []
         - basicAuth: []
