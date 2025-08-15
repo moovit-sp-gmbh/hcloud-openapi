@@ -149,9 +149,8 @@ components:
           example: my_space
         executionTarget:
           type: string
-          format: email
-          description: Email address for the space
-          example: hmc@helmut.cloud
+          description: Email address or pool name for the execution target
+          example: hmc@helmut.cloud or Pool-Party
       required:
         - high5_spaceName
         - executionTarget
@@ -621,7 +620,7 @@ components:
     SpaceDto:
       type: object
       properties:
-        id:
+        _id:
           type: string
           format: uuid
           description: ID of the space
@@ -651,7 +650,7 @@ components:
           description: Email address of the execution target for the high5 space
           example: hmc@helmut.cloud
       required:
-        - id
+        - _id
         - name
         - createDate
         - creator
@@ -659,7 +658,7 @@ components:
     ItemDto:
       type: object
       properties:
-        id:
+        _id:
           type: string
           format: uuid
           description: Item ID
@@ -677,13 +676,13 @@ components:
             - COMMENT
           description: Item type
       required:
-        - id
+        - _id
         - name
         - type
       example:
         name: my space
         type: SPACE
-        id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+        _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
     Unknown:
       type: object
       properties:
@@ -822,7 +821,7 @@ components:
     AssetDetailedDto:
       type: object
       properties:
-        id:
+        _id:
           type: string
           format: uuid
           description: Asset ID
@@ -962,7 +961,7 @@ components:
                   - name
                   - type
       required:
-        - id
+        - _id
         - name
         - type
         - createDate
@@ -988,7 +987,7 @@ components:
     LocationDto:
       type: object
       properties:
-        id:
+        _id:
           type: string
           format: uuid
           description: ID of the location
@@ -998,12 +997,12 @@ components:
           description: Name of the location
           example: My location
       required:
-        - id
+        - _id
         - name
     ProductionDto:
       type: object
       properties:
-        id:
+        _id:
           type: string
           format: uuid
           description: ID of the production
@@ -1013,7 +1012,7 @@ components:
           description: Name of the production
           example: My Production
       required:
-        - id
+        - _id
         - name
     FolderDto:
       allOf:
@@ -1029,8 +1028,8 @@ components:
               items:
                 $ref: '#/components/schemas/ItemDto'
       example:
+        _id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
         name: my-name
-        id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
         type: FOLDER
         children: []
     FolderCreateDto:
@@ -1071,18 +1070,18 @@ components:
     NamespaceDto:
       type: object
       properties:
-        name:
-          type: string
-          description: Namespace name
-          example: My Namespace
-        id:
+        _id:
           type: string
           format: uuid
           description: Namespace ID
           example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+        name:
+          type: string
+          description: Namespace name
+          example: My Namespace
       required:
+        - _id
         - name
-        - id
     ReferencePatchDto:
       type: object
       properties:
@@ -1094,15 +1093,15 @@ components:
     CommentDto:
       type: object
       properties:
-        text:
-          type: string
-          description: Comment Text
-          example: My Comment
-        id:
+        _id:
           type: string
           format: uuid
           description: Comment ID
           example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
+        text:
+          type: string
+          description: Comment Text
+          example: My Comment
         createDate:
           type: number
           minimum: 0
@@ -1135,8 +1134,8 @@ components:
           example: >-
             PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
       required:
+        - _id
         - text
-        - id
         - createDate
         - creator
     CommentCreateDto:
@@ -2066,9 +2065,8 @@ paths:
                       example: my_space
                     executionTarget:
                       type: string
-                      format: email
-                      description: Email address for the space
-                      example: hmc@helmut.cloud
+                      description: Email address or pool name for the execution target
+                      example: hmc@helmut.cloud or Pool-Party
                   required:
                     - high5_spaceName
                     - executionTarget
@@ -2432,7 +2430,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -2510,7 +2508,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -2703,7 +2701,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                       description: Asset ID
@@ -2781,7 +2779,7 @@ paths:
                         - token
                         - expiration
                   required:
-                    - id
+                    - _id
                     - name
                     - type
                     - createDate
@@ -2965,7 +2963,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                       description: Asset ID
@@ -3043,7 +3041,7 @@ paths:
                         - token
                         - expiration
                   required:
-                    - id
+                    - _id
                     - name
                     - type
                     - createDate
@@ -3260,7 +3258,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -3338,7 +3336,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -3520,7 +3518,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -3598,7 +3596,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -3753,7 +3751,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                       description: Asset ID
@@ -3831,7 +3829,7 @@ paths:
                         - token
                         - expiration
                   required:
-                    - id
+                    - _id
                     - name
                     - type
                     - createDate
@@ -4175,7 +4173,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -4253,7 +4251,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -4842,7 +4840,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -4920,7 +4918,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -5011,7 +5009,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -5089,7 +5087,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -5400,7 +5398,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -5478,7 +5476,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -5793,7 +5791,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -5871,7 +5869,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -7028,7 +7026,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -7106,7 +7104,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -7485,7 +7483,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -7570,7 +7568,7 @@ paths:
                     required:
                       - status
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
@@ -9331,7 +9329,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                   name:
@@ -9363,7 +9361,7 @@ paths:
                       ae13321a-522d-48da-9733-27c97bcab124:
                         - READ
                 required:
-                  - id
+                  - _id
                   - name
                   - creator
                   - createDate
@@ -9567,7 +9565,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                   name:
@@ -9597,7 +9595,7 @@ paths:
                       baseline READ permission,
                     example: *ref_1
                 required:
-                  - id
+                  - _id
                   - name
                   - creator
                   - createDate
@@ -9816,7 +9814,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                       description: Asset ID
@@ -9894,7 +9892,7 @@ paths:
                         - token
                         - expiration
                   required:
-                    - id
+                    - _id
                     - name
                     - type
                     - createDate
@@ -10278,7 +10276,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                     description: Asset ID
@@ -10356,7 +10354,7 @@ paths:
                       - token
                       - expiration
                 required:
-                  - id
+                  - _id
                   - name
                   - type
                   - createDate
