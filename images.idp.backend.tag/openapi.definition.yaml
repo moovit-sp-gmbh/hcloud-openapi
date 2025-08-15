@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2319
+  version: 0.0.143-2321
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9265,10 +9265,6 @@ components:
         - fuse:space:execute
         - fuse:space:write
         - fuse:space:delete
-        - friday:space:read
-        - friday:space:execute
-        - friday:space:write
-        - friday:space:delete
         - cosmo:space:read
         - cosmo:space:execute
         - cosmo:space:write
@@ -9317,16 +9313,6 @@ components:
         * fuse:space:write - Access to read and write operations of spaces
 
         * fuse:space:delete - Access to read, write and delete operations of
-        spaces
-
-        * friday:space:read - Access to read operations of spaces
-
-        * friday:space:execute - Access to the ability to start execution of
-        streams of spaces
-
-        * friday:space:write - Access to read and write operations of spaces
-
-        * friday:space:delete - Access to read, write and delete operations of
         spaces
 
         * cosmo:space:read - Access to read operations of spaces
