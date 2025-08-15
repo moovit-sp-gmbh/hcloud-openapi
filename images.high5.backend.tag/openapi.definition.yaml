@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2365
+  version: 0.0.107-2391
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -20,6 +20,438 @@ servers:
   - url: http://localhost/api/high5
     description: Localhost
 paths:
+  /v1/org/{orgName}/spaces/{spaceName}/databases/search:
+    post:
+      tags:
+        - Database
+      summary: Search databases of a space
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of databases that match the search filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DatabaseDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}:
+    get:
+      tags:
+        - Database
+      summary: Search for a database by it's name
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+      responses:
+        '200':
+          description: Database object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Database
+      summary: Delete a database by it's name
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases:
+    post:
+      tags:
+        - Database
+      summary: Create a new database for a space
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabaseCreateDto'
+      responses:
+        '201':
+          description: Database object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseDto'
+        '400':
+          description: Bad request exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DatabaseNameInUseException:
+                  $ref: '#/components/examples/DatabaseNameInUseException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/name:
+    patch:
+      tags:
+        - Database
+      summary: Change name of the database
+      description: |-
+        Change a database's name by providing a new one
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DatabasePatchDto'
+        required: true
+      responses:
+        '200':
+          description: Ok
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DatabaseDto'
+        '400':
+          description: Bad request exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DatabaseNameInUseException:
+                  $ref: '#/components/examples/DatabaseNameInUseException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        '500':
+          description: Internal server error
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InternalServerErrorException:
+                  $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/{streamId}/design:
     get:
       tags:
@@ -376,6 +808,1279 @@ paths:
                   $ref: '#/components/examples/EventNotFoundException'
                 Stream not found:
                   $ref: '#/components/examples/StreamNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/search:
+    post:
+      tags:
+        - Document
+      summary: Search for items within a specified array
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/push:
+    patch:
+      tags:
+        - DocumentArray
+      summary: Add one or more elements to the end of an array
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentPatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/unshift:
+    patch:
+      tags:
+        - DocumentArray
+      summary: Add one or more elements to the beginning of an array
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentPatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{index}:
+    get:
+      tags:
+        - DocumentArray
+      summary: Get element with specified index from the array
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+        - $ref: '#/components/parameters/ArrayIndex'
+      responses:
+        '200':
+          description: Item with the specified index
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentArrayItemDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - DocumentArray
+      summary: Delete element with specified index from the array
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+        - $ref: '#/components/parameters/ArrayIndex'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/search:
+    post:
+      tags:
+        - Document
+      summary: Search for documents by database name and search filter
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/LimitParameter'
+        - $ref: '#/components/parameters/PageParameter'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: List of documents
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Invalid body:
+                  $ref: '#/components/examples/InvalidBodyException'
+                  summary: Invalid body
+                Invalid filter:
+                  $ref: '#/components/examples/InvalidFilterException'
+                  summary: Invalid search filter
+                Invalid pagination parameters (limit/page):
+                  $ref: '#/components/examples/InvalidParameterException'
+                  summary: Invalid limit or page
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}:
+    get:
+      tags:
+        - Document
+      summary: Get document by it's key
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '200':
+          description: Document object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentNotFoundException:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - Document
+      summary: Patch a document
+      description: |-
+        Update the data stored in the document if their type matches.
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentPatchDto'
+        required: true
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                InvalidBodyException:
+                  $ref: '#/components/examples/InvalidBodyException'
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+    delete:
+      tags:
+        - Document
+      summary: Delete a document from the database
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents:
+    post:
+      tags:
+        - Document
+      summary: Add a new document to the database
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentCreateDto'
+      responses:
+        '201':
+          description: Document object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+                License quota exceeded:
+                  $ref: '#/components/examples/LicenseQuotaExceededException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+        '409':
+          description: Resource conflict
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentAlreadyExistWithKeyException:
+                  $ref: '#/components/examples/DocumentAlreadyExistWithKeyException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/inc:
+    patch:
+      tags:
+        - DocumentNumber
+      summary: Increment the numeric value stored in the document by one
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/inc/{value}:
+    patch:
+      tags:
+        - DocumentNumber
+      summary: Increase the numeric value stored in the document by custom value
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/dec:
+    patch:
+      tags:
+        - DocumentNumber
+      summary: Decrement the numeric value stored in the document by one
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/dec/{value}:
+    patch:
+      tags:
+        - DocumentNumber
+      summary: Subtract the numeric value stored in the document by custom value
+      description: |-
+
+        Required organization role: MEMBER\
+        Required space permission: WRITE\
+        Required scopes: HIGH5_SPACE_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+        - $ref: '#/components/parameters/DatabaseName'
+        - $ref: '#/components/parameters/DocumentKey'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                DocumentTypeMismatchException:
+                  $ref: '#/components/examples/DocumentTypeMismatchException'
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Database name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Document key must be provided:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Missing required scope for operation
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least WRITE:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+                Database not found:
+                  $ref: '#/components/examples/DatabaseNotFoundException'
+                Document not found:
+                  $ref: '#/components/examples/DocumentNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/events/search:
@@ -7181,6 +8886,33 @@ components:
       in: header
       name: Authorization
   schemas:
+    AgentInfoDto:
+      properties:
+        bundleVersion:
+          type: string
+          description: Bundle version of the Agent
+        osRelease:
+          type: string
+          description: Release name of the OS the Agent is running on
+        osVersion:
+          type: string
+          description: Version of the OS the Agent is running on
+        cpu:
+          type: string
+          description: Details about the CPU used on the Agent's machine
+        cpuArchitecture:
+          type: string
+          description: The CPU architecture on the Agent's machine
+        ip:
+          type: string
+          description: Agent's public ip address
+      example:
+        bundleVersion: 1.7.2
+        osRelease: Ubuntu 22.04.3 LTS (Jammy Jellyfish)
+        osVersion: 5.15.0-91-generic (Linux kernel)
+        cpu: Intel(R) Core(TM) i7-1365U
+        cpuArchitecture: x86
+        ip: 172.16.254.1
     AvatarDto:
       properties:
         url:
@@ -7266,6 +8998,72 @@ components:
         - error
         - message
       example: null
+    DatabaseCreateDto:
+      properties:
+        name:
+          type: string
+          description: >-
+            Name of the database (only alphanumeric characters, hyphens,
+            underscores and dots are allowed, it should contain between 1 and
+            128 symbols)
+      required:
+        - name
+      example:
+        name: Helmut4-Data-Storage
+    DatabaseDto:
+      properties:
+        _id:
+          type: string
+          description: Object ID of the database
+        name:
+          type: string
+          description: Name of the database
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Space the database belongs to
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the database belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the database
+        createDate:
+          type: number
+          description: Date of creation as unix timestamp
+      required:
+        - _id
+        - name
+        - space
+        - organization
+        - createDate
+      example:
+        _id: 63c7e6e4eae82d8001b65305
+        name: Helmut4-Data-Storage
+        space:
+          _id: 63c7e6dfeae82d8001b652fb
+          name: Helmut4
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        createDate: 1674045156
+    DatabasePatchDto:
+      properties:
+        name:
+          type: string
+          description: >-
+            The new name of the database (only alphanumeric characters, hyphens,
+            underscores and dots are allowed, it should contain between 1 and
+            128 symbols)
+      required:
+        - name
+      example:
+        name: Helmut4-Data-Storage
     StreamDesign:
       properties:
         nodes:
@@ -8234,6 +10032,164 @@ components:
             newCoords:
               x: 25
               'y': 25
+    DocumentArrayItemDto:
+      properties:
+        item:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
+          description: Array item with the specified index
+      required:
+        - item
+      example:
+        item:
+          name: John Doe
+          age: 37
+          city: Las Vegas
+    DocumentCreateDto:
+      properties:
+        key:
+          type: string
+          description: Key of the document
+        type:
+          $ref: '#/components/schemas/DocumentType'
+          description: Type of the document value
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
+          description: >-
+            Document value (data type must match the type specified in the type
+            field)
+      required:
+        - key
+        - type
+        - value
+      example:
+        key: Helmut4-stream-executions-counter
+        type: NUMBER
+        value: 647931
+    DocumentDto:
+      properties:
+        _id:
+          type: string
+          description: Database ID of the document
+        key:
+          type: string
+          description: Key of the document
+        database:
+          type: string
+          description: Database name the document belongs to
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+          description: Space the document belongs to
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+          description: Organization the document belongs to
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Creator of the document
+        type:
+          $ref: '#/components/schemas/DocumentType'
+          description: Type of data stored in the document
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
+          description: Data stored in the document
+        createDate:
+          type: number
+          description: Date of creation as unix timestamp
+        modifyDate:
+          type: number
+          description: Date of last modification as unix timestamp
+      required:
+        - _id
+        - key
+        - space
+        - organization
+        - type
+        - value
+        - createDate
+        - modifyDate
+      example:
+        _id: 71c7e6e4eae82d8001b65303
+        key: Helmut4-stream-executions-counter
+        database: Helmut4-Data-Storage
+        space:
+          _id: 63c7e6dfeae82d8001b652fb
+          name: Helmut4
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        organization:
+          _id: 6436bb9988821e8f6400c2f8
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        type: NUMBER
+        value: 647931
+        createDate: 1774045156
+        modifyDate: 1774047958
+    DocumentPatchDto:
+      properties:
+        value:
+          oneOf:
+            - type: object
+              additionalProperties: true
+            - type: array
+              items: {}
+            - type: string
+            - type: number
+            - type: boolean
+          description: >-
+            Document value - data type must match the type specified in the type
+            field of the existing document - for type NUMBER, it must be number;
+            for type STRING, it must be string; for type BOOLEAN, it must be
+            boolean; for type NUMBER_LIST, it must be Array<number>; for type
+            STRING_LIST, it must be Array<string>; for type BOOLEAN_LIST, it
+            must be Array<boolean>; for type mixed ARRAY, it must be Array<any>;
+            for type OBJECT, it must be object.
+      required:
+        - value
+      example:
+        value: 314579
+    DocumentType:
+      enum:
+        - STRING
+        - NUMBER
+        - BOOLEAN
+        - STRING_LIST
+        - NUMBER_LIST
+        - BOOLEAN_LIST
+        - OBJECT
+        - ARRAY
+      type: string
+      description: |
+        * STRING - String data type.
+        * NUMBER - Number data type.
+        * BOOLEAN - Boolean data type.
+        * STRING_LIST - Array of strings.
+        * NUMBER_LIST - Array of numbers.
+        * BOOLEAN_LIST - Array of boolean values.
+        * OBJECT - Json object.
+        * ARRAY - Array with values of any type.
     EventCreateDto:
       properties:
         name:
@@ -10343,6 +12299,37 @@ components:
         * ADD - Add elements to the array
         * REMOVE - Remove elements from the array
         * SET - Replace the current elements of the array with new ones
+    TriggerDetails:
+      properties:
+        source:
+          $ref: '#/components/schemas/TriggerSource'
+          description: One of 'webhook' | 'api' | 'sdk' | 'stream'
+        ip:
+          type: string
+          description: IP address of the instance that triggered the stream
+        country:
+          type: string
+          description: Country of the instance that triggered the stream
+      required:
+        - source
+        - ip
+        - country
+      example:
+        source: api
+        ip: 75.181.52.101
+        country: USA
+    TriggerSource:
+      enum:
+        - webhook
+        - api
+        - sdk
+        - stream
+      type: string
+      description: |
+        * webhook - webhook
+        * api - api
+        * sdk - sdk
+        * stream - stream
     WaveCatalogDto:
       properties:
         _id:
@@ -11220,6 +13207,19 @@ components:
         hmacAlgorithm: sha256
         hmacSecret: 649180269bdc11b1fe807938
   parameters:
+    ArrayIndex:
+      in: path
+      name: index
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 24
+        pattern: /^\d{1,24}$/i
+        example: 123
+      required: true
+      description: >-
+        Zero-based numeric index of the array item (only digits are allowed; it
+        should contain between 1 and 24 characters)
     CatalogID:
       in: path
       name: catalogId
@@ -11233,6 +13233,32 @@ components:
       description: >-
         ID of the catalog (ObjectId identifier, consists of 24 hexadecimal
         digits)
+    DatabaseName:
+      in: path
+      name: dbName
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 128
+        pattern: /^[\w-.]{1,128}$/i
+        example: Helmut4-Storage
+      required: true
+      description: >-
+        Name of the database (only alphanumeric characters, underscores, hyphens
+        and dots are allowed; it should contain between 1 and 128 characters)
+    DocumentKey:
+      in: path
+      name: key
+      schema:
+        type: string
+        minLength: 1
+        maxLength: 64
+        pattern: /^[\w-.]{1,64}$/i
+        example: My_personal_web-page_address.1
+      required: true
+      description: >-
+        Key of the document (only alphanumeric characters, underscores, hyphens
+        and dots are allowed; it should contain between 1 and 64 characters)
     EventName:
       in: path
       name: eventName
@@ -11713,3 +13739,28 @@ components:
         code: 002.015.0007
         error: single.user.debug
         message: Only the user that started an execution can issue debug commands to it
+    DatabaseNotFoundException:
+      value:
+        code: 002.035.0001
+        error: database.not.found
+        message: Given database not found
+    DatabaseNameInUseException:
+      value:
+        code: 002.035.0002
+        error: database.name.in.use
+        message: Given database name is already in use
+    DocumentAlreadyExistWithKeyException:
+      value:
+        code: 002.036.0003
+        error: document.already.exists
+        message: Document with given key already exists within a space
+    DocumentNotFoundException:
+      value:
+        code: 002.036.0002
+        error: document.not.found
+        message: Given document not found
+    DocumentTypeMismatchException:
+      value:
+        code: 002.036.0001
+        error: document.type.mismatch
+        message: Data type of the value does not match the existing documents data type
