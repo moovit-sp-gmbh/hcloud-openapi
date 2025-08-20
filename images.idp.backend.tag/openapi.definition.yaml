@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2321
+  version: 0.0.143-2326
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7866,6 +7866,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         createDate: 1680251765050
         modifyDate: 1680251765050
@@ -7973,6 +7974,7 @@ components:
         user:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         lastUrl: /account
         lastView: /account
@@ -8263,10 +8265,12 @@ components:
         from:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         to:
           _id: 73d25431614a64c2974c7152
           name: John Doe
+          email: john.doe@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         title: Software updates
         subject: Latest changes
@@ -8346,6 +8350,7 @@ components:
         user:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         organizationInvitationEmail: true
         systemNotifications: false
@@ -8449,6 +8454,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         description: A test OAuthApp
@@ -8516,6 +8522,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         clientId: 30ed05e3-4065-4c2c-b537-e4c411854b6f
@@ -8571,6 +8578,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         description: A test OAuthApp
@@ -8852,6 +8860,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         company: Moovit SP
         isUserOrganization: false
@@ -8950,6 +8959,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         email: newuser@moovit-sp.com
         status: PENDING
@@ -9054,6 +9064,7 @@ components:
         user:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     PatDtoWithToken:
       properties:
@@ -9100,6 +9111,7 @@ components:
         user:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     PatRegenerateDto:
       properties:
@@ -9266,7 +9278,6 @@ components:
         - fuse:space:write
         - fuse:space:delete
         - cosmo:space:read
-        - cosmo:space:execute
         - cosmo:space:write
         - cosmo:space:delete
       type: string
@@ -9316,9 +9327,6 @@ components:
         spaces
 
         * cosmo:space:read - Access to read operations of spaces
-
-        * cosmo:space:execute - Access to the ability to start execution of
-        streams of spaces
 
         * cosmo:space:write - Access to read and write operations of spaces
 
@@ -9563,9 +9571,11 @@ components:
         membersSample:
           - _id: 63c7e64ff912d31ffa27a5b4
             name: Mr Ben Dover
+            email: ben.dover@helmut.cloud
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
           - _id: 63c7e64ff912d31ffa27a5d4
             name: Hugh Janus
+            email: hugh.janus@moovit-sp.com
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         totalMemberCount: 10
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
@@ -9574,6 +9584,7 @@ components:
         creator:
           _id: 6284c915f173f39d71bb8b83
           name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     TeamMemberDto:
       properties:
@@ -10663,6 +10674,19 @@ components:
       required: true
       description: >-
         ID of the invitation (ObjectId identifier, consists of 24 hexadecimal
+        digits)
+    MessageID:
+      in: path
+      name: messageId
+      schema:
+        type: string
+        minLength: 24
+        maxLength: 24
+        pattern: /^[a-fA-F0-9]{24}$/i
+        example: 573a7df208337bc792b55f71
+      required: true
+      description: >-
+        ID of the message (ObjectId identifier, consists of 24 hexadecimal
         digits)
     OAuthAppID:
       in: path
