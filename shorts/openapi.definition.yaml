@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Shorts
-  version: 0.0.1-6
+  version: 0.0.1-7
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -16,7 +16,23 @@ servers:
     description: EU development server
   - url: http://localhost/api/shorts
     description: Localhost
-paths: {}
+paths:
+  /v1/{slug}:
+    get:
+      tags:
+        - Short
+      summary: Redirects to the original long URL based on a 6-character slug
+      description: >-
+        Resolves a short URL slug and redirects the client to the corresponding
+        long URL. If the slug is invalid, not found, or the visit limit has been
+        exceeded, the client is redirected to a fallback page.
+      parameters:
+        - $ref: '#/components/parameters/UrlSlug'
+      responses:
+        '302':
+          description: >-
+            Redirect to the target URL, fallback URL if not found, or fallback
+            URL if visit limit exceeded.
 components:
   securitySchemes:
     BearerAuth:
@@ -26,3 +42,14 @@ components:
     BasicAuth:
       type: http
       scheme: basic
+  parameters:
+    UrlSlug:
+      in: path
+      name: slug
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        example: Az7M4q
+      required: true
+      description: 6-character unique identifier used to access the shortened URL
