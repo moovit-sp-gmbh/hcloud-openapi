@@ -257,7 +257,7 @@ components:
                           - type: array
                             items:
                               type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -269,7 +269,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                     description: STRING for type
                   - type: object
                     properties:
@@ -287,7 +287,7 @@ components:
                           - type: array
                             items:
                               type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -303,7 +303,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                       - allowedValues
                     description: SELECT for type
                   - type: object
@@ -318,7 +318,7 @@ components:
                           - TYPEAHEAD
                       value:
                         type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -334,7 +334,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                       - allowedValues
                     description: TYPEAHEAD for type
                 description: type filters
@@ -354,7 +354,7 @@ components:
                       - type: array
                         items:
                           type: string
-                  operator:
+                  comparator:
                     type: string
                     enum:
                       - is
@@ -363,7 +363,7 @@ components:
                   - key
                   - type
                   - value
-                  - operator
+                  - comparator
                 description: id filters
               - oneOf:
                   - type: object
@@ -382,7 +382,7 @@ components:
                           - type: array
                             items:
                               type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -394,7 +394,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                     description: STRING for name
                   - type: object
                     properties:
@@ -412,7 +412,7 @@ components:
                           - type: array
                             items:
                               type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -428,7 +428,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                       - allowedValues
                     description: SELECT for name
                   - type: object
@@ -443,7 +443,7 @@ components:
                           - TYPEAHEAD
                       value:
                         type: string
-                      operator:
+                      comparator:
                         type: string
                         enum:
                           - is
@@ -459,7 +459,7 @@ components:
                       - key
                       - type
                       - value
-                      - operator
+                      - comparator
                       - allowedValues
                     description: TYPEAHEAD for name
                 description: name filters
@@ -629,6 +629,10 @@ components:
           type: string
           description: User Name
           example: Bob
+        email:
+          type: string
+          description: User email
+          example: bob@helmut.cloud
         avatarUrl:
           type: string
           format: uri
@@ -637,6 +641,7 @@ components:
       required:
         - _id
         - name
+        - email
         - avatarUrl
     SpaceDto:
       type: object
@@ -9752,7 +9757,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                     name:
@@ -9793,7 +9798,7 @@ paths:
                     space:
                       $ref: '#/components/schemas/ReducedSpace'
                   required:
-                    - id
+                    - _id
                     - name
                     - creator
                     - createDate
@@ -9966,7 +9971,7 @@ paths:
                 items:
                   type: object
                   properties:
-                    id:
+                    _id:
                       type: string
                       format: uuid
                     name:
@@ -10007,7 +10012,7 @@ paths:
                     space:
                       $ref: '#/components/schemas/ReducedSpace'
                   required:
-                    - id
+                    - _id
                     - name
                     - creator
                     - createDate
@@ -10475,7 +10480,7 @@ paths:
               schema:
                 type: object
                 properties:
-                  id:
+                  _id:
                     type: string
                     format: uuid
                   name:
@@ -10516,7 +10521,7 @@ paths:
                   space:
                     $ref: '#/components/schemas/ReducedSpace'
                 required:
-                  - id
+                  - _id
                   - name
                   - creator
                   - createDate
