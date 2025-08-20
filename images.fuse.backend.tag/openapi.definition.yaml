@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-941
+  version: 0.0.4-948
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1815,6 +1815,7 @@ components:
         creator:
           _id: 64180bfafe4fbcd791493ef4
           name: Account MSP
+          email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         space:
           _id: 63ecb429ee5ede1101f25d33
@@ -1897,6 +1898,7 @@ components:
         creator:
           _id: 64180bfafe4fbcd791493ef4
           name: Account MSP
+          email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         space:
           _id: 63ecb429ee5ede1101f25d33
@@ -2163,6 +2165,7 @@ components:
         creator:
           _id: 64180bfafe4fbcd791493ef4
           name: Account MSP
+          email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         highestPermissionOfUser: OWNER
         createDate: 1676457001
@@ -2447,7 +2450,7 @@ components:
         type: string
         minLength: 1
         maxLength: 32
-        pattern: /^[a-zA-Z0-9-.]{1,32}$/i
+        pattern: /^[\w-.]{1,32}$/i
         example: Helmut4
       required: true
       description: >-
