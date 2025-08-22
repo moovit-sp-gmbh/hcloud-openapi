@@ -2121,23 +2121,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/SpaceRenameDto'
-                - properties:
-                    high5_spaceName:
-                      type: string
-                      minLength: 1
-                      maxLength: 32
-                      pattern: ^[\w-.]{1,32}$
-                      description: Name for the space
-                      example: my_space
-                    executionTarget:
-                      type: string
-                      description: Email address or pool name for the execution target
-                      example: hmc@helmut.cloud or Pool-Party
-                  required:
-                    - high5_spaceName
-                    - executionTarget
+              $ref: '#/components/schemas/High5SpaceInfoDto'
       responses:
         '200':
           description: LiUpdated space
@@ -3239,9 +3223,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets:
     post:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Create an asset
       tags:
         - Asset
@@ -3419,12 +3406,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -3470,9 +3469,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-move:
     put:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Bulk move multiple assets
       tags:
         - Asset
@@ -3652,12 +3654,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -3717,9 +3731,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/location:
     patch:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Attach an asset to a location
       tags:
         - Asset
@@ -3823,12 +3840,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -3888,9 +3917,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}:
     patch:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Patch an asset
       tags:
         - Asset
@@ -4082,12 +4114,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -4132,9 +4176,12 @@ paths:
                     message: something went wrong
     get:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
       summary: Fetch an asset
       tags:
         - Asset
@@ -4236,12 +4283,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: You have not enough rights to access/manipulate this resource
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 You have not enough rights to access/manipulate this resource:
                   summary: >-
                     You have not enough rights to access/manipulate this
@@ -4292,9 +4351,12 @@ paths:
                     message: something went wrong
     delete:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Delete an asset
       tags:
         - Asset
@@ -4391,6 +4453,23 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '404':
           description: Organization not found | Given space not found | Asset not found
           content:
@@ -4432,9 +4511,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/downloadUrls:
     post:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
       summary: Get download URLs for multiple assets
       tags:
         - Asset
@@ -4532,12 +4614,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: You have not enough rights to access/manipulate this resource
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 You have not enough rights to access/manipulate this resource:
                   summary: >-
                     You have not enough rights to access/manipulate this
@@ -4724,9 +4818,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/move:
     put:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Move an asset
       tags:
         - Asset
@@ -4917,6 +5014,23 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '404':
           description: Organization not found | New parent not found | Asset not found
           content:
@@ -4958,9 +5072,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/permissions:
     post:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       description: The permissions are related to the user making the request.
       summary: Fetch permissions for a group of assets.
       tags:
@@ -5055,12 +5172,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -5112,9 +5241,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/name:
     patch:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Rename an asset
       tags:
         - Asset
@@ -5306,6 +5438,23 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '404':
           description: Organization not found | Given space not found | Asset not found
           content:
@@ -5884,9 +6033,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/folders:
     post:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
       summary: Create a folder
       tags:
         - Folder
@@ -5979,6 +6131,23 @@ paths:
                     code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['high5:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '404':
           description: Organization not found
           content:
@@ -6170,9 +6339,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}:
     get:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
       summary: Fetch a folder
       tags:
         - Folder
@@ -6275,12 +6447,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -6331,9 +6515,12 @@ paths:
                     message: something went wrong
     delete:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - high5:space:delete
+        - basicAuth:
+            - high5:space:delete
+        - patAuth:
+            - high5:space:delete
       summary: Delete a folder
       tags:
         - Folder
@@ -6454,12 +6641,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['high5:space:delete'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['high5:space:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:delete'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -6537,9 +6736,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/move:
     patch:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
       summary: Move a folder
       tags:
         - Folder
@@ -6647,12 +6849,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
