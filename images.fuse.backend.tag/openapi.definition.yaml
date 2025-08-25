@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Fuse
-  version: 0.0.4-948
+  version: 0.0.4-951
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2322,6 +2322,7 @@ components:
           description: Name of the organization
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the organization
       required:
         - _id
@@ -2341,6 +2342,7 @@ components:
           description: Name of the space
         avatarUrl:
           type: string
+          format: uri
           description: URL of the space avatar
       required:
         - _id
@@ -2358,16 +2360,23 @@ components:
         name:
           type: string
           description: Name of the user
+        email:
+          type: string
+          format: email
+          description: Email of the user
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the user
       required:
         - _id
         - name
+        - email
         - avatarUrl
       example:
         _id: 63c7e64ff912d31ffa27a5b4
         name: Helmut Mc Cloud
+        email: Mcloud@helmut.cloud
         avatarUrl: https://example.com/asset/some_avatar.webp
     SearchFilter:
       properties:
