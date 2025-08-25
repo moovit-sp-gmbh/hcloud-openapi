@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2408
+  version: 0.0.107-2410
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2541,6 +2541,12 @@ paths:
       responses:
         '200':
           description: Empty list if no events were added
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/EventDto'
         '201':
           description: List of added events
           content:
@@ -2600,9 +2606,6 @@ paths:
                   $ref: '#/components/examples/OrganizationNotFoundException'
                 Space not found:
                   $ref: '#/components/examples/SpaceNotFoundException'
-        '':
-          content:
-            undefined: {}
         default:
           description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/execute/stream/id/{streamId}:
@@ -10034,6 +10037,547 @@ components:
             newCoords:
               x: 25
               'y': 25
+    DesignerNode:
+      anyOf:
+        - type: object
+          properties:
+            name:
+              type: string
+            catalog:
+              type: object
+              properties:
+                version:
+                  type: string
+                url:
+                  type: string
+            type:
+              type: string
+              enum:
+                - TRIGGER
+            description:
+              type: string
+            color:
+              type: string
+            uuid:
+              type: string
+            connectors:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  uuid:
+                    type: string
+                  io:
+                    type: string
+                    enum:
+                      - INPUT
+                      - OUTPUT
+                  type:
+                    type: string
+                    enum:
+                      - TRIGGER
+                      - SUCCESS
+                      - FAIL
+                      - CUSTOM
+                required:
+                  - name
+                  - description
+                  - uuid
+                  - io
+                  - type
+            inputs:
+              type: array
+              items:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  advanced:
+                    type: boolean
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                      - STRING_LONG
+                      - STRING_LIST
+                      - STRING_MAP
+                      - STRING_READONLY
+                      - STRING_SELECT
+                      - STRING_PASSWORD
+                      - NUMBER
+                      - BOOLEAN
+                      - ANY
+                  example:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  mandatory:
+                    type: boolean
+                required:
+                  - uuid
+                  - name
+                  - type
+                  - example
+            coords:
+              type: object
+              properties:
+                currentX:
+                  type: number
+                currentY:
+                  type: number
+                initialX:
+                  type: number
+                initialY:
+                  type: number
+                xOffset:
+                  type: number
+                yOffset:
+                  type: number
+              required:
+                - currentX
+                - currentY
+                - initialX
+                - initialY
+            path:
+              type: string
+            kind:
+              type: string
+              enum:
+                - NODE
+            customDescription:
+              type: string
+            bypass:
+              type: boolean
+            version:
+              type: object
+              properties:
+                major:
+                  type: number
+                minor:
+                  type: number
+                patch:
+                  type: number
+                changelog:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - major
+                - minor
+                - patch
+                - changelog
+            breakpoint:
+              type: boolean
+          required:
+            - name
+            - description
+            - color
+            - uuid
+            - connectors
+            - inputs
+            - coords
+            - path
+            - kind
+            - version
+        - type: object
+          properties:
+            name:
+              type: string
+            catalog:
+              nullable: true
+            type:
+              type: string
+              enum:
+                - TRIGGER
+            description:
+              type: string
+            color:
+              type: string
+            uuid:
+              type: string
+            connectors:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  uuid:
+                    type: string
+                  io:
+                    type: string
+                    enum:
+                      - INPUT
+                      - OUTPUT
+                  type:
+                    type: string
+                    enum:
+                      - TRIGGER
+                      - SUCCESS
+                      - FAIL
+                      - CUSTOM
+                required:
+                  - name
+                  - description
+                  - uuid
+                  - io
+                  - type
+            inputs:
+              type: array
+              items:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  advanced:
+                    type: boolean
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                      - STRING_LONG
+                      - STRING_LIST
+                      - STRING_MAP
+                      - STRING_READONLY
+                      - STRING_SELECT
+                      - STRING_PASSWORD
+                      - NUMBER
+                      - BOOLEAN
+                      - ANY
+                  example:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  mandatory:
+                    type: boolean
+                required:
+                  - uuid
+                  - name
+                  - type
+                  - example
+            coords:
+              type: object
+              properties:
+                currentX:
+                  type: number
+                currentY:
+                  type: number
+                initialX:
+                  type: number
+                initialY:
+                  type: number
+                xOffset:
+                  type: number
+                yOffset:
+                  type: number
+              required:
+                - currentX
+                - currentY
+                - initialX
+                - initialY
+            path:
+              type: string
+            kind:
+              type: string
+              enum:
+                - NODE
+            customDescription:
+              type: string
+            bypass:
+              type: boolean
+            version:
+              type: object
+              properties:
+                major:
+                  type: number
+                minor:
+                  type: number
+                patch:
+                  type: number
+                changelog:
+                  type: array
+                  items:
+                    type: string
+              required:
+                - major
+                - minor
+                - patch
+                - changelog
+            breakpoint:
+              type: boolean
+            customNode:
+              type: object
+              properties:
+                _id:
+                  type: string
+              required:
+                - _id
+          required:
+            - name
+            - description
+            - color
+            - uuid
+            - connectors
+            - inputs
+            - coords
+            - path
+            - kind
+            - version
+            - customNode
+        - type: object
+          properties:
+            kind:
+              type: string
+              enum:
+                - ANNOTATION
+            title:
+              type: string
+            originalName:
+              type: string
+            background:
+              type: string
+            version:
+              type: object
+              properties:
+                major:
+                  type: number
+                minor:
+                  type: number
+                patch:
+                  type: number
+                changelog:
+                  type: array
+                  items:
+                    type: string
+            size:
+              type: object
+              properties:
+                height:
+                  type: number
+                width:
+                  type: number
+              required:
+                - height
+                - width
+            name:
+              type: string
+            catalog:
+              type: object
+              properties:
+                version:
+                  type: string
+                url:
+                  type: string
+            type:
+              type: string
+              enum:
+                - TRIGGER
+            description:
+              type: string
+            color:
+              type: string
+            uuid:
+              type: string
+            connectors:
+              type: array
+              items:
+                type: object
+                properties:
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  uuid:
+                    type: string
+                  io:
+                    type: string
+                    enum:
+                      - INPUT
+                      - OUTPUT
+                  type:
+                    type: string
+                    enum:
+                      - TRIGGER
+                      - SUCCESS
+                      - FAIL
+                      - CUSTOM
+                required:
+                  - name
+                  - description
+                  - uuid
+                  - io
+                  - type
+            inputs:
+              type: array
+              items:
+                type: object
+                properties:
+                  uuid:
+                    type: string
+                  name:
+                    type: string
+                  description:
+                    type: string
+                  advanced:
+                    type: boolean
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                      - STRING_LONG
+                      - STRING_LIST
+                      - STRING_MAP
+                      - STRING_READONLY
+                      - STRING_SELECT
+                      - STRING_PASSWORD
+                      - NUMBER
+                      - BOOLEAN
+                      - ANY
+                  example:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: number
+                      - type: boolean
+                      - type: array
+                        items:
+                          type: string
+                      - type: object
+                        additionalProperties:
+                          nullable: true
+                      - type: array
+                        items:
+                          type: object
+                          additionalProperties:
+                            nullable: true
+                  mandatory:
+                    type: boolean
+                required:
+                  - uuid
+                  - name
+                  - type
+                  - example
+            coords:
+              type: object
+              properties:
+                currentX:
+                  type: number
+                currentY:
+                  type: number
+                initialX:
+                  type: number
+                initialY:
+                  type: number
+                xOffset:
+                  type: number
+                yOffset:
+                  type: number
+              required:
+                - currentX
+                - currentY
+                - initialX
+                - initialY
+            path:
+              type: string
+          required:
+            - kind
+            - title
+            - background
+            - version
+            - size
+            - name
+            - description
+            - color
+            - uuid
+            - connectors
+            - inputs
+            - coords
+            - path
     DocumentArrayItemDto:
       properties:
         item:
@@ -10321,6 +10865,106 @@ components:
                   startDate: 1744020920526
                   endDate: 1744020920580
                   children: []
+    ExecutionTreeNodeDto:
+      properties:
+        executionStatusId:
+          type: string
+        orgName:
+          type: string
+          description: Name of the organization the stream belongs to
+        spaceName:
+          type: string
+          description: Name of the space the stream belongs to
+        eventName:
+          type: string
+        streamName:
+          type: string
+        streamId:
+          type: string
+        state:
+          $ref: '#/components/schemas/High5ExecutionState'
+        outcome:
+          $ref: '#/components/schemas/High5ExecutionOutcome'
+        message:
+          type: string
+        runningNodes:
+          type: array
+          items:
+            $ref: '#/components/schemas/StreamRunningNodeDto'
+        target:
+          type: string
+        triggerSource:
+          $ref: '#/components/schemas/TriggerSource'
+        startDate:
+          type: number
+        endDate:
+          type: number
+        children:
+          type: array
+          items:
+            $ref: '#/components/schemas/ExecutionTreeNodeDto'
+      required:
+        - executionStatusId
+        - orgName
+        - spaceName
+        - eventName
+        - streamName
+        - streamId
+        - state
+        - outcome
+        - runningNodes
+        - target
+        - triggerSource
+        - startDate
+        - endDate
+        - children
+      example:
+        executionStatusId: 649180269bdc11b1fe807939
+        orgName: account@moovit-sp.com
+        spaceName: test-benchmark
+        eventName: myEvent
+        streamName: stream-bandwidth
+        streamId: 649180269bdc11b1fe807938
+        state: COMPLETED
+        outcome: SUCCESS
+        runningNodes:
+          - uuid: 6fc0e378-c714-4213-ba6f-bf227d2c49e8
+            name: Lower Case Action Node
+            progress: 100
+            message: Successfully converted input to lower case
+        target: account@moovit-sp.com
+        triggerSource: api
+        startDate: 1692275019340
+        endDate: 1692275028520
+        children:
+          - executionStatusId: 67f3a5b8e25c9d7d0a4f852a
+            orgName: account@moovit-sp.com
+            spaceName: test-benchmark
+            eventName: myEvent
+            streamName: stream2
+            streamId: 67f3a54be25c9d7d0a4f828d
+            state: COMPLETED
+            outcome: SUCCESS
+            runningNodes: []
+            target: account@moovit-sp.com
+            triggerSource: stream
+            startDate: 1744020920397
+            endDate: 1744020922582
+            children:
+              - executionStatusId: 67f3a5b8e25c9d7d0a4f8553
+                orgName: account@moovit-sp.com
+                spaceName: test-benchmark
+                eventName: myEvent
+                streamName: stream3
+                streamId: 67f3a54de25c9d7d0a4f82a4
+                state: COMPLETED
+                outcome: SUCCESS
+                runningNodes: []
+                target: account@moovit-sp.com
+                triggerSource: stream
+                startDate: 1744020920526
+                endDate: 1744020920580
+                children: []
     High5ExecutionCrashDto:
       properties:
         message:
@@ -11376,6 +12020,81 @@ components:
         identifiers:
           - 64180bfafe4fbcd791493ef4
         operation: ADD
+    Scope:
+      enum:
+        - hcloud:full
+        - idp:email:read
+        - idp:user:read
+        - idp:user:write
+        - idp:user:delete
+        - openid
+        - idp:organization:read
+        - idp:organization:write
+        - idp:organization:delete
+        - idp:organization:admin
+        - high5:space:read
+        - high5:space:execute
+        - high5:space:write
+        - high5:space:delete
+        - fuse:space:read
+        - fuse:space:execute
+        - fuse:space:write
+        - fuse:space:delete
+        - cosmo:space:read
+        - cosmo:space:write
+        - cosmo:space:delete
+      type: string
+      description: >
+        * hcloud:full - Full access to HCloud
+
+        * idp:email:read - Access to email read operations
+
+        * idp:user:read - Access to read operations of users
+
+        * idp:user:write - Access to read and write operations of users
+
+        * idp:user:delete - Access to read, write and delete operations of users
+
+        * openid - Used for OAuth authentication requests. Used in the OpenID
+        Connect protocol.
+
+        * idp:organization:read - Access to read operations of organizations
+
+        * idp:organization:write - Access to read and write operations of
+        organizations
+
+        * idp:organization:delete - Access to read, write and delete operations
+        of organizations
+
+        * idp:organization:admin - Access to read, write and delete operations
+        of organizations and ability to manage its members
+
+        * high5:space:read - Access to read operations of spaces
+
+        * high5:space:execute - Access to the ability to start execution of
+        streams of spaces
+
+        * high5:space:write - Access to read and write operations of spaces
+
+        * high5:space:delete - Access to read, write and delete operations of
+        spaces
+
+        * fuse:space:read - Access to read operations of spaces
+
+        * fuse:space:execute - Access to the ability to start execution of
+        streams of spaces
+
+        * fuse:space:write - Access to read and write operations of spaces
+
+        * fuse:space:delete - Access to read, write and delete operations of
+        spaces
+
+        * cosmo:space:read - Access to read operations of spaces
+
+        * cosmo:space:write - Access to read and write operations of spaces
+
+        * cosmo:space:delete - Access to read, write and delete operations of
+        spaces
     Search:
       properties:
         filters:
@@ -12416,11 +13135,7 @@ components:
           type: number
           description: HTTP status code
         headers:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Record<string, string'
-              - $ref: '#/components/schemas/string>'
+          $ref: '#/components/schemas/HttpHeaders'
           description: HTTP headers
         body:
           type: string
@@ -12893,6 +13608,17 @@ components:
       example:
         eventName: comment_created
         secret: 649180269bdc11b1fe807938
+    HttpHeaders:
+      type: object
+      description: HTTP headers
+      additionalProperties:
+        oneOf:
+          - type: string
+          - type: array
+            items:
+              type: string
+      example:
+        authorization: Bearer-API-Key
     ReducedEvent:
       properties:
         _id:
@@ -12917,6 +13643,7 @@ components:
           description: Name of the organization
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the organization
       required:
         - _id
@@ -12936,6 +13663,7 @@ components:
           description: Name of the space
         avatarUrl:
           type: string
+          format: uri
           description: URL of the space avatar
       required:
         - _id
@@ -12953,82 +13681,24 @@ components:
         name:
           type: string
           description: Name of the user
+        email:
+          type: string
+          format: email
+          description: Email of the user
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the user
       required:
         - _id
         - name
+        - email
         - avatarUrl
       example:
         _id: 63c7e64ff912d31ffa27a5b4
         name: Helmut Mc Cloud
+        email: mcloud@helmut.cloud
         avatarUrl: https://example.com/asset/some_avatar.webp
-    Scope:
-      enum:
-        - hcloud:full
-        - idp:email:read
-        - idp:user:read
-        - idp:user:write
-        - idp:user:delete
-        - openid
-        - idp:organization:read
-        - idp:organization:write
-        - idp:organization:delete
-        - idp:organization:admin
-        - high5:space:read
-        - high5:space:execute
-        - high5:space:write
-        - high5:space:delete
-        - fuse:space:read
-        - fuse:space:execute
-        - fuse:space:write
-        - fuse:space:delete
-      type: string
-      description: >
-        * hcloud:full - Full access to HCloud
-
-        * idp:email:read - Access to email read operations
-
-        * idp:user:read - Access to read operations of users
-
-        * idp:user:write - Access to read and write operations of users
-
-        * idp:user:delete - Access to read, write and delete operations of users
-
-        * openid - Used for OAuth authentication requests. Used in the OpenID
-        Connect protocol.
-
-        * idp:organization:read - Access to read operations of organizations
-
-        * idp:organization:write - Access to read and write operations of
-        organizations
-
-        * idp:organization:delete - Access to read, write and delete operations
-        of organizations
-
-        * idp:organization:admin - Access to read, write and delete operations
-        of organizations and ability to manage its members
-
-        * high5:space:read - Access to read operations of spaces
-
-        * high5:space:execute - Access to the ability to start execution of
-        streams of spaces
-
-        * high5:space:write - Access to read and write operations of spaces
-
-        * high5:space:delete - Access to read, write and delete operations of
-        spaces
-
-        * fuse:space:read - Access to read operations of spaces
-
-        * fuse:space:execute - Access to the ability to start execution of
-        streams of spaces
-
-        * fuse:space:write - Access to read and write operations of spaces
-
-        * fuse:space:delete - Access to read, write and delete operations of
-        spaces
     SearchFilter:
       properties:
         type:
@@ -13173,6 +13843,7 @@ components:
           description: Name of the User
         email:
           type: string
+          format: email
           description: Email of the User
         company:
           type: string
@@ -13182,6 +13853,7 @@ components:
           description: Name of the organization the user is currently active in
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar
         createDate:
           type: number
@@ -13521,7 +14193,7 @@ components:
         error: failed.dependency
         message: >-
           Failed to request resource(s) from 'Failed to get engine from
-          'https://wave.s3.helmut.cloud/engines/default/''
+          https://wave.s3.helmut.cloud/engines/default/'
     InternalServerErrorException:
       value:
         code: 002.000.0002
