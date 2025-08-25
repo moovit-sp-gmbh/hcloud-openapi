@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2396
+  version: 0.0.107-2408
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10073,6 +10073,9 @@ components:
           description: >-
             Document value (data type must match the type specified in the type
             field)
+        ttl:
+          type: number
+          description: Time-to-live in seconds (undefined if missing)
       required:
         - key
         - type
