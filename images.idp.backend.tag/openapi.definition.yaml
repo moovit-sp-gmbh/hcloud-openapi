@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2337
+  version: 0.0.143-2345
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8560,7 +8560,7 @@ components:
           type: number
           description: Last modification date of the OAuthApp
         scopes:
-          $ref: '#/components/schemas/Record<string, number>'
+          $ref: '#/components/schemas/Scopes'
           description: Scopes the user has consented to
       required:
         - _id
@@ -9165,6 +9165,7 @@ components:
           description: Name of the team
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar
       required:
         - _id
@@ -10175,6 +10176,7 @@ components:
           description: Name of the organization
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the organization
       required:
         - _id
@@ -10194,6 +10196,7 @@ components:
           description: Name of the organization
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the organization
         connect:
           type: boolean
@@ -10216,16 +10219,23 @@ components:
         name:
           type: string
           description: Name of the user
+        email:
+          type: string
+          format: email
+          description: Email of the user
         avatarUrl:
           type: string
+          format: uri
           description: URL of the avatar of the user
       required:
         - _id
         - name
+        - email
         - avatarUrl
       example:
         _id: 63c7e64ff912d31ffa27a5b4
         name: Helmut Mc Cloud
+        email: mcloud@helmut.cloud
         avatarUrl: https://example.com/asset/some_avatar.webp
     Region:
       properties:
@@ -10246,6 +10256,17 @@ components:
         name: EU-West
         id: eu-West
         server: https://na-central.helmut.cloud
+    Scopes:
+      type: object
+      description: >-
+        A map of scopes to numeric values. Keys must be valid scope strings as
+        defined in the Scope enum.
+      additionalProperties:
+        type: number
+      example:
+        idp:user:read: 1754312
+        high5:space:write: 3879142
+        openid: 2079468
     SearchFilter:
       properties:
         type:
