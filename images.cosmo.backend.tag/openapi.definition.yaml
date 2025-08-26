@@ -497,6 +497,8 @@ components:
             - '1080'
             - '720'
             - '480'
+            - '360'
+            - '240'
           description: Resolution for the download URLs
           example: original
       required:
@@ -598,6 +600,36 @@ components:
           pattern: ^[\w-.]{1,32}$
       required:
         - name
+    NamespaceSearchName:
+      anyOf:
+        - type: string
+          minLength: 3
+          maxLength: 64
+          pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+        - type: string
+          minLength: 3
+          maxLength: 64
+          pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+        - type: string
+          enum:
+            - '*'
+        - type: array
+          items:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                enum:
+                  - '*'
+      description: >-
+        Use * to fetch from all namespaces. Can only be used if spaceName is
+        also defined.
     NamespaceCreateDto:
       type: object
       properties:
@@ -924,6 +956,19 @@ components:
             - url
             - token
             - expiration
+        namespaces:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              status:
+                type: string
+            required:
+              - status
+          description: Information about the asset across namespaces.
+          example: &ref_1
+            rush:
+              status: approved
         media:
           type: array
           items:
@@ -2527,6 +2572,17 @@ paths:
                         - url
                         - token
                         - expiration
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                        required:
+                          - status
+                      description: Information about the asset across namespaces.
+                      example: *ref_1
                   required:
                     - _id
                     - name
@@ -2789,6 +2845,17 @@ paths:
                         - url
                         - token
                         - expiration
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                        required:
+                          - status
+                      description: Information about the asset across namespaces.
+                      example: *ref_1
                   required:
                     - _id
                     - name
@@ -3084,6 +3151,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -3347,6 +3425,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -3595,6 +3684,17 @@ paths:
                         - url
                         - token
                         - expiration
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                        required:
+                          - status
+                      description: Information about the asset across namespaces.
+                      example: *ref_1
                   required:
                     - _id
                     - name
@@ -4047,6 +4147,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -4776,6 +4887,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -4948,6 +5070,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -5372,6 +5505,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -5782,6 +5926,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -6034,11 +6189,11 @@ paths:
     post:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Create a folder
       tags:
         - Folder
@@ -6132,15 +6287,15 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['high5:space:write'] not included in authorization
+          description: Required scopes ['cosmo:space:write'] not included in authorization
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -6177,9 +6332,12 @@ paths:
   /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/name:
     patch:
       security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
       summary: Rename a folder
       tags:
         - Folder
@@ -6288,12 +6446,24 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least MEMBER
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -6340,11 +6510,11 @@ paths:
     get:
       security:
         - bearerAuth:
-            - high5:space:read
+            - cosmo:space:read
         - basicAuth:
-            - high5:space:read
+            - cosmo:space:read
         - patAuth:
-            - high5:space:read
+            - cosmo:space:read
       summary: Fetch a folder
       tags:
         - Folder
@@ -6448,16 +6618,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
+            Required scopes ['cosmo:space:read'] not included in authorization |
             User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:read'] not included in authorization:
+                Required scopes ['cosmo:space:read'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:read'] not included in
+                    Required scopes ['cosmo:space:read'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -6516,11 +6686,11 @@ paths:
     delete:
       security:
         - bearerAuth:
-            - high5:space:delete
+            - cosmo:space:delete
         - basicAuth:
-            - high5:space:delete
+            - cosmo:space:delete
         - patAuth:
-            - high5:space:delete
+            - cosmo:space:delete
       summary: Delete a folder
       tags:
         - Folder
@@ -6642,16 +6812,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:delete'] not included in authorization
+            Required scopes ['cosmo:space:delete'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:delete'] not included in authorization:
+                Required scopes ['cosmo:space:delete'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:delete'] not included in
+                    Required scopes ['cosmo:space:delete'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -6737,11 +6907,11 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Move a folder
       tags:
         - Folder
@@ -6850,16 +7020,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 011.001.0004
@@ -7228,6 +7398,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                   reference:
                     type: object
                     properties:
@@ -9025,7 +9206,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: &ref_1
+                    example: &ref_2
                       ae13321a-522d-48da-9733-27c97bcab124:
                         - READ
                   users:
@@ -9272,7 +9453,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_1
+                    example: *ref_2
                   users:
                     type: array
                     items:
@@ -9581,6 +9762,17 @@ paths:
                         - url
                         - token
                         - expiration
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: object
+                        properties:
+                          status:
+                            type: string
+                        required:
+                          - status
+                      description: Information about the asset across namespaces.
+                      example: *ref_1
                   required:
                     - _id
                     - name
@@ -9737,7 +9929,6 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/:spaceName/shares/{shareId}:
     delete:
       security:
         - bearerAuth:
@@ -9767,9 +9958,12 @@ paths:
           in: path
         - schema:
             type: string
-            format: uuid
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
           required: true
-          name: spaceId
+          name: spaceName
           in: path
         - schema:
             type: string
@@ -9783,7 +9977,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceId' | Failed to validate 'path' parameter
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'shareId'
           content:
             application/json:
@@ -9797,13 +9991,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceId':
-                  summary: Failed to validate 'path' parameter 'spaceId'
-                  description: Failed to validate 'path' parameter 'spaceId' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceId' - {error}
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'shareId':
                   summary: Failed to validate 'path' parameter 'shareId'
                   description: Failed to validate 'path' parameter 'shareId' - {error}
@@ -9999,7 +10193,7 @@ paths:
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_1
+                      example: *ref_2
                     users:
                       type: array
                       items:
@@ -10213,7 +10407,7 @@ paths:
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_1
+                      example: *ref_2
                     users:
                       type: array
                       items:
@@ -10722,7 +10916,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_1
+                    example: *ref_2
                   users:
                     type: array
                     items:
@@ -10938,6 +11132,39 @@ paths:
           name: spaceName
           in: query
         - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                enum:
+                  - '*'
+              - type: array
+                items:
+                  anyOf:
+                    - type: string
+                      minLength: 3
+                      maxLength: 64
+                      pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                    - type: string
+                      minLength: 3
+                      maxLength: 64
+                      pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                    - type: string
+                      enum:
+                        - '*'
+            description: >-
+              Use * to fetch from all namespaces. Can only be used if spaceName
+              is also defined.
+          required: false
+          name: namespace
+          in: query
+        - schema:
             type: string
             format: uuid
           required: false
@@ -11034,6 +11261,17 @@ paths:
                       - url
                       - token
                       - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
                 required:
                   - _id
                   - name
@@ -11046,7 +11284,8 @@ paths:
             'query' parameter 'limit' | Failed to validate 'query' parameter
             'page' | Failed to validate 'query' parameter 'recursive' | Failed
             to validate 'query' parameter 'spaceName' | Failed to validate
-            'query' parameter 'parentId'
+            'query' parameter 'namespace' | Failed to validate 'query' parameter
+            'parentId'
           content:
             application/json:
               schema:
@@ -11087,6 +11326,13 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'spaceName' - {error}
+                Failed to validate 'query' parameter 'namespace':
+                  summary: Failed to validate 'query' parameter 'namespace'
+                  description: Failed to validate 'query' parameter 'namespace' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'namespace' - {error}
                 Failed to validate 'query' parameter 'parentId':
                   summary: Failed to validate 'query' parameter 'parentId'
                   description: Failed to validate 'query' parameter 'parentId' - {error}
