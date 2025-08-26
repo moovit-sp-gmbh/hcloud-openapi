@@ -969,6 +969,13 @@ components:
           example: &ref_1
             rush:
               status: approved
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Allowed operations on the asset
+          example: &ref_2
+            - CAN_READ
         media:
           type: array
           items:
@@ -2583,6 +2590,12 @@ paths:
                           - status
                       description: Information about the asset across namespaces.
                       example: *ref_1
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                      description: Allowed operations on the asset
+                      example: *ref_2
                   required:
                     - _id
                     - name
@@ -2856,6 +2869,12 @@ paths:
                           - status
                       description: Information about the asset across namespaces.
                       example: *ref_1
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                      description: Allowed operations on the asset
+                      example: *ref_2
                   required:
                     - _id
                     - name
@@ -3162,6 +3181,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -3436,6 +3461,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -3695,6 +3726,12 @@ paths:
                           - status
                       description: Information about the asset across namespaces.
                       example: *ref_1
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                      description: Allowed operations on the asset
+                      example: *ref_2
                   required:
                     - _id
                     - name
@@ -4158,6 +4195,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -4898,6 +4941,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -5081,6 +5130,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -5516,6 +5571,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -5937,6 +5998,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
@@ -7409,6 +7476,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                   reference:
                     type: object
                     properties:
@@ -9206,7 +9279,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: &ref_2
+                    example: &ref_3
                       ae13321a-522d-48da-9733-27c97bcab124:
                         - READ
                   users:
@@ -9453,7 +9526,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_2
+                    example: *ref_3
                   users:
                     type: array
                     items:
@@ -9773,6 +9846,12 @@ paths:
                           - status
                       description: Information about the asset across namespaces.
                       example: *ref_1
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                      description: Allowed operations on the asset
+                      example: *ref_2
                   required:
                     - _id
                     - name
@@ -10193,7 +10272,7 @@ paths:
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_2
+                      example: *ref_3
                     users:
                       type: array
                       items:
@@ -10407,7 +10486,7 @@ paths:
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_2
+                      example: *ref_3
                     users:
                       type: array
                       items:
@@ -10916,7 +10995,7 @@ paths:
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_2
+                    example: *ref_3
                   users:
                     type: array
                     items:
@@ -11272,6 +11351,12 @@ paths:
                         - status
                     description: Information about the asset across namespaces.
                     example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
                 required:
                   - _id
                   - name
