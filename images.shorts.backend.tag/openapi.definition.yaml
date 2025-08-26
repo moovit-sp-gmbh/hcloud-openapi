@@ -1,0 +1,55 @@
+openapi: 3.0.0
+info:
+  title: hcloud - Shorts
+  version: 0.0.1-9
+  contact:
+    name: MoovIT Software Products GmbH
+    url: https://www.moovit-sp.com
+    email: info@moovit-sp.com
+  description: Simple and secure link shortener for long, unguessable URLs.
+servers:
+  - url: https://eu-central-1.helmut.cloud/api/shorts
+    description: EU-Central production server
+  - url: https://na-west-1.helmut.cloud/api/shorts
+    description: NA-West production server
+  - url: https://eu-dev-1.app.helmut.cloud/api/shorts
+    description: EU development server
+  - url: http://localhost/api/shorts
+    description: Localhost
+paths:
+  /v1/{slug}:
+    get:
+      tags:
+        - Short
+      summary: Redirects to the original long URL based on a 6-character slug
+      description: >-
+        Resolves a short URL slug and redirects the client to the corresponding
+        long URL. If the slug is invalid, not found, or the visit limit has been
+        exceeded, the client is redirected to a fallback page.
+      parameters:
+        - $ref: '#/components/parameters/UrlSlug'
+      responses:
+        '302':
+          description: >-
+            Redirect to the target URL, fallback URL if not found, or fallback
+            URL if visit limit exceeded.
+components:
+  securitySchemes:
+    BearerAuth:
+      type: http
+      bearerFormat: JWT
+      scheme: bearer
+    BasicAuth:
+      type: http
+      scheme: basic
+  parameters:
+    UrlSlug:
+      in: path
+      name: slug
+      schema:
+        type: string
+        minLength: 6
+        maxLength: 6
+        example: Az7M4q
+      required: true
+      description: 6-character unique identifier used to access the shortened URL
