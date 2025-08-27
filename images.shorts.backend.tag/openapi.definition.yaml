@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Shorts
-  version: 0.0.1-11
+  version: 0.0.1-12
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -17,7 +17,7 @@ servers:
   - url: http://localhost/api/shorts
     description: Localhost
 paths:
-  /v1/shorts/{slug}:
+  /v1/short/{slug}:
     get:
       tags:
         - Short
