@@ -1211,6 +1211,26 @@ components:
           description: Optional annotation for the comment
           example: >-
             PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
+        replies:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                format: uuid
+              text:
+                type: string
+              createDate:
+                type: number
+              creator:
+                $ref: '#/components/schemas/ReducedUser'
+            required:
+              - id
+              - text
+              - createDate
+              - creator
+          description: Replies to this comment
       required:
         - _id
         - text
@@ -7915,6 +7935,15 @@ paths:
           required: false
           name: annotation
           in: query
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: replySamle
+          in: query
       responses:
         '200':
           description: Comments of an entity
@@ -7931,7 +7960,7 @@ paths:
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page' | Failed to validate 'query' parameter
-            'annotation'
+            'annotation' | Failed to validate 'query' parameter 'replySamle'
           content:
             application/json:
               schema:
@@ -7991,6 +8020,15 @@ paths:
                     error: invalid.parameter
                     message: >-
                       Failed to validate 'query' parameter 'annotation' -
+                      {error}
+                Failed to validate 'query' parameter 'replySamle':
+                  summary: Failed to validate 'query' parameter 'replySamle'
+                  description: Failed to validate 'query' parameter 'replySamle' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'replySamle' -
                       {error}
         '401':
           description: >-
