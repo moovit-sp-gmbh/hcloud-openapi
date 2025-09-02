@@ -8458,7 +8458,7 @@ paths:
             default: 25
             description: Page size
           required: false
-          name: replySamle
+          name: replySample
           in: query
       responses:
         '200':
@@ -8476,7 +8476,7 @@ paths:
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page' | Failed to validate 'query' parameter
-            'annotation' | Failed to validate 'query' parameter 'replySamle'
+            'annotation' | Failed to validate 'query' parameter 'replySample'
           content:
             application/json:
               schema:
@@ -8537,14 +8537,14 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'annotation' -
                       {error}
-                Failed to validate 'query' parameter 'replySamle':
-                  summary: Failed to validate 'query' parameter 'replySamle'
-                  description: Failed to validate 'query' parameter 'replySamle' - {error}
+                Failed to validate 'query' parameter 'replySample':
+                  summary: Failed to validate 'query' parameter 'replySample'
+                  description: Failed to validate 'query' parameter 'replySample' - {error}
                   value:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: >-
-                      Failed to validate 'query' parameter 'replySamle' -
+                      Failed to validate 'query' parameter 'replySample' -
                       {error}
         '401':
           description: >-
