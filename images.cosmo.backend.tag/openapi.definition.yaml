@@ -240,13 +240,40 @@ components:
           type: array
           items:
             oneOf:
+              - type: object
+                properties:
+                  key:
+                    type: string
+                    enum:
+                      - type
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: array
+                        items:
+                          type: string
+                  comparator:
+                    type: string
+                    enum:
+                      - is
+                      - is not
+                required:
+                  - key
+                  - type
+                  - value
+                  - comparator
+                description: type filters
               - oneOf:
                   - type: object
                     properties:
                       key:
                         type: string
                         enum:
-                          - type
+                          - assetType
                       type:
                         type: string
                         enum:
@@ -270,13 +297,13 @@ components:
                       - type
                       - value
                       - comparator
-                    description: STRING for type
+                    description: STRING for assetType
                   - type: object
                     properties:
                       key:
                         type: string
                         enum:
-                          - type
+                          - assetType
                       type:
                         type: string
                         enum:
@@ -305,13 +332,13 @@ components:
                       - value
                       - comparator
                       - allowedValues
-                    description: SELECT for type
+                    description: SELECT for assetType
                   - type: object
                     properties:
                       key:
                         type: string
                         enum:
-                          - type
+                          - assetType
                       type:
                         type: string
                         enum:
@@ -336,8 +363,8 @@ components:
                       - value
                       - comparator
                       - allowedValues
-                    description: TYPEAHEAD for type
-                description: type filters
+                    description: TYPEAHEAD for assetType
+                description: assetType filters
               - type: object
                 properties:
                   key:
@@ -463,6 +490,493 @@ components:
                       - allowedValues
                     description: TYPEAHEAD for name
                 description: name filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - createDate
+                      type:
+                        type: string
+                        enum:
+                          - NUMBER
+                      value:
+                        type: number
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - greater than
+                          - less than
+                          - greater than or equal
+                          - less than or equal
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: NUMBER for createDate
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - createDate
+                      type:
+                        type: string
+                        enum:
+                          - DATE
+                      value:
+                        type: number
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - greater than
+                          - less than
+                          - greater than or equal
+                          - less than or equal
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: DATE for createDate
+                description: createDate filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - modifyDate
+                      type:
+                        type: string
+                        enum:
+                          - NUMBER
+                      value:
+                        type: number
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - greater than
+                          - less than
+                          - greater than or equal
+                          - less than or equal
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: NUMBER for modifyDate
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - modifyDate
+                      type:
+                        type: string
+                        enum:
+                          - DATE
+                      value:
+                        type: number
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - greater than
+                          - less than
+                          - greater than or equal
+                          - less than or equal
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: DATE for modifyDate
+                description: modifyDate filters
+              - type: object
+                properties:
+                  key:
+                    type: string
+                    enum:
+                      - size
+                  type:
+                    type: string
+                    enum:
+                      - NUMBER
+                  value:
+                    type: number
+                  comparator:
+                    type: string
+                    enum:
+                      - is
+                      - is not
+                      - greater than
+                      - less than
+                      - greater than or equal
+                      - less than or equal
+                required:
+                  - key
+                  - type
+                  - value
+                  - comparator
+                description: size filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - extension
+                      type:
+                        type: string
+                        enum:
+                          - STRING
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: STRING for extension
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - extension
+                      type:
+                        type: string
+                        enum:
+                          - SELECT
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: SELECT for extension
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - extension
+                      type:
+                        type: string
+                        enum:
+                          - TYPEAHEAD
+                      value:
+                        type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: TYPEAHEAD for extension
+                description: extension filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - creator.name
+                      type:
+                        type: string
+                        enum:
+                          - STRING
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: STRING for creator.name
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - creator.name
+                      type:
+                        type: string
+                        enum:
+                          - SELECT
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: SELECT for creator.name
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - creator.name
+                      type:
+                        type: string
+                        enum:
+                          - TYPEAHEAD
+                      value:
+                        type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: TYPEAHEAD for creator.name
+                description: creator.name filters
+              - type: object
+                properties:
+                  key:
+                    type: string
+                    enum:
+                      - creator.id
+                  type:
+                    type: string
+                    enum:
+                      - STRING
+                  value:
+                    anyOf:
+                      - type: string
+                      - type: array
+                        items:
+                          type: string
+                  comparator:
+                    type: string
+                    enum:
+                      - is
+                      - is not
+                required:
+                  - key
+                  - type
+                  - value
+                  - comparator
+                description: creator.id filters
+              - type: object
+                properties:
+                  key:
+                    type: string
+                    enum:
+                      - resolution
+                  type:
+                    type: string
+                    enum:
+                      - NUMBER
+                  value:
+                    type: number
+                  comparator:
+                    type: string
+                    enum:
+                      - is
+                      - is not
+                      - greater than
+                      - less than
+                      - greater than or equal
+                      - less than or equal
+                required:
+                  - key
+                  - type
+                  - value
+                  - comparator
+                description: resolution filters
+              - oneOf:
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - approvalStatus
+                      type:
+                        type: string
+                        enum:
+                          - STRING
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                    description: STRING for approvalStatus
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - approvalStatus
+                      type:
+                        type: string
+                        enum:
+                          - SELECT
+                      value:
+                        anyOf:
+                          - type: string
+                          - type: array
+                            items:
+                              type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: SELECT for approvalStatus
+                  - type: object
+                    properties:
+                      key:
+                        type: string
+                        enum:
+                          - approvalStatus
+                      type:
+                        type: string
+                        enum:
+                          - TYPEAHEAD
+                      value:
+                        type: string
+                      comparator:
+                        type: string
+                        enum:
+                          - is
+                          - is not
+                          - starts with
+                          - ends with
+                          - contains
+                      allowedValues:
+                        type: array
+                        items:
+                          type: string
+                    required:
+                      - key
+                      - type
+                      - value
+                      - comparator
+                      - allowedValues
+                    description: TYPEAHEAD for approvalStatus
+                description: approvalStatus filters
           description: field filters
       required:
         - filters
@@ -898,6 +1412,10 @@ components:
             - FOLDER
             - COMMENT
           description: Item type
+        extension:
+          type: string
+          description: Asset extension
+          example: .mov
         assetType:
           type: string
           enum:
@@ -934,6 +1452,12 @@ components:
           type: number
           minimum: 0
           description: Date of creation
+          format: UNIX timestamp
+          example: 1747142773233
+        modifyDate:
+          type: number
+          minimum: 0
+          description: Date of last change
           format: UNIX timestamp
           example: 1747142773233
         creator:
@@ -1043,6 +1567,7 @@ components:
         - name
         - type
         - createDate
+        - modifyDate
         - creator
     AssetPermissionsDto:
       type: object
@@ -1097,6 +1622,16 @@ components:
         - $ref: '#/components/schemas/ItemDto'
         - type: object
           properties:
+            createDate:
+              type: number
+              minimum: 0
+              description: Date of creation
+              format: UNIX timestamp (ms)
+            modifyDate:
+              type: number
+              minimum: 0
+              description: Date of last change
+              format: UNIX timestamp (ms)
             breadcrumb:
               type: array
               items:
@@ -1105,9 +1640,14 @@ components:
               type: array
               items:
                 $ref: '#/components/schemas/ItemDto'
+          required:
+            - createDate
+            - modifyDate
       example:
         _id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
         name: my-name
+        createDate: 1756285405647
+        modifyDate: 1756285405647
         type: FOLDER
         children: []
     FolderCreateDto:
@@ -3057,6 +3597,10 @@ paths:
                         - FOLDER
                         - COMMENT
                       description: Item type
+                    extension:
+                      type: string
+                      description: Asset extension
+                      example: .mov
                     assetType:
                       type: string
                       enum:
@@ -3093,6 +3637,12 @@ paths:
                       type: number
                       minimum: 0
                       description: Date of creation
+                      format: UNIX timestamp
+                      example: 1747142773233
+                    modifyDate:
+                      type: number
+                      minimum: 0
+                      description: Date of last change
                       format: UNIX timestamp
                       example: 1747142773233
                     creator:
@@ -3137,6 +3687,7 @@ paths:
                     - name
                     - type
                     - createDate
+                    - modifyDate
                     - creator
         '400':
           description: >-
@@ -3336,6 +3887,10 @@ paths:
                         - FOLDER
                         - COMMENT
                       description: Item type
+                    extension:
+                      type: string
+                      description: Asset extension
+                      example: .mov
                     assetType:
                       type: string
                       enum:
@@ -3372,6 +3927,12 @@ paths:
                       type: number
                       minimum: 0
                       description: Date of creation
+                      format: UNIX timestamp
+                      example: 1747142773233
+                    modifyDate:
+                      type: number
+                      minimum: 0
+                      description: Date of last change
                       format: UNIX timestamp
                       example: 1747142773233
                     creator:
@@ -3416,6 +3977,7 @@ paths:
                     - name
                     - type
                     - createDate
+                    - modifyDate
                     - creator
         '400':
           description: >-
@@ -3648,6 +4210,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -3684,6 +4250,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -3728,6 +4300,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -3928,6 +4501,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -3964,6 +4541,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -4008,6 +4591,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -4193,6 +4777,10 @@ paths:
                         - FOLDER
                         - COMMENT
                       description: Item type
+                    extension:
+                      type: string
+                      description: Asset extension
+                      example: .mov
                     assetType:
                       type: string
                       enum:
@@ -4229,6 +4817,12 @@ paths:
                       type: number
                       minimum: 0
                       description: Date of creation
+                      format: UNIX timestamp
+                      example: 1747142773233
+                    modifyDate:
+                      type: number
+                      minimum: 0
+                      description: Date of last change
                       format: UNIX timestamp
                       example: 1747142773233
                     creator:
@@ -4273,6 +4867,7 @@ paths:
                     - name
                     - type
                     - createDate
+                    - modifyDate
                     - creator
         '400':
           description: >-
@@ -4662,6 +5257,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -4698,6 +5297,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -4742,6 +5347,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -5408,6 +6014,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -5444,6 +6054,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -5488,6 +6104,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: Failed to validate 'query' parameter 'token'
@@ -5597,6 +6214,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -5633,6 +6254,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -5677,6 +6304,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -6038,6 +6666,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -6074,6 +6706,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -6118,6 +6756,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -6465,6 +7104,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -6501,6 +7144,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -6545,6 +7194,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -7943,6 +8593,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -7979,6 +8633,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -8030,6 +8690,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
                   - reference
         '400':
@@ -10331,6 +10992,10 @@ paths:
                         - FOLDER
                         - COMMENT
                       description: Item type
+                    extension:
+                      type: string
+                      description: Asset extension
+                      example: .mov
                     assetType:
                       type: string
                       enum:
@@ -10367,6 +11032,12 @@ paths:
                       type: number
                       minimum: 0
                       description: Date of creation
+                      format: UNIX timestamp
+                      example: 1747142773233
+                    modifyDate:
+                      type: number
+                      minimum: 0
+                      description: Date of last change
                       format: UNIX timestamp
                       example: 1747142773233
                     creator:
@@ -10411,6 +11082,7 @@ paths:
                     - name
                     - type
                     - createDate
+                    - modifyDate
                     - creator
         '400':
           description: >-
@@ -11836,6 +12508,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -11872,6 +12548,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -11916,6 +12598,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
