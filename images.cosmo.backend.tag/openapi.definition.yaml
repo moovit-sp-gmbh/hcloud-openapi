@@ -233,6 +233,26 @@ components:
           example:
             - tag1
             - tag2
+    sorting:
+      type: object
+      properties:
+        fields:
+          type: array
+          items:
+            type: string
+          description: Fields to sort by
+          example:
+            - name
+        direction:
+          type: string
+          enum:
+            - ASC
+            - DESC
+          description: Sort order
+          example: ASC
+      required:
+        - fields
+        - direction
     AssetSearchDto:
       type: object
       properties:
@@ -978,8 +998,11 @@ components:
                     description: TYPEAHEAD for approvalStatus
                 description: approvalStatus filters
           description: field filters
+        sorting:
+          $ref: '#/components/schemas/sorting'
       required:
         - filters
+        - sorting
     AssetRenameDto:
       type: object
       properties:
