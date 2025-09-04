@@ -1761,7 +1761,7 @@ components:
           items:
             type: object
             properties:
-              id:
+              _id:
                 type: string
                 format: uuid
               text:
@@ -1771,7 +1771,7 @@ components:
               creator:
                 $ref: '#/components/schemas/ReducedUser'
             required:
-              - id
+              - _id
               - text
               - createDate
               - creator
@@ -10821,7 +10821,6 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
             | The provided password does not match the share's password.
           content:
             application/json:
@@ -10832,16 +10831,6 @@ paths:
                   summary: >-
                     Required scopes ['cosmo:space:write'] not included in
                     authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -11168,9 +11157,7 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: >-
-            Required scopes ['cosmo:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER
+          description: Required scopes ['cosmo:space:read'] not included in authorization
           content:
             application/json:
               schema:
@@ -11180,16 +11167,6 @@ paths:
                   summary: >-
                     Required scopes ['cosmo:space:read'] not included in
                     authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
