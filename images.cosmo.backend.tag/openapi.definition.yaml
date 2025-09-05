@@ -1184,6 +1184,7 @@ components:
           enum: &ref_0
             - approved
             - rejected
+            - none
       required:
         - status
     ReducedUser:
@@ -3376,6 +3377,10 @@ paths:
                       - FOLDER
                       - COMMENT
                     description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
                   assetType:
                     type: string
                     enum:
@@ -3412,6 +3417,12 @@ paths:
                     type: number
                     minimum: 0
                     description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
                     format: UNIX timestamp
                     example: 1747142773233
                   creator:
@@ -3456,6 +3467,7 @@ paths:
                   - name
                   - type
                   - createDate
+                  - modifyDate
                   - creator
         '400':
           description: >-
@@ -8832,16 +8844,16 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: User's organization role is insufficient. Must be at least ADMIN
+          description: User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
