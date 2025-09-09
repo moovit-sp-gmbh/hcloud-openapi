@@ -1068,33 +1068,11 @@ components:
           format: uuid
           description: Parent ID. If omitted, the asset will be placed at the root level.
           example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        tags:
-          type: array
-          items:
-            type: string
-          description: Asset tags
-          example:
-            - tag1
-            - tag2
-        categories:
-          type: array
-          items:
-            type: string
-          description: Asset categories
-          example:
-            - category1
-            - category2
       required:
         - name
       example:
         name: my-asset
         parentId: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
-        tags:
-          - tag1
-          - tag2
-        categories:
-          - category1
-          - category2
     AssetTrashDto:
       type: object
       properties:
