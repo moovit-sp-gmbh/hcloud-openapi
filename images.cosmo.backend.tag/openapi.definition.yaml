@@ -119,6 +119,9 @@ components:
           type: string
           description: Share password
           example: super-safe
+        shareIdHMAC:
+          type: string
+          description: HMAC of the shareId. Required if password is not present
     ShareAddUsersDto:
       type: object
       properties:
@@ -11092,6 +11095,19 @@ paths:
                     code: 011.045.0001
                     error: share.not.found
                     message: Share not found
+        '409':
+          description: The HMAC supplied is incorrect.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The HMAC supplied is incorrect.:
+                  summary: The HMAC supplied is incorrect.
+                  value:
+                    code: 011.045.0004
+                    error: invalid.share.hmac
+                    message: The HMAC supplied is incorrect.
         '500':
           description: something went wrong
           content:
