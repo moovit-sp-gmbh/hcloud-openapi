@@ -1440,6 +1440,17 @@ components:
           type: string
           description: Asset extension
           example: .mov
+        status:
+          type: string
+          enum:
+            - UPLOADING
+            - UPLOADED
+            - PROCESSING
+            - FINISHED
+            - WAITING
+            - FAILED
+          description: Upload status of the asset
+          example: FINISHED
         assetType:
           type: string
           enum:
@@ -3381,6 +3392,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -3680,6 +3702,17 @@ paths:
                       type: string
                       description: Asset extension
                       example: .mov
+                    status:
+                      type: string
+                      enum:
+                        - UPLOADING
+                        - UPLOADED
+                        - PROCESSING
+                        - FINISHED
+                        - WAITING
+                        - FAILED
+                      description: Upload status of the asset
+                      example: FINISHED
                     assetType:
                       type: string
                       enum:
@@ -3970,6 +4003,17 @@ paths:
                       type: string
                       description: Asset extension
                       example: .mov
+                    status:
+                      type: string
+                      enum:
+                        - UPLOADING
+                        - UPLOADED
+                        - PROCESSING
+                        - FINISHED
+                        - WAITING
+                        - FAILED
+                      description: Upload status of the asset
+                      example: FINISHED
                     assetType:
                       type: string
                       enum:
@@ -4293,6 +4337,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -4584,6 +4639,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -4860,6 +4926,17 @@ paths:
                       type: string
                       description: Asset extension
                       example: .mov
+                    status:
+                      type: string
+                      enum:
+                        - UPLOADING
+                        - UPLOADED
+                        - PROCESSING
+                        - FINISHED
+                        - WAITING
+                        - FAILED
+                      description: Upload status of the asset
+                      example: FINISHED
                     assetType:
                       type: string
                       enum:
@@ -5340,6 +5417,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -6097,6 +6185,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -6297,6 +6396,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -6749,6 +6859,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -7187,6 +7308,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -8676,6 +8808,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -11413,6 +11556,17 @@ paths:
                       type: string
                       description: Asset extension
                       example: .mov
+                    status:
+                      type: string
+                      enum:
+                        - UPLOADING
+                        - UPLOADED
+                        - PROCESSING
+                        - FINISHED
+                        - WAITING
+                        - FAILED
+                      description: Upload status of the asset
+                      example: FINISHED
                     assetType:
                       type: string
                       enum:
@@ -12745,6 +12899,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
