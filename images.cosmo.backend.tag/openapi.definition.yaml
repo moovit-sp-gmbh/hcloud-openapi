@@ -5656,6 +5656,21 @@ paths:
           required: true
           name: assetId
           in: path
+        - schema:
+            anyOf:
+              - type: string
+                enum:
+                  - 'true'
+              - type: string
+                enum:
+                  - 'false'
+            default: 'false'
+            description: >-
+              Flag that indicates if the permissions for the asset should be
+              included in the result object.
+          required: false
+          name: permissions
+          in: query
       responses:
         '200':
           description: Detailed asset
@@ -5667,7 +5682,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'assetId'
+            'assetId' | Failed to validate 'query' parameter 'permissions'
           content:
             application/json:
               schema:
@@ -5694,6 +5709,15 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'assetId' - {error}
+                Failed to validate 'query' parameter 'permissions':
+                  summary: Failed to validate 'query' parameter 'permissions'
+                  description: Failed to validate 'query' parameter 'permissions' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'permissions' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
