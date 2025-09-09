@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2355
+  version: 0.0.143-2359
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -383,6 +383,67 @@ paths:
               examples:
                 InternalServerErrorException:
                   $ref: '#/components/examples/InternalServerErrorException'
+        default:
+          description: Unexpected error
+  /v1/guest:
+    post:
+      tags:
+        - Guest
+      summary: Create a guest user
+      description: Create a guest user by providing an email and HMAC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestCreateDto'
+      responses:
+        '200':
+          description: Guest object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        default:
+          description: Unexpected error
+    put:
+      tags:
+        - Guest
+      summary: Login a guest user
+      description: Login as a guest user by providing an email and HMAC
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/GuestLoginDto'
+      responses:
+        '200':
+          description: Guest object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        default:
+          description: Unexpected error
+  /v1/guest/email/{email}:
+    get:
+      tags:
+        - Guest
+      summary: Check email's guest status
+      description: Check if a certain email is associated with a guest account
+      parameters:
+        - name: email
+          in: path
+          description: Email of the guest account
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: '"no user" | "not guest" | "guest"'
+          content:
+            text/plain:
+              schema:
+                type: string
         default:
           description: Unexpected error
   /v1/org/{orgName}/license:
@@ -8033,6 +8094,39 @@ components:
       description: |
         * authorization_code - OAuth 2.0 Authorization Code Grant
         * refresh_token - OAuth 2.0 Refresh token Grant
+    GuestCreateDto:
+      properties:
+        email:
+          type: string
+          description: Email of the guest
+        hmac:
+          type: string
+          description: Base64 representation of the HMAC of the email address
+        name:
+          type: string
+          description: Name of the guest account
+      required:
+        - email
+        - hmac
+        - name
+      example:
+        email: guest@example.com
+        hmac: dQ+ydEYJowE/OKIEN7ePf68SresdIAkaR7BUbyp5Lg0=
+        name: Guest
+    GuestLoginDto:
+      properties:
+        email:
+          type: string
+          description: Email of the guest
+        hmac:
+          type: string
+          description: Base64 representation of the HMAC of the email address
+      required:
+        - email
+        - hmac
+      example:
+        email: guest@example.com
+        hmac: dQ+ydEYJowE/OKIEN7ePf68SresdIAkaR7BUbyp5Lg0=
     InvitationStatus:
       enum:
         - ACCEPTED
@@ -10652,6 +10746,11 @@ components:
         code: 001.044.0001
         error: message.not.found
         message: The specified message does not exist.
+    InvalidGuestHmacException:
+      value:
+        code: 001.005.0007
+        error: invalid.guest.hmac
+        message: The HMAC supplied is incorrect. The email has been tampered with.
     OAuthTokenEndpointInvalidGrantErrorResponseDto:
       value:
         error: invalid_grant
