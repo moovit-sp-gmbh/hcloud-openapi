@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2439
+  version: 0.0.107-2443
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -12028,6 +12028,7 @@ components:
           payload:
             type: JSON
             data: eyJmb28iOiJiYXIifQ==
+          accountName: local-agent
           createDate: 1721136751035
     High5ExecutionLogDto:
       properties:
@@ -12048,6 +12049,9 @@ components:
         payload:
           $ref: '#/components/schemas/High5ExecutionPayload'
           description: Payload of the execution
+        accountName:
+          type: string
+          description: Name of the account that initiated the execution
         createDate:
           type: number
           description: Date of creation of the log
@@ -12056,6 +12060,7 @@ components:
         - streamId
         - high5ExecutionId
         - nodeResults
+        - accountName
         - createDate
       example:
         _id: 6479b0630053275a1742e233
@@ -12098,6 +12103,7 @@ components:
         payload:
           type: JSON
           data: eyJmb28iOiJiYXIifQ==
+        accountName: local-agent
         createDate: 1721136751035
     High5ExecutionOutcome:
       enum:
