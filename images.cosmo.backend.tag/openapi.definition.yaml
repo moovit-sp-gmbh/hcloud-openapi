@@ -13696,6 +13696,22 @@ paths:
           name: recursive
           in: query
         - schema:
+            anyOf:
+              - type: string
+                enum:
+                  - ''
+              - type: string
+                enum:
+                  - 'true'
+              - type: string
+                enum:
+                  - 'false'
+            default: 'false'
+            description: Include assets in trashbin. Defaults to false.
+          required: false
+          name: includeTrash
+          in: query
+        - schema:
             type: string
             minLength: 1
             maxLength: 32
@@ -13884,9 +13900,9 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'query' parameter 'limit' | Failed to validate 'query' parameter
             'page' | Failed to validate 'query' parameter 'recursive' | Failed
-            to validate 'query' parameter 'spaceName' | Failed to validate
-            'query' parameter 'namespace' | Failed to validate 'query' parameter
-            'parentId'
+            to validate 'query' parameter 'includeTrash' | Failed to validate
+            'query' parameter 'spaceName' | Failed to validate 'query' parameter
+            'namespace' | Failed to validate 'query' parameter 'parentId'
           content:
             application/json:
               schema:
@@ -13920,6 +13936,17 @@ paths:
                     code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'recursive' - {error}
+                Failed to validate 'query' parameter 'includeTrash':
+                  summary: Failed to validate 'query' parameter 'includeTrash'
+                  description: >-
+                    Failed to validate 'query' parameter 'includeTrash' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'includeTrash' -
+                      {error}
                 Failed to validate 'query' parameter 'spaceName':
                   summary: Failed to validate 'query' parameter 'spaceName'
                   description: Failed to validate 'query' parameter 'spaceName' - {error}
