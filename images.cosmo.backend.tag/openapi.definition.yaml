@@ -1462,7 +1462,6 @@ components:
         - duration
         - tcIn
         - tcOut
-        - noOfFrames
         - formatLongName
       description: Video metadata
     AssetDetailedDto:
