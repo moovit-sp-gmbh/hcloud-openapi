@@ -1238,6 +1238,38 @@ components:
             - none
       required:
         - status
+    TagCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 20
+          pattern: ^[a-zA-Z0-9 ]{1,20}$
+          description: Name for the tag
+          example: my tag
+        color:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$
+          description: Color for the tag
+          example: '#4A90E2'
+      required:
+        - name
+        - color
+    TagUpdateDto:
+      type: object
+      properties:
+        color:
+          type: string
+          minLength: 7
+          maxLength: 7
+          pattern: ^#([a-fA-F0-9]{3}|[a-fA-F0-9]{6})$
+          description: Color for the tag
+          example: '#4A90E2'
+      required:
+        - color
     ReducedUser:
       type: object
       properties:
@@ -1321,6 +1353,7 @@ components:
             - PROJECT
             - FOLDER
             - COMMENT
+            - TAG
           description: Item type
       required:
         - _id
@@ -1485,6 +1518,7 @@ components:
             - PROJECT
             - FOLDER
             - COMMENT
+            - TAG
           description: Item type
         extension:
           type: string
@@ -1547,6 +1581,21 @@ components:
           example: 1747142773233
         creator:
           $ref: '#/components/schemas/ReducedUser'
+        tag:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the tag associated with the asset
+              example: Needs Review
+            color:
+              type: string
+              description: Color of the tag associated with the asset
+              example: '#4A90E2'
+          required:
+            - name
+            - color
+          description: Tag associated with the asset
         upload:
           type: object
           properties:
@@ -2052,6 +2101,26 @@ components:
         - createDate
         - items
       description: Extended share object that includes a more detailed permissions object.
+    TagDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: ID of the tag
+          example: 641fa07a-2812-4d07-8de7-cd20daade955
+        name:
+          type: string
+          description: Name of the tag
+          example: My Tag
+        color:
+          type: string
+          description: Color of the tag in HEX format
+          example: '#ff0000'
+      required:
+        - _id
+        - name
+        - color
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
@@ -3447,6 +3516,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -3509,6 +3579,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -3757,6 +3842,7 @@ paths:
                         - PROJECT
                         - FOLDER
                         - COMMENT
+                        - TAG
                       description: Item type
                     extension:
                       type: string
@@ -3819,6 +3905,21 @@ paths:
                       example: 1747142773233
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
+                    tag:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tag associated with the asset
+                          example: Needs Review
+                        color:
+                          type: string
+                          description: Color of the tag associated with the asset
+                          example: '#4A90E2'
+                      required:
+                        - name
+                        - color
+                      description: Tag associated with the asset
                     upload:
                       type: object
                       properties:
@@ -4058,6 +4159,7 @@ paths:
                         - PROJECT
                         - FOLDER
                         - COMMENT
+                        - TAG
                       description: Item type
                     extension:
                       type: string
@@ -4120,6 +4222,21 @@ paths:
                       example: 1747142773233
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
+                    tag:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tag associated with the asset
+                          example: Needs Review
+                        color:
+                          type: string
+                          description: Color of the tag associated with the asset
+                          example: '#4A90E2'
+                      required:
+                        - name
+                        - color
+                      description: Tag associated with the asset
                     upload:
                       type: object
                       properties:
@@ -4425,6 +4542,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -4487,6 +4605,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -4735,6 +4868,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -4797,6 +4931,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -5022,6 +5171,7 @@ paths:
                         - PROJECT
                         - FOLDER
                         - COMMENT
+                        - TAG
                       description: Item type
                     extension:
                       type: string
@@ -5084,6 +5234,21 @@ paths:
                       example: 1747142773233
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
+                    tag:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tag associated with the asset
+                          example: Needs Review
+                        color:
+                          type: string
+                          description: Color of the tag associated with the asset
+                          example: '#4A90E2'
+                      required:
+                        - name
+                        - color
+                      description: Tag associated with the asset
                     upload:
                       type: object
                       properties:
@@ -5513,6 +5678,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -5575,6 +5741,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -6346,6 +6527,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -6408,6 +6590,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -6557,6 +6754,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -6619,6 +6817,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -7020,6 +7233,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -7082,6 +7296,631 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
+                required:
+                  - _id
+                  - name
+                  - type
+                  - createDate
+                  - modifyDate
+                  - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/tags/{tagName}:
+    patch:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Add a tag to an asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Asset ID
+          required: true
+          name: assetId
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+            pattern: ^[a-zA-Z0-9 ]{1,20}$
+            description: Tag name
+          required: true
+          name: tagName
+          in: path
+      responses:
+        '200':
+          description: Asset with added tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: Asset ID
+                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
+                  name:
+                    type: string
+                    description: Asset Name
+                    example: myasset.mov
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                      - COMMENT
+                      - TAG
+                    description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                      - FOLDER
+                    description: Asset Type
+                    example: VIDEO
+                  breadcrumb:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemDto'
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
+                  previewUrl:
+                    type: string
+                    format: uri
+                    description: URL of the preview
+                    example: https://example.com/preview.jpg
+                  createDate:
+                    type: number
+                    minimum: 0
+                    description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  creator:
+                    $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
+                  upload:
+                    type: object
+                    properties:
+                      url:
+                        type: string
+                        format: uri
+                      token:
+                        type: string
+                      expiration:
+                        type: number
+                      libraryId:
+                        type: number
+                      videoId:
+                        type: string
+                    required:
+                      - url
+                      - token
+                      - expiration
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        status:
+                          type: string
+                      required:
+                        - status
+                    description: Information about the asset across namespaces.
+                    example: *ref_1
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                    description: Allowed operations on the asset
+                    example: *ref_2
+                required:
+                  - _id
+                  - name
+                  - type
+                  - createDate
+                  - modifyDate
+                  - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId' | Failed to validate 'path' parameter 'tagName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+                Failed to validate 'path' parameter 'tagName':
+                  summary: Failed to validate 'path' parameter 'tagName'
+                  description: Failed to validate 'path' parameter 'tagName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'tagName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Asset not found |
+            Tag not found in the namespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+                Tag not found in the namespace:
+                  summary: Tag not found in the namespace
+                  value:
+                    code: 011.047.0003
+                    error: tag.not.found
+                    message: Tag not found in the namespace
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/tags:
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Remove a tag from an asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Asset ID
+          required: true
+          name: assetId
+          in: path
+      responses:
+        '200':
+          description: Asset with removed tag
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: Asset ID
+                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
+                  name:
+                    type: string
+                    description: Asset Name
+                    example: myasset.mov
+                  type:
+                    type: string
+                    enum:
+                      - ASSET
+                      - SPACE
+                      - PRODUCTION
+                      - PROJECT
+                      - FOLDER
+                      - COMMENT
+                      - TAG
+                    description: Item type
+                  extension:
+                    type: string
+                    description: Asset extension
+                    example: .mov
+                  assetType:
+                    type: string
+                    enum:
+                      - VIDEO
+                      - IMAGE
+                      - DOCUMENT
+                      - UNKNOWN
+                      - FOLDER
+                    description: Asset Type
+                    example: VIDEO
+                  breadcrumb:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ItemDto'
+                  duration:
+                    type: number
+                    description: Duration of the video if the asset is a video asset
+                    example: 29.56
+                  frameRate:
+                    type: number
+                    description: Frame rate of the video if the asset is a video asset
+                    example: 25
+                  thumbnailUrl:
+                    type: string
+                    format: uri
+                    description: URL of the thumbnail
+                    example: https://example.com/thumbnail.jpg
+                  previewUrl:
+                    type: string
+                    format: uri
+                    description: URL of the preview
+                    example: https://example.com/preview.jpg
+                  createDate:
+                    type: number
+                    minimum: 0
+                    description: Date of creation
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    description: Date of last change
+                    format: UNIX timestamp
+                    example: 1747142773233
+                  creator:
+                    $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -7469,6 +8308,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -7531,6 +8371,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -8969,6 +9824,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -9031,6 +9887,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -12008,6 +12879,7 @@ paths:
                         - PROJECT
                         - FOLDER
                         - COMMENT
+                        - TAG
                       description: Item type
                     extension:
                       type: string
@@ -12070,6 +12942,21 @@ paths:
                       example: 1747142773233
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
+                    tag:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tag associated with the asset
+                          example: Needs Review
+                        color:
+                          type: string
+                          description: Color of the tag associated with the asset
+                          example: '#4A90E2'
+                      required:
+                        - name
+                        - color
+                      description: Tag associated with the asset
                     upload:
                       type: object
                       properties:
@@ -13790,6 +14677,7 @@ paths:
                       - PROJECT
                       - FOLDER
                       - COMMENT
+                      - TAG
                     description: Item type
                   extension:
                     type: string
@@ -13852,6 +14740,21 @@ paths:
                     example: 1747142773233
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
+                  tag:
+                    type: object
+                    properties:
+                      name:
+                        type: string
+                        description: Name of the tag associated with the asset
+                        example: Needs Review
+                      color:
+                        type: string
+                        description: Color of the tag associated with the asset
+                        example: '#4A90E2'
+                    required:
+                      - name
+                      - color
+                    description: Tag associated with the asset
                   upload:
                     type: object
                     properties:
@@ -14117,6 +15020,837 @@ paths:
                     code: 011.010.0001
                     error: space.not.found
                     message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/tags:
+    post:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Create a tag
+      tags:
+        - Tag
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagCreateDto'
+      responses:
+        '201':
+          description: Created tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Maximum number of tags reached for namespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Maximum number of tags reached for namespace:
+                  summary: Maximum number of tags reached for namespace
+                  value:
+                    code: 011.047.0001
+                    error: tag.max.count.reached
+                    message: Maximum number of tags reached for namespace
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least ADMIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '409':
+          description: Tag already exists in the namespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Tag already exists in the namespace:
+                  summary: Tag already exists in the namespace
+                  value:
+                    code: 011.047.0002
+                    error: tag.exists
+                    message: Tag already exists in the namespace
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    get:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: List all tags of a namespace
+      tags:
+        - Tag
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+      responses:
+        '200':
+          description: List of tags
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/TagDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/tags/{tagName}:
+    patch:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Update a tag
+      tags:
+        - Tag
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+            pattern: ^[a-zA-Z0-9 ]{1,20}$
+            description: Tag name
+          required: true
+          name: tagName
+          in: path
+      responses:
+        '200':
+          description: Updated tag
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TagDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'path' parameter 'tagName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'path' parameter 'tagName':
+                  summary: Failed to validate 'path' parameter 'tagName'
+                  description: Failed to validate 'path' parameter 'tagName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'tagName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least ADMIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '409':
+          description: Tag already exists in the namespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Tag already exists in the namespace:
+                  summary: Tag already exists in the namespace
+                  value:
+                    code: 011.047.0002
+                    error: tag.exists
+                    message: Tag already exists in the namespace
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Delete a tag
+      tags:
+        - Tag
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 20
+            pattern: ^[a-zA-Z0-9 ]{1,20}$
+            description: Tag name
+          required: true
+          name: tagName
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'path' parameter 'tagName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'path' parameter 'tagName':
+                  summary: Failed to validate 'path' parameter 'tagName'
+                  description: Failed to validate 'path' parameter 'tagName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'tagName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least ADMIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '409':
+          description: Tag already exists in the namespace
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Tag already exists in the namespace:
+                  summary: Tag already exists in the namespace
+                  value:
+                    code: 011.047.0002
+                    error: tag.exists
+                    message: Tag already exists in the namespace
         '500':
           description: something went wrong
           content:
