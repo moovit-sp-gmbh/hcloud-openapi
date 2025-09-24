@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2367
+  version: 0.0.143-2368
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8991,6 +8991,9 @@ components:
         serviceAccount:
           type: boolean
           description: Is service account
+        isGuest:
+          type: boolean
+          description: Boolean flag indicating if this is a guest account
       required:
         - _id
         - email
@@ -9009,6 +9012,7 @@ components:
         executionTarget: false
         lastActive: 1666361487534
         serviceAccount: false
+        isGuest: false
     OrganizationMemberInvitationDto:
       properties:
         _id:
@@ -9695,6 +9699,9 @@ components:
         avatarUrl:
           type: string
           description: Avatar URL of the user
+        isGuest:
+          type: boolean
+          description: Boolean flag indicating if this a guest account
       required:
         - _id
         - email
@@ -9705,6 +9712,7 @@ components:
         email: hmc@helmut.cloud
         name: Helmut Mc Cloud
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        isGuest: false
     TeamPatchDto:
       properties:
         name:
@@ -9879,6 +9887,9 @@ components:
         isAgent:
           type: boolean
           description: Boolean flag marking the user as an agent
+        isGuest:
+          type: boolean
+          description: Boolean flag marking the user as a guest
         lastActive:
           type: number
           description: Time of the last activity of the user
@@ -9902,6 +9913,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        isGuest: false
         lastActive: 1666361487534
     UserLoginDto:
       properties:
@@ -10113,6 +10125,9 @@ components:
         isAgent:
           type: boolean
           description: Boolean flag marking the user as an agent
+        isGuest:
+          type: boolean
+          description: Boolean flag indicating if this is a guest account
         lastActive:
           type: number
           description: Time of the last activity of the user
@@ -10138,6 +10153,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        isGuest: false
         lastActive: 1666361487534
     UsersEmailDto:
       properties:
