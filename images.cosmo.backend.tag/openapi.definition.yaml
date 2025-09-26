@@ -74,21 +74,24 @@ components:
             items:
               type: string
               enum:
-                - READ
-                - WRITE
-                - CREATE
-                - COMMENT
-                - CONTRIBUTE
-                - DOWNLOAD
-                - DELETE
-                - READ_DETAILS
+                - VIEW_ASSETS
+                - VIEW_ASSET_DETAILS
+                - VIEW_ASSET_ACTIVITY
+                - DOWNLOAD_ASSETS
+                - CREATE_ASSETS
+                - UPDATE_ASSETS
+                - DELETE_ASSETS
+                - COPY_ASSETS
+                - MOVE_ASSETS
+                - RENAME_ASSETS
+                - SHARE_ASSETS
           description: >-
             Map of asset ID to the desired permissions that the share members
-            will have relative to it. All shared assets have baseline READ
-            permission,
+            will have relative to it. All shared assets have baseline
+            VIEW_ASSETS permission,
           example:
             ae13321a-522d-48da-9733-27c97bcab124:
-              - READ
+              - VIEW_ASSETS
         namespaces:
           type: object
           additionalProperties:
@@ -96,9 +99,18 @@ components:
             items:
               type: string
               enum:
-                - READ_COMMENTS
-                - WRITE_COMMENTS
-                - READ_STATUS
+                - VIEW_NAMESPACES
+                - EDIT_NAMESPACES
+                - CREATE_NAMESPACES
+                - DELETE_NAMESPACES
+                - VIEW_ASSET_TAGS
+                - WRITE_ASSET_TAGS
+                - VIEW_ASSET_STATUS
+                - WRITE_ASSET_STATUS
+                - VIEW_ASSET_COMMENTS
+                - CREATE_ASSET_COMMENTS
+                - EDIT_ASSET_COMMENTS
+                - DELETE_ASSET_COMMENTS
             minItems: 1
           description: >-
             Namespaces to include in the share. Share consumers will only able
@@ -106,7 +118,7 @@ components:
             permissions set in this map.
           example:
             rush:
-              - READ_STATUS
+              - VIEW_ASSET_STATUS
         users:
           type: array
           items:
@@ -165,14 +177,11 @@ components:
                 items:
                   type: string
                   enum:
-                    - READ
-                    - WRITE
-                    - CREATE
-                    - COMMENT
-                    - CONTRIBUTE
-                    - DOWNLOAD
-                    - DELETE
-                    - READ_DETAILS
+                    - VIEW_SHARES
+                    - EDIT_SHARES
+                    - DELETE_SHARES
+                    - ADD_USERS_TO_SHARES
+                    - REMOVE_USERS_FROM_SHARES
               - nullable: true
               - nullable: true
           description: >-
@@ -182,7 +191,7 @@ components:
             completely remove the previous ones.
           example:
             ae13321a-522d-48da-9733-27c97bcab124:
-              - READ
+              - VIEW_ASSETS
             aba19fb6-c776-41e0-a7ca-7c0f532af436: null
         namespaces:
           type: object
@@ -192,9 +201,18 @@ components:
                 items:
                   type: string
                   enum:
-                    - READ_COMMENTS
-                    - WRITE_COMMENTS
-                    - READ_STATUS
+                    - VIEW_NAMESPACES
+                    - EDIT_NAMESPACES
+                    - CREATE_NAMESPACES
+                    - DELETE_NAMESPACES
+                    - VIEW_ASSET_TAGS
+                    - WRITE_ASSET_TAGS
+                    - VIEW_ASSET_STATUS
+                    - WRITE_ASSET_STATUS
+                    - VIEW_ASSET_COMMENTS
+                    - CREATE_ASSET_COMMENTS
+                    - EDIT_ASSET_COMMENTS
+                    - DELETE_ASSET_COMMENTS
                 minItems: 1
               - nullable: true
               - nullable: true
@@ -205,7 +223,7 @@ components:
             namespace, use the null value.
           example:
             rush:
-              - READ_STATUS
+              - VIEW_ASSET_STATUS
       description: Object used to patch shares
     SpaceCreateDto:
       type: object
@@ -1270,6 +1288,164 @@ components:
           example: '#4A90E2'
       required:
         - color
+    CreateRoleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: Name of the role
+          example: Reviewer
+        permissions:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              enum:
+                - VIEW_SPACE
+                - VIEW_MEMBERS
+                - UPDATE_MEMBERS
+                - VIEW_TRASHBIN
+                - RECOVER_TRASHBIN
+                - EMPTY_TRASHBIN
+                - VIEW_ROLES
+                - CREATE_ROLES
+                - EDIT_ROLES
+                - DELETE_ROLES
+                - ASSIGN_USER_ROLES
+                - UPDATE_SPACE_AVATAR
+                - UPDATE_SPACE_NAME
+                - DELETE_SPACE
+                - CONNECT_HIGH5_SPACE
+                - VIEW_ASSETS
+                - VIEW_ASSET_DETAILS
+                - VIEW_ASSET_ACTIVITY
+                - DOWNLOAD_ASSETS
+                - CREATE_ASSETS
+                - UPDATE_ASSETS
+                - DELETE_ASSETS
+                - COPY_ASSETS
+                - MOVE_ASSETS
+                - RENAME_ASSETS
+                - SHARE_ASSETS
+                - VIEW_NAMESPACES
+                - EDIT_NAMESPACES
+                - CREATE_NAMESPACES
+                - DELETE_NAMESPACES
+                - VIEW_ASSET_TAGS
+                - WRITE_ASSET_TAGS
+                - VIEW_ASSET_STATUS
+                - WRITE_ASSET_STATUS
+                - VIEW_ASSET_COMMENTS
+                - CREATE_ASSET_COMMENTS
+                - EDIT_ASSET_COMMENTS
+                - DELETE_ASSET_COMMENTS
+                - VIEW_MENTIONS
+                - VIEW_SHARES
+                - EDIT_SHARES
+                - DELETE_SHARES
+                - ADD_USERS_TO_SHARES
+                - REMOVE_USERS_FROM_SHARES
+            minItems: 1
+            description: Permissions to assign
+            example:
+              - VIEW_ASSETS
+      required:
+        - name
+        - permissions
+    PutRoleDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 64
+          description: Name of the role
+          example: Reviewer
+        permissions:
+          type: object
+          additionalProperties:
+            type: array
+            items:
+              type: string
+              enum:
+                - VIEW_SPACE
+                - VIEW_MEMBERS
+                - UPDATE_MEMBERS
+                - VIEW_TRASHBIN
+                - RECOVER_TRASHBIN
+                - EMPTY_TRASHBIN
+                - VIEW_ROLES
+                - CREATE_ROLES
+                - EDIT_ROLES
+                - DELETE_ROLES
+                - ASSIGN_USER_ROLES
+                - UPDATE_SPACE_AVATAR
+                - UPDATE_SPACE_NAME
+                - DELETE_SPACE
+                - CONNECT_HIGH5_SPACE
+                - VIEW_ASSETS
+                - VIEW_ASSET_DETAILS
+                - VIEW_ASSET_ACTIVITY
+                - DOWNLOAD_ASSETS
+                - CREATE_ASSETS
+                - UPDATE_ASSETS
+                - DELETE_ASSETS
+                - COPY_ASSETS
+                - MOVE_ASSETS
+                - RENAME_ASSETS
+                - SHARE_ASSETS
+                - VIEW_NAMESPACES
+                - EDIT_NAMESPACES
+                - CREATE_NAMESPACES
+                - DELETE_NAMESPACES
+                - VIEW_ASSET_TAGS
+                - WRITE_ASSET_TAGS
+                - VIEW_ASSET_STATUS
+                - WRITE_ASSET_STATUS
+                - VIEW_ASSET_COMMENTS
+                - CREATE_ASSET_COMMENTS
+                - EDIT_ASSET_COMMENTS
+                - DELETE_ASSET_COMMENTS
+                - VIEW_MENTIONS
+                - VIEW_SHARES
+                - EDIT_SHARES
+                - DELETE_SHARES
+                - ADD_USERS_TO_SHARES
+                - REMOVE_USERS_FROM_SHARES
+            minItems: 1
+            description: Permissions to assign
+            example:
+              - VIEW_ASSETS
+      required:
+        - name
+        - permissions
+    PutUserRoleDto:
+      type: object
+      properties:
+        userId:
+          type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+          description: ID of the user
+          example: 67336a3f31ed8ecdc24e0080
+      required:
+        - userId
+    PutTeamRoleDto:
+      type: object
+      properties:
+        teamName:
+          type: string
+          minLength: 3
+          maxLength: 64
+          pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+          description: Name of the team
+          example: My team
+      required:
+        - teamName
     ReducedUser:
       type: object
       properties:
@@ -1624,7 +1800,7 @@ components:
             required:
               - status
           description: Information about the asset across namespaces.
-          example: &ref_1
+          example: &ref_2
             rush:
               status: approved
         permissions:
@@ -1632,7 +1808,7 @@ components:
           items:
             type: string
           description: Allowed operations on the asset
-          example: &ref_2
+          example: &ref_3
             - CAN_READ
         media:
           type: array
@@ -1710,17 +1886,20 @@ components:
         items:
           type: string
           enum:
-            - READ
-            - WRITE
-            - CREATE
-            - COMMENT
-            - CONTRIBUTE
-            - DOWNLOAD
-            - DELETE
-            - READ_DETAILS
+            - VIEW_ASSETS
+            - VIEW_ASSET_DETAILS
+            - VIEW_ASSET_ACTIVITY
+            - DOWNLOAD_ASSETS
+            - CREATE_ASSETS
+            - UPDATE_ASSETS
+            - DELETE_ASSETS
+            - COPY_ASSETS
+            - MOVE_ASSETS
+            - RENAME_ASSETS
+            - SHARE_ASSETS
       example:
         37fd2155-98f7-4154-b2ed-a43715937f6a:
-          - READ
+          - VIEW_ASSETS
     LocationDto:
       type: object
       properties:
@@ -1890,6 +2069,18 @@ components:
           items:
             $ref: '#/components/schemas/ReducedUser'
           description: Array of mentioned users
+        commentType:
+          type: string
+          enum:
+            - COMMENT
+            - REPLY
+          description: Type of the comment
+          example: COMMENT
+        assetId:
+          type: string
+          format: uuid
+          description: ID of the asset the comment refers to
+          example: 254b0fb5-7567-47a8-b655-d09a40c91b2f
         replies:
           type: array
           items:
@@ -1904,17 +2095,35 @@ components:
                 type: number
               creator:
                 $ref: '#/components/schemas/ReducedUser'
+              commentType:
+                type: string
+                enum:
+                  - COMMENT
+                  - REPLY
+                description: Type of the comment
+                example: REPLY
+              commentRef:
+                type: string
+                format: uuid
+              assetId:
+                type: string
+                format: uuid
             required:
               - _id
               - text
               - createDate
               - creator
+              - commentType
+              - commentRef
+              - assetId
           description: Replies to this comment
       required:
         - _id
         - text
         - createDate
         - creator
+        - commentType
+        - assetId
     CommentCreateDto:
       type: object
       properties:
@@ -2115,12 +2324,51 @@ components:
           example: My Tag
         color:
           type: string
+          format: hex
           description: Color of the tag in HEX format
           example: '#ff0000'
       required:
         - _id
         - name
         - color
+    PermissionsDto:
+      type: object
+      properties:
+        space: &ref_1
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              description:
+                type: string
+            required:
+              - description
+        namespace: *ref_1
+        asset: *ref_1
+        share: *ref_1
+        user: *ref_1
+      description: Map of all the permissions available in the Cosmo service
+    ReducedTeam:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hex
+          description: Team ID
+          example: 67336a3f31ed8ecdc24e0080
+        name:
+          type: string
+          description: Team Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the team's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
@@ -3622,13 +3870,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -3948,13 +4196,13 @@ paths:
                         required:
                           - status
                       description: Information about the asset across namespaces.
-                      example: *ref_1
+                      example: *ref_2
                     permissions:
                       type: array
                       items:
                         type: string
                       description: Allowed operations on the asset
-                      example: *ref_2
+                      example: *ref_3
                   required:
                     - _id
                     - name
@@ -4265,13 +4513,13 @@ paths:
                         required:
                           - status
                       description: Information about the asset across namespaces.
-                      example: *ref_1
+                      example: *ref_2
                     permissions:
                       type: array
                       items:
                         type: string
                       description: Allowed operations on the asset
-                      example: *ref_2
+                      example: *ref_3
                   required:
                     - _id
                     - name
@@ -4648,13 +4896,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -4974,13 +5222,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -5277,13 +5525,13 @@ paths:
                         required:
                           - status
                       description: Information about the asset across namespaces.
-                      example: *ref_1
+                      example: *ref_2
                     permissions:
                       type: array
                       items:
                         type: string
                       description: Allowed operations on the asset
-                      example: *ref_2
+                      example: *ref_3
                   required:
                     - _id
                     - name
@@ -5784,13 +6032,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -6633,13 +6881,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -6860,13 +7108,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -7339,13 +7587,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -7552,6 +7800,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -7641,13 +7900,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -7860,6 +8119,17 @@ paths:
                     type: string
                     description: Asset extension
                     example: .mov
+                  status:
+                    type: string
+                    enum:
+                      - UPLOADING
+                      - UPLOADED
+                      - PROCESSING
+                      - FINISHED
+                      - WAITING
+                      - FAILED
+                    description: Upload status of the asset
+                    example: FINISHED
                   assetType:
                     type: string
                     enum:
@@ -7949,13 +8219,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -8414,13 +8684,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -9930,13 +10200,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                   reference:
                     type: object
                     properties:
@@ -11740,22 +12010,25 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum:
-                          - READ
-                          - WRITE
-                          - CREATE
-                          - COMMENT
-                          - CONTRIBUTE
-                          - DOWNLOAD
-                          - DELETE
-                          - READ_DETAILS
+                        enum: &ref_4
+                          - VIEW_ASSETS
+                          - VIEW_ASSET_DETAILS
+                          - VIEW_ASSET_ACTIVITY
+                          - DOWNLOAD_ASSETS
+                          - CREATE_ASSETS
+                          - UPDATE_ASSETS
+                          - DELETE_ASSETS
+                          - COPY_ASSETS
+                          - MOVE_ASSETS
+                          - RENAME_ASSETS
+                          - SHARE_ASSETS
                     description: >-
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: &ref_3
+                    example: &ref_5
                       ae13321a-522d-48da-9733-27c97bcab124:
-                        - READ
+                        - VIEW_ASSETS
                   users:
                     type: array
                     items:
@@ -11999,20 +12272,12 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum:
-                          - READ
-                          - WRITE
-                          - CREATE
-                          - COMMENT
-                          - CONTRIBUTE
-                          - DOWNLOAD
-                          - DELETE
-                          - READ_DETAILS
+                        enum: *ref_4
                     description: >-
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_3
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -12248,20 +12513,12 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum:
-                          - READ
-                          - WRITE
-                          - CREATE
-                          - COMMENT
-                          - CONTRIBUTE
-                          - DOWNLOAD
-                          - DELETE
-                          - READ_DETAILS
+                        enum: *ref_4
                     description: >-
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_3
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -12985,13 +13242,13 @@ paths:
                         required:
                           - status
                       description: Information about the asset across namespaces.
-                      example: *ref_1
+                      example: *ref_2
                     permissions:
                       type: array
                       items:
                         type: string
                       description: Allowed operations on the asset
-                      example: *ref_2
+                      example: *ref_3
                   required:
                     - _id
                     - name
@@ -13274,6 +13531,7 @@ paths:
                         - PROJECT
                         - FOLDER
                         - COMMENT
+                        - TAG
                       description: Item type
                     extension:
                       type: string
@@ -13336,6 +13594,21 @@ paths:
                       example: 1747142773233
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
+                    tag:
+                      type: object
+                      properties:
+                        name:
+                          type: string
+                          description: Name of the tag associated with the asset
+                          example: Needs Review
+                        color:
+                          type: string
+                          description: Color of the tag associated with the asset
+                          example: '#4A90E2'
+                      required:
+                        - name
+                        - color
+                      description: Tag associated with the asset
                     upload:
                       type: object
                       properties:
@@ -13364,13 +13637,13 @@ paths:
                         required:
                           - status
                       description: Information about the asset across namespaces.
-                      example: *ref_1
+                      example: *ref_2
                     permissions:
                       type: array
                       items:
                         type: string
                       description: Allowed operations on the asset
-                      example: *ref_2
+                      example: *ref_3
                   required:
                     - _id
                     - name
@@ -13603,20 +13876,12 @@ paths:
                         type: array
                         items:
                           type: string
-                          enum:
-                            - READ
-                            - WRITE
-                            - CREATE
-                            - COMMENT
-                            - CONTRIBUTE
-                            - DOWNLOAD
-                            - DELETE
-                            - READ_DETAILS
+                          enum: *ref_4
                       description: >-
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_3
+                      example: *ref_5
                     users:
                       type: array
                       items:
@@ -13829,20 +14094,12 @@ paths:
                         type: array
                         items:
                           type: string
-                          enum:
-                            - READ
-                            - WRITE
-                            - CREATE
-                            - COMMENT
-                            - CONTRIBUTE
-                            - DOWNLOAD
-                            - DELETE
-                            - READ_DETAILS
+                          enum: *ref_4
                       description: >-
                         Map of asset ID to the desired permissions that the
                         share members will have relative to it. All shared
                         assets have baseline READ permission,
-                      example: *ref_3
+                      example: *ref_5
                     users:
                       type: array
                       items:
@@ -14350,20 +14607,12 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum:
-                          - READ
-                          - WRITE
-                          - CREATE
-                          - COMMENT
-                          - CONTRIBUTE
-                          - DOWNLOAD
-                          - DELETE
-                          - READ_DETAILS
+                        enum: *ref_4
                     description: >-
                       Map of asset ID to the desired permissions that the share
                       members will have relative to it. All shared assets have
                       baseline READ permission,
-                    example: *ref_3
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -14783,13 +15032,13 @@ paths:
                       required:
                         - status
                     description: Information about the asset across namespaces.
-                    example: *ref_1
+                    example: *ref_2
                   permissions:
                     type: array
                     items:
                       type: string
                     description: Allowed operations on the asset
-                    example: *ref_2
+                    example: *ref_3
                 required:
                   - _id
                   - name
@@ -15494,6 +15743,12 @@ paths:
           required: true
           name: tagName
           in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/TagUpdateDto'
       responses:
         '200':
           description: Updated tag
@@ -15851,6 +16106,1955 @@ paths:
                     code: 011.047.0002
                     error: tag.exists
                     message: Tag already exists in the namespace
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/permissions/discovery:
+    get:
+      summary: Obtain a list of possible permissions inside the Cosmo service
+      tags:
+        - Permissions
+      responses:
+        '200':
+          description: Possible permissions
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PermissionsDto'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles:
+    post:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Create a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CreateRoleDto'
+      responses:
+        '201':
+          description: Created role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: Id of the role
+                    example: ccbdb9de-714a-456d-9484-282678b447c5
+                  name:
+                    type: string
+                    description: Name of the role
+                    example: Reviewer
+                  createDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Creation date of the role
+                    example: 1757925900126
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Last modification date of the role
+                    example: 1757925900126
+                  creator:
+                    allOf:
+                      - $ref: '#/components/schemas/ReducedUser'
+                      - description: Creator of the role
+                required:
+                  - _id
+                  - name
+                  - createDate
+                  - modifyDate
+                  - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | A permission was assigned to an
+            entity that does not match the permission category. {{name}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                A permission was assigned to an entity that does not match the permission category. {{name}:
+                  summary: >-
+                    A permission was assigned to an entity that does not match
+                    the permission category. {{name}
+                  description: >-
+                    A permission was assigned to an entity that does not match
+                    the permission category. {{name}}: {{incoming}} assigned to
+                    {{actual}}
+                  value:
+                    code: 011.048.0002
+                    error: permission.category.mismatch
+                    message: >-
+                      A permission was assigned to an entity that does not match
+                      the permission category. {{name}}: {{incoming}} assigned
+                      to {{actual}}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 011.037.0001
+                    error: item.not.found
+                    message: Item not found
+        '409':
+          description: A role with the same name already exists in the space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                A role with the same name already exists in the space:
+                  summary: A role with the same name already exists in the space
+                  value:
+                    code: 011.048.0001
+                    error: role.already.exists
+                    message: A role with the same name already exists in the space
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/search:
+    post:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Search custom roles
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+      responses:
+        '200':
+          description: List of roles that match the search filter criteria
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    _id:
+                      type: string
+                      format: uuid
+                      description: Id of the role
+                      example: ccbdb9de-714a-456d-9484-282678b447c5
+                    name:
+                      type: string
+                      description: Name of the role
+                      example: Reviewer
+                    createDate:
+                      type: number
+                      minimum: 0
+                      exclusiveMinimum: true
+                      description: Creation date of the role
+                      example: 1757925900126
+                    modifyDate:
+                      type: number
+                      minimum: 0
+                      exclusiveMinimum: true
+                      description: Last modification date of the role
+                      example: 1757925900126
+                    creator:
+                      allOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - description: Creator of the role
+                  required:
+                    - _id
+                    - name
+                    - createDate
+                    - modifyDate
+                    - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'query' parameter
+            'limit' | Failed to validate 'query' parameter 'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/{roleId}:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Update a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutRoleDto'
+      responses:
+        '200':
+          description: Updated role
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: Id of the role
+                    example: ccbdb9de-714a-456d-9484-282678b447c5
+                  name:
+                    type: string
+                    description: Name of the role
+                    example: Reviewer
+                  createDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Creation date of the role
+                    example: 1757925900126
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Last modification date of the role
+                    example: 1757925900126
+                  creator:
+                    allOf:
+                      - $ref: '#/components/schemas/ReducedUser'
+                      - description: Creator of the role
+                required:
+                  - _id
+                  - name
+                  - createDate
+                  - modifyDate
+                  - creator
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId' | A permission was assigned to an entity that does not
+            match the permission category. {{name}
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+                A permission was assigned to an entity that does not match the permission category. {{name}:
+                  summary: >-
+                    A permission was assigned to an entity that does not match
+                    the permission category. {{name}
+                  description: >-
+                    A permission was assigned to an entity that does not match
+                    the permission category. {{name}}: {{incoming}} assigned to
+                    {{actual}}
+                  value:
+                    code: 011.048.0002
+                    error: permission.category.mismatch
+                    message: >-
+                      A permission was assigned to an entity that does not match
+                      the permission category. {{name}}: {{incoming}} assigned
+                      to {{actual}}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Role not found |
+            Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 011.037.0001
+                    error: item.not.found
+                    message: Item not found
+        '409':
+          description: A role with the same name already exists in the space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                A role with the same name already exists in the space:
+                  summary: A role with the same name already exists in the space
+                  value:
+                    code: 011.048.0001
+                    error: role.already.exists
+                    message: A role with the same name already exists in the space
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    get:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Fetch a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+      responses:
+        '200':
+          description: Detailed custom role object
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: Id of the role
+                    example: ccbdb9de-714a-456d-9484-282678b447c5
+                  name:
+                    type: string
+                    description: Name of the role
+                    example: Reviewer
+                  createDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Creation date of the role
+                    example: 1757925900126
+                  modifyDate:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: Last modification date of the role
+                    example: 1757925900126
+                  creator:
+                    allOf:
+                      - $ref: '#/components/schemas/ReducedUser'
+                      - description: Creator of the role
+                  users:
+                    type: array
+                    items:
+                      oneOf:
+                        - allOf:
+                            - $ref: '#/components/schemas/ReducedUser'
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  enum:
+                                    - user
+                              required:
+                                - type
+                        - allOf:
+                            - $ref: '#/components/schemas/ReducedTeam'
+                            - type: object
+                              properties:
+                                type:
+                                  type: string
+                                  enum:
+                                    - team
+                              required:
+                                - type
+                  permissions:
+                    type: object
+                    additionalProperties:
+                      type: object
+                      properties:
+                        entity:
+                          type: object
+                          properties:
+                            type:
+                              type: string
+                            name:
+                              type: string
+                            _id:
+                              type: string
+                          required:
+                            - type
+                            - name
+                            - _id
+                        permissions:
+                          type: array
+                          items:
+                            type: string
+                            enum:
+                              - VIEW_SPACE
+                              - VIEW_MEMBERS
+                              - UPDATE_MEMBERS
+                              - VIEW_TRASHBIN
+                              - RECOVER_TRASHBIN
+                              - EMPTY_TRASHBIN
+                              - VIEW_ROLES
+                              - CREATE_ROLES
+                              - EDIT_ROLES
+                              - DELETE_ROLES
+                              - ASSIGN_USER_ROLES
+                              - UPDATE_SPACE_AVATAR
+                              - UPDATE_SPACE_NAME
+                              - DELETE_SPACE
+                              - CONNECT_HIGH5_SPACE
+                              - VIEW_ASSETS
+                              - VIEW_ASSET_DETAILS
+                              - VIEW_ASSET_ACTIVITY
+                              - DOWNLOAD_ASSETS
+                              - CREATE_ASSETS
+                              - UPDATE_ASSETS
+                              - DELETE_ASSETS
+                              - COPY_ASSETS
+                              - MOVE_ASSETS
+                              - RENAME_ASSETS
+                              - SHARE_ASSETS
+                              - VIEW_NAMESPACES
+                              - EDIT_NAMESPACES
+                              - CREATE_NAMESPACES
+                              - DELETE_NAMESPACES
+                              - VIEW_ASSET_TAGS
+                              - WRITE_ASSET_TAGS
+                              - VIEW_ASSET_STATUS
+                              - WRITE_ASSET_STATUS
+                              - VIEW_ASSET_COMMENTS
+                              - CREATE_ASSET_COMMENTS
+                              - EDIT_ASSET_COMMENTS
+                              - DELETE_ASSET_COMMENTS
+                              - VIEW_MENTIONS
+                              - VIEW_SHARES
+                              - EDIT_SHARES
+                              - DELETE_SHARES
+                              - ADD_USERS_TO_SHARES
+                              - REMOVE_USERS_FROM_SHARES
+                      required:
+                        - entity
+                        - permissions
+                required:
+                  - _id
+                  - name
+                  - createDate
+                  - modifyDate
+                  - creator
+                  - users
+                  - permissions
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:delete
+        - basicAuth:
+            - cosmo:space:delete
+        - patAuth:
+            - cosmo:space:delete
+      summary: Delete a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:delete'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:delete'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/{roleId}/user:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Assign a user to a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutUserRoleDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/{roleId}/user/{userId}:
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Unassign a user from a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+            description: User ID
+          required: true
+          name: userId
+          in: path
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId' | Failed to validate 'path' parameter 'userId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+                Failed to validate 'path' parameter 'userId':
+                  summary: Failed to validate 'path' parameter 'userId'
+                  description: Failed to validate 'path' parameter 'userId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'userId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/{roleId}/team:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Assign a team to a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PutTeamRoleDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Role not found |
+            Team does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
+                Team does not exist:
+                  summary: Team does not exist
+                  value:
+                    code: 011.008.0001
+                    error: team.not.found
+                    message: Team does not exist
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/roles/{roleId}/team/{teamName}:
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Unassign a team from a custom role
+      tags:
+        - Permissions
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: Role ID
+          required: true
+          name: roleId
+          in: path
+        - schema:
+            type: string
+            minLength: 3
+            maxLength: 64
+            pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Team Name
+          required: true
+          name: teamName
+          in: path
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'roleId' | Failed to validate 'path' parameter 'teamName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'roleId':
+                  summary: Failed to validate 'path' parameter 'roleId'
+                  description: Failed to validate 'path' parameter 'roleId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'roleId' - {error}
+                Failed to validate 'path' parameter 'teamName':
+                  summary: Failed to validate 'path' parameter 'teamName'
+                  description: Failed to validate 'path' parameter 'teamName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'teamName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Role not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Role not found:
+                  summary: Role not found
+                  value:
+                    code: 011.048.0003
+                    error: role.not.found
+                    message: Role not found
         '500':
           description: something went wrong
           content:
