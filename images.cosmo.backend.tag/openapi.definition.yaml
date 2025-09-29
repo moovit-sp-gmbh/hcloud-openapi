@@ -1091,9 +1091,6 @@ components:
           description: field filters
         sorting:
           $ref: '#/components/schemas/sorting'
-      required:
-        - filters
-        - sorting
     AssetRenameDto:
       type: object
       properties:
