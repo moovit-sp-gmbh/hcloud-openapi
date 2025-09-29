@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2368
+  version: 0.0.143-2372
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -441,7 +441,7 @@ paths:
         '200':
           description: '"no user" | "not guest" | "guest"'
           content:
-            text/plain:
+            application/json:
               schema:
                 type: string
         default:
