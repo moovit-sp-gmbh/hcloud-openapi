@@ -293,7 +293,7 @@ components:
           format: uuid
           description: Parent ID. If omitted, the asset will be placed at the root level.
           example: 24b9fe00-8cc2-4f15-bde7-72a8b2e3c7ef
-    BulkMoveAssetsDto:
+    BulkMoveCopyAssetsDto:
       type: object
       properties:
         assetIds:
@@ -313,6 +313,11 @@ components:
             ID of the target parent. If omitted, the assets will be placed at
             the root level.
           example: 24b9fe00-8cc2-4f15-bde7-72a8b2e3c7ef
+        copy:
+          type: boolean
+          default: false
+          description: Whether to copy the assets instead of moving them
+          example: false
       required:
         - assetIds
     AssetPatchDto:
@@ -5372,7 +5377,7 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-move:
+  /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-move-copy:
     put:
       security:
         - bearerAuth:
@@ -5381,7 +5386,7 @@ paths:
             - cosmo:space:write
         - patAuth:
             - cosmo:space:write
-      summary: Bulk move multiple assets
+      summary: Bulk move or copy multiple assets
       tags:
         - Asset
       parameters:
@@ -5413,10 +5418,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/BulkMoveAssetsDto'
+              $ref: '#/components/schemas/BulkMoveCopyAssetsDto'
       responses:
         '200':
-          description: List of moved assets
+          description: List of moved or copied assets
           content:
             application/json:
               schema:
