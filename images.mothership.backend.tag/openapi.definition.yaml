@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - Mothership
-  version: 0.0.1-250
+  version: 0.0.1-270
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -929,9 +929,9 @@ components:
         installerVersion:
           type: string
           description: Version of the agent installer
-        targetEmail:
-          type: string
-          description: Email address that can be used as a target for stream execution
+        target:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Account that can be used as a target for stream execution
       required:
         - _id
         - uuid
@@ -948,7 +948,7 @@ components:
         - status
         - createDate
         - modifyDate
-        - targetEmail
+        - target
       example:
         _id: 65562d052ed0590e5d580ca0
         uuid: dcf1c58a-0806-4f6d-9530-d4fe0d8672d3
@@ -968,7 +968,11 @@ components:
         status: IDLE
         createDate: 1697726857196
         modifyDate: 1697726857196
-        targetEmail: example@example.com
+        target:
+          _id: 71380bfafe4fbcd791493ef4
+          name: Account MSP
+          email: account@moovit-sp.com
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     AgentStatus:
       enum:
         - ONLINE
