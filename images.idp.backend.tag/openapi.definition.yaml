@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2372
+  version: 0.0.143-2373
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -7929,6 +7929,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1680251765050
         modifyDate: 1680251765050
     Entrypoint:
@@ -8037,6 +8038,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         lastUrl: /account
         lastView: /account
         timezone: Europe/Berlin
@@ -8361,6 +8363,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         to:
           _id: 73d25431614a64c2974c7152
           name: John Doe
@@ -8446,6 +8449,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         organizationInvitationEmail: true
         systemNotifications: false
         cosmoNotifications: false
@@ -8550,6 +8554,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         description: A test OAuthApp
         homepage: https://github.com/
@@ -8618,6 +8623,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         clientId: 30ed05e3-4065-4c2c-b537-e4c411854b6f
         description: A test OAuthApp
@@ -8674,6 +8680,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         description: A test OAuthApp
         homepage: https://github.com/
@@ -8956,6 +8963,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         company: Moovit SP
         isUserOrganization: false
         createDate: 1660922024145
@@ -9059,6 +9067,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         email: newuser@moovit-sp.com
         status: PENDING
         role: MEMBER
@@ -9164,6 +9173,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
     PatDtoWithToken:
       properties:
         _id:
@@ -9211,6 +9221,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
     PatRegenerateDto:
       properties:
         token:
@@ -9685,6 +9696,7 @@ components:
           name: Helmut Mc Cloud
           email: hmc@helmut.cloud
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
     TeamMemberDto:
       properties:
         _id:
@@ -10337,6 +10349,9 @@ components:
           type: string
           format: uri
           description: URL of the avatar of the user
+        isGuest:
+          type: boolean
+          description: Flag indicating if this is a guest account
       required:
         - _id
         - name
@@ -10347,6 +10362,7 @@ components:
         name: Helmut Mc Cloud
         email: mcloud@helmut.cloud
         avatarUrl: https://example.com/asset/some_avatar.webp
+        isGuest: false
     Region:
       properties:
         name:
