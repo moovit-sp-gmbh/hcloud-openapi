@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2458
+  version: 0.0.107-2473
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10023,6 +10023,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1674045156
     DatabasePatchDto:
       properties:
@@ -10237,6 +10238,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         designHash: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
         createDate: 1674045168
     DesignOperation:
@@ -11661,6 +11663,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         type: NUMBER
         value: 647931
         createDate: 1774045156
@@ -11762,6 +11765,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1674045156
     EventPatchDto:
       properties:
@@ -11970,6 +11974,7 @@ components:
             name: Account MSP
             email: account@moovit-sp.com
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
           state: QUEUED
           outcome: PENDING
           message: Message bus timeout
@@ -12422,6 +12427,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         state: QUEUED
         outcome: PENDING
         message: Message bus timeout
@@ -12695,6 +12701,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         space:
           _id: 63c7e6dfeae82d8001b652fb
           name: Helmut4
@@ -12771,6 +12778,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         space:
           _id: 63c7e6dfeae82d8001b652fb
           name: Helmut4
@@ -12820,6 +12828,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         organization:
           _id: 6436bb9988821e8f6400c2f8
           name: DEV-software
@@ -12929,6 +12938,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         specification: >-
           eyJuYW1lIjoiRXhlY3V0ZSBweXRob24iLCJkZXNjcmlwdGlvbiI6ImV4ZWMgcHl0aG9uIiwidHlwZSI6IkFDVElPTiIsInBhY2thZ2UiOiJDVVNUT00iLCJjYXRlZ29yeSI6Ik90aGVyIiwidmVyc2lvbiI6eyJtYWpvciI6MCwibWlub3IiOjAsInBhdGNoIjoxLCJjaGFuZ2Vsb2ciOlsiSW5pdGlhbCBub2RlIl19LCJhdXRob3IiOnsibmFtZSI6Ik1vb3ZJVCBTUCIsImVtYWlsIjoiYWNjb3VudEBtb292aXQtc3AuY29tIiwiY29tcGFueSI6IiJ9LCJpbnB1dHMiOltdLCJvdXRwdXRzIjpbeyJuYW1lIjoiUmVzdWx0IiwiZGVzY3JpcHRpb24iOiJUaGUgRnJhbWVJTyByZXN1bHQiLCJ0eXBlIjoiU1RSSU5HIiwiZXhhbXBsZSI6Int9In1dLCJwYXRoIjoiaHR0cHM6Ly9kZXYuYXBwLmhlbG11dC5jbG91ZDo0NDMvYXBpL2hpZ2g1L3YxL25vZGUvMjE5NmYyOGQ0MWU2NWRlMDQ5Y2RkMDg4ODM0YjI2ZmM0NDAwZjIxZDZmMjQ2M2U5NDk0NTIxMjhiOWIwZDlmNDBjYzdkMDg4ZTk1YzdjOWFkYzEwMjA4M2UwOWFjZjMzZWVjYjM0MTk4NWVhNDBlMGZjNDkzNTQ1YTM2OTg3NjgvY29udGVudCIsImN1c3RvbU5vZGUiOnsiX2lkIjoiNjNjYWE4YmU4MTJjYzFlYjE1N2M5N2RhIn19
         createDate: 1674224764
@@ -12998,6 +13008,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         specification: >-
           eyJuYW1lIjoiRXhlY3V0ZSBweXRob24iLCJkZXNjcmlwdGlvbiI6ImV4ZWMgcHl0aG9uIiwidHlwZSI6IkFDVElPTiIsInBhY2thZ2UiOiJDVVNUT00iLCJjYXRlZ29yeSI6Ik90aGVyIiwidmVyc2lvbiI6eyJtYWpvciI6MCwibWlub3IiOjAsInBhdGNoIjoxLCJjaGFuZ2Vsb2ciOlsiSW5pdGlhbCBub2RlIl19LCJhdXRob3IiOnsibmFtZSI6Ik1vb3ZJVCBTUCIsImVtYWlsIjoiYWNjb3VudEBtb292aXQtc3AuY29tIiwiY29tcGFueSI6IiJ9LCJpbnB1dHMiOltdLCJvdXRwdXRzIjpbeyJuYW1lIjoiUmVzdWx0IiwiZGVzY3JpcHRpb24iOiJUaGUgRnJhbWVJTyByZXN1bHQiLCJ0eXBlIjoiU1RSSU5HIiwiZXhhbXBsZSI6Int9In1dLCJwYXRoIjoiaHR0cHM6Ly9kZXYuYXBwLmhlbG11dC5jbG91ZDo0NDMvYXBpL2hpZ2g1L3YxL25vZGUvMjE5NmYyOGQ0MWU2NWRlMDQ5Y2RkMDg4ODM0YjI2ZmM0NDAwZjIxZDZmMjQ2M2U5NDk0NTIxMjhiOWIwZDlmNDBjYzdkMDg4ZTk1YzdjOWFkYzEwMjA4M2UwOWFjZjMzZWVjYjM0MTk4NWVhNDBlMGZjNDkzNTQ1YTM2OTg3NjgvY29udGVudCIsImN1c3RvbU5vZGUiOnsiX2lkIjoiNjNjYWE4YmU4MTJjYzFlYjE1N2M5N2RhIn19
         typescript: >-
@@ -13165,12 +13176,14 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         name: name
         targets:
           - _id: 64180bfafe4fbcd791493ef4
             name: Account MSP
             email: account@moovit-sp.com
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
         invalidTargets:
           notMember:
             - 646cc8a659b8ca8c14864078
@@ -13249,6 +13262,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         name: name
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         createDate: 1738751664185
@@ -13533,6 +13547,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1679297530231
         modifyDate: 1679297530231
     SecretUpdateDto:
@@ -13651,6 +13666,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         designHash: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
         type: manual
         createDate: 1701270816094
@@ -13767,6 +13783,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         highestPermissionOfUser: OWNER
         enableDev: true
         createDate: 1674045151
@@ -14005,6 +14022,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         order: 1
         createDate: 1674731476
     StreamExecutionPackage:
@@ -14574,6 +14592,7 @@ components:
           name: Account MSP
           email: account@moovit-sp.com
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1690882658405
         modifyDate: 1690891038659
         lastTriggered:
@@ -14713,6 +14732,7 @@ components:
             name: Account MSP
             email: account@moovit-sp.com
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
           createDate: 1681308569768
           modifyDate: 1681308569768
           roleOfUser: MEMBER
@@ -14981,6 +15001,9 @@ components:
           type: string
           format: uri
           description: URL of the avatar of the user
+        isGuest:
+          type: boolean
+          description: Flag indicating if this is a guest account
       required:
         - _id
         - name
@@ -14991,6 +15014,7 @@ components:
         name: Helmut Mc Cloud
         email: mcloud@helmut.cloud
         avatarUrl: https://example.com/asset/some_avatar.webp
+        isGuest: false
     SearchFilter:
       properties:
         type:
