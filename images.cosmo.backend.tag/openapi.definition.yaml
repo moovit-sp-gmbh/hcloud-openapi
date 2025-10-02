@@ -235,6 +235,21 @@ components:
             rush:
               - VIEW_ASSET_STATUS
       description: Object used to patch shares
+    DeleteSharesDto:
+      type: object
+      properties:
+        shareIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: List of share IDs to delete
+          example:
+            - uuid-1
+            - uuid-2
+      required:
+        - shareIds
     SpaceCreateDto:
       type: object
       properties:
@@ -1111,7 +1126,7 @@ components:
       properties:
         name:
           type: string
-          description: Asset name
+          description: MediaAsset name
           example: my-asset
       required:
         - name
@@ -1153,7 +1168,7 @@ components:
             type: string
             format: uuid
           minItems: 1
-          description: List of asset IDs to get download Urls from
+          description: List of asset IDs
           example:
             - uuid-1
             - uuid-2
@@ -1164,7 +1179,7 @@ components:
       properties:
         name:
           type: string
-          description: Asset name
+          description: MediaAsset name
           example: my-asset
         parentId:
           type: string
@@ -1536,6 +1551,7 @@ components:
           type: string
           enum:
             - ASSET
+            - MEDIA_ASSET
             - SPACE
             - PRODUCTION
             - PROJECT
@@ -1701,6 +1717,7 @@ components:
           type: string
           enum:
             - ASSET
+            - MEDIA_ASSET
             - SPACE
             - PRODUCTION
             - PROJECT
@@ -1710,7 +1727,7 @@ components:
           description: Item type
         extension:
           type: string
-          description: Asset extension
+          description: MediaAsset extension
           example: .mov
         status:
           type: string
@@ -1731,7 +1748,7 @@ components:
             - DOCUMENT
             - UNKNOWN
             - FOLDER
-          description: Asset Type
+          description: MediaAsset Type
           example: VIDEO
         breadcrumb:
           type: array
@@ -1991,25 +2008,6 @@ components:
           example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
       required:
         - name
-    FolderRenameDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 128
-          description: Folder name
-          example: my folder
-      required:
-        - name
-    FolderMoveDto:
-      type: object
-      properties:
-        parentId:
-          type: string
-          format: uuid
-          description: Parent ID. If omitted, the asset will be placed at the root level.
-          example: 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
     NamespaceDto:
       type: object
       properties:
@@ -2226,6 +2224,21 @@ components:
             PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
       required:
         - annotation
+    DeleteCommentsDto:
+      type: object
+      properties:
+        commentIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: List of comment IDs to delete comments
+          example:
+            - uuid-1
+            - uuid-2
+      required:
+        - commentIds
     ReducedOrganization:
       type: object
       properties:
@@ -3787,6 +3800,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -3796,7 +3810,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -3817,7 +3831,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -4113,6 +4127,7 @@ paths:
                       type: string
                       enum:
                         - ASSET
+                        - MEDIA_ASSET
                         - SPACE
                         - PRODUCTION
                         - PROJECT
@@ -4122,7 +4137,7 @@ paths:
                       description: Item type
                     extension:
                       type: string
-                      description: Asset extension
+                      description: MediaAsset extension
                       example: .mov
                     status:
                       type: string
@@ -4143,7 +4158,7 @@ paths:
                         - DOCUMENT
                         - UNKNOWN
                         - FOLDER
-                      description: Asset Type
+                      description: MediaAsset Type
                       example: VIDEO
                     breadcrumb:
                       type: array
@@ -4430,6 +4445,7 @@ paths:
                       type: string
                       enum:
                         - ASSET
+                        - MEDIA_ASSET
                         - SPACE
                         - PRODUCTION
                         - PROJECT
@@ -4439,7 +4455,7 @@ paths:
                       description: Item type
                     extension:
                       type: string
-                      description: Asset extension
+                      description: MediaAsset extension
                       example: .mov
                     status:
                       type: string
@@ -4460,7 +4476,7 @@ paths:
                         - DOCUMENT
                         - UNKNOWN
                         - FOLDER
-                      description: Asset Type
+                      description: MediaAsset Type
                       example: VIDEO
                     breadcrumb:
                       type: array
@@ -4813,6 +4829,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -4822,7 +4839,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -4843,7 +4860,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -5139,6 +5156,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -5148,7 +5166,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -5169,7 +5187,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -5377,6 +5395,180 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Delete assets
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                enum:
+                  - 'false'
+              - type: string
+                enum:
+                  - 'true'
+            description: >-
+              If asset is folder and force is set to false, it will only succeed
+              if the folder is empty. If set to true, it will always succeed,
+              but delete all children in the process
+          required: false
+          name: force
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetIdsDto'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'query' parameter
+            'force'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'query' parameter 'force':
+                  summary: Failed to validate 'query' parameter 'force'
+                  description: Failed to validate 'query' parameter 'force' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'force' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 011.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-move-copy:
     put:
       security:
@@ -5442,6 +5634,7 @@ paths:
                       type: string
                       enum:
                         - ASSET
+                        - MEDIA_ASSET
                         - SPACE
                         - PRODUCTION
                         - PROJECT
@@ -5451,7 +5644,7 @@ paths:
                       description: Item type
                     extension:
                       type: string
-                      description: Asset extension
+                      description: MediaAsset extension
                       example: .mov
                     status:
                       type: string
@@ -5472,7 +5665,7 @@ paths:
                         - DOCUMENT
                         - UNKNOWN
                         - FOLDER
-                      description: Asset Type
+                      description: MediaAsset Type
                       example: VIDEO
                     breadcrumb:
                       type: array
@@ -5949,6 +6142,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -5958,7 +6152,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -5979,7 +6173,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -6435,165 +6629,6 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-    delete:
-      security:
-        - bearerAuth:
-            - cosmo:space:write
-        - basicAuth:
-            - cosmo:space:write
-        - patAuth:
-            - cosmo:space:write
-      summary: Delete an asset
-      tags:
-        - Asset
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: assetId
-          in: path
-      responses:
-        '204':
-          description: No content
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'assetId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'assetId':
-                  summary: Failed to validate 'path' parameter 'assetId'
-                  description: Failed to validate 'path' parameter 'assetId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'assetId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: Required scopes ['cosmo:space:write'] not included in authorization
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:write'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Given space not found | Asset not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 011.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Asset not found:
-                  summary: Asset not found
-                  value:
-                    code: 011.038.0001
-                    error: asset.not.found
-                    message: Asset not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/assets/downloadUrls:
     post:
       security:
@@ -6646,7 +6681,7 @@ paths:
                 additionalProperties:
                   type: string
                   nullable: true
-                description: Asset ID to URL mapping
+                description: MediaAsset ID to URL mapping
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -6798,6 +6833,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -6807,7 +6843,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -6828,7 +6864,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -7025,6 +7061,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -7034,7 +7071,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -7055,7 +7092,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -7504,6 +7541,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -7513,7 +7551,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -7534,7 +7572,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -7798,7 +7836,7 @@ paths:
           in: path
       responses:
         '200':
-          description: Asset with added tag
+          description: MediaAsset with added tag
           content:
             application/json:
               schema:
@@ -7817,6 +7855,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -7826,7 +7865,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -7847,7 +7886,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -8117,7 +8156,7 @@ paths:
           in: path
       responses:
         '200':
-          description: Asset with removed tag
+          description: MediaAsset with removed tag
           content:
             application/json:
               schema:
@@ -8136,6 +8175,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -8145,7 +8185,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -8166,7 +8206,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -8802,6 +8842,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -8811,7 +8852,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -8832,7 +8873,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -9313,762 +9354,6 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/name:
-    patch:
-      security:
-        - bearerAuth:
-            - cosmo:space:write
-        - basicAuth:
-            - cosmo:space:write
-        - patAuth:
-            - cosmo:space:write
-      summary: Rename a folder
-      tags:
-        - Folder
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space Name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-            description: Folder ID
-          required: true
-          name: folderId
-          in: path
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FolderRenameDto'
-      responses:
-        '200':
-          description: Renamed folder
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FolderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'folderId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'folderId':
-                  summary: Failed to validate 'path' parameter 'folderId'
-                  description: Failed to validate 'path' parameter 'folderId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'folderId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:write'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Folder not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Folder not found:
-                  summary: Folder not found
-                  value:
-                    code: 011.039.0001
-                    error: folder.not.found
-                    message: Folder not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}:
-    get:
-      security:
-        - bearerAuth:
-            - cosmo:space:read
-        - basicAuth:
-            - cosmo:space:read
-        - patAuth:
-            - cosmo:space:read
-      summary: Fetch a folder
-      tags:
-        - Folder
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space Name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-            description: Folder ID
-          required: true
-          name: folderId
-          in: path
-      responses:
-        '200':
-          description: Folder
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FolderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'folderId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'folderId':
-                  summary: Failed to validate 'path' parameter 'folderId'
-                  description: Failed to validate 'path' parameter 'folderId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'folderId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:read'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Folder not found | Given space not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Folder not found:
-                  summary: Folder not found
-                  value:
-                    code: 011.039.0001
-                    error: folder.not.found
-                    message: Folder not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 011.010.0001
-                    error: space.not.found
-                    message: Given space not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    delete:
-      security:
-        - bearerAuth:
-            - cosmo:space:delete
-        - basicAuth:
-            - cosmo:space:delete
-        - patAuth:
-            - cosmo:space:delete
-      summary: Delete a folder
-      tags:
-        - Folder
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space Name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-            description: Folder ID
-          required: true
-          name: folderId
-          in: path
-        - schema:
-            anyOf:
-              - type: string
-                enum:
-                  - 'false'
-              - type: string
-                enum:
-                  - 'true'
-            description: >-
-              If set to false, will only succeed if the folder is empty. If set
-              to true, it will always succeed, but delete all children in the
-              process
-          required: false
-          name: force
-          in: query
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'folderId' | Failed to validate 'query' parameter 'force'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'folderId':
-                  summary: Failed to validate 'path' parameter 'folderId'
-                  description: Failed to validate 'path' parameter 'folderId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'folderId' - {error}
-                Failed to validate 'query' parameter 'force':
-                  summary: Failed to validate 'query' parameter 'force'
-                  description: Failed to validate 'query' parameter 'force' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'query' parameter 'force' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:delete'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:delete'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:delete'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Space not found | Folder not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Space not found:
-                  summary: Space not found
-                  value:
-                    code: 011.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Folder not found:
-                  summary: Folder not found
-                  value:
-                    code: 011.039.0001
-                    error: folder.not.found
-                    message: Folder not found
-        '409':
-          description: Folder is not empty
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Folder not empty:
-                  summary: Folder not empty
-                  value:
-                    code: 011.039.0002
-                    error: folder.not.empty
-                    message: Folder not empty
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-        '501':
-          description: Not Implemented
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Force option is not yet implemented:
-                  summary: Force option is not yet implemented
-                  value:
-                    code: 011.000.0006
-                    error: not.implemented
-                    message: Feature not implemented
-  /v1/org/{orgName}/spaces/{spaceName}/folders/{folderId}/move:
-    patch:
-      security:
-        - bearerAuth:
-            - cosmo:space:write
-        - basicAuth:
-            - cosmo:space:write
-        - patAuth:
-            - cosmo:space:write
-      summary: Move a folder
-      tags:
-        - Folder
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: folderId
-          in: path
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/FolderMoveDto'
-      responses:
-        '200':
-          description: Object representation of the moved folder
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/FolderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'folderId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'folderId':
-                  summary: Failed to validate 'path' parameter 'folderId'
-                  description: Failed to validate 'path' parameter 'folderId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'folderId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:write'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Item not found | Folder not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Item not found:
-                  summary: Item not found
-                  value:
-                    code: 011.037.0001
-                    error: item.not.found
-                    message: Item not found
-                Folder not found:
-                  summary: Folder not found
-                  value:
-                    code: 011.039.0001
-                    error: folder.not.found
-                    message: Folder not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/namespaces:
     post:
       security:
@@ -10244,7 +9529,7 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
-      summary: Change the status of a reference (e.g. Asset)
+      summary: Change the status of a reference (e.g. MediaAsset)
       tags:
         - Namespace
       parameters:
@@ -10318,6 +9603,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -10327,7 +9613,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -10348,7 +9634,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
@@ -11057,6 +10343,206 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Delete Comments
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+            description: Namespace name
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteCommentsDto'
+      responses:
+        '204':
+          description: Comments deleted successfully
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'query' parameter 'annotation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Comment not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Comment not found:
+                  summary: Comment not found
+                  value:
+                    code: 011.043.0001
+                    error: comment.not.found
+                    message: Comment not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 011.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments/{commentId}:
     patch:
       security:
@@ -11495,214 +10981,6 @@ paths:
                     code: 011.043.0001
                     error: comment.not.found
                     message: Comment not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    delete:
-      security:
-        - bearerAuth:
-            - cosmo:space:write
-        - basicAuth:
-            - cosmo:space:write
-        - patAuth:
-            - cosmo:space:write
-      summary: Delete Comment
-      tags:
-        - Comment
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
-          required: true
-          name: namespaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: commentId
-          in: path
-        - schema:
-            type: boolean
-            nullable: true
-          required: false
-          name: annotation
-          in: query
-      responses:
-        '204':
-          description: Comment deleted successfully
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'namespaceName' | Failed to validate 'path' parameter 'commentId' |
-            Failed to validate 'query' parameter 'annotation'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'namespaceName':
-                  summary: Failed to validate 'path' parameter 'namespaceName'
-                  description: >-
-                    Failed to validate 'path' parameter 'namespaceName' -
-                    {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'path' parameter 'namespaceName' -
-                      {error}
-                Failed to validate 'path' parameter 'commentId':
-                  summary: Failed to validate 'path' parameter 'commentId'
-                  description: Failed to validate 'path' parameter 'commentId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'commentId' - {error}
-                Failed to validate 'query' parameter 'annotation':
-                  summary: Failed to validate 'query' parameter 'annotation'
-                  description: Failed to validate 'query' parameter 'annotation' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'query' parameter 'annotation' -
-                      {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: Required scopes ['cosmo:space:write'] not included in authorization
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:write'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: >-
-            Organization not found | Comment not found | Given space not found |
-            Namespace not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Comment not found:
-                  summary: Comment not found
-                  value:
-                    code: 011.043.0001
-                    error: comment.not.found
-                    message: Comment not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 011.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Namespace not found:
-                  summary: Namespace not found
-                  value:
-                    code: 011.040.0001
-                    error: namespace.not.found
-                    message: Namespace not found
         '500':
           description: something went wrong
           content:
@@ -12431,6 +11709,170 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:delete
+        - basicAuth:
+            - cosmo:space:delete
+        - patAuth:
+            - cosmo:space:delete
+      description: Deletes shares, revoking any access that it previously granted.
+      summary: Delete Shares
+      tags:
+        - Share
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DeleteSharesDto'
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:delete'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:delete'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Share not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Share not found:
+                  summary: Share not found
+                  value:
+                    code: 011.045.0001
+                    error: share.not.found
+                    message: Share not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/shares/{shareId}:
     put:
       security:
@@ -13105,178 +12547,6 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
-    delete:
-      security:
-        - bearerAuth:
-            - cosmo:space:delete
-        - basicAuth:
-            - cosmo:space:delete
-        - patAuth:
-            - cosmo:space:delete
-      description: Deletes a share, revoking any access that it previously granted.
-      summary: Delete Share
-      tags:
-        - Share
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: shareId
-          in: path
-      responses:
-        '204':
-          description: No Content
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'shareId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'shareId':
-                  summary: Failed to validate 'path' parameter 'shareId'
-                  description: Failed to validate 'path' parameter 'shareId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'shareId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:delete'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:delete'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:delete'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Given space not found | Share not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 011.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Share not found:
-                  summary: Share not found
-                  value:
-                    code: 011.045.0001
-                    error: share.not.found
-                    message: Share not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/shares/{shareId}/assets:
     get:
       security:
@@ -13372,6 +12642,7 @@ paths:
                       type: string
                       enum:
                         - ASSET
+                        - MEDIA_ASSET
                         - SPACE
                         - PRODUCTION
                         - PROJECT
@@ -13381,7 +12652,7 @@ paths:
                       description: Item type
                     extension:
                       type: string
-                      description: Asset extension
+                      description: MediaAsset extension
                       example: .mov
                     status:
                       type: string
@@ -13402,7 +12673,7 @@ paths:
                         - DOCUMENT
                         - UNKNOWN
                         - FOLDER
-                      description: Asset Type
+                      description: MediaAsset Type
                       example: VIDEO
                     breadcrumb:
                       type: array
@@ -13767,6 +13038,7 @@ paths:
                       type: string
                       enum:
                         - ASSET
+                        - MEDIA_ASSET
                         - SPACE
                         - PRODUCTION
                         - PROJECT
@@ -13776,7 +13048,7 @@ paths:
                       description: Item type
                     extension:
                       type: string
-                      description: Asset extension
+                      description: MediaAsset extension
                       example: .mov
                     status:
                       type: string
@@ -13797,7 +13069,7 @@ paths:
                         - DOCUMENT
                         - UNKNOWN
                         - FOLDER
-                      description: Asset Type
+                      description: MediaAsset Type
                       example: VIDEO
                     breadcrumb:
                       type: array
@@ -15174,6 +14446,7 @@ paths:
                     type: string
                     enum:
                       - ASSET
+                      - MEDIA_ASSET
                       - SPACE
                       - PRODUCTION
                       - PROJECT
@@ -15183,7 +14456,7 @@ paths:
                     description: Item type
                   extension:
                     type: string
-                    description: Asset extension
+                    description: MediaAsset extension
                     example: .mov
                   status:
                     type: string
@@ -15204,7 +14477,7 @@ paths:
                       - DOCUMENT
                       - UNKNOWN
                       - FOLDER
-                    description: Asset Type
+                    description: MediaAsset Type
                     example: VIDEO
                   breadcrumb:
                     type: array
