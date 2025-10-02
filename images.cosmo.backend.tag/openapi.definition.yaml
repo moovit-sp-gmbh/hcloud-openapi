@@ -8376,6 +8376,207 @@ paths:
                     code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/users:
+    get:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: >-
+        List users that are allowed to be mentioned for the asset (=Space or
+        Share members)
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+            description: Organization name
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: Space name
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+      responses:
+        '200':
+          description: Users of asset
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/ReducedUser'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId' | Failed to validate 'query' parameter 'limit' | Failed to
+            validate 'query' parameter 'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/locations:
     post:
       security:
