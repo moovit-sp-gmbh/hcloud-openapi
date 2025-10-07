@@ -335,25 +335,6 @@ components:
           example: false
       required:
         - assetIds
-    AssetPatchDto:
-      type: object
-      properties:
-        categories:
-          type: array
-          items:
-            type: string
-          description: New categories
-          example:
-            - cat1
-            - cat2
-        tags:
-          type: array
-          items:
-            type: string
-          description: New tags
-          example:
-            - tag1
-            - tag2
     sorting:
       type: object
       properties:
@@ -1126,7 +1107,7 @@ components:
       properties:
         name:
           type: string
-          description: MediaAsset name
+          description: Media_Asset name
           example: my-asset
       required:
         - name
@@ -1179,7 +1160,7 @@ components:
       properties:
         name:
           type: string
-          description: MediaAsset name
+          description: Media_Asset name
           example: my-asset
         parentId:
           type: string
@@ -1277,7 +1258,7 @@ components:
       properties:
         status:
           type: string
-          enum: &ref_0
+          enum: &ref_1
             - approved
             - rejected
             - none
@@ -1537,7 +1518,7 @@ components:
         - createDate
         - creator
         - avatarUrl
-    ItemDto:
+    BaseAssetDto:
       type: object
       properties:
         _id:
@@ -1552,6 +1533,7 @@ components:
           enum:
             - ASSET
             - MEDIA_ASSET
+            - REFERENCE
             - SPACE
             - PRODUCTION
             - PROJECT
@@ -1563,10 +1545,135 @@ components:
         - _id
         - name
         - type
-      example:
+      example: &ref_0
         name: my space
         type: SPACE
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+    AssetDto:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/BaseAssetDto'
+            - type: object
+              properties:
+                extension:
+                  type: string
+                  description: Media_Asset extension
+                  example: .mov
+                status:
+                  type: string
+                  enum:
+                    - UPLOADING
+                    - UPLOADED
+                    - PROCESSING
+                    - FINISHED
+                    - WAITING
+                    - FAILED
+                  description: Upload status of the asset
+                  example: FINISHED
+                assetType:
+                  type: string
+                  enum:
+                    - VIDEO
+                    - IMAGE
+                    - DOCUMENT
+                    - UNKNOWN
+                    - FOLDER
+                  description: Media_Asset Type
+                  example: VIDEO
+                breadcrumb:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BaseAssetDto'
+                duration:
+                  type: number
+                  description: Duration of the video if the asset is a video asset
+                  example: 29.56
+                frameRate:
+                  type: number
+                  description: Frame rate of the video if the asset is a video asset
+                  example: 25
+                thumbnailUrl:
+                  type: string
+                  format: uri
+                  description: URL of the thumbnail
+                  example: https://example.com/thumbnail.jpg
+                previewUrl:
+                  type: string
+                  format: uri
+                  description: URL of the preview
+                  example: https://example.com/preview.jpg
+                createDate:
+                  type: number
+                  minimum: 0
+                  description: Date of creation
+                  format: UNIX timestamp
+                  example: 1747142773233
+                modifyDate:
+                  type: number
+                  minimum: 0
+                  description: Date of last change
+                  format: UNIX timestamp
+                  example: 1747142773233
+                creator:
+                  $ref: '#/components/schemas/ReducedUser'
+                tag:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the tag associated with the asset
+                      example: Needs Review
+                    color:
+                      type: string
+                      description: Color of the tag associated with the asset
+                      example: '#4A90E2'
+                  required:
+                    - name
+                    - color
+                  description: Tag associated with the asset
+                upload:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      format: uri
+                    token:
+                      type: string
+                    expiration:
+                      type: number
+                    libraryId:
+                      type: number
+                    videoId:
+                      type: string
+                  required:
+                    - url
+                    - token
+                    - expiration
+                namespaces:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                    required:
+                      - status
+                  description: Information about the asset across namespaces.
+                  example:
+                    rush:
+                      status: approved
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Allowed operations on the asset
+                  example:
+                    - CAN_READ
+              required:
+                - createDate
+                - modifyDate
+                - creator
+          example: *ref_0
     Unknown:
       type: object
       properties:
@@ -1702,212 +1809,192 @@ components:
         - formatLongName
       description: Video metadata
     AssetDetailedDto:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: uuid
-          description: Asset ID
-          example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-        name:
-          type: string
-          description: Asset Name
-          example: myasset.mov
-        type:
-          type: string
-          enum:
-            - ASSET
-            - MEDIA_ASSET
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-            - COMMENT
-            - TAG
-          description: Item type
-        extension:
-          type: string
-          description: MediaAsset extension
-          example: .mov
-        status:
-          type: string
-          enum:
-            - UPLOADING
-            - UPLOADED
-            - PROCESSING
-            - FINISHED
-            - WAITING
-            - FAILED
-          description: Upload status of the asset
-          example: FINISHED
-        assetType:
-          type: string
-          enum:
-            - VIDEO
-            - IMAGE
-            - DOCUMENT
-            - UNKNOWN
-            - FOLDER
-          description: MediaAsset Type
-          example: VIDEO
-        breadcrumb:
-          type: array
-          items:
-            $ref: '#/components/schemas/ItemDto'
-        duration:
-          type: number
-          description: Duration of the video if the asset is a video asset
-          example: 29.56
-        frameRate:
-          type: number
-          description: Frame rate of the video if the asset is a video asset
-          example: 25
-        thumbnailUrl:
-          type: string
-          format: uri
-          description: URL of the thumbnail
-          example: https://example.com/thumbnail.jpg
-        previewUrl:
-          type: string
-          format: uri
-          description: URL of the preview
-          example: https://example.com/preview.jpg
-        createDate:
-          type: number
-          minimum: 0
-          description: Date of creation
-          format: UNIX timestamp
-          example: 1747142773233
-        modifyDate:
-          type: number
-          minimum: 0
-          description: Date of last change
-          format: UNIX timestamp
-          example: 1747142773233
-        creator:
-          $ref: '#/components/schemas/ReducedUser'
-        tag:
-          type: object
-          properties:
-            name:
-              type: string
-              description: Name of the tag associated with the asset
-              example: Needs Review
-            color:
-              type: string
-              description: Color of the tag associated with the asset
-              example: '#4A90E2'
-          required:
-            - name
-            - color
-          description: Tag associated with the asset
-        upload:
-          type: object
-          properties:
-            url:
-              type: string
-              format: uri
-            token:
-              type: string
-            expiration:
-              type: number
-            libraryId:
-              type: number
-            videoId:
-              type: string
-          required:
-            - url
-            - token
-            - expiration
-        namespaces:
-          type: object
-          additionalProperties:
-            type: object
-            properties:
-              status:
-                type: string
-            required:
-              - status
-          description: Information about the asset across namespaces.
-          example: &ref_2
-            rush:
-              status: approved
-        permissions:
-          type: array
-          items:
-            type: string
-          description: Allowed operations on the asset
-          example: &ref_3
-            - CAN_READ
-        media:
-          type: array
-          items:
-            oneOf:
-              - $ref: '#/components/schemas/Unknown'
-              - $ref: '#/components/schemas/Image'
-              - type: object
-                properties:
-                  name:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/BaseAssetDto'
+            - type: object
+              properties:
+                extension:
+                  type: string
+                  description: Media_Asset extension
+                  example: .mov
+                status:
+                  type: string
+                  enum:
+                    - UPLOADING
+                    - UPLOADED
+                    - PROCESSING
+                    - FINISHED
+                    - WAITING
+                    - FAILED
+                  description: Upload status of the asset
+                  example: FINISHED
+                assetType:
+                  type: string
+                  enum:
+                    - VIDEO
+                    - IMAGE
+                    - DOCUMENT
+                    - UNKNOWN
+                    - FOLDER
+                  description: Media_Asset Type
+                  example: VIDEO
+                breadcrumb:
+                  type: array
+                  items:
+                    $ref: '#/components/schemas/BaseAssetDto'
+                duration:
+                  type: number
+                  description: Duration of the video if the asset is a video asset
+                  example: 29.56
+                frameRate:
+                  type: number
+                  description: Frame rate of the video if the asset is a video asset
+                  example: 25
+                thumbnailUrl:
+                  type: string
+                  format: uri
+                  description: URL of the thumbnail
+                  example: https://example.com/thumbnail.jpg
+                previewUrl:
+                  type: string
+                  format: uri
+                  description: URL of the preview
+                  example: https://example.com/preview.jpg
+                createDate:
+                  type: number
+                  minimum: 0
+                  description: Date of creation
+                  format: UNIX timestamp
+                  example: 1747142773233
+                modifyDate:
+                  type: number
+                  minimum: 0
+                  description: Date of last change
+                  format: UNIX timestamp
+                  example: 1747142773233
+                creator:
+                  $ref: '#/components/schemas/ReducedUser'
+                tag:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                      description: Name of the tag associated with the asset
+                      example: Needs Review
+                    color:
+                      type: string
+                      description: Color of the tag associated with the asset
+                      example: '#4A90E2'
+                  required:
+                    - name
+                    - color
+                  description: Tag associated with the asset
+                upload:
+                  type: object
+                  properties:
+                    url:
+                      type: string
+                      format: uri
+                    token:
+                      type: string
+                    expiration:
+                      type: number
+                    libraryId:
+                      type: number
+                    videoId:
+                      type: string
+                  required:
+                    - url
+                    - token
+                    - expiration
+                namespaces:
+                  type: object
+                  additionalProperties:
+                    type: object
+                    properties:
+                      status:
+                        type: string
+                    required:
+                      - status
+                  description: Information about the asset across namespaces.
+                  example:
+                    rush:
+                      status: approved
+                permissions:
+                  type: array
+                  items:
                     type: string
-                    description: Name of the media
-                    example: original
-                  url:
-                    type: string
-                    format: uri
-                    description: >-
-                      URL to the media. Can be undefined if the media is still
-                      being uploaded
-                    example: https://example.com
-                  type:
-                    type: string
-                    enum:
-                      - AUDIO
-                    description: Media type
-                    example: AUDIO
-                  metadata:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/AudioMetadata'
-                    description: Media metadata
-                required:
-                  - name
-                  - type
-              - type: object
-                properties:
-                  name:
-                    type: string
-                    description: Name of the media
-                    example: original
-                  url:
-                    type: string
-                    format: uri
-                    description: >-
-                      URL to the media. Can be undefined if the media is still
-                      being uploaded
-                    example: https://example.com
-                  type:
-                    type: string
-                    enum:
-                      - VIDEO
-                    description: Media type
-                    example: VIDEO
-                  metadata:
-                    type: array
-                    items:
-                      anyOf:
-                        - $ref: '#/components/schemas/AudioMetadata'
-                        - $ref: '#/components/schemas/VideoMetadata'
-                    description: Media metadata
-                required:
-                  - name
-                  - type
-      required:
-        - _id
-        - name
-        - type
-        - createDate
-        - modifyDate
-        - creator
+                  description: Allowed operations on the asset
+                  example:
+                    - CAN_READ
+                media:
+                  type: array
+                  items:
+                    oneOf:
+                      - $ref: '#/components/schemas/Unknown'
+                      - $ref: '#/components/schemas/Image'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - AUDIO
+                            description: Media type
+                            example: AUDIO
+                          metadata:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AudioMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - VIDEO
+                            description: Media type
+                            example: VIDEO
+                          metadata:
+                            type: array
+                            items:
+                              anyOf:
+                                - $ref: '#/components/schemas/AudioMetadata'
+                                - $ref: '#/components/schemas/VideoMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+              required:
+                - createDate
+                - modifyDate
+                - creator
+          example: *ref_0
     AssetPermissionsDto:
       type: object
       additionalProperties:
@@ -1944,54 +2031,6 @@ components:
       required:
         - _id
         - name
-    ProductionDto:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: uuid
-          description: ID of the production
-          example: 641fa07a-2812-4d07-8de7-cd20daade955
-        name:
-          type: string
-          description: Name of the production
-          example: My Production
-      required:
-        - _id
-        - name
-    FolderDto:
-      allOf:
-        - $ref: '#/components/schemas/ItemDto'
-        - type: object
-          properties:
-            createDate:
-              type: number
-              minimum: 0
-              description: Date of creation
-              format: UNIX timestamp (ms)
-            modifyDate:
-              type: number
-              minimum: 0
-              description: Date of last change
-              format: UNIX timestamp (ms)
-            breadcrumb:
-              type: array
-              items:
-                $ref: '#/components/schemas/ItemDto'
-            children:
-              type: array
-              items:
-                $ref: '#/components/schemas/ItemDto'
-          required:
-            - createDate
-            - modifyDate
-      example:
-        _id: fa7f41b9-7915-4a9c-bd6f-67ddfb03f73a
-        name: my-name
-        createDate: 1756285405647
-        modifyDate: 1756285405647
-        type: FOLDER
-        children: []
     FolderCreateDto:
       type: object
       properties:
@@ -2023,12 +2062,144 @@ components:
       required:
         - _id
         - name
+    AssetReferenceDto:
+      allOf:
+        - $ref: '#/components/schemas/BaseAssetDto'
+        - type: object
+          properties:
+            extension:
+              type: string
+              description: Media_Asset extension
+              example: .mov
+            status:
+              type: string
+              enum:
+                - UPLOADING
+                - UPLOADED
+                - PROCESSING
+                - FINISHED
+                - WAITING
+                - FAILED
+              description: Upload status of the asset
+              example: FINISHED
+            assetType:
+              type: string
+              enum:
+                - VIDEO
+                - IMAGE
+                - DOCUMENT
+                - UNKNOWN
+                - FOLDER
+              description: Media_Asset Type
+              example: VIDEO
+            breadcrumb:
+              type: array
+              items:
+                $ref: '#/components/schemas/BaseAssetDto'
+            duration:
+              type: number
+              description: Duration of the video if the asset is a video asset
+              example: 29.56
+            frameRate:
+              type: number
+              description: Frame rate of the video if the asset is a video asset
+              example: 25
+            thumbnailUrl:
+              type: string
+              format: uri
+              description: URL of the thumbnail
+              example: https://example.com/thumbnail.jpg
+            previewUrl:
+              type: string
+              format: uri
+              description: URL of the preview
+              example: https://example.com/preview.jpg
+            createDate:
+              type: number
+              minimum: 0
+              description: Date of creation
+              format: UNIX timestamp
+              example: 1747142773233
+            modifyDate:
+              type: number
+              minimum: 0
+              description: Date of last change
+              format: UNIX timestamp
+              example: 1747142773233
+            creator:
+              $ref: '#/components/schemas/ReducedUser'
+            tag:
+              type: object
+              properties:
+                name:
+                  type: string
+                  description: Name of the tag associated with the asset
+                  example: Needs Review
+                color:
+                  type: string
+                  description: Color of the tag associated with the asset
+                  example: '#4A90E2'
+              required:
+                - name
+                - color
+              description: Tag associated with the asset
+            upload:
+              type: object
+              properties:
+                url:
+                  type: string
+                  format: uri
+                token:
+                  type: string
+                expiration:
+                  type: number
+                libraryId:
+                  type: number
+                videoId:
+                  type: string
+              required:
+                - url
+                - token
+                - expiration
+            namespaces:
+              type: object
+              additionalProperties:
+                type: object
+                properties:
+                  status:
+                    type: string
+                required:
+                  - status
+              description: Information about the asset across namespaces.
+              example:
+                rush:
+                  status: approved
+            permissions:
+              type: array
+              items:
+                type: string
+              description: Allowed operations on the asset
+              example:
+                - CAN_READ
+            reference:
+              type: object
+              properties:
+                status:
+                  type: string
+              required:
+                - status
+          required:
+            - createDate
+            - modifyDate
+            - creator
+            - reference
+      example: *ref_0
     ReferencePatchDto:
       type: object
       properties:
         status:
           type: string
-          enum: *ref_0
+          enum: *ref_1
       required:
         - status
     CommentDto:
@@ -2375,7 +2546,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_1
+        space: &ref_2
           type: object
           additionalProperties:
             type: object
@@ -2384,10 +2555,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_1
-        asset: *ref_1
-        share: *ref_1
-        user: *ref_1
+        namespace: *ref_2
+        asset: *ref_2
+        share: *ref_2
+        user: *ref_2
       description: Map of all the permissions available in the Cosmo service
     ReducedTeam:
       type: object
@@ -3785,147 +3956,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -4112,147 +4143,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    _id:
-                      type: string
-                      format: uuid
-                      description: Asset ID
-                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                    name:
-                      type: string
-                      description: Asset Name
-                      example: myasset.mov
-                    type:
-                      type: string
-                      enum:
-                        - ASSET
-                        - MEDIA_ASSET
-                        - SPACE
-                        - PRODUCTION
-                        - PROJECT
-                        - FOLDER
-                        - COMMENT
-                        - TAG
-                      description: Item type
-                    extension:
-                      type: string
-                      description: MediaAsset extension
-                      example: .mov
-                    status:
-                      type: string
-                      enum:
-                        - UPLOADING
-                        - UPLOADED
-                        - PROCESSING
-                        - FINISHED
-                        - WAITING
-                        - FAILED
-                      description: Upload status of the asset
-                      example: FINISHED
-                    assetType:
-                      type: string
-                      enum:
-                        - VIDEO
-                        - IMAGE
-                        - DOCUMENT
-                        - UNKNOWN
-                        - FOLDER
-                      description: MediaAsset Type
-                      example: VIDEO
-                    breadcrumb:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/ItemDto'
-                    duration:
-                      type: number
-                      description: Duration of the video if the asset is a video asset
-                      example: 29.56
-                    frameRate:
-                      type: number
-                      description: Frame rate of the video if the asset is a video asset
-                      example: 25
-                    thumbnailUrl:
-                      type: string
-                      format: uri
-                      description: URL of the thumbnail
-                      example: https://example.com/thumbnail.jpg
-                    previewUrl:
-                      type: string
-                      format: uri
-                      description: URL of the preview
-                      example: https://example.com/preview.jpg
-                    createDate:
-                      type: number
-                      minimum: 0
-                      description: Date of creation
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    modifyDate:
-                      type: number
-                      minimum: 0
-                      description: Date of last change
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    creator:
-                      $ref: '#/components/schemas/ReducedUser'
-                    tag:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: Name of the tag associated with the asset
-                          example: Needs Review
-                        color:
-                          type: string
-                          description: Color of the tag associated with the asset
-                          example: '#4A90E2'
-                      required:
-                        - name
-                        - color
-                      description: Tag associated with the asset
-                    upload:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                          format: uri
-                        token:
-                          type: string
-                        expiration:
-                          type: number
-                        libraryId:
-                          type: number
-                        videoId:
-                          type: string
-                      required:
-                        - url
-                        - token
-                        - expiration
-                    namespaces:
-                      type: object
-                      additionalProperties:
-                        type: object
-                        properties:
-                          status:
-                            type: string
-                        required:
-                          - status
-                      description: Information about the asset across namespaces.
-                      example: *ref_2
-                    permissions:
-                      type: array
-                      items:
-                        type: string
-                      description: Allowed operations on the asset
-                      example: *ref_3
-                  required:
-                    - _id
-                    - name
-                    - type
-                    - createDate
-                    - modifyDate
-                    - creator
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -4430,147 +4321,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    _id:
-                      type: string
-                      format: uuid
-                      description: Asset ID
-                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                    name:
-                      type: string
-                      description: Asset Name
-                      example: myasset.mov
-                    type:
-                      type: string
-                      enum:
-                        - ASSET
-                        - MEDIA_ASSET
-                        - SPACE
-                        - PRODUCTION
-                        - PROJECT
-                        - FOLDER
-                        - COMMENT
-                        - TAG
-                      description: Item type
-                    extension:
-                      type: string
-                      description: MediaAsset extension
-                      example: .mov
-                    status:
-                      type: string
-                      enum:
-                        - UPLOADING
-                        - UPLOADED
-                        - PROCESSING
-                        - FINISHED
-                        - WAITING
-                        - FAILED
-                      description: Upload status of the asset
-                      example: FINISHED
-                    assetType:
-                      type: string
-                      enum:
-                        - VIDEO
-                        - IMAGE
-                        - DOCUMENT
-                        - UNKNOWN
-                        - FOLDER
-                      description: MediaAsset Type
-                      example: VIDEO
-                    breadcrumb:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/ItemDto'
-                    duration:
-                      type: number
-                      description: Duration of the video if the asset is a video asset
-                      example: 29.56
-                    frameRate:
-                      type: number
-                      description: Frame rate of the video if the asset is a video asset
-                      example: 25
-                    thumbnailUrl:
-                      type: string
-                      format: uri
-                      description: URL of the thumbnail
-                      example: https://example.com/thumbnail.jpg
-                    previewUrl:
-                      type: string
-                      format: uri
-                      description: URL of the preview
-                      example: https://example.com/preview.jpg
-                    createDate:
-                      type: number
-                      minimum: 0
-                      description: Date of creation
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    modifyDate:
-                      type: number
-                      minimum: 0
-                      description: Date of last change
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    creator:
-                      $ref: '#/components/schemas/ReducedUser'
-                    tag:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: Name of the tag associated with the asset
-                          example: Needs Review
-                        color:
-                          type: string
-                          description: Color of the tag associated with the asset
-                          example: '#4A90E2'
-                      required:
-                        - name
-                        - color
-                      description: Tag associated with the asset
-                    upload:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                          format: uri
-                        token:
-                          type: string
-                        expiration:
-                          type: number
-                        libraryId:
-                          type: number
-                        videoId:
-                          type: string
-                      required:
-                        - url
-                        - token
-                        - expiration
-                    namespaces:
-                      type: object
-                      additionalProperties:
-                        type: object
-                        properties:
-                          status:
-                            type: string
-                        required:
-                          - status
-                      description: Information about the asset across namespaces.
-                      example: *ref_2
-                    permissions:
-                      type: array
-                      items:
-                        type: string
-                      description: Allowed operations on the asset
-                      example: *ref_3
-                  required:
-                    - _id
-                    - name
-                    - type
-                    - createDate
-                    - modifyDate
-                    - creator
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -4814,147 +4565,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -5141,147 +4752,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -5619,147 +5090,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    _id:
-                      type: string
-                      format: uuid
-                      description: Asset ID
-                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                    name:
-                      type: string
-                      description: Asset Name
-                      example: myasset.mov
-                    type:
-                      type: string
-                      enum:
-                        - ASSET
-                        - MEDIA_ASSET
-                        - SPACE
-                        - PRODUCTION
-                        - PROJECT
-                        - FOLDER
-                        - COMMENT
-                        - TAG
-                      description: Item type
-                    extension:
-                      type: string
-                      description: MediaAsset extension
-                      example: .mov
-                    status:
-                      type: string
-                      enum:
-                        - UPLOADING
-                        - UPLOADED
-                        - PROCESSING
-                        - FINISHED
-                        - WAITING
-                        - FAILED
-                      description: Upload status of the asset
-                      example: FINISHED
-                    assetType:
-                      type: string
-                      enum:
-                        - VIDEO
-                        - IMAGE
-                        - DOCUMENT
-                        - UNKNOWN
-                        - FOLDER
-                      description: MediaAsset Type
-                      example: VIDEO
-                    breadcrumb:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/ItemDto'
-                    duration:
-                      type: number
-                      description: Duration of the video if the asset is a video asset
-                      example: 29.56
-                    frameRate:
-                      type: number
-                      description: Frame rate of the video if the asset is a video asset
-                      example: 25
-                    thumbnailUrl:
-                      type: string
-                      format: uri
-                      description: URL of the thumbnail
-                      example: https://example.com/thumbnail.jpg
-                    previewUrl:
-                      type: string
-                      format: uri
-                      description: URL of the preview
-                      example: https://example.com/preview.jpg
-                    createDate:
-                      type: number
-                      minimum: 0
-                      description: Date of creation
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    modifyDate:
-                      type: number
-                      minimum: 0
-                      description: Date of last change
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    creator:
-                      $ref: '#/components/schemas/ReducedUser'
-                    tag:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: Name of the tag associated with the asset
-                          example: Needs Review
-                        color:
-                          type: string
-                          description: Color of the tag associated with the asset
-                          example: '#4A90E2'
-                      required:
-                        - name
-                        - color
-                      description: Tag associated with the asset
-                    upload:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                          format: uri
-                        token:
-                          type: string
-                        expiration:
-                          type: number
-                        libraryId:
-                          type: number
-                        videoId:
-                          type: string
-                      required:
-                        - url
-                        - token
-                        - expiration
-                    namespaces:
-                      type: object
-                      additionalProperties:
-                        type: object
-                        properties:
-                          status:
-                            type: string
-                        required:
-                          - status
-                      description: Information about the asset across namespaces.
-                      example: *ref_2
-                    permissions:
-                      type: array
-                      items:
-                        type: string
-                      description: Allowed operations on the asset
-                      example: *ref_3
-                  required:
-                    - _id
-                    - name
-                    - type
-                    - createDate
-                    - modifyDate
-                    - creator
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -6074,321 +5405,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}:
-    patch:
-      security:
-        - bearerAuth:
-            - cosmo:space:write
-        - basicAuth:
-            - cosmo:space:write
-        - patAuth:
-            - cosmo:space:write
-      summary: Patch an asset
-      tags:
-        - Asset
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
-            description: Space name
-          required: true
-          name: spaceName
-          in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: assetId
-          in: path
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/AssetPatchDto'
-      responses:
-        '200':
-          description: Patched asset
-          content:
-            application/json:
-              schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'assetId'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'spaceName':
-                  summary: Failed to validate 'path' parameter 'spaceName'
-                  description: Failed to validate 'path' parameter 'spaceName' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'spaceName' - {error}
-                Failed to validate 'path' parameter 'assetId':
-                  summary: Failed to validate 'path' parameter 'assetId'
-                  description: Failed to validate 'path' parameter 'assetId' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'assetId' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 011.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 011.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 011.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['cosmo:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['cosmo:space:write'] not included in
-                    authorization
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 011.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found | Asset not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 011.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Asset not found:
-                  summary: Asset not found
-                  value:
-                    code: 011.038.0001
-                    error: asset.not.found
-                    message: Asset not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 011.000.0002
-                    error: internal.server.error
-                    message: something went wrong
     get:
       security:
         - bearerAuth:
@@ -6681,7 +5697,7 @@ paths:
                 additionalProperties:
                   type: string
                   nullable: true
-                description: MediaAsset ID to URL mapping
+                description: Media_Asset ID to URL mapping
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -6818,147 +5834,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: Failed to validate 'query' parameter 'token'
           content:
@@ -7046,147 +5922,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -7526,147 +6262,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -7836,151 +6432,11 @@ paths:
           in: path
       responses:
         '200':
-          description: MediaAsset with added tag
+          description: Media_Asset with added tag
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8156,151 +6612,11 @@ paths:
           in: path
       responses:
         '200':
-          description: MediaAsset with removed tag
+          description: Media_Asset with removed tag
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8827,147 +7143,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -9119,7 +7295,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ProductionDto'
+                $ref: '#/components/schemas/AssetDto'
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -9258,7 +7434,7 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/FolderDto'
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -9529,7 +7705,7 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
-      summary: Change the status of a reference (e.g. MediaAsset)
+      summary: Change the status of a reference (e.g. Media_Asset)
       tags:
         - Namespace
       parameters:
@@ -9588,155 +7764,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                  reference:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                    required:
-                      - status
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
-                  - reference
+                $ref: '#/components/schemas/AssetReferenceDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -11517,13 +9545,13 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: &ref_4
+                    example: &ref_3
                       - ae13321a-522d-48da-9733-27c97bcab124
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_5
+                      enum: &ref_4
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -11538,7 +9566,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_6
+                    example: &ref_5
                       - VIEW_ASSETS
                   users:
                     type: array
@@ -11947,16 +9975,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_4
+                    example: *ref_3
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_5
+                      enum: *ref_4
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_6
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -12192,16 +10220,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_4
+                    example: *ref_3
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_5
+                      enum: *ref_4
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_6
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -12627,147 +10655,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    _id:
-                      type: string
-                      format: uuid
-                      description: Asset ID
-                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                    name:
-                      type: string
-                      description: Asset Name
-                      example: myasset.mov
-                    type:
-                      type: string
-                      enum:
-                        - ASSET
-                        - MEDIA_ASSET
-                        - SPACE
-                        - PRODUCTION
-                        - PROJECT
-                        - FOLDER
-                        - COMMENT
-                        - TAG
-                      description: Item type
-                    extension:
-                      type: string
-                      description: MediaAsset extension
-                      example: .mov
-                    status:
-                      type: string
-                      enum:
-                        - UPLOADING
-                        - UPLOADED
-                        - PROCESSING
-                        - FINISHED
-                        - WAITING
-                        - FAILED
-                      description: Upload status of the asset
-                      example: FINISHED
-                    assetType:
-                      type: string
-                      enum:
-                        - VIDEO
-                        - IMAGE
-                        - DOCUMENT
-                        - UNKNOWN
-                        - FOLDER
-                      description: MediaAsset Type
-                      example: VIDEO
-                    breadcrumb:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/ItemDto'
-                    duration:
-                      type: number
-                      description: Duration of the video if the asset is a video asset
-                      example: 29.56
-                    frameRate:
-                      type: number
-                      description: Frame rate of the video if the asset is a video asset
-                      example: 25
-                    thumbnailUrl:
-                      type: string
-                      format: uri
-                      description: URL of the thumbnail
-                      example: https://example.com/thumbnail.jpg
-                    previewUrl:
-                      type: string
-                      format: uri
-                      description: URL of the preview
-                      example: https://example.com/preview.jpg
-                    createDate:
-                      type: number
-                      minimum: 0
-                      description: Date of creation
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    modifyDate:
-                      type: number
-                      minimum: 0
-                      description: Date of last change
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    creator:
-                      $ref: '#/components/schemas/ReducedUser'
-                    tag:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: Name of the tag associated with the asset
-                          example: Needs Review
-                        color:
-                          type: string
-                          description: Color of the tag associated with the asset
-                          example: '#4A90E2'
-                      required:
-                        - name
-                        - color
-                      description: Tag associated with the asset
-                    upload:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                          format: uri
-                        token:
-                          type: string
-                        expiration:
-                          type: number
-                        libraryId:
-                          type: number
-                        videoId:
-                          type: string
-                      required:
-                        - url
-                        - token
-                        - expiration
-                    namespaces:
-                      type: object
-                      additionalProperties:
-                        type: object
-                        properties:
-                          status:
-                            type: string
-                        required:
-                          - status
-                      description: Information about the asset across namespaces.
-                      example: *ref_2
-                    permissions:
-                      type: array
-                      items:
-                        type: string
-                      description: Allowed operations on the asset
-                      example: *ref_3
-                  required:
-                    - _id
-                    - name
-                    - type
-                    - createDate
-                    - modifyDate
-                    - creator
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -13023,147 +10911,7 @@ paths:
               schema:
                 type: array
                 items:
-                  type: object
-                  properties:
-                    _id:
-                      type: string
-                      format: uuid
-                      description: Asset ID
-                      example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                    name:
-                      type: string
-                      description: Asset Name
-                      example: myasset.mov
-                    type:
-                      type: string
-                      enum:
-                        - ASSET
-                        - MEDIA_ASSET
-                        - SPACE
-                        - PRODUCTION
-                        - PROJECT
-                        - FOLDER
-                        - COMMENT
-                        - TAG
-                      description: Item type
-                    extension:
-                      type: string
-                      description: MediaAsset extension
-                      example: .mov
-                    status:
-                      type: string
-                      enum:
-                        - UPLOADING
-                        - UPLOADED
-                        - PROCESSING
-                        - FINISHED
-                        - WAITING
-                        - FAILED
-                      description: Upload status of the asset
-                      example: FINISHED
-                    assetType:
-                      type: string
-                      enum:
-                        - VIDEO
-                        - IMAGE
-                        - DOCUMENT
-                        - UNKNOWN
-                        - FOLDER
-                      description: MediaAsset Type
-                      example: VIDEO
-                    breadcrumb:
-                      type: array
-                      items:
-                        $ref: '#/components/schemas/ItemDto'
-                    duration:
-                      type: number
-                      description: Duration of the video if the asset is a video asset
-                      example: 29.56
-                    frameRate:
-                      type: number
-                      description: Frame rate of the video if the asset is a video asset
-                      example: 25
-                    thumbnailUrl:
-                      type: string
-                      format: uri
-                      description: URL of the thumbnail
-                      example: https://example.com/thumbnail.jpg
-                    previewUrl:
-                      type: string
-                      format: uri
-                      description: URL of the preview
-                      example: https://example.com/preview.jpg
-                    createDate:
-                      type: number
-                      minimum: 0
-                      description: Date of creation
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    modifyDate:
-                      type: number
-                      minimum: 0
-                      description: Date of last change
-                      format: UNIX timestamp
-                      example: 1747142773233
-                    creator:
-                      $ref: '#/components/schemas/ReducedUser'
-                    tag:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                          description: Name of the tag associated with the asset
-                          example: Needs Review
-                        color:
-                          type: string
-                          description: Color of the tag associated with the asset
-                          example: '#4A90E2'
-                      required:
-                        - name
-                        - color
-                      description: Tag associated with the asset
-                    upload:
-                      type: object
-                      properties:
-                        url:
-                          type: string
-                          format: uri
-                        token:
-                          type: string
-                        expiration:
-                          type: number
-                        libraryId:
-                          type: number
-                        videoId:
-                          type: string
-                      required:
-                        - url
-                        - token
-                        - expiration
-                    namespaces:
-                      type: object
-                      additionalProperties:
-                        type: object
-                        properties:
-                          status:
-                            type: string
-                        required:
-                          - status
-                      description: Information about the asset across namespaces.
-                      example: *ref_2
-                    permissions:
-                      type: array
-                      items:
-                        type: string
-                      description: Allowed operations on the asset
-                      example: *ref_3
-                  required:
-                    - _id
-                    - name
-                    - type
-                    - createDate
-                    - modifyDate
-                    - creator
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -13389,16 +11137,16 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_4
+                      example: *ref_3
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_5
+                        enum: *ref_4
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_6
+                      example: *ref_5
                     users:
                       type: array
                       items:
@@ -13611,16 +11359,16 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_4
+                      example: *ref_3
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_5
+                        enum: *ref_4
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_6
+                      example: *ref_5
                     users:
                       type: array
                       items:
@@ -14128,16 +11876,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_4
+                    example: *ref_3
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_5
+                      enum: *ref_4
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_6
+                    example: *ref_5
                   users:
                     type: array
                     items:
@@ -14431,147 +12179,7 @@ paths:
           content:
             application/json:
               schema:
-                type: object
-                properties:
-                  _id:
-                    type: string
-                    format: uuid
-                    description: Asset ID
-                    example: d11bdb05-d94a-4aa1-b6e2-32259a2c46e3
-                  name:
-                    type: string
-                    description: Asset Name
-                    example: myasset.mov
-                  type:
-                    type: string
-                    enum:
-                      - ASSET
-                      - MEDIA_ASSET
-                      - SPACE
-                      - PRODUCTION
-                      - PROJECT
-                      - FOLDER
-                      - COMMENT
-                      - TAG
-                    description: Item type
-                  extension:
-                    type: string
-                    description: MediaAsset extension
-                    example: .mov
-                  status:
-                    type: string
-                    enum:
-                      - UPLOADING
-                      - UPLOADED
-                      - PROCESSING
-                      - FINISHED
-                      - WAITING
-                      - FAILED
-                    description: Upload status of the asset
-                    example: FINISHED
-                  assetType:
-                    type: string
-                    enum:
-                      - VIDEO
-                      - IMAGE
-                      - DOCUMENT
-                      - UNKNOWN
-                      - FOLDER
-                    description: MediaAsset Type
-                    example: VIDEO
-                  breadcrumb:
-                    type: array
-                    items:
-                      $ref: '#/components/schemas/ItemDto'
-                  duration:
-                    type: number
-                    description: Duration of the video if the asset is a video asset
-                    example: 29.56
-                  frameRate:
-                    type: number
-                    description: Frame rate of the video if the asset is a video asset
-                    example: 25
-                  thumbnailUrl:
-                    type: string
-                    format: uri
-                    description: URL of the thumbnail
-                    example: https://example.com/thumbnail.jpg
-                  previewUrl:
-                    type: string
-                    format: uri
-                    description: URL of the preview
-                    example: https://example.com/preview.jpg
-                  createDate:
-                    type: number
-                    minimum: 0
-                    description: Date of creation
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  modifyDate:
-                    type: number
-                    minimum: 0
-                    description: Date of last change
-                    format: UNIX timestamp
-                    example: 1747142773233
-                  creator:
-                    $ref: '#/components/schemas/ReducedUser'
-                  tag:
-                    type: object
-                    properties:
-                      name:
-                        type: string
-                        description: Name of the tag associated with the asset
-                        example: Needs Review
-                      color:
-                        type: string
-                        description: Color of the tag associated with the asset
-                        example: '#4A90E2'
-                    required:
-                      - name
-                      - color
-                    description: Tag associated with the asset
-                  upload:
-                    type: object
-                    properties:
-                      url:
-                        type: string
-                        format: uri
-                      token:
-                        type: string
-                      expiration:
-                        type: number
-                      libraryId:
-                        type: number
-                      videoId:
-                        type: string
-                    required:
-                      - url
-                      - token
-                      - expiration
-                  namespaces:
-                    type: object
-                    additionalProperties:
-                      type: object
-                      properties:
-                        status:
-                          type: string
-                      required:
-                        - status
-                    description: Information about the asset across namespaces.
-                    example: *ref_2
-                  permissions:
-                    type: array
-                    items:
-                      type: string
-                    description: Allowed operations on the asset
-                    example: *ref_3
-                required:
-                  - _id
-                  - name
-                  - type
-                  - createDate
-                  - modifyDate
-                  - creator
+                $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
