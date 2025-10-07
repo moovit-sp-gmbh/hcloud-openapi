@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2473
+  version: 0.0.107-2487
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -11983,7 +11983,12 @@ components:
               name: Lower Case Action Node
               progress: 100
               message: Successfully converted input to lower case
-          target: account@moovit-sp.com
+          target:
+            _id: 64180bfafe4fbcd791493ef4
+            name: Account MSP
+            email: account@moovit-sp.com
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
           triggerSource: api
           dry: false
           createDate: 1692274988700
@@ -12033,7 +12038,12 @@ components:
           payload:
             type: JSON
             data: eyJmb28iOiJiYXIifQ==
-          accountName: local-agent
+          target:
+            _id: 64180bfafe4fbcd791493ef4
+            name: Account MSP
+            email: account@moovit-sp.com
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
           createDate: 1721136751035
     High5ExecutionLogDto:
       properties:
@@ -12054,9 +12064,9 @@ components:
         payload:
           $ref: '#/components/schemas/High5ExecutionPayload'
           description: Payload of the execution
-        accountName:
-          type: string
-          description: Name of the account that initiated the execution
+        target:
+          $ref: '#/components/schemas/ReducedUser'
+          description: Target that executes the stream. Can be a user or pool.
         createDate:
           type: number
           description: Date of creation of the log
@@ -12065,7 +12075,7 @@ components:
         - streamId
         - high5ExecutionId
         - nodeResults
-        - accountName
+        - target
         - createDate
       example:
         _id: 6479b0630053275a1742e233
@@ -12108,7 +12118,12 @@ components:
         payload:
           type: JSON
           data: eyJmb28iOiJiYXIifQ==
-        accountName: local-agent
+        target:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          email: account@moovit-sp.com
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         createDate: 1721136751035
     High5ExecutionOutcome:
       enum:
@@ -12358,8 +12373,8 @@ components:
             $ref: '#/components/schemas/StreamRunningNodeDto'
           description: Status of currently running nodes
         target:
-          type: string
-          description: Target that executes the stream. Can be a user email or pool name.
+          $ref: '#/components/schemas/ReducedUser'
+          description: Target that executes the stream. Can be a user or pool.
         isPoolExecution:
           type: boolean
           description: Defines wether this execution is part of a pool or not
@@ -12436,7 +12451,12 @@ components:
             name: Lower Case Action Node
             progress: 100
             message: Successfully converted input to lower case
-        target: account@moovit-sp.com
+        target:
+          _id: 64180bfafe4fbcd791493ef4
+          name: Account MSP
+          email: account@moovit-sp.com
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
         triggerSource: api
         dry: false
         createDate: 1692274988700
