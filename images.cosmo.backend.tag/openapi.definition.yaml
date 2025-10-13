@@ -492,7 +492,7 @@ components:
                   key:
                     type: string
                     enum:
-                      - id
+                      - _id
                   type:
                     type: string
                     enum:
@@ -513,7 +513,7 @@ components:
                   - type
                   - value
                   - comparator
-                description: id filters
+                description: _id filters
               - oneOf:
                   - type: object
                     properties:
@@ -952,7 +952,7 @@ components:
                   key:
                     type: string
                     enum:
-                      - creator.id
+                      - creator._id
                   type:
                     type: string
                     enum:
@@ -973,7 +973,7 @@ components:
                   - type
                   - value
                   - comparator
-                description: creator.id filters
+                description: creator._id filters
               - type: object
                 properties:
                   key:
