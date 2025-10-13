@@ -1160,8 +1160,8 @@ components:
       properties:
         name:
           type: string
-          description: Media_Asset name
-          example: my-asset
+          description: Media_Asset name. It must include a file extension
+          example: my-asset.mp4
         parentId:
           type: string
           format: uuid
