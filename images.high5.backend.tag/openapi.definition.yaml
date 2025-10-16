@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2487
+  version: 0.0.107-2531
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10260,12 +10260,15 @@ components:
                     name:
                       type: string
                     catalog:
-                      type: object
-                      properties:
-                        version:
-                          type: string
-                        url:
-                          type: string
+                      anyOf:
+                        - type: object
+                          properties:
+                            version:
+                              type: string
+                            url:
+                              type: string
+                        - nullable: true
+                        - nullable: true
                     type:
                       type: string
                       enum:
@@ -10648,12 +10651,15 @@ components:
                     name:
                       type: string
                     catalog:
-                      type: object
-                      properties:
-                        version:
-                          type: string
-                        url:
-                          type: string
+                      anyOf:
+                        - type: object
+                          properties:
+                            version:
+                              type: string
+                            url:
+                              type: string
+                        - nullable: true
+                        - nullable: true
                     type:
                       type: string
                       enum:
@@ -11014,12 +11020,15 @@ components:
             name:
               type: string
             catalog:
-              type: object
-              properties:
-                version:
-                  type: string
-                url:
-                  type: string
+              anyOf:
+                - type: object
+                  properties:
+                    version:
+                      type: string
+                    url:
+                      type: string
+                - nullable: true
+                - nullable: true
             type:
               type: string
               enum:
@@ -11402,12 +11411,15 @@ components:
             name:
               type: string
             catalog:
-              type: object
-              properties:
-                version:
-                  type: string
-                url:
-                  type: string
+              anyOf:
+                - type: object
+                  properties:
+                    version:
+                      type: string
+                    url:
+                      type: string
+                - nullable: true
+                - nullable: true
             type:
               type: string
               enum:
