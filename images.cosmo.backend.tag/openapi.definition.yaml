@@ -1518,6 +1518,27 @@ components:
         - createDate
         - creator
         - avatarUrl
+    ReducedTeam:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hex
+          description: Team ID
+          example: 67336a3f31ed8ecdc24e0080
+        name:
+          type: string
+          description: Team Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the team's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
     BaseAssetDto:
       type: object
       properties:
@@ -2560,27 +2581,6 @@ components:
         share: *ref_2
         user: *ref_2
       description: Map of all the permissions available in the Cosmo service
-    ReducedTeam:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: hex
-          description: Team ID
-          example: 67336a3f31ed8ecdc24e0080
-        name:
-          type: string
-          description: Team Name
-          example: Bob
-        avatarUrl:
-          type: string
-          format: uri
-          description: URL to the team's avatar
-          example: https://example.com
-      required:
-        - _id
-        - name
-        - avatarUrl
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces:
@@ -3751,7 +3751,57 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/ReducedUser'
+                type: array
+                items:
+                  anyOf:
+                    - allOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - type: object
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  _id:
+                                    type: string
+                                  name:
+                                    type: string
+                                required:
+                                  - _id
+                                  - name
+                            type:
+                              type: string
+                              enum:
+                                - user
+                                - team
+                          required:
+                            - roles
+                            - type
+                    - allOf:
+                        - $ref: '#/components/schemas/ReducedTeam'
+                        - type: object
+                          properties:
+                            roles:
+                              type: array
+                              items:
+                                type: object
+                                properties:
+                                  _id:
+                                    type: string
+                                  name:
+                                    type: string
+                                required:
+                                  - _id
+                                  - name
+                            type:
+                              type: string
+                              enum:
+                                - user
+                                - team
+                          required:
+                            - roles
+                            - type
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
