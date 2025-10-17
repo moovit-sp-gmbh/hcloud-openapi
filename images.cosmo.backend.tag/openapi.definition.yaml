@@ -1571,6 +1571,48 @@ components:
         name: my space
         type: SPACE
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+    ReducedOrganization:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hex
+          description: Organization ID
+          example: 67336a3f31ed8ecdc24e0080
+        name:
+          type: string
+          description: Organization Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the organization's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
+    ReducedSpace:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: Space ID
+          example: 8c773f25-aef8-427c-a009-32b7bb007802
+        name:
+          type: string
+          description: Space Name
+          example: Bob
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the space's avatar
+          example: https://example.com
+      required:
+        - _id
+        - name
+        - avatarUrl
     AssetDto:
       oneOf:
         - allOf:
@@ -1638,6 +1680,10 @@ components:
                   example: 1747142773233
                 creator:
                   $ref: '#/components/schemas/ReducedUser'
+                organization:
+                  $ref: '#/components/schemas/ReducedOrganization'
+                space:
+                  $ref: '#/components/schemas/ReducedSpace'
                 tag:
                   type: object
                   properties:
@@ -1695,6 +1741,8 @@ components:
                 - createDate
                 - modifyDate
                 - creator
+                - organization
+                - space
           example: *ref_0
     Unknown:
       type: object
@@ -1897,6 +1945,10 @@ components:
                   example: 1747142773233
                 creator:
                   $ref: '#/components/schemas/ReducedUser'
+                organization:
+                  $ref: '#/components/schemas/ReducedOrganization'
+                space:
+                  $ref: '#/components/schemas/ReducedSpace'
                 tag:
                   type: object
                   properties:
@@ -2016,6 +2068,8 @@ components:
                 - createDate
                 - modifyDate
                 - creator
+                - organization
+                - space
           example: *ref_0
     AssetPermissionsDto:
       type: object
@@ -2150,6 +2204,10 @@ components:
               example: 1747142773233
             creator:
               $ref: '#/components/schemas/ReducedUser'
+            organization:
+              $ref: '#/components/schemas/ReducedOrganization'
+            space:
+              $ref: '#/components/schemas/ReducedSpace'
             tag:
               type: object
               properties:
@@ -2214,6 +2272,8 @@ components:
             - createDate
             - modifyDate
             - creator
+            - organization
+            - space
             - reference
       example: *ref_0
     ReferencePatchDto:
@@ -2432,48 +2492,6 @@ components:
             - uuid-2
       required:
         - commentIds
-    ReducedOrganization:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: hex
-          description: Organization ID
-          example: 67336a3f31ed8ecdc24e0080
-        name:
-          type: string
-          description: Organization Name
-          example: Bob
-        avatarUrl:
-          type: string
-          format: uri
-          description: URL to the organization's avatar
-          example: https://example.com
-      required:
-        - _id
-        - name
-        - avatarUrl
-    ReducedSpace:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: uuid
-          description: Space ID
-          example: 8c773f25-aef8-427c-a009-32b7bb007802
-        name:
-          type: string
-          description: Space Name
-          example: Bob
-        avatarUrl:
-          type: string
-          format: uri
-          description: URL to the space's avatar
-          example: https://example.com
-      required:
-        - _id
-        - name
-        - avatarUrl
     ShareDetailsDto:
       type: object
       properties:
