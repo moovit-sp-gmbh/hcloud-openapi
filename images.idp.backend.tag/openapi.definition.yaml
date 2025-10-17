@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2384
+  version: 0.0.143-2393
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -9925,6 +9925,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        isAgent: true
         isGuest: false
         lastActive: 1666361487534
     UserLoginDto:
@@ -10165,6 +10166,7 @@ components:
         modifyDate: 1666361487534
         activeScopes:
           - idp:organization:admin
+        isAgent: true
         isGuest: false
         lastActive: 1666361487534
     UsersEmailDto:
