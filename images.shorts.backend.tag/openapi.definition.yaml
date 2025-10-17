@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
   title: hcloud - Shorts
-  version: 0.0.1-17
+  description: Simple and secure link shortener for long, unguessable URLs.
+  version: 1.0.0
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
     email: info@moovit-sp.com
-  description: Simple and secure link shortener for long, unguessable URLs.
 servers:
   - url: https://eu-central-1.helmut.cloud/api/shorts
     description: EU-Central production server
@@ -16,40 +16,117 @@ servers:
     description: EU development server
   - url: http://localhost/api/shorts
     description: Localhost
+components:
+  schemas:
+    CustomError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error name
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      required:
+        - error
+        - code
+        - message
+      description: API errors obey this shape
+    ShortCreateDto:
+      type: object
+      properties:
+        url:
+          type: string
+          format: uri
+          description: Long URL to shorten
+          example: https://helmut.cloud
+        visitsLimit:
+          type: number
+          minimum: 1
+          description: Max visits allowed
+          example: 100
+        organizationId:
+          type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+          description: ID of organization the short URL belongs to
+          example: 381b5de208337dc792b65f67
+        spaceId:
+          type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+          description: ID of the space this short URL belongs to
+          example: 291b7de208337dc792b65f76
+      required:
+        - url
+        - organizationId
+        - spaceId
+      description: Initial data required to create a shortened URL entry
+    ShortPatchDto:
+      type: object
+      properties:
+        visitsLimit:
+          type: number
+          minimum: 1
+          description: Max visits allowed
+          example: 100
+      required:
+        - visitsLimit
+      description: New limit of maximum allowed visits
+  parameters: {}
 paths:
   /v1/short/{slug}:
     get:
+      summary: Redirects to the original long URL based on a 6-character slug
       tags:
         - Short
-      summary: Redirects to the original long URL based on a 6-character slug
-      description: >-
-        Resolves a short URL slug and redirects the client to the corresponding
-        long URL. If the slug is invalid, not found, or the visit limit has been
-        exceeded, the client is redirected to a fallback page.
       parameters:
-        - $ref: '#/components/parameters/UrlSlug'
+        - schema:
+            type: string
+            minLength: 6
+            maxLength: 6
+            pattern: ^[A-NP-Za-km-z1-9]{6}$
+            description: 6-character unique identifier used to access the shortened URL
+            example: Az7M4q
+          required: true
+          name: slug
+          in: path
       responses:
         '302':
           description: >-
-            Redirect to the target URL, fallback URL if not found, or fallback
-            URL if visit limit exceeded.
-components:
-  securitySchemes:
-    BearerAuth:
-      type: http
-      bearerFormat: JWT
-      scheme: bearer
-    BasicAuth:
-      type: http
-      scheme: basic
-  parameters:
-    UrlSlug:
-      in: path
-      name: slug
-      schema:
-        type: string
-        minLength: 6
-        maxLength: 6
-        example: Az7M4q
-      required: true
-      description: 6-character unique identifier used to access the shortened URL
+            Resolves a short URL slug and redirects the client to the
+            corresponding long URL. If the slug is invalid, not found, or the
+            visit limit has been exceeded, the client is redirected to a
+            fallback page
+        '400':
+          description: Failed to validate 'path' parameter 'slug'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'slug':
+                  summary: Failed to validate 'path' parameter 'slug'
+                  description: Failed to validate 'path' parameter 'slug' - {error}
+                  value:
+                    code: 010.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'slug' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 010.000.0002
+                    error: internal.server.error
+                    message: something went wrong
