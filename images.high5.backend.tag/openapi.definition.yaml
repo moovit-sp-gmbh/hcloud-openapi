@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2531
+  version: 0.0.107-2543
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -10062,9 +10062,10 @@ components:
           pattern: ^[a-zA-Z-_]{1,64}$
           description: >-
             Name of the design (only alphabet characters, hyphens and
-            underscores are allowed, it should contain between 1 and 64 symbols)
+            underscores are allowed; it should contain between 1 and 64
+            characters)
+          example: Design-application
           deprecated: true
-          example: My_design
         content:
           $ref: '#/components/schemas/StreamDesign'
         build:
@@ -10991,28 +10992,788 @@ components:
             - target
             - type
             - uuid
+      description: Operation to apply to the design
+      example:
+        target: NODE
+        type: MOVE
+        uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
+        newCoords:
+          x: 25
+          'y': 25
     DesignPatchDto:
+      type: object
       properties:
         hash:
           type: string
+          minLength: 64
+          maxLength: 64
+          pattern: ^[a-f0-9]+$
           description: Current hash of the design
+          example: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
         operations:
           type: array
           items:
-            $ref: '#/components/schemas/DesignOperation'
+            anyOf:
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - NODE
+                  type:
+                    type: string
+                    enum:
+                      - ADD
+                  details:
+                    anyOf:
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                          catalog:
+                            anyOf:
+                              - type: object
+                                properties:
+                                  version:
+                                    type: string
+                                  url:
+                                    type: string
+                              - nullable: true
+                              - nullable: true
+                          type:
+                            type: string
+                            enum:
+                              - TRIGGER
+                          description:
+                            type: string
+                          color:
+                            type: string
+                          uuid:
+                            type: string
+                          connectors:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                uuid:
+                                  type: string
+                                io:
+                                  type: string
+                                  enum:
+                                    - INPUT
+                                    - OUTPUT
+                                type:
+                                  type: string
+                                  enum:
+                                    - TRIGGER
+                                    - SUCCESS
+                                    - FAIL
+                                    - CUSTOM
+                              required:
+                                - name
+                                - description
+                                - uuid
+                                - io
+                                - type
+                          inputs:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                advanced:
+                                  type: boolean
+                                type:
+                                  type: string
+                                  enum:
+                                    - STRING
+                                    - STRING_LONG
+                                    - STRING_LIST
+                                    - STRING_MAP
+                                    - STRING_READONLY
+                                    - STRING_SELECT
+                                    - STRING_PASSWORD
+                                    - NUMBER
+                                    - BOOLEAN
+                                    - ANY
+                                example:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                value:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                mandatory:
+                                  type: boolean
+                              required:
+                                - uuid
+                                - name
+                                - type
+                                - example
+                          coords:
+                            type: object
+                            properties:
+                              currentX:
+                                type: number
+                              currentY:
+                                type: number
+                              initialX:
+                                type: number
+                              initialY:
+                                type: number
+                              xOffset:
+                                type: number
+                              yOffset:
+                                type: number
+                            required:
+                              - currentX
+                              - currentY
+                              - initialX
+                              - initialY
+                          path:
+                            type: string
+                          kind:
+                            type: string
+                            enum:
+                              - NODE
+                          customDescription:
+                            type: string
+                          bypass:
+                            type: boolean
+                          version:
+                            type: object
+                            properties:
+                              major:
+                                type: number
+                              minor:
+                                type: number
+                              patch:
+                                type: number
+                              changelog:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                              - major
+                              - minor
+                              - patch
+                              - changelog
+                          breakpoint:
+                            type: boolean
+                        required:
+                          - name
+                          - description
+                          - color
+                          - uuid
+                          - connectors
+                          - inputs
+                          - coords
+                          - path
+                          - kind
+                          - version
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                          catalog:
+                            nullable: true
+                          type:
+                            type: string
+                            enum:
+                              - TRIGGER
+                          description:
+                            type: string
+                          color:
+                            type: string
+                          uuid:
+                            type: string
+                          connectors:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                uuid:
+                                  type: string
+                                io:
+                                  type: string
+                                  enum:
+                                    - INPUT
+                                    - OUTPUT
+                                type:
+                                  type: string
+                                  enum:
+                                    - TRIGGER
+                                    - SUCCESS
+                                    - FAIL
+                                    - CUSTOM
+                              required:
+                                - name
+                                - description
+                                - uuid
+                                - io
+                                - type
+                          inputs:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                advanced:
+                                  type: boolean
+                                type:
+                                  type: string
+                                  enum:
+                                    - STRING
+                                    - STRING_LONG
+                                    - STRING_LIST
+                                    - STRING_MAP
+                                    - STRING_READONLY
+                                    - STRING_SELECT
+                                    - STRING_PASSWORD
+                                    - NUMBER
+                                    - BOOLEAN
+                                    - ANY
+                                example:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                value:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                mandatory:
+                                  type: boolean
+                              required:
+                                - uuid
+                                - name
+                                - type
+                                - example
+                          coords:
+                            type: object
+                            properties:
+                              currentX:
+                                type: number
+                              currentY:
+                                type: number
+                              initialX:
+                                type: number
+                              initialY:
+                                type: number
+                              xOffset:
+                                type: number
+                              yOffset:
+                                type: number
+                            required:
+                              - currentX
+                              - currentY
+                              - initialX
+                              - initialY
+                          path:
+                            type: string
+                          kind:
+                            type: string
+                            enum:
+                              - NODE
+                          customDescription:
+                            type: string
+                          bypass:
+                            type: boolean
+                          version:
+                            type: object
+                            properties:
+                              major:
+                                type: number
+                              minor:
+                                type: number
+                              patch:
+                                type: number
+                              changelog:
+                                type: array
+                                items:
+                                  type: string
+                            required:
+                              - major
+                              - minor
+                              - patch
+                              - changelog
+                          breakpoint:
+                            type: boolean
+                          customNode:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                            required:
+                              - _id
+                        required:
+                          - name
+                          - description
+                          - color
+                          - uuid
+                          - connectors
+                          - inputs
+                          - coords
+                          - path
+                          - kind
+                          - version
+                          - customNode
+                      - type: object
+                        properties:
+                          kind:
+                            type: string
+                            enum:
+                              - ANNOTATION
+                          title:
+                            type: string
+                          originalName:
+                            type: string
+                          background:
+                            type: string
+                          version:
+                            type: object
+                            properties:
+                              major:
+                                type: number
+                              minor:
+                                type: number
+                              patch:
+                                type: number
+                              changelog:
+                                type: array
+                                items:
+                                  type: string
+                          size:
+                            type: object
+                            properties:
+                              height:
+                                type: number
+                              width:
+                                type: number
+                            required:
+                              - height
+                              - width
+                          name:
+                            type: string
+                          catalog:
+                            anyOf:
+                              - type: object
+                                properties:
+                                  version:
+                                    type: string
+                                  url:
+                                    type: string
+                              - nullable: true
+                              - nullable: true
+                          type:
+                            type: string
+                            enum:
+                              - TRIGGER
+                          description:
+                            type: string
+                          color:
+                            type: string
+                          uuid:
+                            type: string
+                          connectors:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                uuid:
+                                  type: string
+                                io:
+                                  type: string
+                                  enum:
+                                    - INPUT
+                                    - OUTPUT
+                                type:
+                                  type: string
+                                  enum:
+                                    - TRIGGER
+                                    - SUCCESS
+                                    - FAIL
+                                    - CUSTOM
+                              required:
+                                - name
+                                - description
+                                - uuid
+                                - io
+                                - type
+                          inputs:
+                            type: array
+                            items:
+                              type: object
+                              properties:
+                                uuid:
+                                  type: string
+                                name:
+                                  type: string
+                                description:
+                                  type: string
+                                advanced:
+                                  type: boolean
+                                type:
+                                  type: string
+                                  enum:
+                                    - STRING
+                                    - STRING_LONG
+                                    - STRING_LIST
+                                    - STRING_MAP
+                                    - STRING_READONLY
+                                    - STRING_SELECT
+                                    - STRING_PASSWORD
+                                    - NUMBER
+                                    - BOOLEAN
+                                    - ANY
+                                example:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                value:
+                                  anyOf:
+                                    - type: string
+                                    - type: number
+                                    - type: boolean
+                                    - type: array
+                                      items:
+                                        type: string
+                                    - type: object
+                                      additionalProperties:
+                                        nullable: true
+                                    - type: array
+                                      items:
+                                        type: object
+                                        additionalProperties:
+                                          nullable: true
+                                mandatory:
+                                  type: boolean
+                              required:
+                                - uuid
+                                - name
+                                - type
+                                - example
+                          coords:
+                            type: object
+                            properties:
+                              currentX:
+                                type: number
+                              currentY:
+                                type: number
+                              initialX:
+                                type: number
+                              initialY:
+                                type: number
+                              xOffset:
+                                type: number
+                              yOffset:
+                                type: number
+                            required:
+                              - currentX
+                              - currentY
+                              - initialX
+                              - initialY
+                          path:
+                            type: string
+                        required:
+                          - kind
+                          - title
+                          - background
+                          - version
+                          - size
+                          - name
+                          - description
+                          - color
+                          - uuid
+                          - connectors
+                          - inputs
+                          - coords
+                          - path
+                required:
+                  - target
+                  - type
+                  - details
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - NODE
+                  type:
+                    type: string
+                    enum:
+                      - DELETE
+                  uuid:
+                    type: string
+                    format: uuid
+                required:
+                  - target
+                  - type
+                  - uuid
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - NODE
+                  type:
+                    type: string
+                    enum:
+                      - EDIT
+                  uuid:
+                    type: string
+                    format: uuid
+                  changes:
+                    anyOf:
+                      - type: object
+                        properties:
+                          customDescription:
+                            type: string
+                          color:
+                            type: string
+                          bypass:
+                            type: boolean
+                          breakpoint:
+                            type: boolean
+                      - type: object
+                        properties:
+                          customDescription:
+                            type: string
+                          customNode:
+                            type: object
+                            properties:
+                              _id:
+                                type: string
+                            required:
+                              - _id
+                          color:
+                            type: string
+                          bypass:
+                            type: boolean
+                          breakpoint:
+                            type: boolean
+                      - type: object
+                        properties:
+                          color:
+                            type: string
+                required:
+                  - target
+                  - type
+                  - uuid
+                  - changes
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - NODE
+                  type:
+                    type: string
+                    enum:
+                      - MOVE
+                  uuid:
+                    anyOf:
+                      - type: string
+                        format: uuid
+                      - type: string
+                        enum:
+                          - '0'
+                  newCoords:
+                    type: object
+                    properties:
+                      x:
+                        type: number
+                      'y':
+                        type: number
+                    required:
+                      - x
+                      - 'y'
+                required:
+                  - target
+                  - type
+                  - uuid
+                  - newCoords
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - LINK
+                  type:
+                    type: string
+                    enum:
+                      - LINK
+                  details:
+                    type: object
+                    properties:
+                      uuid:
+                        type: string
+                        format: uuid
+                      from:
+                        type: object
+                        properties:
+                          nodeUuid:
+                            anyOf:
+                              - type: string
+                                format: uuid
+                              - type: string
+                                enum:
+                                  - '0'
+                          connectorUuid:
+                            anyOf:
+                              - type: string
+                                format: uuid
+                              - type: string
+                                enum:
+                                  - '0'
+                              - type: string
+                                enum:
+                                  - '1'
+                        required:
+                          - nodeUuid
+                          - connectorUuid
+                      to:
+                        type: object
+                        properties:
+                          nodeUuid:
+                            anyOf:
+                              - type: string
+                                format: uuid
+                              - type: string
+                                enum:
+                                  - '0'
+                          connectorUuid:
+                            anyOf:
+                              - type: string
+                                format: uuid
+                              - type: string
+                                enum:
+                                  - '0'
+                              - type: string
+                                enum:
+                                  - '1'
+                        required:
+                          - nodeUuid
+                          - connectorUuid
+                    required:
+                      - uuid
+                      - from
+                      - to
+                required:
+                  - target
+                  - type
+                  - details
+              - type: object
+                properties:
+                  target:
+                    type: string
+                    enum:
+                      - LINK
+                  type:
+                    type: string
+                    enum:
+                      - UNLINK
+                  uuid:
+                    type: string
+                    format: uuid
+                required:
+                  - target
+                  - type
+                  - uuid
+            description: Operation to apply to the design
+            example:
+              target: NODE
+              type: MOVE
+              uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
+              newCoords:
+                x: 25
+                'y': 25
           description: Operations to apply to the design
       required:
         - hash
         - operations
-      example:
-        hash: 0cfd5f4e76bf02158951d317babe7979d4f4e6ccce5d6b7f4739d65e15d290af
-        operations:
-          - target: NODE
-            type: MOVE
-            uuid: 111f07fc-aa74-4949-be5b-6d282e91010a
-            newCoords:
-              x: 25
-              'y': 25
     DesignerNode:
       anyOf:
         - type: object
