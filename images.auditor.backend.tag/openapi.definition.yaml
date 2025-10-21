@@ -1,12 +1,12 @@
 openapi: 3.0.0
 info:
   title: hcloud - Auditor
-  version: 0.0.28-443
+  description: Auditor manages audit logs
+  version: 1.0.0
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
     email: info@moovit-sp.com
-  description: Auditor manages audit logs
 servers:
   - url: https://eu-central-1.helmut.cloud/api/auditor
     description: EU-Central production server
@@ -16,143 +16,144 @@ servers:
     description: EU development server
   - url: http://localhost/api/auditor
     description: Localhost
-paths:
-  /v1/org/{orgName}/logs/search:
-    post:
-      tags:
-        - AuditLogs
-      summary: >-
-        Retrieves all audit logs that match the provided search filter. Returns
-        all audit logs of the organization if no search filter is provided.
-      description: |-
-
-        Required organization role: ADMIN\
-        Required scopes: IDP_ORGANIZATION_READ
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - $ref: '#/components/parameters/OrgName'
-        - $ref: '#/components/parameters/LimitParameter'
-        - $ref: '#/components/parameters/PageParameter'
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/Search'
-      responses:
-        '200':
-          description: List of audit logs that match the search filter
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/AuditLogDtoWithOrgName'
-        '400':
-          description: Organization name is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization name is invalid:
-                  $ref: '#/components/examples/InvalidParameterException'
-                Invalid body:
-                  $ref: '#/components/examples/InvalidBodyException'
-                  summary: Invalid body
-                Invalid filter:
-                  $ref: '#/components/examples/InvalidFilterException'
-                  summary: Invalid search filter
-                Invalid pagination parameters (limit/page):
-                  $ref: '#/components/examples/InvalidParameterException'
-                  summary: Invalid limit or page
-        '401':
-          description: There was an error while evaluating the user's credentials
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                WrongAuthenticationTokenException:
-                  $ref: '#/components/examples/WrongAuthenticationTokenException'
-                  summary: The JWT payload has an invalid format
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                  summary: The credentials were incorrect
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
-                  summary: The Authorization header is empty
-        '403':
-          description: Missing required scope for operation
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Missing required scope for operation:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                User is not member of organization or role is insufficient:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  $ref: '#/components/examples/OrganizationNotFoundException'
-        default:
-          description: Unexpected error
 components:
   securitySchemes:
-    BearerAuth:
+    bearerAuth:
       type: http
-      bearerFormat: JWT
       scheme: bearer
-    BasicAuth:
+      bearerFormat: JWT
+    patAuth:
+      type: http
+      scheme: bearer
+      bearerFormat: PAT
+    basicAuth:
       type: http
       scheme: basic
   schemas:
+    CustomError:
+      type: object
+      properties:
+        error:
+          type: string
+          description: Error name
+        code:
+          type: string
+          description: Error code
+        message:
+          type: string
+          description: Error message
+      required:
+        - error
+        - code
+        - message
+      description: API errors obey this shape
+    Event:
+      type: string
+      enum:
+        - login
+        - logout
+        - user
+        - organization
+        - organizationMember
+        - team
+        - space
+        - event
+        - stream
+        - mail
+        - webhook
+        - cronjob
+        - secret
+        - agent
+        - avatar
+        - serviceAccount
+        - database
+        - document
+        - asset
+        - share
+        - role
+        - group
+        - app
+      description: Event of the log (login, logout, user, stream, ...)
+      example: webhook
+    Level:
+      type: string
+      enum:
+        - info
+        - warn
+        - error
+        - debug
+      description: Level of the log (info, warn, error, debug, ...)
+      example: error
+    Origin:
+      type: string
+      enum:
+        - idp
+        - high5
+        - auditor
+        - mailer
+        - fuse
+        - mothership
+        - dali
+        - cosmo
+      description: Origin of the log (idp, high5, auditor, ...)
+      example: mailer
+    Type:
+      type: string
+      enum:
+        - read
+        - write
+        - create
+        - update
+        - delete
+        - execute
+        - connect
+        - disconnect
+        - add
+        - remove
+        - send
+        - receive
+      description: Type of the log (read, write, update, ...)
+      example: execute
+    LicenseTier:
+      type: string
+      enum:
+        - FREE
+        - PRO
+        - ENTERPRISE
+      description: Tier of the license
+      example: PRO
     AuditLogDtoWithOrgName:
+      type: object
       properties:
         _id:
           type: string
+          format: hexadecimal
           description: Unique identifier of this log
+          example: 527d1df208337bc792b55f73
         origin:
           $ref: '#/components/schemas/Origin'
-          description: Origin of the log (idp, high5, auditor, ...)
         level:
           $ref: '#/components/schemas/Level'
-          description: Level of the log (info, warn, error, debug, ...)
         organizationName:
           type: string
+          description: Name of the Organization the log belongs to
         space:
           type: string
           description: Name of the Space
         event:
           $ref: '#/components/schemas/Event'
-          description: Event of the log (login, logout, user, stream, ...)
         user:
           type: string
-          description: User that triggered the audit log
+          description: Name of the user that triggered the audit log
         type:
           $ref: '#/components/schemas/Type'
-          description: Type of the log (read, write, update, ...)
         timestamp:
           type: number
+          minimum: 0
           description: Timestamp in unix format
         message:
-          oneOf:
-            - type: object
-              additionalProperties: true
-            - type: array
-              items: {}
-            - type: string
-            - type: number
-            - type: boolean
-          description: Actual message
+          nullable: true
+          description: Actual message of the log
         correlationId:
           type: string
           description: Request correlation id
@@ -161,6 +162,7 @@ components:
           description: Ip of the client of the initial request
         assetId:
           type: string
+          format: hexadecimal
           description: >-
             Optional asset Id that is just present for events around assets
             (e.g. asset add, comment add to asset, ...)
@@ -174,312 +176,192 @@ components:
         - timestamp
         - correlationId
         - requestorIp
-      example:
-        _id: 63cff8cbf4d8003cdf93d532
-        origin: idp
-        level: debug
-        organizationName: OrgName
-        event: login
-        user: 62f0c93a38c853e70f99ec43
-        type: connect
-        timestamp: 1674574027
-        message: Authenticate account@moovit-sp.com
-        correlationId: 1aab73eb73a35934:6eed330da496b4a4:1aab73eb73a35934:0
-    CustomError:
-      properties:
-        code:
-          type: string
-          description: >-
-            "A helmut cloud custom error code following this schema: [Custom
-            Error
-            Codes](https://development-guideline.pages.moovit-sp.com/en/hcloud/customErrorCodes.html)"
-        error:
-          type: string
-          description: 'Name of the error in the following format: name.of.error'
-        message:
-          type: string
-          description: Error description
-      required:
-        - code
-        - error
-        - message
-      example: null
-    Search:
-      properties:
-        filters:
-          type: array
-          items:
-            $ref: '#/components/schemas/SearchFilter'
-          description: A list of filters
-        sorting:
-          $ref: '#/components/schemas/Sorting'
-          description: The sorting definition
-      example:
-        filters:
-          - type: DATE
-            key: modifyDate
-            comparator: less than
-            value: 1681912446650
-        sorting:
-          direction: DESC
-          fields:
-            - name
-            - company
-    SearchFilterComparatorBoolean:
-      enum:
-        - is
-        - is not
-      type: string
-      description: |
-        * is - Boolean equals the specified boolean value
-        * is not - Boolean does not equal the specified boolean value
-    SearchFilterComparatorDate:
-      enum:
-        - is
-        - is not
-        - greater than
-        - less than
-        - greater than or equal
-        - less than or equal
-      type: string
-      description: >
-        * is - Date equals the specified date value
-
-        * is not - Date does not equal the specified date value
-
-        * greater than - Date is more recent than the specified date value
-
-        * less than - Date is older than the specified date value
-
-        * greater than or equal - Date is more recent or equal to the specified
-        date value
-
-        * less than or equal - Date is older than or equal to the specified date
-        value
-    SearchFilterComparatorNumber:
-      enum:
-        - is
-        - is not
-        - greater than
-        - less than
-        - greater than or equal
-        - less than or equal
-      type: string
-      description: >
-        * is - Number equals the specified numeric value
-
-        * is not - Number does not equal the specified numeric value
-
-        * greater than - Number is greater than the specified numeric value
-
-        * less than - Number is less than the specified numeric value
-
-        * greater than or equal - Number is greater than or equal to the
-        specified numeric value
-
-        * less than or equal - Number is less than or equal to the specified
-        numeric value
-    SearchFilterComparatorString:
-      enum:
-        - is
-        - is not
-        - starts with
-        - ends with
-        - contains
-      type: string
-      description: |
-        * is - String equals the specified string value
-        * is not - String does not equal the specified string value
-        * starts with - String starts with the specified string value
-        * ends with - String ends with the specified string value
-        * contains - String contains the specified string value
-    SearchFilterType:
-      enum:
-        - STRING
-        - SELECT
-        - MULTISELECT
-        - TYPEAHEAD
-        - NUMBER
-        - DATE
-        - BOOLEAN
-      type: string
-      description: |
-        * STRING - Filter by a string value
-        * SELECT - Filter by a value from a set of possible choices
-        * MULTISELECT - Filter by multiple values from a set of possible choices
-        * TYPEAHEAD - Filter by ???
-        * NUMBER - Filter by a numeric value
-        * DATE - Filter by a Date value
-        * BOOLEAN - Filter by a boolean flag
-    SortDirection:
-      enum:
-        - ASC
-        - DESC
-      type: string
-      description: |
-        * ASC - Ascending order
-        * DESC - Descending order
-    Sorting:
-      properties:
-        direction:
-          $ref: '#/components/schemas/SortDirection'
-        fields:
-          type: array
-          items:
+      description: Audit log record with organization name
+  parameters: {}
+paths:
+  /v1/org/{orgName}/logs/search:
+    post:
+      security:
+        - bearerAuth:
+            - idp:organization:read
+        - basicAuth:
+            - idp:organization:read
+        - patAuth:
+            - idp:organization:read
+      summary: >-
+        Retrieves all audit logs that match the provided search filter, returns
+        all audit logs of the organization if no search filter is provided
+      tags:
+        - AuditLogs
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+        - schema:
             type: string
-          description: The fields to consider when performing the sorting of the result.
-      example:
-        direction: DESC
-        fields:
-          - name
-          - company
-    Event:
-      enum:
-        - Login
-        - Logout
-        - User
-        - Organization
-        - App
-        - Event
-        - Stream
-        - Mail
-      type: string
-    Level:
-      enum:
-        - INFO
-        - WARN
-        - ERROR
-        - DEBUG
-      type: string
-    Origin:
-      enum:
-        - IDP
-        - High5
-        - Auditor
-        - Mailer
-      type: string
-    SearchFilter:
-      properties:
-        type:
-          description: The type of the filter
-          $ref: '#/components/schemas/SearchFilterType'
-        key:
-          type: string
-          description: The search key
-        comparator:
-          description: The search comparator
-          oneOf:
-            - $ref: '#/components/schemas/SearchFilterComparatorString'
-            - $ref: '#/components/schemas/SearchFilterComparatorNumber'
-            - $ref: '#/components/schemas/SearchFilterComparatorDate'
-            - $ref: '#/components/schemas/SearchFilterComparatorBoolean'
-        value:
-          description: The value searching for
-          oneOf:
-            - type: string
-            - type: array
-              items:
-                type: string
-            - type: boolean
-            - type: number
-      required:
-        - type
-        - key
-        - comparator
-        - value
-      example:
-        type: STRING
-        key: name
-        comparator: starts with
-        value: Editor-
-    Type:
-      enum:
-        - Read
-        - Write
-        - Create
-        - Update
-        - Delete
-        - Execute
-        - Connect
-        - Disconnect
-        - Add
-        - Remove
-        - Send
-        - Receive
-      type: string
-  examples:
-    NotAuthorizedException:
-      value:
-        code: 004.001.0001
-        error: unauthorized
-        message: You're not authorized
-    InvalidFilterException:
-      value:
-        code: 004.023.0001
-        error: search.invalid.filter
-        message: The value of the filter property 'field' is invalid
-    OrganizationNotFoundException:
-      value:
-        code: 004.007.0001
-        error: organization.not.found
-        message: Organization not found
-    InvalidParameterException:
-      value:
-        code: 004.000.0003
-        error: invalid.parameter
-        message: >-
-          Failed to validate '<path | query>' parameter '<parameter name>' -
-          <detailed cause of the validation fail>
-    InsufficientAccessRightException:
-      value:
-        code: 004.001.0004
-        error: insufficient.rights
-        message: You have not enough rights to access/manipulate this resource
-    AuthenticationTokenMissingException:
-      value:
-        code: 004.001.0002
-        error: missing.auth.token
-        message: Expected an authentication token that has not been provided
-    WrongAuthenticationTokenException:
-      value:
-        code: 004.001.0003
-        error: wrong.auth.token
-        message: Your authentication token is invalid
-    InvalidBodyException:
-      value:
-        code: 004.000.0004
-        error: invalid.body
-        message: <detailed cause of the validation fail>
-  parameters:
-    OrgName:
-      in: path
-      name: orgName
-      schema:
-        type: string
-        minLength: 3
-        maxLength: 64
-        pattern: /^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$/i
-        example: MoovIT-Software-Products-GmbH
-      required: true
-      description: >-
-        Name of the organization (only alphanumeric characters, hyphens and dots
-        are allowed; it should contain between 3 and 64 characters)
-    LimitParameter:
-      in: query
-      name: limit
-      schema:
-        type: integer
-        minimum: 1
-        maximum: 100
-        default: 25
-      required: false
-      description: The number of items to return. Integer between 1 and 100.
-    PageParameter:
-      in: query
-      name: page
-      schema:
-        type: integer
-        minimum: 0
-        default: 0
-      required: false
-      description: Designates the current page, when using a limit. Minimum value is 0.
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: List of audit logs that match the search filter
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuditLogDtoWithOrgName'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'query' parameter 'limit' | Failed to validate 'query' parameter
+            'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 004.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 004.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 004.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 004.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 004.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 004.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['idp:organization:read'] not included in
+            authorization | User's organization role is insufficient. Must be at
+            least ADMIN
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['idp:organization:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['idp:organization:read'] not included in
+                    authorization
+                  value:
+                    code: 004.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 004.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 004.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 004.000.0002
+                    error: internal.server.error
+                    message: something went wrong
