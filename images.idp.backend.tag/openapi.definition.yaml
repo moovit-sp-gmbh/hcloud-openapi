@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2398
+  version: 0.0.143-2402
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5580,6 +5580,87 @@ paths:
                   $ref: '#/components/examples/InternalServerErrorException'
         default:
           description: Unexpected error
+  /v1/org/{orgName}/stats:
+    get:
+      tags:
+        - Organization.Statistics
+      summary: Retrieve usage statistics for a specific organization
+      description: |-
+        Provides detailed license usage metrics for a given organization
+        Required scopes: IDP_ORGANIZATION_READ\
+        Required role: ADMIN
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+      responses:
+        '200':
+          description: Statistics information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsDto'
+        '400':
+          description: Invalid Parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+        default:
+          description: Unexpected error
   /v1/user/email:
     get:
       tags:
@@ -9610,6 +9691,53 @@ components:
         fields:
           - name
           - createDate
+    StatsDto:
+      type: object
+      properties:
+        orgName:
+          type: string
+          description: Name of the organization
+          example: Moovit SP GmbH
+        usersTotal:
+          type: number
+          minimum: 0
+          description: Total number of registered users within the organization
+          example: 47
+        usersOnline:
+          type: number
+          minimum: 0
+          description: Number of users currently online in the organization
+          example: 19
+        teams:
+          type: number
+          minimum: 0
+          description: Total number of teams created under the organization
+          example: 11
+        serviceAccounts:
+          type: number
+          minimum: 0
+          description: Number of agent accounts associated with the organization
+          example: 5
+        date:
+          type: number
+          description: >-
+            Timestamp representing the date for which the statistics were
+            obtained
+      required:
+        - orgName
+        - usersTotal
+        - usersOnline
+        - teams
+        - serviceAccounts
+        - date
+      description: Aggregated license usage statistics for a given organization
+      example:
+        orgName: Moovit SP GmbH
+        usersTotal: 47
+        usersOnline: 19
+        teams: 11
+        serviceAccounts: 5
+        date: 1760997600000
     TeamCreateDto:
       properties:
         name:
