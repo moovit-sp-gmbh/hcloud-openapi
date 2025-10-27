@@ -1202,6 +1202,10 @@ components:
           minLength: 1
           maxLength: 32
           pattern: ^[\w-.]{1,32}$
+          description: >-
+            Name of the space (only alphanumeric characters, hyphens and dots
+            are allowed; it should contain between 1 and 32 characters)
+          example: Helmut4
       required:
         - name
     ProductionCreateDto:
@@ -1212,6 +1216,10 @@ components:
           minLength: 1
           maxLength: 32
           pattern: ^[\w-.]{1,32}$
+          description: >-
+            Name of the space (only alphanumeric characters, hyphens and dots
+            are allowed; it should contain between 1 and 32 characters)
+          example: Helmut4
       required:
         - name
     NamespaceSearchName:
@@ -1220,10 +1228,18 @@ components:
           minLength: 3
           maxLength: 64
           pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+          description: >-
+            Name of the namespace (only alphanumeric characters, hyphens and
+            dots are allowed; it should contain between 3 and 64 characters)
+          example: My-Namespace
         - type: string
           minLength: 3
           maxLength: 64
           pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+          description: >-
+            Name of the namespace (only alphanumeric characters, hyphens and
+            dots are allowed; it should contain between 3 and 64 characters)
+          example: My-Namespace
         - type: string
           enum:
             - '*'
@@ -1234,10 +1250,20 @@ components:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 enum:
                   - '*'
@@ -2621,11 +2647,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -2773,11 +2808,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -2942,11 +2986,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -2955,7 +3008,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3097,11 +3153,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3110,7 +3175,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3249,11 +3317,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3262,7 +3339,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3411,11 +3491,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3424,7 +3513,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3573,11 +3665,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3586,7 +3687,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3729,11 +3833,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3742,7 +3855,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -3962,11 +4078,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -3975,7 +4100,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -4181,11 +4309,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -4194,7 +4331,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -4359,11 +4499,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -4372,7 +4521,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -4538,11 +4690,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -4551,7 +4712,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -4699,11 +4863,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -4712,7 +4885,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -4874,11 +5050,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -4887,7 +5072,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -5052,11 +5240,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -5065,7 +5262,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -5238,11 +5438,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -5251,7 +5460,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -5282,10 +5494,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 enum:
                   - '*'
@@ -5296,10 +5518,20 @@ paths:
                       minLength: 3
                       maxLength: 64
                       pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
                     - type: string
                       minLength: 3
                       maxLength: 64
                       pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
                     - type: string
                       enum:
                         - '*'
@@ -5479,11 +5711,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -5492,7 +5733,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -5702,11 +5946,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -5715,7 +5968,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -5873,11 +6129,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -5886,7 +6151,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6041,11 +6309,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6054,7 +6331,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6212,11 +6492,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6225,7 +6514,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6241,7 +6533,8 @@ paths:
             minLength: 1
             maxLength: 20
             pattern: ^[a-zA-Z0-9 ]{1,20}$
-            description: Tag name
+            description: Name of the tag (it should contain between 1 and 20 characters)
+            example: My Tag
           required: true
           name: tagName
           in: path
@@ -6401,11 +6694,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6414,7 +6716,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6568,11 +6873,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6581,7 +6895,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6767,11 +7084,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6780,7 +7106,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -6923,11 +7252,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -6936,7 +7274,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7220,11 +7561,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -7234,6 +7584,7 @@ paths:
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
             description: Space Name
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7364,11 +7715,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -7377,7 +7737,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7530,11 +7893,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -7543,7 +7915,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7559,11 +7934,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -7733,11 +8117,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -7746,7 +8139,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7756,11 +8152,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -7937,11 +8342,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -7950,7 +8364,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -7960,11 +8377,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -8204,11 +8630,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -8217,7 +8652,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -8227,11 +8665,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -8405,11 +8852,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -8418,7 +8874,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -8428,11 +8887,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -8635,11 +9103,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -8648,7 +9125,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -8658,11 +9138,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -8856,11 +9345,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -8869,7 +9367,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -8879,11 +9380,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -9095,11 +9605,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -9108,7 +9627,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -9118,11 +9640,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -9314,11 +9845,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -9327,7 +9867,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -9571,11 +10114,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -9584,7 +10136,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -9738,11 +10293,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -9751,7 +10315,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -9983,11 +10550,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -9996,7 +10572,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -10233,11 +10812,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -10246,7 +10834,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -10410,11 +11001,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -10423,7 +11023,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -10459,6 +11062,7 @@ paths:
             description: >-
               Namespace to include reference details of. If omitted the result
               will include any data relative to asset references.
+            example: My-Namespace
           required: false
           name: namespace
           in: query
@@ -10628,11 +11232,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -10641,7 +11254,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -11049,11 +11665,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -11062,7 +11687,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -11197,11 +11825,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -11210,7 +11847,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -11374,11 +12014,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -11387,7 +12036,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -11612,11 +12264,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -11669,7 +12330,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: false
           name: spaceName
           in: query
@@ -11679,10 +12343,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 enum:
                   - '*'
@@ -11693,10 +12367,20 @@ paths:
                       minLength: 3
                       maxLength: 64
                       pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
                     - type: string
                       minLength: 3
                       maxLength: 64
                       pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
                     - type: string
                       enum:
                         - '*'
@@ -11990,11 +12674,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -12003,7 +12696,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -12013,11 +12709,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -12202,11 +12907,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -12215,7 +12929,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -12225,11 +12942,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -12392,11 +13118,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -12405,7 +13140,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -12415,11 +13153,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -12428,7 +13175,8 @@ paths:
             minLength: 1
             maxLength: 20
             pattern: ^[a-zA-Z0-9 ]{1,20}$
-            description: Tag name
+            description: Name of the tag (it should contain between 1 and 20 characters)
+            example: My Tag
           required: true
           name: tagName
           in: path
@@ -12614,11 +13362,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -12627,7 +13384,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -12637,11 +13397,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
               - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-            description: Namespace name
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
           required: true
           name: namespaceName
           in: path
@@ -12650,7 +13419,8 @@ paths:
             minLength: 1
             maxLength: 20
             pattern: ^[a-zA-Z0-9 ]{1,20}$
-            description: Tag name
+            description: Name of the tag (it should contain between 1 and 20 characters)
+            example: My Tag
           required: true
           name: tagName
           in: path
@@ -12852,11 +13622,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -12865,7 +13644,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -13081,11 +13863,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -13094,7 +13885,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -13420,11 +14214,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -13433,7 +14236,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -13671,11 +14477,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -13684,7 +14499,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -13949,11 +14767,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -13962,7 +14789,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -14122,11 +14952,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -14135,7 +14974,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -14301,11 +15143,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -14314,7 +15165,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -14490,11 +15344,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -14503,7 +15366,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -14677,11 +15543,20 @@ paths:
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
               - type: string
                 minLength: 3
                 maxLength: 255
                 pattern: ^[\w-+@.]{3,255}$
-            description: Organization name
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
           required: true
           name: orgName
           in: path
@@ -14690,7 +15565,10 @@ paths:
             minLength: 1
             maxLength: 32
             pattern: ^[\w-.]{1,32}$
-            description: Space name
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
           required: true
           name: spaceName
           in: path
@@ -14707,6 +15585,7 @@ paths:
             maxLength: 64
             pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
             description: Team Name
+            example: Research-and-development-department.1
           required: true
           name: teamName
           in: path
