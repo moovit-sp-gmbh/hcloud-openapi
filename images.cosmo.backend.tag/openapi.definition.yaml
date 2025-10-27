@@ -2119,6 +2119,54 @@ components:
                 - organization
                 - space
           example: *ref_0
+      example:
+        _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+        name: my asset
+        createDate: 1747142773233
+        modifyDate: 1747142773233
+        creator:
+          _id: 7e1d01be-fc17-4acd-a3d9-ddacedebc59f
+          name: John Doe
+          email: john.doe@example.com
+          avatarUrl: https://example.com/avatar.jpg
+        organization:
+          _id: 68d6694d34ae624a505cde5b
+          name: Example Organization
+          avatarUrl: https://example.com/org-avatar.png
+        space:
+          _id: 3e1d01be-fc17-4acd-a3d9-ddacedebc59f
+          name: Marketing Assets
+          avatarUrl: https://example.com/space-avatar.png
+        type: MEDIA_ASSET
+        assetType: VIDEO
+        extension: .mov
+        duration: 29.56
+        frameRate: 25
+        thumbnailUrl: https://example.com/thumbnail.jpg?token=abc123&expires=1747146373
+        previewUrl: https://example.com/preview.jpg?token=def456&expires=1747146373
+        permissions:
+          - CAN_READ
+          - CAN_WRITE
+        tag:
+          name: Needs Review
+          color: '#4A90E2'
+        media:
+          - name: original
+            url: https://example.com/original.mov?token=ghi789&expires=1747146373
+            type: VIDEO
+            metadata:
+              - type: VIDEO
+                codec: h264
+                width: 1920
+                height: 1080
+                frameRate: 25
+                duration: 29.56
+                pixelFormat: yuv420p
+                aspectRatio: '16:9'
+                fieldOrder: progressive
+                tcIn: '00:00:00:00'
+                tcOut: '00:00:29:14'
+                formatLongName: QuickTime
     AssetPermissionsDto:
       type: object
       additionalProperties:
@@ -2323,7 +2371,30 @@ components:
             - organization
             - space
             - reference
-      example: *ref_0
+      example:
+        _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
+        name: my asset
+        createDate: 1747142773233
+        modifyDate: 1747142773233
+        creator:
+          _id: 7e1d01be-fc17-4acd-a3d9-ddacedebc59f
+          name: John Doe
+          email: john.doe@example.com
+          avatarUrl: https://example.com/avatar.jpg
+        organization:
+          _id: 68d6694d34ae624a505cde5b
+          name: Example Organization
+          avatarUrl: https://example.com/org-avatar.png
+        space:
+          _id: 3e1d01be-fc17-4acd-a3d9-ddacedebc59f
+          name: Marketing Assets
+          avatarUrl: https://example.com/space-avatar.png
+        type: REFERENCE
+        namespaces:
+          rush:
+            status: approved
+        reference:
+          status: approved
     ReferencePatchDto:
       type: object
       properties:
