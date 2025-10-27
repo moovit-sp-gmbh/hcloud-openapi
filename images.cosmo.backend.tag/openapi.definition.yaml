@@ -1537,6 +1537,29 @@ components:
           format: email
           description: Email address of the execution target for the high5 space
           example: hmc@helmut.cloud
+        permissions:
+          type: array
+          items:
+            type: string
+            enum:
+              - VIEW_SPACE
+              - VIEW_MEMBERS
+              - UPDATE_MEMBERS
+              - VIEW_TRASHBIN
+              - RECOVER_TRASHBIN
+              - EMPTY_TRASHBIN
+              - VIEW_ROLES
+              - CREATE_ROLES
+              - EDIT_ROLES
+              - DELETE_ROLES
+              - ASSIGN_USER_ROLES
+              - UPDATE_SPACE_AVATAR
+              - UPDATE_SPACE_NAME
+              - DELETE_SPACE
+              - CONNECT_HIGH5_SPACE
+          description: Permissions the request user has on the space
+          example:
+            - UPDATE_SPACE_AVATAR
       required:
         - _id
         - name
