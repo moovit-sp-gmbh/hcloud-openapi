@@ -3413,7 +3413,8 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least ADMIN |
+            You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
@@ -3433,6 +3434,16 @@ paths:
                   summary: >-
                     User's organization role is insufficient. Must be at least
                     ADMIN
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
