@@ -2831,7 +2831,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -2847,10 +2847,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -3507,8 +3507,8 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN |
-            You have not enough rights to access/manipulate this resource
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
@@ -3524,10 +3524,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -3692,7 +3692,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least OWNER
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -3708,10 +3708,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least OWNER:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    OWNER
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -3860,7 +3860,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least OWNER
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -3876,10 +3876,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least OWNER:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    OWNER
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -7285,7 +7285,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -7301,10 +7301,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -7467,7 +7467,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -7483,10 +7483,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -7588,7 +7588,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -7604,10 +7604,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -7923,7 +7923,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -7939,10 +7939,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -10124,8 +10124,8 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN |
-            You have not enough rights to access/manipulate this resource
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
@@ -10141,10 +10141,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -11516,7 +11516,7 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least ADMIN
+            User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -11532,10 +11532,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -12047,7 +12047,7 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:delete'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -12063,10 +12063,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -12284,8 +12284,8 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN |
-            The provided password does not match the share's password.
+            | User's organization role is insufficient. Must be at least MEMBER
+            | The provided password does not match the share's password.
           content:
             application/json:
               schema:
@@ -12301,10 +12301,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -12916,7 +12916,7 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -12932,10 +12932,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -13371,7 +13371,7 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -13387,10 +13387,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
@@ -13605,7 +13605,7 @@ paths:
         '403':
           description: >-
             Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least ADMIN
+            | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
@@ -13621,10 +13621,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least ADMIN:
+                User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    ADMIN
+                    MEMBER
                   value:
                     code: 011.001.0004
                     error: insufficient.rights
