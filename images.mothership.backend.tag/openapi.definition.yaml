@@ -376,6 +376,332 @@ components:
         Detailed representation of a registered agent within the system,
         including hardware specifications, operating system details, connection
         status, and metadata required for monitoring and orchestration
+    SearchFilterType:
+      type: string
+      enum:
+        - STRING
+        - SELECT
+        - MULTISELECT
+        - TYPEAHEAD
+        - NUMBER
+        - DATE
+        - BOOLEAN
+      description: |-
+        * STRING - Filter by a string value
+        * SELECT - Filter by a value from a set of possible choices
+        * MULTISELECT - Filter by multiple values from a set of possible choices
+        * TYPEAHEAD - Filter by ???
+        * NUMBER - Filter by a numeric value
+        * DATE - Filter by a Date value
+        * BOOLEAN - Filter by a boolean flag
+      example: NUMBER
+    SearchFilterComparatorString:
+      type: string
+      enum:
+        - is
+        - is not
+        - starts with
+        - ends with
+        - contains
+      description: |-
+        * is - String equals the specified string value
+        * is not - String does not equal the specified string value
+        * starts with - String starts with the specified string value
+        * ends with - String ends with the specified string value
+        * contains - String contains the specified string value
+      example: starts with
+    SearchFilterString:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorString'
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: The value searching for
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      description: >-
+        Filter for string-based fields, accepts a single string or an array of
+        strings as the filter value
+    SearchFilterSelect:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        allowedValues:
+          type: array
+          items:
+            type: string
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorString'
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+          description: The value searching for
+      required:
+        - type
+        - key
+        - allowedValues
+        - comparator
+        - value
+      description: >-
+        Filter for fields with predefined selectable values, allows string
+        comparators and accepts either a single value or multiple values from
+        the allowed set
+    SearchFilterMultiSelect:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        allowedValues:
+          type: array
+          items:
+            type: string
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorString'
+        value:
+          type: array
+          items:
+            type: string
+          description: The value searching for
+      required:
+        - type
+        - key
+        - allowedValues
+        - comparator
+        - value
+      description: >-
+        Filter for fields that support multiple selections from a predefined
+        list, accepts an array of strings and applies string-based comparators
+    SearchFilterTypeahead:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        allowedValues:
+          type: array
+          items:
+            type: string
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorString'
+        value:
+          type: string
+          description: The value searching for
+      required:
+        - type
+        - key
+        - allowedValues
+        - comparator
+        - value
+      description: >-
+        Filter designed for typeahead fields, accepts a single string value and
+        applies string comparators against a list of allowed values
+    SearchFilterComparatorNumber:
+      type: string
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      description: >-
+        * is - Number equals the specified numeric value
+
+        * is not - Number does not equal the specified numeric value
+
+        * greater than - Number is greater than the specified numeric value
+
+        * less than - Number is less than the specified numeric value
+
+        * greater than or equal - Number is greater than or equal to the
+        specified numeric value
+
+        * less than or equal - Number is less than or equal to the specified
+        numeric value
+      example: greater than or equal
+    SearchFilterNumber:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorNumber'
+        value:
+          type: number
+          description: The value searching for
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      description: Filter for numeric fields, accepts a single number as the filter value
+    SearchFilterComparatorDate:
+      type: string
+      enum:
+        - is
+        - is not
+        - greater than
+        - less than
+        - greater than or equal
+        - less than or equal
+      description: >-
+        * is - Date equals the specified date value
+
+        * is not - Date does not equal the specified date value
+
+        * greater than - Date is more recent than the specified date value
+
+        * less than - Date is older than the specified date value
+
+        * greater than or equal - Date is more recent or equal to the specified
+        date value
+
+        * less than or equal - Date is older than or equal to the specified date
+        value
+      example: less than
+    SearchFilterDate:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorDate'
+        value:
+          type: number
+          description: The value searching for
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      description: >-
+        Filter for date or timestamp fields, uses date-based comparators and
+        accepts a numeric value representing the date (e.g., Unix timestamp)
+    SearchFilterComparatorBoolean:
+      type: string
+      enum:
+        - is
+        - is not
+      description: |-
+        * is - Boolean equals the specified boolean value
+        * is not - Boolean does not equal the specified boolean value
+      example: is not
+    SearchFilterBoolean:
+      type: object
+      properties:
+        type:
+          $ref: '#/components/schemas/SearchFilterType'
+        key:
+          type: string
+          description: The search key
+        comparator:
+          $ref: '#/components/schemas/SearchFilterComparatorBoolean'
+        value:
+          type: boolean
+          description: The value searching for
+      required:
+        - type
+        - key
+        - comparator
+        - value
+      description: Filter for boolean fields, accepts a boolean value
+    SearchFilter:
+      anyOf:
+        - $ref: '#/components/schemas/SearchFilterString'
+        - $ref: '#/components/schemas/SearchFilterSelect'
+        - $ref: '#/components/schemas/SearchFilterMultiSelect'
+        - $ref: '#/components/schemas/SearchFilterTypeahead'
+        - $ref: '#/components/schemas/SearchFilterNumber'
+        - $ref: '#/components/schemas/SearchFilterDate'
+        - $ref: '#/components/schemas/SearchFilterBoolean'
+      description: Filter for searching
+      example:
+        type: STRING
+        key: name
+        comparator: starts with
+        value: Editor-
+    SortDirection:
+      type: string
+      enum:
+        - ASC
+        - DESC
+      description: |-
+        * ASC - Ascending order
+        * DESC - Descending order
+      example: DESC
+    Sorting:
+      type: object
+      properties:
+        direction:
+          $ref: '#/components/schemas/SortDirection'
+        fields:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          description: The fields to consider when performing the sorting of the result
+      description: The sorting definition
+      example:
+        direction: DESC
+        fields:
+          - name
+          - company
+    Search:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            $ref: '#/components/schemas/SearchFilter'
+          description: A list of filters
+        sorting:
+          $ref: '#/components/schemas/Sorting'
+      description: >-
+        Defines the search parameters used to query objects of various types.
+        Includes optional filters for narrowing down results and a sorting
+        definition to control the order of returned data
+      example:
+        filters:
+          - type: DATE
+            key: modifyDate
+            comparator: less than
+            value: 1681912446650
+        sorting:
+          direction: DESC
+          fields:
+            - name
+            - company
     AgentDto:
       type: object
       properties:
@@ -595,6 +921,12 @@ paths:
           required: true
           name: authorization
           in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
       responses:
         '200':
           description: List of target agents
