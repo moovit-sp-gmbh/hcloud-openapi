@@ -91,7 +91,6 @@ components:
               - COPY_ASSETS
               - MOVE_ASSETS
               - RENAME_ASSETS
-          minItems: 1
           description: List of the permissions to apply.
           example:
             - VIEW_ASSETS
