@@ -141,6 +141,7 @@ components:
           example: super-safe
         shareIdHMAC:
           type: string
+          format: Base64 URL
           description: HMAC of the shareId. Required if password is not present
     ShareAddUsersDto:
       type: object
