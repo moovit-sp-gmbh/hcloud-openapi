@@ -8548,16 +8548,6 @@ paths:
           required: false
           name: replySample
           in: query
-        - schema:
-            type: string
-            enum:
-              - COMMENT
-              - ASSET
-            description: Type of root to the refIs
-            example: COMMENT
-          required: false
-          name: type
-          in: query
       responses:
         '200':
           description: Comments of an entity
@@ -8574,8 +8564,7 @@ paths:
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page' | Failed to validate 'query' parameter
-            'annotation' | Failed to validate 'query' parameter 'replySample' |
-            Failed to validate 'query' parameter 'type'
+            'annotation' | Failed to validate 'query' parameter 'replySample'
           content:
             application/json:
               schema:
@@ -8645,13 +8634,6 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'replySample' -
                       {error}
-                Failed to validate 'query' parameter 'type':
-                  summary: Failed to validate 'query' parameter 'type'
-                  description: Failed to validate 'query' parameter 'type' - {error}
-                  value:
-                    code: 011.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'query' parameter 'type' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
