@@ -107,6 +107,7 @@ components:
                 - DELETE_NAMESPACES
                 - VIEW_ASSET_TAGS
                 - WRITE_ASSET_TAGS
+                - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
@@ -216,6 +217,7 @@ components:
                     - DELETE_NAMESPACES
                     - VIEW_ASSET_TAGS
                     - WRITE_ASSET_TAGS
+                    - WRITE_NAMESPACE_TAGS
                     - VIEW_ASSET_STATUS
                     - WRITE_ASSET_STATUS
                     - VIEW_ASSET_COMMENTS
@@ -1374,6 +1376,7 @@ components:
                 - DELETE_NAMESPACES
                 - VIEW_ASSET_TAGS
                 - WRITE_ASSET_TAGS
+                - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
@@ -1441,6 +1444,7 @@ components:
                 - DELETE_NAMESPACES
                 - VIEW_ASSET_TAGS
                 - WRITE_ASSET_TAGS
+                - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
@@ -14271,6 +14275,7 @@ paths:
                                 - DELETE_NAMESPACES
                                 - VIEW_ASSET_TAGS
                                 - WRITE_ASSET_TAGS
+                                - WRITE_NAMESPACE_TAGS
                                 - VIEW_ASSET_STATUS
                                 - WRITE_ASSET_STATUS
                                 - VIEW_ASSET_COMMENTS
