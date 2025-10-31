@@ -1276,6 +1276,11 @@ components:
           type: string
           description: Namespace name
           example: My Namespace
+        defaultStatus:
+          type: string
+          default: none
+          description: Namespace name
+          example: My Namespace
       required:
         - name
     ReferenceStatusPatchDto:
@@ -7857,6 +7862,11 @@ paths:
               properties:
                 name:
                   type: string
+                  description: Namespace name
+                  example: My Namespace
+                defaultStatus:
+                  type: string
+                  default: none
                   description: Namespace name
                   example: My Namespace
               required:
