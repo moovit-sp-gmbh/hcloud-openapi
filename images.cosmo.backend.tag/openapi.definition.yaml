@@ -110,6 +110,7 @@ components:
                 - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
+                - OVERRIDE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
                 - CREATE_ASSET_COMMENTS
                 - EDIT_ASSET_COMMENTS
@@ -220,6 +221,7 @@ components:
                     - WRITE_NAMESPACE_TAGS
                     - VIEW_ASSET_STATUS
                     - WRITE_ASSET_STATUS
+                    - OVERRIDE_ASSET_STATUS
                     - VIEW_ASSET_COMMENTS
                     - CREATE_ASSET_COMMENTS
                     - EDIT_ASSET_COMMENTS
@@ -1379,6 +1381,7 @@ components:
                 - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
+                - OVERRIDE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
                 - CREATE_ASSET_COMMENTS
                 - EDIT_ASSET_COMMENTS
@@ -1447,6 +1450,7 @@ components:
                 - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
+                - OVERRIDE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
                 - CREATE_ASSET_COMMENTS
                 - EDIT_ASSET_COMMENTS
@@ -14236,6 +14240,7 @@ paths:
                                 - WRITE_NAMESPACE_TAGS
                                 - VIEW_ASSET_STATUS
                                 - WRITE_ASSET_STATUS
+                                - OVERRIDE_ASSET_STATUS
                                 - VIEW_ASSET_COMMENTS
                                 - CREATE_ASSET_COMMENTS
                                 - EDIT_ASSET_COMMENTS
