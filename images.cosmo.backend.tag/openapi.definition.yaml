@@ -1536,6 +1536,10 @@ components:
           example: 1633072800000
         creator:
           $ref: '#/components/schemas/ReducedUser'
+        type:
+          type: string
+          default: SPACE
+          description: Item type
         avatarUrl:
           type: string
           format: uri
