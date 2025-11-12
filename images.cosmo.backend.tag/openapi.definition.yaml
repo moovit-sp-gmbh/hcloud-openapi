@@ -1806,7 +1806,7 @@ components:
                     type: string
                   description: Allowed operations on the asset
                   example:
-                    - CAN_READ
+                    - VIEW_ASSETS
               required:
                 - createDate
                 - modifyDate
@@ -2071,7 +2071,7 @@ components:
                     type: string
                   description: Allowed operations on the asset
                   example:
-                    - CAN_READ
+                    - VIEW_ASSETS
                 media:
                   type: array
                   items:
@@ -2167,8 +2167,7 @@ components:
         thumbnailUrl: https://example.com/thumbnail.jpg?token=abc123&expires=1747146373
         previewUrl: https://example.com/preview.jpg?token=def456&expires=1747146373
         permissions:
-          - CAN_READ
-          - CAN_WRITE
+          - VIEW_ASSETS
         tag:
           name: Needs Review
           color: '#4A90E2'
@@ -2378,7 +2377,7 @@ components:
                 type: string
               description: Allowed operations on the asset
               example:
-                - CAN_READ
+                - VIEW_ASSETS
             reference:
               type: object
               properties:
