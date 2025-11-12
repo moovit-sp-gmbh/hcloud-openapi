@@ -1545,6 +1545,10 @@ components:
           format: uri
           description: URL of the avatar
           example: https://example.com/avatar.jpg
+        storageUsed:
+          type: number
+          description: Amount of storage used by the space's assets in bytes
+          example: 1234
         high5_spaceName:
           type: string
           description: Name of the linked high5 space
@@ -1583,6 +1587,7 @@ components:
         - createDate
         - creator
         - avatarUrl
+        - storageUsed
     ReducedTeam:
       type: object
       properties:
