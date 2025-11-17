@@ -338,773 +338,795 @@ components:
           example: false
       required:
         - assetIds
-    sorting:
+    type filters:
       type: object
       properties:
-        fields:
+        key:
+          type: string
+          enum:
+            - type
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum:
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for type
+    STRING:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - assetType
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: &ref_0
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for assetType
+    SELECT:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - assetType
+        type:
+          type: string
+          enum:
+            - SELECT
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: &ref_1
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+        allowedValues:
           type: array
           items:
             type: string
-          description: Fields to sort by
-          example:
-            - name
-        direction:
+      required:
+        - key
+        - type
+        - value
+        - comparator
+        - allowedValues
+      description: SELECT for assetType
+    TYPEAHEAD:
+      type: object
+      properties:
+        key:
           type: string
           enum:
-            - ASC
-            - DESC
-          description: Sort order
-          example: ASC
+            - assetType
+        type:
+          type: string
+          enum:
+            - TYPEAHEAD
+        value:
+          type: string
+        comparator:
+          type: string
+          enum: &ref_2
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+        allowedValues:
+          type: array
+          items:
+            type: string
       required:
-        - fields
-        - direction
+        - key
+        - type
+        - value
+        - comparator
+        - allowedValues
+      description: TYPEAHEAD for assetType
+    assetType filters:
+      oneOf:
+        - $ref: '#/components/schemas/STRING'
+        - $ref: '#/components/schemas/SELECT'
+        - $ref: '#/components/schemas/TYPEAHEAD'
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    _id filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - _id
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum:
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for _id
+    name filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - name
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: STRING for name
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - name
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_1
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for name
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - name
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for name
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    NUMBER:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - createDate
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: &ref_3
+            - is
+            - is not
+            - greater than
+            - less than
+            - greater than or equal
+            - less than or equal
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for createDate
+    DATE:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - createDate
+        type:
+          type: string
+          enum:
+            - DATE
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: &ref_4
+            - is
+            - is not
+            - greater than
+            - less than
+            - greater than or equal
+            - less than or equal
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: DATE for createDate
+    createDate filters:
+      oneOf:
+        - $ref: '#/components/schemas/NUMBER'
+        - $ref: '#/components/schemas/DATE'
+      discriminator:
+        propertyName: type
+        mapping:
+          NUMBER: '#/components/schemas/NUMBER'
+          DATE: '#/components/schemas/DATE'
+    modifyDate filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/NUMBER'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - modifyDate
+                type:
+                  type: string
+                  enum:
+                    - NUMBER
+                value:
+                  type: number
+                comparator:
+                  type: string
+                  enum: *ref_3
+              description: NUMBER for modifyDate
+        - allOf:
+            - $ref: '#/components/schemas/DATE'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - modifyDate
+                type:
+                  type: string
+                  enum:
+                    - DATE
+                value:
+                  type: number
+                comparator:
+                  type: string
+                  enum: *ref_4
+              description: DATE for modifyDate
+      discriminator:
+        propertyName: type
+        mapping:
+          NUMBER: '#/components/schemas/NUMBER'
+          DATE: '#/components/schemas/DATE'
+    size filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - size
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: *ref_3
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for size
+    extension filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - extension
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: STRING for extension
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - extension
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_1
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for extension
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - extension
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for extension
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    creator.name filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: STRING for creator.name
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_1
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for creator.name
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for creator.name
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    creator._id filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - creator._id
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum:
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for creator._id
+    resolution filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - resolution
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: *ref_3
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for resolution
+    namespace.<namespaceName>.approvalStatus filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).approvalStatus$
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: STRING for namespace.<namespaceName>.approvalStatus
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).approvalStatus$
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_1
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for namespace.<namespaceName>.approvalStatus
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).approvalStatus$
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for namespace.<namespaceName>.approvalStatus
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    namespace.<namespaceName>.tag filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).tag
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: STRING for namespace.<namespaceName>.tag
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).tag
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_1
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for namespace.<namespaceName>.tag
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).tag
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for namespace.<namespaceName>.tag
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
     AssetSearchDto:
       type: object
       properties:
         filters:
           type: array
           items:
-            oneOf:
-              - type: object
-                properties:
-                  key:
-                    type: string
+            anyOf:
+              - $ref: '#/components/schemas/type filters'
+              - $ref: '#/components/schemas/assetType filters'
+              - $ref: '#/components/schemas/_id filters'
+              - $ref: '#/components/schemas/name filters'
+              - $ref: '#/components/schemas/createDate filters'
+              - $ref: '#/components/schemas/modifyDate filters'
+              - $ref: '#/components/schemas/size filters'
+              - $ref: '#/components/schemas/extension filters'
+              - $ref: '#/components/schemas/creator.name filters'
+              - $ref: '#/components/schemas/creator._id filters'
+              - $ref: '#/components/schemas/resolution filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.approvalStatus
+                  filters
+              - $ref: '#/components/schemas/namespace.<namespaceName>.tag filters'
+          description: Filters to apply to the search
+        sorting:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                anyOf:
+                  - type: string
                     enum:
                       - type
-                  type:
-                    type: string
+                  - type: string
                     enum:
-                      - STRING
-                  value:
-                    anyOf:
-                      - type: string
-                      - type: array
-                        items:
-                          type: string
-                  comparator:
-                    type: string
-                    enum:
-                      - is
-                      - is not
-                required:
-                  - key
-                  - type
-                  - value
-                  - comparator
-                description: type filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - assetType
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: STRING for assetType
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - assetType
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: SELECT for assetType
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - assetType
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: TYPEAHEAD for assetType
-                description: assetType filters
-              - type: object
-                properties:
-                  key:
-                    type: string
+                      - assetType
+                  - type: string
                     enum:
                       - _id
-                  type:
-                    type: string
+                  - type: string
                     enum:
-                      - STRING
-                  value:
-                    anyOf:
-                      - type: string
-                      - type: array
-                        items:
-                          type: string
-                  comparator:
-                    type: string
+                      - name
+                  - type: string
                     enum:
-                      - is
-                      - is not
-                required:
-                  - key
-                  - type
-                  - value
-                  - comparator
-                description: _id filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: STRING for name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: SELECT for name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - name
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: TYPEAHEAD for name
-                description: name filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - createDate
-                      type:
-                        type: string
-                        enum:
-                          - NUMBER
-                      value:
-                        type: number
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - greater than
-                          - less than
-                          - greater than or equal
-                          - less than or equal
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: NUMBER for createDate
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - createDate
-                      type:
-                        type: string
-                        enum:
-                          - DATE
-                      value:
-                        type: number
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - greater than
-                          - less than
-                          - greater than or equal
-                          - less than or equal
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: DATE for createDate
-                description: createDate filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - modifyDate
-                      type:
-                        type: string
-                        enum:
-                          - NUMBER
-                      value:
-                        type: number
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - greater than
-                          - less than
-                          - greater than or equal
-                          - less than or equal
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: NUMBER for modifyDate
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - modifyDate
-                      type:
-                        type: string
-                        enum:
-                          - DATE
-                      value:
-                        type: number
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - greater than
-                          - less than
-                          - greater than or equal
-                          - less than or equal
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: DATE for modifyDate
-                description: modifyDate filters
-              - type: object
-                properties:
-                  key:
-                    type: string
+                      - createDate
+                  - type: string
+                    enum:
+                      - modifyDate
+                  - type: string
                     enum:
                       - size
-                  type:
-                    type: string
+                  - type: string
                     enum:
-                      - NUMBER
-                  value:
-                    type: number
-                  comparator:
-                    type: string
+                      - extension
+                  - type: string
                     enum:
-                      - is
-                      - is not
-                      - greater than
-                      - less than
-                      - greater than or equal
-                      - less than or equal
-                required:
-                  - key
-                  - type
-                  - value
-                  - comparator
-                description: size filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - extension
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: STRING for extension
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - extension
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: SELECT for extension
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - extension
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: TYPEAHEAD for extension
-                description: extension filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - creator.name
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: STRING for creator.name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - creator.name
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: SELECT for creator.name
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - creator.name
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: TYPEAHEAD for creator.name
-                description: creator.name filters
-              - type: object
-                properties:
-                  key:
-                    type: string
+                      - creator.name
+                  - type: string
                     enum:
                       - creator._id
-                  type:
-                    type: string
-                    enum:
-                      - STRING
-                  value:
-                    anyOf:
-                      - type: string
-                      - type: array
-                        items:
-                          type: string
-                  comparator:
-                    type: string
-                    enum:
-                      - is
-                      - is not
-                required:
-                  - key
-                  - type
-                  - value
-                  - comparator
-                description: creator._id filters
-              - type: object
-                properties:
-                  key:
-                    type: string
+                  - type: string
                     enum:
                       - resolution
-                  type:
-                    type: string
-                    enum:
-                      - NUMBER
-                  value:
-                    type: number
-                  comparator:
-                    type: string
-                    enum:
-                      - is
-                      - is not
-                      - greater than
-                      - less than
-                      - greater than or equal
-                      - less than or equal
-                required:
-                  - key
-                  - type
-                  - value
-                  - comparator
-                description: resolution filters
-              - oneOf:
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - approvalStatus
-                      type:
-                        type: string
-                        enum:
-                          - STRING
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                    description: STRING for approvalStatus
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - approvalStatus
-                      type:
-                        type: string
-                        enum:
-                          - SELECT
-                      value:
-                        anyOf:
-                          - type: string
-                          - type: array
-                            items:
-                              type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: SELECT for approvalStatus
-                  - type: object
-                    properties:
-                      key:
-                        type: string
-                        enum:
-                          - approvalStatus
-                      type:
-                        type: string
-                        enum:
-                          - TYPEAHEAD
-                      value:
-                        type: string
-                      comparator:
-                        type: string
-                        enum:
-                          - is
-                          - is not
-                          - starts with
-                          - ends with
-                          - contains
-                      allowedValues:
-                        type: array
-                        items:
-                          type: string
-                    required:
-                      - key
-                      - type
-                      - value
-                      - comparator
-                      - allowedValues
-                    description: TYPEAHEAD for approvalStatus
-                description: approvalStatus filters
-          description: field filters
-        sorting:
-          $ref: '#/components/schemas/sorting'
+                  - type: string
+                    pattern: ^namespace.(\w{1,64}).approvalStatus$
+                  - type: string
+                    pattern: ^namespace.(\w{1,64}).tag
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+          required:
+            - fields
+          description: Sorting to apply to the search
     AssetRenameDto:
       type: object
       properties:
@@ -1292,7 +1314,7 @@ components:
       properties:
         status:
           type: string
-          enum: &ref_1
+          enum: &ref_6
             - approved
             - rejected
             - none
@@ -1637,7 +1659,7 @@ components:
         - _id
         - name
         - type
-      example: &ref_0
+      example: &ref_5
         name: my space
         type: SPACE
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
@@ -1813,7 +1835,7 @@ components:
                 - creator
                 - organization
                 - space
-          example: *ref_0
+          example: *ref_5
     Unknown:
       type: object
       properties:
@@ -2140,7 +2162,7 @@ components:
                 - creator
                 - organization
                 - space
-          example: *ref_0
+          example: *ref_5
       example:
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
         name: my asset
@@ -2421,7 +2443,7 @@ components:
       properties:
         status:
           type: string
-          enum: *ref_1
+          enum: *ref_6
       required:
         - status
     CommentDto:
@@ -2726,7 +2748,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_2
+        space: &ref_7
           type: object
           additionalProperties:
             type: object
@@ -2735,10 +2757,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_2
-        asset: *ref_2
-        share: *ref_2
-        user: *ref_2
+        namespace: *ref_7
+        asset: *ref_7
+        share: *ref_7
+        user: *ref_7
       description: Map of all the permissions available in the Cosmo service
   parameters: {}
 paths:
@@ -10420,13 +10442,13 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: &ref_3
+                    example: &ref_8
                       - ae13321a-522d-48da-9733-27c97bcab124
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_4
+                      enum: &ref_9
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -10441,7 +10463,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_5
+                    example: &ref_10
                       - VIEW_ASSETS
                   users:
                     type: array
@@ -10874,16 +10896,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_3
+                    example: *ref_8
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_4
+                      enum: *ref_9
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_5
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -11131,16 +11153,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_3
+                    example: *ref_8
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_4
+                      enum: *ref_9
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_5
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -11821,16 +11843,16 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_3
+                      example: *ref_8
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_4
+                        enum: *ref_9
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_5
+                      example: *ref_10
                     users:
                       type: array
                       items:
@@ -12043,16 +12065,16 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_3
+                      example: *ref_8
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_4
+                        enum: *ref_9
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_5
+                      example: *ref_10
                     users:
                       type: array
                       items:
@@ -12596,16 +12618,16 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_3
+                    example: *ref_8
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_4
+                      enum: *ref_9
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_5
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -14464,7 +14486,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_6
+                              enum: &ref_11
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -14512,7 +14534,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_7
+                            example: &ref_12
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -15067,9 +15089,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_6
+                            enum: *ref_11
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_7
+                          example: *ref_12
                       required:
                         - entity
                         - permissions
