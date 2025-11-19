@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2578
+  version: 0.0.107-2589
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8317,6 +8317,156 @@ paths:
                   $ref: '#/components/examples/SpaceNotFoundException'
         default:
           description: Unexpected error
+  /v1/org/{orgName}/stats:
+    get:
+      tags:
+        - Organization.Statistics
+      summary: Retrieve usage statistics for a specific organization
+      description: |-
+        Provides detailed license usage metrics for a given organization
+        Required role: ADMIN
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+      responses:
+        '200':
+          description: Statistics information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Organization role is insufficient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/spaces/{spaceName}/stats:
+    get:
+      tags:
+        - Organization.Space.Statistics
+      summary: Retrieve usage statistics for a specific space
+      description: |-
+        Provides detailed license usage metrics for a given space
+        Required role: ADMIN
+        Required space permission: READ\
+        Required scopes: HIGH5_SPACE_READ
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+        - $ref: '#/components/parameters/SpaceName'
+      responses:
+        '200':
+          description: Statistics information
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StatsDto'
+        '400':
+          description: Organization name is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+                Space name is invalid:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Organization role is insufficient
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of organization or role is insufficient:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Space permission is insufficient. Must be at least READ:
+                  $ref: '#/components/examples/SpaceInsufficientPermissionException'
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
+                Space not found:
+                  $ref: '#/components/examples/SpaceNotFoundException'
+        default:
+          description: Unexpected error
   /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/search:
     post:
       tags:
@@ -14646,6 +14796,115 @@ components:
       example:
         userId: 63c7e64ff912d31ffa27a5b4
         permission: OWNER
+    ExecutionsPerDayDto:
+      type: object
+      properties:
+        count:
+          type: number
+          minimum: 0
+          description: Number of stream executions per space per day
+          example: 23
+      required:
+        - count
+      description: Stream executions statistics for a given organization per day
+      example:
+        count: 18
+    StatsDto:
+      type: object
+      properties:
+        orgName:
+          type: string
+          description: Name of the organization
+          example: Moovit SP GmbH
+        spaceName:
+          type: string
+          description: Name of the space
+          example: Helmut4
+        spaces:
+          type: number
+          minimum: 0
+          description: Number of spaces within the organization
+          example: 5
+        events:
+          type: number
+          minimum: 0
+          description: Number of events per space
+          example: 8
+        streams:
+          type: number
+          minimum: 0
+          description: Number of streams per space
+          example: 17
+        secrets:
+          type: number
+          minimum: 0
+          description: Number of secrets
+          example: 3
+        webhooks:
+          type: number
+          minimum: 0
+          description: Number of webhooks
+          example: 18
+        jobs:
+          type: number
+          minimum: 0
+          description: Number of cron jobs
+          example: 19
+        databases:
+          type: number
+          minimum: 0
+          description: Number of FridayDB databases
+          example: 6
+        documents:
+          type: number
+          minimum: 0
+          description: Number of FridayDB documents per database
+          example: 8
+        executions:
+          type: object
+          additionalProperties:
+            type: object
+            additionalProperties:
+              type: object
+              additionalProperties:
+                $ref: '#/components/schemas/ExecutionsPerDayDto'
+              description: Days mapped to their statistics of executions
+            description: Months mapped to days
+          description: Years mapped to months
+      required:
+        - orgName
+        - spaces
+        - events
+        - streams
+        - secrets
+        - webhooks
+        - jobs
+        - databases
+        - documents
+        - executions
+      description: >-
+        Structured daily statistics representing agent activity data for a
+        specific organization, grouped by year, month, and day
+      example:
+        orgName: Moovit SP GmbH
+        spaceName: Helmut4
+        spaces: 3
+        events: 5
+        streams: 7
+        secrets: 6
+        webhooks: 23
+        jobs: 17
+        databases: 4
+        documents: 25
+        executions:
+          '2025':
+            '11':
+              '1':
+                count: 18
+              '2':
+                count: 19
+              '3':
+                count: 33
     StreamCreateOrDuplicateDto:
       properties:
         name:
