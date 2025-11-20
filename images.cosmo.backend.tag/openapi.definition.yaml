@@ -1051,6 +1051,56 @@ components:
           STRING: '#/components/schemas/STRING'
           SELECT: '#/components/schemas/SELECT'
           TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    type:
+      type: string
+      enum:
+        - type
+    assetType:
+      type: string
+      enum:
+        - assetType
+    _id:
+      type: string
+      enum:
+        - _id
+    name:
+      type: string
+      enum:
+        - name
+    createDate:
+      type: string
+      enum:
+        - createDate
+    modifyDate:
+      type: string
+      enum:
+        - modifyDate
+    size:
+      type: string
+      enum:
+        - size
+    extension:
+      type: string
+      enum:
+        - extension
+    creator.name:
+      type: string
+      enum:
+        - creator.name
+    creator._id:
+      type: string
+      enum:
+        - creator._id
+    resolution:
+      type: string
+      enum:
+        - resolution
+    namespace.<namespaceName>.approvalStatus:
+      type: string
+      pattern: ^namespace.(\w{1,64}).approvalStatus$
+    namespace.<namespaceName>.tag:
+      type: string
+      pattern: ^namespace.(\w{1,64}).tag
     AssetSearchDto:
       type: object
       properties:
@@ -1081,43 +1131,20 @@ components:
               type: array
               items:
                 anyOf:
-                  - type: string
-                    enum:
-                      - type
-                  - type: string
-                    enum:
-                      - assetType
-                  - type: string
-                    enum:
-                      - _id
-                  - type: string
-                    enum:
-                      - name
-                  - type: string
-                    enum:
-                      - createDate
-                  - type: string
-                    enum:
-                      - modifyDate
-                  - type: string
-                    enum:
-                      - size
-                  - type: string
-                    enum:
-                      - extension
-                  - type: string
-                    enum:
-                      - creator.name
-                  - type: string
-                    enum:
-                      - creator._id
-                  - type: string
-                    enum:
-                      - resolution
-                  - type: string
-                    pattern: ^namespace.(\w{1,64}).approvalStatus$
-                  - type: string
-                    pattern: ^namespace.(\w{1,64}).tag
+                  - $ref: '#/components/schemas/type'
+                  - $ref: '#/components/schemas/assetType'
+                  - $ref: '#/components/schemas/_id'
+                  - $ref: '#/components/schemas/name'
+                  - $ref: '#/components/schemas/createDate'
+                  - $ref: '#/components/schemas/modifyDate'
+                  - $ref: '#/components/schemas/size'
+                  - $ref: '#/components/schemas/extension'
+                  - $ref: '#/components/schemas/creator.name'
+                  - $ref: '#/components/schemas/creator._id'
+                  - $ref: '#/components/schemas/resolution'
+                  - $ref: >-
+                      #/components/schemas/namespace.<namespaceName>.approvalStatus
+                  - $ref: '#/components/schemas/namespace.<namespaceName>.tag'
             direction:
               type: string
               enum:
