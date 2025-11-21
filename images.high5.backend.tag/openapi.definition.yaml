@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - High5
-  version: 0.0.107-2589
+  version: 0.0.107-2600
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -13295,59 +13295,6 @@ components:
         event:
           _id: 63c7e6e4eae82d8001b65305
           name: helmut4.webhook.test
-    HmacHashingAlgo:
-      enum:
-        - SHA-1
-        - SHA-256
-      type: string
-      description: |
-        * SHA-1 - SHA1 hashing algorithm
-        * SHA-256 - SHA256 hashing algorithm
-    HmacSettingsDto:
-      properties:
-        headerName:
-          type: string
-          description: Name of the header containing the HMAC
-        algorithm:
-          $ref: '#/components/schemas/HmacHashingAlgo'
-          description: Hashing algorithm used in the HMAC
-        secret:
-          type: string
-          description: Base64 encoded secret used in the HMAC
-      required:
-        - headerName
-        - algorithm
-        - secret
-      example:
-        headerName: X-HMAC-hcloud
-        algorithm: SHA-256
-        secret: CiXbc2Vao5Bova7onoOpBeyVopvwcsunsfor+HzSSLs=
-    HmacSettingsIncomingDto:
-      properties:
-        headerName:
-          type: string
-          description: Name of the header used in the request sent out by the cronjob
-        secret:
-          type: string
-          description: Base64 encoded secret used in the HMAC
-        algorithm:
-          $ref: '#/components/schemas/HmacHashingAlgo'
-          description: Hashing algorithm used in the HMAC
-      required:
-        - headerName
-        - algorithm
-      example:
-        headerName: X-HMAC-hcloud
-        algorithm: SHA-256
-    HttpMethodEnum:
-      enum:
-        - GET
-        - POST
-        - PUT
-        - PATCH
-        - DELETE
-      type: string
-      description: ''
     IncomingWebhookNetworkSettingsDto:
       properties:
         addressWhiteList:
@@ -13410,22 +13357,12 @@ components:
         targetUrl:
           type: string
           description: Target URL. The Job will execute HTTP calls to this URL
-        httpMethod:
-          $ref: '#/components/schemas/HttpMethodEnum'
-          description: HTTP method, e.g. GET, POST, PUT, DELETE
-        acceptInvalidSSL:
-          type: boolean
         timezone:
           type: string
           description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
         description:
           type: string
           description: Description of the cron job
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Header'
-          description: Headers for the HTTP request as key value pairs
         body:
           type: string
           description: Body for the HTTP request, limited to 1024kb
@@ -13438,22 +13375,16 @@ components:
         lastTriggered:
           type: number
           description: Last triggered date of the cron job as unix timestamp
-        hmacSettings:
-          $ref: '#/components/schemas/HmacSettingsIncomingDto'
-          description: HMAC settings of the new job
       required:
         - name
         - expression
         - targetUrl
-        - httpMethod
         - timezone
         - enabled
       example:
         name: My cronjob
         expression: 0 0 12 ? * * *
         targetUrl: http://www.gitlab.com
-        httpMethod: POST
-        acceptInvalidSSL: false
         timezone: Europe/London
         enabled: false
     JobDto:
@@ -13479,27 +13410,12 @@ components:
         targetUrl:
           type: string
           description: Target URL. The Cronjob will execute HTTP calls to this URL
-        httpMethod:
-          $ref: '#/components/schemas/HttpMethodEnum'
-          description: >-
-            HTTP method for the requests made by the cronjob, e.g. GET, POST,
-            PUT, DELETE
-        acceptInvalidSSL:
-          type: boolean
-          description: Whether to accept invalid SSL certificates
         timezone:
           type: string
           description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
         description:
           type: string
           description: Description of the cronjob
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Header'
-          description: >-
-            Headers (as key value pairs) for the HTTP requests that will be
-            triggered by the cronjob
         body:
           type: string
           description: Body for the HTTP request
@@ -13523,9 +13439,6 @@ components:
         lastTriggered:
           type: number
           description: Last triggered date of the cronjob as unix timestamp
-        hmacSettings:
-          $ref: '#/components/schemas/HmacSettingsDto'
-          description: HMAC settings for this cronjob
       required:
         - _id
         - name
@@ -13533,8 +13446,6 @@ components:
         - organization
         - space
         - targetUrl
-        - httpMethod
-        - acceptInvalidSSL
         - timezone
         - createDate
         - modifyDate
@@ -13557,10 +13468,7 @@ components:
           name: Helmut4
           avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         targetUrl: http://www.gitlab.com
-        httpMethod: POST
-        acceptInvalidSSL: false
         timezone: Europe/London
-        headers: []
         createDate: 1676457001
         modifyDate: 1676457001
     JobEnabledPatchDto:
