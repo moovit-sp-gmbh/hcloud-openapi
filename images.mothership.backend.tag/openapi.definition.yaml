@@ -828,20 +828,13 @@ components:
           minimum: 0
           description: Total number of connected agents within the organization
           example: 3
-        date:
-          type: number
-          description: >-
-            Timestamp representing the date for which the statistics were
-            obtained
       required:
         - orgName
         - connectedAgents
-        - date
       description: Aggregated license usage statistics for a given organization
       example:
         orgName: Moovit SP GmbH
         connectedAgents: 3
-        date: 1760997600000
   parameters: {}
 paths:
   /v1/agent:
