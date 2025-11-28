@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2430
+  version: 0.0.143-2450
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -2787,6 +2787,100 @@ paths:
               examples:
                 InvitationAlreadySentException:
                   $ref: '#/components/examples/InvitationAlreadySentException'
+        default:
+          description: Unexpected error
+  /v1/org/{orgName}/members/invitations-list:
+    post:
+      tags:
+        - Organization.Members.Invitations
+      summary: Invite multiple members to an organization
+      description: |-
+        Sends invitations to a list of users to join the specified organization
+        Required organization role: ADMIN\
+        Required scopes: IDP_ORGANIZATION_WRITE
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - $ref: '#/components/parameters/OrgName'
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OrgMemberInvitationsCreateDto'
+        required: true
+      responses:
+        '201':
+          description: List of created invitations
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OrganizationMemberInvitationDto'
+        '400':
+          description: Invalid Parameter
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Invalid path parameter for organization name:
+                  $ref: '#/components/examples/InvalidParameterException'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Forbidden
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OrganizationInsufficientRoleException:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Operation disabled for user organizations:
+                  $ref: >-
+                    #/components/examples/UserOrganizationOperationDisabledException
+                Not a member of the organization:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+                Insufficient organization role. Must be at least ADMIN:
+                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
+        '404':
+          description: Not Found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  $ref: '#/components/examples/OrganizationNotFoundException'
         default:
           description: Unexpected error
   /v1/org/{orgName}/members/invitations/{invitationId}/approval:
@@ -8885,32 +8979,46 @@ components:
       example:
         executionTarget: true
     OrgMemberInvitationCreateDto:
+      type: object
       properties:
         email:
           type: string
+          format: email
           description: Email of the user
+          example: john.doe@example.com
         role:
-          $ref: '#/components/schemas/OrganizationRole'
+          type: string
+          enum:
+            - MEMBER
+            - MANAGER
+            - ADMIN
+            - OWNER
           description: Role the user shall have in the Organization
+          example: MANAGER
         allowNonRegisteredUsers:
           type: boolean
+          default: false
           description: >-
             If non-registered users are allowed and the email is not bound an
             HCloud user, then a registration email will be sent to this email.
             Upon registration, the user will be added automatically to the
-            organization.
+            organization
+          example: true
         targetUrl:
           type: string
+          format: uri
           description: >-
             URL create the redirect link in the email. It will default to
-            https://app.helmut.cloud.
+            https://app.helmut.cloud
+          example: https://alternative.helmut.cloud
       required:
         - email
         - role
+      description: Request data for inviting a user to an organization
       example:
-        email: hmc@helmut.cloud
-        role: MEMBER
-        allowNonRegisteredUsers: false
+        email: john.doe@example.com
+        role: ADMIN
+        allowNonRegisteredUsers: true
         targetUrl: app.helmut.cloud
     OrgMemberInvitationPatchDto:
       properties:
@@ -8921,6 +9029,17 @@ components:
         - accept
       example:
         accept: false
+    OrgMemberInvitationsCreateDto:
+      type: object
+      properties:
+        users:
+          type: array
+          items:
+            $ref: '#/components/schemas/OrgMemberInvitationCreateDto'
+          minItems: 1
+      required:
+        - users
+      description: Request data for inviting a list of users to an organization
     OrgMemberPatchDto:
       properties:
         role:
@@ -9718,18 +9837,12 @@ components:
           minimum: 0
           description: Number of agent accounts associated with the organization
           example: 5
-        date:
-          type: number
-          description: >-
-            Timestamp representing the date for which the statistics were
-            obtained
       required:
         - orgName
         - usersTotal
         - usersOnline
         - teams
         - serviceAccounts
-        - date
       description: Aggregated license usage statistics for a given organization
       example:
         orgName: Moovit SP GmbH
@@ -9737,7 +9850,6 @@ components:
         usersOnline: 19
         teams: 11
         serviceAccounts: 5
-        date: 1760997600000
     TeamCreateDto:
       properties:
         name:
