@@ -101,13 +101,8 @@ components:
             items:
               type: string
               enum:
-                - VIEW_NAMESPACES
-                - EDIT_NAMESPACES
-                - CREATE_NAMESPACES
-                - DELETE_NAMESPACES
                 - VIEW_ASSET_TAGS
                 - WRITE_ASSET_TAGS
-                - WRITE_NAMESPACE_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
                 - OVERRIDE_ASSET_STATUS
@@ -144,6 +139,21 @@ components:
           type: string
           format: Base64 URL
           description: HMAC of the shareId. Required if password is not present
+    ShareAddUsersDto:
+      type: object
+      properties:
+        password:
+          type: string
+          description: Share password
+          example: super-safe
+        users:
+          type: array
+          items:
+            type: string
+            format: email
+          description: List of user to automatically add and notify of the share
+      required:
+        - users
     SharePatchDto:
       type: object
       properties:
@@ -197,13 +207,8 @@ components:
                 items:
                   type: string
                   enum:
-                    - VIEW_NAMESPACES
-                    - EDIT_NAMESPACES
-                    - CREATE_NAMESPACES
-                    - DELETE_NAMESPACES
                     - VIEW_ASSET_TAGS
                     - WRITE_ASSET_TAGS
-                    - WRITE_NAMESPACE_TAGS
                     - VIEW_ASSET_STATUS
                     - WRITE_ASSET_STATUS
                     - OVERRIDE_ASSET_STATUS
@@ -12046,6 +12051,256 @@ paths:
                     code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 011.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/shares/{shareId}/user:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Add/link one or more users to a share
+      tags:
+        - Share
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: ID of the share
+          required: true
+          name: shareId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/ShareAddUsersDto'
+      responses:
+        '200':
+          description: Share
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  creator:
+                    $ref: '#/components/schemas/ReducedUser'
+                  createDate:
+                    type: number
+                  items:
+                    type: array
+                    items:
+                      type: string
+                      format: uuid
+                    description: List of asset IDs that the share members have access to.
+                    example: *ref_8
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_9
+                    description: >-
+                      List of permissions granted to the share members over the
+                      share's assets.
+                    example: *ref_10
+                  users:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/ReducedUser'
+                    description: >-
+                      Array of the users associated with the share. Only present
+                      when searching shares of a space.
+                  organization:
+                    $ref: '#/components/schemas/ReducedOrganization'
+                  space:
+                    $ref: '#/components/schemas/ReducedSpace'
+                  password:
+                    type: string
+                    description: Share password
+                    example: super-safe
+                  expires:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: >-
+                      UTC timestamp in milliseconds marking when the share
+                      should expire
+                    example: 1752057295637
+                required:
+                  - _id
+                  - name
+                  - creator
+                  - createDate
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'shareId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'shareId':
+                  summary: Failed to validate 'path' parameter 'shareId'
+                  description: Failed to validate 'path' parameter 'shareId' - {error}
+                  value:
+                    code: 011.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'shareId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 011.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 011.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 011.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | The provided password does not match the share's password.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                The provided password does not match the share's password.:
+                  summary: The provided password does not match the share's password.
+                  value:
+                    code: 011.045.0003
+                    error: invalid.password
+                    message: The provided password does not match the share's password.
+        '404':
+          description: Organization not found | Share not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 011.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Share not found:
+                  summary: Share not found
+                  value:
+                    code: 011.045.0001
+                    error: share.not.found
+                    message: Share not found
         '500':
           description: something went wrong
           content:
