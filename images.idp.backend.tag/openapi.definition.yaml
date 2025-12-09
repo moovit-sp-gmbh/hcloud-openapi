@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2450
+  version: 0.0.143-2503
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -8484,6 +8484,9 @@ components:
         message:
           type: string
           description: Content of the message
+        link:
+          type: string
+          description: Optional link related to a referenced ressource
       required:
         - to
         - message
@@ -8523,6 +8526,9 @@ components:
         createDate:
           type: number
           description: Creation date of the message
+        link:
+          type: string
+          description: Link associated with the message
       required:
         - _id
         - from
