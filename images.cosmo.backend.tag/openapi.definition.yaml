@@ -2767,6 +2767,8 @@ components:
                 - WRITE_ASSET_TAGS
                 - VIEW_ASSET_STATUS
                 - WRITE_ASSET_STATUS
+                - VIEW_ASSET_METADATA
+                - WRITE_ASSET_METADATA
                 - OVERRIDE_ASSET_STATUS
                 - VIEW_ASSET_COMMENTS
                 - CREATE_ASSET_COMMENTS
@@ -4061,6 +4063,13 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: |-
+
+        Required role: MEMBER
+        Required scopes: HIGH5_SPACE_WRITE
+      summary: Update space avatar
+      tags:
+        - Space
       parameters:
         - schema:
             anyOf:
@@ -4098,6 +4107,12 @@ paths:
           name: spaceName
           in: path
       responses:
+        '200':
+          description: Successfully updated space avatar, returns the updated space object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -4154,6 +4169,7 @@ paths:
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
+            | You have not enough rights to access/manipulate this resource
           content:
             application/json:
               schema:
@@ -4179,8 +4195,20 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 011.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '404':
-          description: Organization not found
+          description: >-
+            Organization not found | Organization not found | Given space not
+            found
           content:
             application/json:
               schema:
@@ -4192,6 +4220,12 @@ paths:
                     code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 011.010.0001
+                    error: space.not.found
+                    message: Given space not found
         '500':
           description: something went wrong
           content:
