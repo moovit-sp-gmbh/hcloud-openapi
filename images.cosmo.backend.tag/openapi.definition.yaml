@@ -2550,6 +2550,11 @@ components:
           items:
             $ref: '#/components/schemas/ReducedUser'
           description: Array of mentioned users
+        mentionedTeams:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReducedTeam'
+          description: Array of mentioned teams
         commentType:
           type: string
           enum:
@@ -2646,6 +2651,14 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
+          example:
+            - 66b0994fa5bc5f142de5fb2f
+            - 36b0294fa1bc5f142de5fc2f
+        mentionsTeams:
+          type: array
+          items:
+            type: string
+          description: Array of mentioned team ids
           example:
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
@@ -6565,9 +6578,7 @@ paths:
             - cosmo:space:read
         - patAuth:
             - cosmo:space:read
-      summary: >-
-        List users that are allowed to be mentioned for the asset (=Space or
-        Share members)
+      summary: List users and teams that are allowed to be mentioned for the asset
       tags:
         - Space
       parameters:
@@ -6632,13 +6643,33 @@ paths:
           in: query
       responses:
         '200':
-          description: Users of asset
+          description: Users and teams of the asset
           content:
             application/json:
               schema:
                 type: array
                 items:
-                  $ref: '#/components/schemas/ReducedUser'
+                  oneOf:
+                    - allOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - user
+                          required:
+                            - type
+                    - allOf:
+                        - $ref: '#/components/schemas/ReducedTeam'
+                        - type: object
+                          properties:
+                            type:
+                              type: string
+                              enum:
+                                - team
+                          required:
+                            - type
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
