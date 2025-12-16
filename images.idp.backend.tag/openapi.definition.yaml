@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2529
+  version: 0.0.143-2532
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -1641,6 +1641,262 @@ paths:
               examples:
                 OAuthAppNotFoundException:
                   $ref: '#/components/examples/OAuthAppNotFoundException'
+        default:
+          description: Unexpected error
+  /v1/login/oauth/device/authorize:
+    post:
+      tags:
+        - Login.OAuth
+      summary: Device flow - Authorization Endpoint
+      description: Authorization endpoint used in the OAuth 2.0 Device Authorization Flow
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuthDeviceAuthorizationRequestDto'
+        required: true
+      responses:
+        '200':
+          description: >-
+            Object containing unique device verification code and an end-user
+            code that are valid for a limited time.
+            https://datatracker.ietf.org/doc/html/rfc8628#section-3.2
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthDeviceResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenEndpointErrorResponseDto'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+    get:
+      tags:
+        - Login.OAuth
+      summary: Device flow - Validate the user code
+      description: >-
+        Authorization endpoint used in the OAuth 2.0 Device Authorization Flow
+        to validate the user code
+      parameters:
+        - name: client_id
+          in: query
+          description: Client ID of the OAuth application
+          required: true
+          schema:
+            type: string
+        - name: user_code
+          in: query
+          description: User code to validate
+          required: true
+          schema:
+            type: string
+      responses:
+        '200':
+          description: >-
+            Object containing information about the OAuthApp and scopes related
+            to the user_code + client_id
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthDeviceUserCodeResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenEndpointErrorResponseDto'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/login/oauth/device/authorize/{client_id}/{user_code}:
+    post:
+      tags:
+        - Login.OAuth
+      summary: Device flow - Accept/reject authorization
+      description: >-
+        Endpoint used in the OAuth 2.0 Device Authorization Flow to store the
+        decision made by the user
+
+        Required scopes: HCLOUD_FULL
+      security:
+        - BearerAuth: []
+        - BasicAuth: []
+      parameters:
+        - name: client_id
+          in: path
+          description: Client ID of the OAuth application
+          required: true
+          schema:
+            type: string
+        - name: user_code
+          in: path
+          description: User code to validate
+          required: true
+          schema:
+            type: string
+      requestBody:
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/OAuthDeviceDecisionDto'
+        required: true
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenEndpointErrorResponseDto'
+        '401':
+          description: There was an error while evaluating the user's credentials
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                WrongAuthenticationTokenException:
+                  $ref: '#/components/examples/WrongAuthenticationTokenException'
+                  summary: The JWT payload has an invalid format
+                PatExpiredException:
+                  $ref: '#/components/examples/PatExpiredException'
+                  summary: The token has expired
+                TokenExpiredException:
+                  $ref: '#/components/examples/TokenExpiredException'
+                  summary: The token has expired
+                NotAuthorizedException:
+                  $ref: '#/components/examples/NotAuthorizedException'
+                  summary: The credentials were incorrect
+                SessionExpiredException:
+                  $ref: '#/components/examples/SessionExpiredException'
+                  summary: The user session has expired
+                AuthenticationTokenMissingException:
+                  $ref: '#/components/examples/AuthenticationTokenMissingException'
+                  summary: The Authorization header is empty
+        '403':
+          description: Basic auth cannot be used because 2FA is enabled
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                BasicAuthDisabledInFavorOf2FAException:
+                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
+                Missing required scope for operation:
+                  $ref: '#/components/examples/InsufficientAccessRightException'
+        default:
+          description: Unexpected error
+  /v1/login/oauth/device/access_token:
+    post:
+      tags:
+        - Login.OAuth
+      summary: Device flow - Token Endpoint
+      description: >-
+        Use this endpoint to poll for an access token with a given device code.
+        The device code can be obtained via the authorization endpoint.
+      requestBody:
+        content:
+          application/x-www-form-urlencoded:
+            schema:
+              $ref: '#/components/schemas/OAuthDeviceTokenRequestDto'
+        required: true
+      responses:
+        '200':
+          description: OAuth object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenEndpointResponseDto'
+        '400':
+          description: Bad Request
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthTokenEndpointErrorResponseDto'
+        '415':
+          description: Unsupported Media Type exception
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthInvalidContentTypeException:
+                  $ref: '#/components/examples/OAuthInvalidContentTypeException'
         default:
           description: Unexpected error
   /v1/org:
@@ -8976,6 +9232,105 @@ components:
         modifyDate: 1673527923627
         scopes:
           idp:user:read: 1723563392019
+    OAuthDeviceAuthorizationRequestDto:
+      properties:
+        client_id:
+          type: string
+          description: HcloudClientId of the OAuth app
+        scope:
+          type: string
+          description: Scope that the access token should be granted
+      required:
+        - client_id
+      example:
+        client_id: <client_id>
+        scope: profile email
+    OAuthDeviceDecisionDto:
+      properties:
+        status:
+          $ref: '#/components/schemas/OAuthDeviceDecisionStatus'
+          description: Status to set
+      required:
+        - status
+      example:
+        status: APPROVED
+    OAuthDeviceDecisionStatus:
+      enum:
+        - APPROVED
+        - REJECTED
+      type: string
+      description: |
+        * APPROVED - Approve the authorization request
+        * REJECTED - Reject the authorization request
+    OAuthDeviceResponseDto:
+      properties:
+        device_code:
+          type: string
+          description: Device code
+        user_code:
+          type: string
+          description: User code
+        verification_uri:
+          type: string
+          description: Partial verification URI
+        verification_uri_complete:
+          type: string
+          description: Complete verification URI
+        expires_in:
+          type: number
+          description: TTL of the device and user codes in seconds
+        interval:
+          type: number
+          description: Minimum polling interval allowed for the clients in seconds
+      required:
+        - device_code
+        - user_code
+        - verification_uri
+        - verification_uri_complete
+        - expires_in
+        - interval
+      example:
+        device_code: KCb89Icp8H7kffAbA9Gs2LmtkSLsuPU85bJNH8qXe8VIy5w-I8RZEG60R0qk4pJB
+        user_code: oa5L-2T2C
+        verification_uri: https://app.helmut.cloud/oauth/device/authorize
+        verification_uri_complete: https://app.helmut.cloud/oauth/device/authorize?user_code=oa5L-2T2C
+        expires_in: 90
+        interval: 3
+    OAuthDeviceUserCodeResponseDto:
+      properties:
+        scopes:
+          type: array
+          items:
+            $ref: '#/components/schemas/Scope'
+          description: Scopes requested by the client
+        app:
+          $ref: '#/components/schemas/OAuthAppPublicInfoDto'
+          description: OAuth application involved in the authentication attempt
+      required:
+        - scopes
+        - app
+      example:
+        scopes:
+          - cosmo:space:delete
+        app:
+          _id: 63ca7c7683160ed3ad9162ff
+          name: SevTest
+          organization:
+            _id: 6284c915f173f39d71bb8b83
+            name: Helmut Mc Cloud
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          creator:
+            _id: 6284c915f173f39d71bb8b83
+            name: Helmut Mc Cloud
+            email: hmc@helmut.cloud
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            isGuest: false
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          clientId: 30ed05e3-4065-4c2c-b537-e4c411854b6f
+          description: A test OAuthApp
+          homepage: https://github.com/
+          createDate: 1673527923627
+          modifyDate: 1673527923627
     OAuthSecretCreateDto:
       properties:
         secretName:
