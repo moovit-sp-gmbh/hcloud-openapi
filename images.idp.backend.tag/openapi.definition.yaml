@@ -1,7 +1,7 @@
 openapi: 3.0.0
 info:
   title: hcloud - IdP
-  version: 0.0.143-2532
+  version: 0.0.143-2534
   contact:
     name: MoovIT Software Products GmbH
     url: https://www.moovit-sp.com
@@ -5824,113 +5824,6 @@ paths:
                   $ref: '#/components/examples/InternalServerErrorException'
         default:
           description: Unexpected error
-  /v1/org/{orgName}/service-accounts/{serviceAccountId}/scopes/permission:
-    patch:
-      tags:
-        - Organization.Service Accounts
-      summary: Update a service account's scopes by permission
-      description: |-
-
-        Required organization role: ADMIN\
-        Required scopes: IDP_ORGANIZATION_WRITE
-      security:
-        - BearerAuth: []
-        - BasicAuth: []
-      parameters:
-        - $ref: '#/components/parameters/OrgName'
-        - name: serviceAccountId
-          in: path
-          description: Service account ID
-          required: true
-          schema:
-            type: string
-      requestBody:
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ServiceAccountPatchPermissionDto'
-      responses:
-        '200':
-          description: Ok
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ServiceAccountDto'
-        '400':
-          description: Bad Request
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Invalid service account ID:
-                  $ref: '#/components/examples/InvalidParameterException'
-                Invalid path parameter for organization name:
-                  $ref: '#/components/examples/InvalidParameterException'
-        '401':
-          description: There was an error while evaluating the user's credentials
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                WrongAuthenticationTokenException:
-                  $ref: '#/components/examples/WrongAuthenticationTokenException'
-                  summary: The JWT payload has an invalid format
-                PatExpiredException:
-                  $ref: '#/components/examples/PatExpiredException'
-                  summary: The token has expired
-                TokenExpiredException:
-                  $ref: '#/components/examples/TokenExpiredException'
-                  summary: The token has expired
-                NotAuthorizedException:
-                  $ref: '#/components/examples/NotAuthorizedException'
-                  summary: The credentials were incorrect
-                SessionExpiredException:
-                  $ref: '#/components/examples/SessionExpiredException'
-                  summary: The user session has expired
-                AuthenticationTokenMissingException:
-                  $ref: '#/components/examples/AuthenticationTokenMissingException'
-                  summary: The Authorization header is empty
-        '403':
-          description: Basic auth cannot be used because 2FA is enabled
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                BasicAuthDisabledInFavorOf2FAException:
-                  $ref: '#/components/examples/BasicAuthDisabledInFavorOf2FAException'
-                Missing required scope for operation:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                Not a member of the organization:
-                  $ref: '#/components/examples/InsufficientAccessRightException'
-                Insufficient organization role. Must be at least ADMIN:
-                  $ref: '#/components/examples/OrganizationInsufficientRoleException'
-        '404':
-          description: Not Found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                ServiceAccountNotFoundException:
-                  $ref: '#/components/examples/ServiceAccountNotFoundException'
-                PATNotFoundException:
-                  $ref: '#/components/examples/PATNotFoundException'
-                Organization not found:
-                  $ref: '#/components/examples/OrganizationNotFoundException'
-        '500':
-          description: Internal Server Error
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                InternalServerErrorException:
-                  $ref: '#/components/examples/InternalServerErrorException'
-        default:
-          description: Unexpected error
   /v1/org/{orgName}/service-accounts/{serviceAccountId}/name:
     patch:
       tags:
@@ -10256,15 +10149,6 @@ components:
         email: hmc@helmut.cloud
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         token: hlmc_p_8332629108ba293471c7bb8631a12d8b
-    ServiceAccountPatchPermissionDto:
-      properties:
-        permission:
-          $ref: '#/components/schemas/High5SpacePermission'
-          description: The permission the user has within the space
-      required:
-        - permission
-      example:
-        permission: READ
     SortDirection:
       enum:
         - ASC
