@@ -4455,7 +4455,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedUser'
             - description: Creator of the stream
-        status:
+        state:
           allOf:
             - $ref: '#/components/schemas/High5ExecutionState'
             - description: Current state of the stream
@@ -4514,7 +4514,7 @@ components:
         - space
         - organization
         - creator
-        - status
+        - state
         - outcome
         - runningNodes
         - target
@@ -13631,14 +13631,14 @@ paths:
           in: path
         - schema:
             type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
+            minLength: 3
+            maxLength: 1024
+            pattern: ^[\w-]{3,1024}$
             description: >-
-              Key of the secret (only alphanumeric characters, underscores,
-              hyphens and dots are allowed; it should contain between 1 and 32
+              Secret that got generated on execution package creation at one of
+              the POST execute endpoints (it should contain between 3 and 1024
               characters)
-            example: Helmut4-dev.api_key
+            example: A-top-top-top-secret-superspy-Secret
           required: true
           name: secret
           in: path
@@ -15410,14 +15410,14 @@ paths:
           in: path
         - schema:
             type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
+            minLength: 3
+            maxLength: 1024
+            pattern: ^[\w-]{3,1024}$
             description: >-
-              Key of the secret (only alphanumeric characters, underscores,
-              hyphens and dots are allowed; it should contain between 1 and 32
+              Secret that got generated on execution package creation at one of
+              the POST execute endpoints (it should contain between 3 and 1024
               characters)
-            example: Helmut4-dev.api_key
+            example: A-top-top-top-secret-superspy-Secret
           required: true
           name: streamSecret
           in: path
@@ -15590,14 +15590,14 @@ paths:
           in: path
         - schema:
             type: string
-            minLength: 1
-            maxLength: 32
-            pattern: ^[\w-.]{1,32}$
+            minLength: 3
+            maxLength: 1024
+            pattern: ^[\w-]{3,1024}$
             description: >-
-              Key of the secret (only alphanumeric characters, underscores,
-              hyphens and dots are allowed; it should contain between 1 and 32
+              Secret that got generated on execution package creation at one of
+              the POST execute endpoints (it should contain between 3 and 1024
               characters)
-            example: Helmut4-dev.api_key
+            example: A-top-top-top-secret-superspy-Secret
           required: true
           name: streamSecret
           in: path
