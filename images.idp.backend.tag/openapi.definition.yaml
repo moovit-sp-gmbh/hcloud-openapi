@@ -5739,6 +5739,7 @@ paths:
       parameters:
         - schema:
             type: boolean
+            nullable: true
           required: false
           name: noAvatar
           in: query
@@ -5817,6 +5818,7 @@ paths:
           in: path
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If true, an additional property holding all teams that the
               requesting user is part of and that belong to the organization
@@ -5826,6 +5828,7 @@ paths:
           in: query
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If true, an additional property holding the total member count of
               the organization will be returned
@@ -5846,6 +5849,7 @@ paths:
           in: query
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If set, an additional property holding the organization's license
               will be included
@@ -7778,6 +7782,7 @@ paths:
           in: path
         - schema:
             type: boolean
+            nullable: true
           required: false
           name: noAvatar
           in: query
@@ -8172,6 +8177,7 @@ paths:
           in: query
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If true, an additional property holding the total member count of
               the organization will be returned
@@ -8885,6 +8891,7 @@ paths:
           in: path
         - schema:
             type: boolean
+            nullable: true
           required: false
           name: noAvatar
           in: query
@@ -9822,6 +9829,7 @@ paths:
           in: query
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If true, an additional property holding all teams that the
               requesting user is part of and that belong to the organization
@@ -9831,6 +9839,7 @@ paths:
           in: query
         - schema:
             type: boolean
+            nullable: true
             description: >-
               If true, an additional property holding the total member count of
               the organization will be returned
