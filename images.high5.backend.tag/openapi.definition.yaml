@@ -2866,13 +2866,13 @@ components:
           maxLength: 255
           description: Quartz cron expression
           example: 0 0 * * *
-        targetUrl:
+        targetEventId:
           type: string
-          minLength: 1
-          maxLength: 255
-          format: uri
-          description: Target URL. The Job will execute HTTP calls to this URL
-          example: https://api.example.com/trigger
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+          description: ID of the target event
+          example: 63c7e6e4eae82d8001b65305
         timezone:
           type: string
           description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
@@ -2883,9 +2883,9 @@ components:
           maxLength: 255
           description: Description of the cron job
           example: Triggers daily report generation
-        body:
+        payload:
           type: string
-          description: Body for the HTTP request, limited to 1024kb
+          description: Execution payload, limited to 1024kb
         enabled:
           type: boolean
           description: Whether the job is enabled
@@ -2898,10 +2898,172 @@ components:
           type: number
           description: Last triggered date of the cron job as unix timestamp
           example: 1692275090717
+        time:
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - minute
+                values:
+                  type: object
+                  properties:
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - hour
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                  required:
+                    - hour
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - day
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - month
+                values:
+                  type: object
+                  properties:
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - year
+                values:
+                  type: object
+                  properties:
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - custom
+                values:
+                  type: object
+                  properties:
+                    year:
+                      type: number
+                      minimum: 0
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - year
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+          description: >-
+            Optional data related to the resolved expression (used on the
+            frontend only)
       required:
         - name
         - expression
-        - targetUrl
+        - targetEventId
         - timezone
       description: Data for creating a new cron job
     JobEnabledPatchDto:
@@ -4958,17 +5120,18 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedUser'
             - description: Creator of the cronjob
-        targetUrl:
-          type: string
-          format: uri
-          description: Target URL, the cronjob will execute HTTP calls to this URL
+        targetEvent:
+          allOf:
+            - $ref: '#/components/schemas/ReducedEvent'
+            - description: Target event to be executed by job
+              example: *ref_0
         timezone:
           type: string
           description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
         description:
           type: string
           description: Description of the cronjob
-        body:
+        payload:
           type: string
           description: Body for the HTTP request
         enabled:
@@ -4995,6 +5158,168 @@ components:
           type: number
           minimum: 0
           description: Last triggered date of the cronjob as unix timestamp
+        time:
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - minute
+                values:
+                  type: object
+                  properties:
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - hour
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                  required:
+                    - hour
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - day
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - month
+                values:
+                  type: object
+                  properties:
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - year
+                values:
+                  type: object
+                  properties:
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - custom
+                values:
+                  type: object
+                  properties:
+                    year:
+                      type: number
+                      minimum: 0
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - year
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+          description: >-
+            Optional data related to the resolved expression (used on the
+            frontend only)
       required:
         - _id
         - name
@@ -5002,7 +5327,7 @@ components:
         - space
         - organization
         - creator
-        - targetUrl
+        - targetEvent
         - timezone
         - createDate
         - modifyDate
