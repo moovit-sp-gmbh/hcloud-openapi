@@ -1546,11 +1546,17 @@ components:
           description: Password of the user
           example: 123&/(Password
         token:
-          type: string
-          minLength: 6
-          maxLength: 6
-          pattern: ^\d{6}$
-          description: Token to match against a TOTP secret if 2FA is enabled
+          anyOf:
+            - type: string
+              minLength: 6
+              maxLength: 6
+              pattern: ^\d{6}$
+            - type: string
+              enum:
+                - ''
+          description: >-
+            Token to match against a TOTP secret if 2FA is enabled (empty string
+            is ignored)
           example: '937482'
       required:
         - email
