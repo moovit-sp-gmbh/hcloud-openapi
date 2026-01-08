@@ -7686,7 +7686,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Given database name is already in use
           content:
             application/json:
               schema:
@@ -7706,6 +7706,12 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Given database name is already in use:
+                  summary: Given database name is already in use
+                  value:
+                    code: 002.035.0002
+                    error: database.name.in.use
+                    message: Given database name is already in use
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -7873,7 +7879,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'string' parameter 'dbName'
+            'dbName' | Failed to validate 'string' parameter 'dbName' | Given
+            database name is already in use
           content:
             application/json:
               schema:
@@ -7911,6 +7918,12 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'dbName' - Database
                       name must be provided
+                Given database name is already in use:
+                  summary: Given database name is already in use
+                  value:
+                    code: 002.035.0002
+                    error: database.name.in.use
+                    message: Given database name is already in use
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8179,7 +8192,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given stream not found
+          description: >-
+            Organization not found | Given stream not found | Given design not
+            found
           content:
             application/json:
               schema:
@@ -8197,6 +8212,12 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+                Given design not found:
+                  summary: Given design not found
+                  value:
+                    code: 002.018.0001
+                    error: design.not.found
+                    message: Given design not found
         '500':
           description: something went wrong
           content:
@@ -8515,7 +8536,9 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'eventName' | Failed to validate 'path' parameter 'streamId'
+            'eventName' | Failed to validate 'path' parameter 'streamId' |
+            Mismatch between actual current hash and expected current hash. You
+            may need to retrieve a more u
           content:
             application/json:
               schema:
@@ -8549,6 +8572,21 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'streamId' - {error}
+                Mismatch between actual current hash and expected current hash. You may need to retrieve a more u:
+                  summary: >-
+                    Mismatch between actual current hash and expected current
+                    hash. You may need to retrieve a more u
+                  description: >-
+                    Mismatch between actual current hash and expected current
+                    hash. You may need to retrieve a more up-to-date version of
+                    this design.
+                  value:
+                    code: 002.018.0004
+                    error: design.hash.mismatch
+                    message: >-
+                      Mismatch between actual current hash and expected current
+                      hash. You may need to retrieve a more up-to-date version
+                      of this design.
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8608,7 +8646,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given stream not found
+          description: >-
+            Organization not found | Given stream not found | Given design not
+            found | Given design node not found
           content:
             application/json:
               schema:
@@ -8626,6 +8666,18 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+                Given design not found:
+                  summary: Given design not found
+                  value:
+                    code: 002.018.0001
+                    error: design.not.found
+                    message: Given design not found
+                Given design node not found:
+                  summary: Given design node not found
+                  value:
+                    code: 002.018.0002
+                    error: design.node.not.found
+                    message: Given design node not found
         '500':
           description: something went wrong
           content:
@@ -8813,7 +8865,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given stream not found
+          description: >-
+            Organization not found | Given stream not found | Given design not
+            found
           content:
             application/json:
               schema:
@@ -8831,6 +8885,12 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+                Given design not found:
+                  summary: Given design not found
+                  value:
+                    code: 002.018.0001
+                    error: design.not.found
+                    message: Given design not found
         '500':
           description: something went wrong
           content:
@@ -9208,7 +9268,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'string' parameter 'dbName' | Failed to validate 'string'
-            parameter 'key'
+            parameter 'key' | Data type of the value does not match the existing
+            documents data type
           content:
             application/json:
               schema:
@@ -9264,6 +9325,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -9460,7 +9531,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'string' parameter 'dbName' | Failed to validate 'string'
-            parameter 'key'
+            parameter 'key' | Data type of the value does not match the existing
+            documents data type
           content:
             application/json:
               schema:
@@ -9516,6 +9588,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -9614,7 +9696,7 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{index}:
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{pos}:
     get:
       security:
         - bearerAuth:
@@ -9690,12 +9772,11 @@ paths:
           in: path
         - schema:
             type: number
-            minimum: 0
             description: >-
               Numeric identifier representing the element’s position in the
               array
           required: true
-          name: index
+          name: pos
           in: path
         - schema:
             type: string
@@ -9714,8 +9795,10 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'index' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            validate 'path' parameter 'pos' | Failed to validate 'string'
+            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
+            Data type of the value does not match the existing documents data
+            type
           content:
             application/json:
               schema:
@@ -9749,13 +9832,13 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'path' parameter 'index':
-                  summary: Failed to validate 'path' parameter 'index'
-                  description: Failed to validate 'path' parameter 'index' - {error}
+                Failed to validate 'path' parameter 'pos':
+                  summary: Failed to validate 'path' parameter 'pos'
+                  description: Failed to validate 'path' parameter 'pos' - {error}
                   value:
                     code: 002.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'index' - {error}
+                    message: Failed to validate 'path' parameter 'pos' - {error}
                 Failed to validate 'string' parameter 'dbName':
                   summary: Failed to validate 'string' parameter 'dbName'
                   description: >-
@@ -9778,6 +9861,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -9839,7 +9932,7 @@ paths:
         '404':
           description: >-
             Organization not found | Given database not found | Given document
-            not found
+            not found | Given array item not found
           content:
             application/json:
               schema:
@@ -9863,6 +9956,12 @@ paths:
                     code: 002.036.0002
                     error: document.not.found
                     message: Given document not found
+                Given array item not found:
+                  summary: Given array item not found
+                  value:
+                    code: 002.036.0004
+                    error: array.item.not.found
+                    message: Given array item not found
         '500':
           description: something went wrong
           content:
@@ -9876,6 +9975,7 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/:index:
     delete:
       security:
         - bearerAuth:
@@ -9951,12 +10051,11 @@ paths:
           in: path
         - schema:
             type: number
-            minimum: 0
             description: >-
               Numeric identifier representing the element’s position in the
               array
           required: true
-          name: index
+          name: pos
           in: path
         - schema:
             type: string
@@ -9971,8 +10070,10 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'index' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            validate 'path' parameter 'pos' | Failed to validate 'string'
+            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
+            Data type of the value does not match the existing documents data
+            type
           content:
             application/json:
               schema:
@@ -10006,13 +10107,13 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'path' parameter 'index':
-                  summary: Failed to validate 'path' parameter 'index'
-                  description: Failed to validate 'path' parameter 'index' - {error}
+                Failed to validate 'path' parameter 'pos':
+                  summary: Failed to validate 'path' parameter 'pos'
+                  description: Failed to validate 'path' parameter 'pos' - {error}
                   value:
                     code: 002.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'index' - {error}
+                    message: Failed to validate 'path' parameter 'pos' - {error}
                 Failed to validate 'string' parameter 'dbName':
                   summary: Failed to validate 'string' parameter 'dbName'
                   description: >-
@@ -10035,6 +10136,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -10096,7 +10207,7 @@ paths:
         '404':
           description: >-
             Organization not found | Given database not found | Given document
-            not found
+            not found | Given array item not found
           content:
             application/json:
               schema:
@@ -10120,6 +10231,12 @@ paths:
                     code: 002.036.0002
                     error: document.not.found
                     message: Given document not found
+                Given array item not found:
+                  summary: Given array item not found
+                  value:
+                    code: 002.036.0004
+                    error: array.item.not.found
+                    message: Given array item not found
         '500':
           description: something went wrong
           content:
@@ -10723,7 +10840,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'string' parameter 'dbName' | Failed to validate 'string'
-            parameter 'key'
+            parameter 'key' | Data type of the value does not match the existing
+            documents data type
           content:
             application/json:
               schema:
@@ -10779,6 +10897,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -11316,6 +11444,19 @@ paths:
                     code: 002.035.0001
                     error: database.not.found
                     message: Given database not found
+        '409':
+          description: Document with given key already exists within a space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Document with given key already exists within a space:
+                  summary: Document with given key already exists within a space
+                  value:
+                    code: 002.036.0003
+                    error: document.already.exists
+                    message: Document with given key already exists within a space
         '500':
           description: something went wrong
           content:
@@ -11421,7 +11562,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'string' parameter 'dbName' | Failed to validate 'string'
-            parameter 'key'
+            parameter 'key' | Data type of the value does not match the existing
+            documents data type
           content:
             application/json:
               schema:
@@ -11477,6 +11619,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -11652,8 +11804,8 @@ paths:
         - schema:
             type: number
             description: >-
-              The numeric value extracted from the path, stored in the document
-              and used in subsequent processing
+              Numeric value extracted from the path, stored in the document and
+              used in subsequent processing
           required: true
           name: value
           in: path
@@ -11675,7 +11827,9 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'path' parameter 'value' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
+            Data type of the value does not match the existing documents data
+            type
           content:
             application/json:
               schema:
@@ -11738,6 +11892,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -11928,7 +12092,8 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'string' parameter 'dbName' | Failed to validate 'string'
-            parameter 'key'
+            parameter 'key' | Data type of the value does not match the existing
+            documents data type
           content:
             application/json:
               schema:
@@ -11984,6 +12149,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -12159,8 +12334,8 @@ paths:
         - schema:
             type: number
             description: >-
-              The numeric value extracted from the path, stored in the document
-              and used in subsequent processing
+              Numeric value extracted from the path, stored in the document and
+              used in subsequent processing
           required: true
           name: value
           in: path
@@ -12182,7 +12357,9 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
             validate 'path' parameter 'value' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
+            Data type of the value does not match the existing documents data
+            type
           content:
             application/json:
               schema:
@@ -12245,6 +12422,16 @@ paths:
                     message: >-
                       Failed to validate 'string' parameter 'key' - Document key
                       must be provided
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -12991,7 +13178,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Given event name is already in use
           content:
             application/json:
               schema:
@@ -13011,6 +13198,12 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Given event name is already in use:
+                  summary: Given event name is already in use
+                  value:
+                    code: 002.017.0002
+                    error: event.name.in.use
+                    message: Given event name is already in use
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -13178,7 +13371,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'eventName'
+            'eventName' | Given event name is already in use
           content:
             application/json:
               schema:
@@ -13205,6 +13398,12 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'eventName' - {error}
+                Given event name is already in use:
+                  summary: Given event name is already in use
+                  value:
+                    code: 002.017.0002
+                    error: event.name.in.use
+                    message: Given event name is already in use
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -13382,7 +13581,9 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'streamId' | Failed to validate 'query' parameter 'design' | Failed
-            to validate 'query' parameter 'debug'
+            to validate 'query' parameter 'debug' | Unable to execute stream
+            marked as inactive. Please change the state of the stream first. |
+            invalid execution configuratio
           content:
             application/json:
               schema:
@@ -13423,6 +13624,27 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'debug' - {error}
+                Unable to execute stream marked as inactive. Please change the state of the stream first.:
+                  summary: >-
+                    Unable to execute stream marked as inactive. Please change
+                    the state of the stream first.
+                  value:
+                    code: 002.015.0001
+                    error: stream.inactive
+                    message: >-
+                      Unable to execute stream marked as inactive. Please change
+                      the state of the stream first.
+                invalid execution configuratio:
+                  summary: invalid execution configuratio
+                  description: >-
+                    invalid execution configuration: a stream can only be
+                    executed in debug mode if the design is executed
+                  value:
+                    code: 002.015.0006
+                    error: invalid.execution.configuration
+                    message: >-
+                      invalid execution configuration: a stream can only be
+                      executed in debug mode if the design is executed
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -13456,7 +13678,7 @@ paths:
           description: >-
             Required scopes ['high5:space:execute'] not included in
             authorization | User's organization role is insufficient. Must be at
-            least MEMBER
+            least MEMBER | You have exceeded the assigned quota for this action.
           content:
             application/json:
               schema:
@@ -13482,6 +13704,12 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                You have exceeded the assigned quota for this action.:
+                  summary: You have exceeded the assigned quota for this action.
+                  value:
+                    code: 002.032.0001
+                    error: license.quota.exceeded
+                    message: You have exceeded the assigned quota for this action.
         '404':
           description: Organization not found | Given stream not found
           content:
@@ -13501,6 +13729,50 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+        '409':
+          description: >-
+            Requested target john.doe@helmut.cloud is a member of the
+            organization but not an execution target | Requested target
+            target@helmut.cloud is not a member of the organization | Minimum
+            engine version required '3.1.0', but current space version is '2.3.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Requested target john.doe@helmut.cloud is a member of the organization but not an execution target:
+                  summary: >-
+                    Requested target john.doe@helmut.cloud is a member of the
+                    organization but not an execution target
+                  value:
+                    code: 002.015.0010
+                    error: execution.target.not.execution.target
+                    message: >-
+                      Requested target john.doe@helmut.cloud is a member of the
+                      organization but not an execution target
+                Requested target target@helmut.cloud is not a member of the organization:
+                  summary: >-
+                    Requested target target@helmut.cloud is not a member of the
+                    organization
+                  value:
+                    code: 002.015.0004
+                    error: execution.target.not.member
+                    message: >-
+                      Requested target target@helmut.cloud is not a member of
+                      the organization
+                Minimum engine version required '3.1.0', but current space version is '2.3.:
+                  summary: >-
+                    Minimum engine version required '3.1.0', but current space
+                    version is '2.3.
+                  description: >-
+                    Minimum engine version required '3.1.0', but current space
+                    version is '2.3.1-dev-17'
+                  value:
+                    code: 002.015.0005
+                    error: incompatible.engine.version
+                    message: >-
+                      Minimum engine version required '3.1.0', but current space
+                      version is '2.3.1-dev-17'
         '500':
           description: something went wrong
           content:
@@ -13590,7 +13862,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'executionId'
+            'executionId' | Debug commands can only be issued to executions of
+            designs started in debug mode
           content:
             application/json:
               schema:
@@ -13619,6 +13892,16 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'executionId' -
                       {error}
+                Debug commands can only be issued to executions of designs started in debug mode:
+                  summary: >-
+                    Debug commands can only be issued to executions of designs
+                    started in debug mode
+                  value:
+                    code: 002.015.0008
+                    error: no.debug.mode
+                    message: >-
+                      Debug commands can only be issued to executions of designs
+                      started in debug mode
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -13652,7 +13935,8 @@ paths:
           description: >-
             Required scopes ['high5:space:execute'] not included in
             authorization | User's organization role is insufficient. Must be at
-            least MEMBER
+            least MEMBER | Only the user that started an execution can issue
+            debug commands to it
           content:
             application/json:
               schema:
@@ -13678,8 +13962,18 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                Only the user that started an execution can issue debug commands to it:
+                  summary: >-
+                    Only the user that started an execution can issue debug
+                    commands to it
+                  value:
+                    code: 002.015.0007
+                    error: single.user.debug
+                    message: >-
+                      Only the user that started an execution can issue debug
+                      commands to it
         '404':
-          description: Organization not found
+          description: Organization not found | Execution object not found.
           content:
             application/json:
               schema:
@@ -13691,6 +13985,12 @@ paths:
                     code: 002.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Execution object not found.:
+                  summary: Execution object not found.
+                  value:
+                    code: 002.025.0003
+                    error: execution.not.found
+                    message: Execution object not found.
         '500':
           description: something went wrong
           content:
@@ -13704,6 +14004,19 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+        '504':
+          description: Acknowledgement of debug command timed out
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Acknowledgement of debug command timed out:
+                  summary: Acknowledgement of debug command timed out
+                  value:
+                    code: 002.015.0009
+                    error: debug.command.timeout
+                    message: Acknowledgement of debug command timed out
   /v1/org/{orgName}/spaces/{spaceName}/execute/event/name/{eventName}:
     post:
       security:
@@ -13849,7 +14162,7 @@ paths:
           description: >-
             Required scopes ['high5:space:execute'] not included in
             authorization | User's organization role is insufficient. Must be at
-            least MEMBER
+            least MEMBER | You have exceeded the assigned quota for this action.
           content:
             application/json:
               schema:
@@ -13875,6 +14188,12 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                You have exceeded the assigned quota for this action.:
+                  summary: You have exceeded the assigned quota for this action.
+                  value:
+                    code: 002.032.0001
+                    error: license.quota.exceeded
+                    message: You have exceeded the assigned quota for this action.
         '404':
           description: Organization not found
           content:
@@ -13888,6 +14207,25 @@ paths:
                     code: 002.007.0001
                     error: organization.not.found
                     message: Organization not found
+        '409':
+          description: >-
+            Requested target target@helmut.cloud is not a member of the
+            organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Requested target target@helmut.cloud is not a member of the organization:
+                  summary: >-
+                    Requested target target@helmut.cloud is not a member of the
+                    organization
+                  value:
+                    code: 002.015.0004
+                    error: execution.target.not.member
+                    message: >-
+                      Requested target target@helmut.cloud is not a member of
+                      the organization
         '500':
           description: something went wrong
           content:
@@ -14064,7 +14402,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given stream not found
+          description: >-
+            Organization not found | Given stream not found | Given design not
+            found | Execution object not found.
           content:
             application/json:
               schema:
@@ -14082,6 +14422,18 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+                Given design not found:
+                  summary: Given design not found
+                  value:
+                    code: 002.018.0001
+                    error: design.not.found
+                    message: Given design not found
+                Execution object not found.:
+                  summary: Execution object not found.
+                  value:
+                    code: 002.025.0003
+                    error: execution.not.found
+                    message: Execution object not found.
         '500':
           description: something went wrong
           content:
@@ -14157,7 +14509,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'webhookToken'
+            'webhookToken' | Failed to prepare webhook
           content:
             application/json:
               schema:
@@ -14186,6 +14538,58 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'webhookToken' -
                       {error}
+                Failed to prepare webhook:
+                  summary: Failed to prepare webhook
+                  description: Failed to prepare webhook - Missing hmac request header
+                  value:
+                    code: 002.011.0009
+                    error: webhook.preparation.error
+                    message: Failed to prepare webhook - Missing hmac request header
+        '401':
+          description: The provided security headers do not match
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The provided security headers do not match:
+                  summary: The provided security headers do not match
+                  value:
+                    code: 002.011.0006
+                    error: invalid.security.headers
+                    message: The provided security headers do not match
+        '404':
+          description: Given webhook not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given webhook not found:
+                  summary: Given webhook not found
+                  value:
+                    code: 002.011.0002
+                    error: webhook.not.found
+                    message: Given webhook not found
+        '409':
+          description: >-
+            Requested target target@helmut.cloud is not a member of the
+            organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Requested target target@helmut.cloud is not a member of the organization:
+                  summary: >-
+                    Requested target target@helmut.cloud is not a member of the
+                    organization
+                  value:
+                    code: 002.015.0004
+                    error: execution.target.not.member
+                    message: >-
+                      Requested target target@helmut.cloud is not a member of
+                      the organization
         '500':
           description: something went wrong
           content:
@@ -14453,6 +14857,32 @@ paths:
                     message: >-
                       Failed to validate 'header' parameter 'content-type' -
                       headers is missing
+        '404':
+          description: Execution object not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Execution object not found.:
+                  summary: Execution object not found.
+                  value:
+                    code: 002.025.0003
+                    error: execution.not.found
+                    message: Execution object not found.
+        '410':
+          description: The callback window for this webhook execution has expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The callback window for this webhook execution has expired:
+                  summary: The callback window for this webhook execution has expired
+                  value:
+                    code: 002.011.0011
+                    error: webhook.callback.expired
+                    message: The callback window for this webhook execution has expired
         '500':
           description: something went wrong
           content:
