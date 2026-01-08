@@ -1175,7 +1175,6 @@ components:
             minLength: 24
             maxLength: 24
             format: hexadecimal
-          minItems: 1
           maxItems: 1000
           description: Array of user database IDs that should be part of the team
           example:
@@ -5105,10 +5104,11 @@ paths:
       parameters:
         - schema:
             type: string
+            default: code
             description: >-
               Tells the authorization server which grant to execute. Currently
               only "code" is supported
-          required: true
+          required: false
           name: response_type
           in: query
         - schema:
@@ -5222,10 +5222,11 @@ paths:
       parameters:
         - schema:
             type: string
+            default: code
             description: >-
               Tells the authorization server which grant to execute. Currently
               only "code" is supported
-          required: true
+          required: false
           name: response_type
           in: query
         - schema:
@@ -5343,10 +5344,11 @@ paths:
       parameters:
         - schema:
             type: string
+            default: code
             description: >-
               Tells the authorization server which grant to execute. Currently
               only "code" is supported
-          required: true
+          required: false
           name: response_type
           in: query
         - schema:
