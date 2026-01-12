@@ -1968,6 +1968,7 @@ components:
       description: Error if the node failed
     CatalogInfo:
       type: object
+      nullable: true
       properties:
         name:
           type: string
