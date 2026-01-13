@@ -3756,17 +3756,17 @@ components:
             overwritten by ?callback=false query param in the webhook execution
             endpoint
       description: Update webhook configuration details
-    AvatarDto:
+    CustomAvatarDto:
       type: object
       properties:
-        url:
+        avatar:
           type: string
-          format: uri
-          description: URL to the avatar
-          example: https://dali.s3.helmut.cloud/no_avatar.webp
+          format: binary
+          description: Image file to upload as avatar
+          example: <binary>
       required:
-        - url
-      description: Avatar create object
+        - avatar
+      description: Custom image must be send in request body as multipart/form-data as file
     ReducedSpace:
       type: object
       properties:
@@ -23276,6 +23276,165 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/pools/{poolName}/avatar:
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      summary: Upload custom avatar for the High5 Pool
+      tags:
+        - Pool
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated pool details with new avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PoolDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'poolName' | Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'poolName':
+                  summary: Failed to validate 'path' parameter 'poolName'
+                  description: Failed to validate 'path' parameter 'poolName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'poolName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: Organization not found | Given space not found | Pool not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Pool not found:
+                  summary: Pool not found
+                  value:
+                    code: 002.033.0002
+                    error: pool.not.found
+                    message: Pool not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/secrets/search:
     post:
       security:
@@ -28021,6 +28180,227 @@ paths:
                     code: 002.010.0001
                     error: space.not.found
                     message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/avatar:
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      summary: Upload custom avatar for the High5 Space
+      tags:
+        - Space
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated space details with new avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/spaces:
+    get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['high5:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '500':
           description: something went wrong
           content:
