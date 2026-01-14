@@ -9960,7 +9960,7 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{pos}:
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{index}:
     get:
       security:
         - bearerAuth:
@@ -10040,7 +10040,7 @@ paths:
               Numeric identifier representing the element’s position in the
               array
           required: true
-          name: pos
+          name: index
           in: path
         - schema:
             type: string
@@ -10059,7 +10059,7 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'pos' | Failed to validate 'path'
+            validate 'path' parameter 'index' | Failed to validate 'path'
             parameter 'spaceName' | Failed to validate 'string' parameter
             'dbName' | Failed to validate 'string' parameter 'key' | Data type
             of the value does not match the existing documents data type
@@ -10096,13 +10096,13 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'path' parameter 'pos':
-                  summary: Failed to validate 'path' parameter 'pos'
-                  description: Failed to validate 'path' parameter 'pos' - {error}
+                Failed to validate 'path' parameter 'index':
+                  summary: Failed to validate 'path' parameter 'index'
+                  description: Failed to validate 'path' parameter 'index' - {error}
                   value:
                     code: 002.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'pos' - {error}
+                    message: Failed to validate 'path' parameter 'index' - {error}
                 Failed to validate 'string' parameter 'dbName':
                   summary: Failed to validate 'string' parameter 'dbName'
                   description: >-
@@ -10252,7 +10252,6 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/:index:
     delete:
       security:
         - bearerAuth:
@@ -10332,7 +10331,7 @@ paths:
               Numeric identifier representing the element’s position in the
               array
           required: true
-          name: pos
+          name: index
           in: path
         - schema:
             type: string
@@ -10347,7 +10346,7 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'pos' | Failed to validate 'path'
+            validate 'path' parameter 'index' | Failed to validate 'path'
             parameter 'spaceName' | Failed to validate 'string' parameter
             'dbName' | Failed to validate 'string' parameter 'key' | Data type
             of the value does not match the existing documents data type
@@ -10384,13 +10383,13 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'path' parameter 'pos':
-                  summary: Failed to validate 'path' parameter 'pos'
-                  description: Failed to validate 'path' parameter 'pos' - {error}
+                Failed to validate 'path' parameter 'index':
+                  summary: Failed to validate 'path' parameter 'index'
+                  description: Failed to validate 'path' parameter 'index' - {error}
                   value:
                     code: 002.000.0003
                     error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'pos' - {error}
+                    message: Failed to validate 'path' parameter 'index' - {error}
                 Failed to validate 'string' parameter 'dbName':
                   summary: Failed to validate 'string' parameter 'dbName'
                   description: >-
