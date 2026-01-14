@@ -1826,17 +1826,17 @@ components:
       example:
         email: hmc@helmut.cloud
         verificationCode: 2ba23e43-a549-48e2-8ce0-832b8ad13729
-    AvatarDto:
+    CustomAvatarDto:
       type: object
       properties:
-        url:
+        avatar:
           type: string
-          format: uri
-          description: URL to the avatar
-          example: https://dali.s3.helmut.cloud/no_avatar.webp
+          format: binary
+          description: Image file to upload as avatar
+          example: <binary>
       required:
-        - url
-      description: Avatar create object
+        - avatar
+      description: Custom image must be send in request body as multipart/form-data as file
     ReducedOrganization:
       type: object
       properties:
@@ -4135,6 +4135,30 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+        '409':
+          description: >-
+            Domain already taken by another organization. If you are the current
+            owner of this domain, this means that the previous owner already
+            verified it. Contact support to resolve this issue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Domain already taken by another organization. If you are the current owner of this domain, this means that the previous owner already verified it. Contact support to resolve this issue.:
+                  summary: >-
+                    Domain already taken by another organization. If you are the
+                    current owner of this domain, this means that the previous
+                    owner already verified it. Contact support to resolve this
+                    issue.
+                  value:
+                    code: 001.021.0001
+                    error: domain.already.taken
+                    message: >-
+                      Domain already taken by another organization. If you are
+                      the current owner of this domain, this means that the
+                      previous owner already verified it. Contact support to
+                      resolve this issue.
         '500':
           description: something went wrong
           content:
@@ -4217,6 +4241,86 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+        '404':
+          description: >-
+            Your organization has no domain associated with the given name. |
+            Unable to find DNS records associated with the domain
+            some.domain.example.com from DNS server.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+                Unable to find DNS records associated with the domain some.domain.example.com from DNS server.:
+                  summary: >-
+                    Unable to find DNS records associated with the domain
+                    some.domain.example.com from DNS server.
+                  value:
+                    code: 001.021.0006
+                    error: domain.cannot.be.resolved
+                    message: >-
+                      Unable to find DNS records associated with the domain
+                      some.domain.example.com from DNS server.
+        '409':
+          description: >-
+            This domain has already been verified. | This domain has already
+            been verified by another organization. If you are the current owner
+            of this domain, this means that the previous owner already verified
+            it. Contact support to resolve this issue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                This domain has already been verified.:
+                  summary: This domain has already been verified.
+                  value:
+                    code: 001.021.0004
+                    error: domain.already.verified
+                    message: This domain has already been verified.
+                This domain has already been verified by another organization. If you are the current owner of this domain, this means that the previous owner already verified it. Contact support to resolve this issue.:
+                  summary: >-
+                    This domain has already been verified by another
+                    organization. If you are the current owner of this domain,
+                    this means that the previous owner already verified it.
+                    Contact support to resolve this issue.
+                  value:
+                    code: 001.021.0005
+                    error: domain.belongs.to.another.organization
+                    message: >-
+                      This domain has already been verified by another
+                      organization. If you are the current owner of this domain,
+                      this means that the previous owner already verified it.
+                      Contact support to resolve this issue.
+        '428':
+          description: >-
+            Unable to find the correct UUID in the DNS TXT records associated
+            with this domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Unable to find the correct UUID in the DNS TXT records associated with this domain.:
+                  summary: >-
+                    Unable to find the correct UUID in the DNS TXT records
+                    associated with this domain.
+                  value:
+                    code: 001.021.0003
+                    error: domain.verification.failed
+                    message: >-
+                      Unable to find the correct UUID in the DNS TXT records
+                      associated with this domain.
         '500':
           description: something went wrong
           content:
@@ -4295,8 +4399,25 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+        '404':
+          description: Your organization has no domain associated with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
         '500':
-          description: something went wrong
+          description: something went wrong | Unable to delete domai
           content:
             application/json:
               schema:
@@ -4308,6 +4429,15 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Unable to delete domai:
+                  summary: Unable to delete domai
+                  description: 'Unable to delete domain: Problems connecting to the database'
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Unable to delete domain: Problems connecting to the
+                      database
   /v1/guest:
     post:
       description: Create a guest user by providing an email and HMAC
@@ -4327,6 +4457,31 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '409':
+          description: >-
+            The HMAC supplied is incorrect. The email has been tampered with. |
+            User has already an account in helmut cloud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The HMAC supplied is incorrect. The email has been tampered with.:
+                  summary: >-
+                    The HMAC supplied is incorrect. The email has been tampered
+                    with.
+                  value:
+                    code: 001.005.0007
+                    error: invalid.guest.hmac
+                    message: >-
+                      The HMAC supplied is incorrect. The email has been
+                      tampered with.
+                User has already an account in helmut cloud:
+                  summary: User has already an account in helmut cloud
+                  value:
+                    code: 001.009.0003
+                    error: user.already.exists
+                    message: User has already an account in helmut cloud
         '500':
           description: something went wrong
           content:
@@ -4358,6 +4513,36 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: The HMAC supplied is incorrect. The email has been tampered with.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The HMAC supplied is incorrect. The email has been tampered with.:
+                  summary: >-
+                    The HMAC supplied is incorrect. The email has been tampered
+                    with.
+                  value:
+                    code: 001.005.0007
+                    error: invalid.guest.hmac
+                    message: >-
+                      The HMAC supplied is incorrect. The email has been
+                      tampered with.
         '500':
           description: something went wrong
           content:
@@ -4499,6 +4684,25 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+        '503':
+          description: >-
+            Failed to fetch the license because 'License server is not reachable
+            at the moment'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to fetch the license because 'License server is not reachable at the moment':
+                  summary: >-
+                    Failed to fetch the license because 'License server is not
+                    reachable at the moment'
+                  value:
+                    code: 001.032.0003
+                    error: failed.to.fetch.license
+                    message: >-
+                      Failed to fetch the license because 'License server is not
+                      reachable at the moment'
     put:
       description: |-
 
@@ -4558,6 +4762,21 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+        '403':
+          description: The specified license is not assigned to this organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified license is not assigned to this organization.:
+                  summary: The specified license is not assigned to this organization.
+                  value:
+                    code: 001.032.0004
+                    error: unassigned.license
+                    message: >-
+                      The specified license is not assigned to this
+                      organization.
         '500':
           description: something went wrong
           content:
@@ -4571,6 +4790,25 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+        '503':
+          description: >-
+            Failed to fetch the license because 'License server is not reachable
+            at the moment'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to fetch the license because 'License server is not reachable at the moment':
+                  summary: >-
+                    Failed to fetch the license because 'License server is not
+                    reachable at the moment'
+                  value:
+                    code: 001.032.0003
+                    error: failed.to.fetch.license
+                    message: >-
+                      Failed to fetch the license because 'License server is not
+                      reachable at the moment'
   /v1/login:
     post:
       summary: >-
@@ -4612,6 +4850,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'origin' - {error}
+        '401':
+          description: You're not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+        '403':
+          description: Failed to verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
         '500':
           description: something went wrong
           content:
@@ -4668,6 +4932,19 @@ paths:
       responses:
         '204':
           description: No Content
+        '409':
+          description: The given captcha was not valid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The given captcha was not valid:
+                  summary: The given captcha was not valid
+                  value:
+                    code: 001.009.0002
+                    error: registration.invalid.captcha
+                    message: The given captcha was not valid
         '500':
           description: something went wrong
           content:
@@ -4826,6 +5103,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'email' - {error}
+        '404':
+          description: SAML provider not found for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SAML provider not found for the specified domain.:
+                  summary: SAML provider not found for the specified domain.
+                  value:
+                    code: 001.022.0003
+                    error: saml.provider.not.found
+                    message: SAML provider not found for the specified domain.
         '500':
           description: something went wrong
           content:
@@ -4858,6 +5148,19 @@ paths:
       responses:
         '302':
           description: User gets redirected to the SAML IdP's login page
+        '400':
+          description: The RelayState sent by the SAML IdP is invalid.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The RelayState sent by the SAML IdP is invalid.:
+                  summary: The RelayState sent by the SAML IdP is invalid.
+                  value:
+                    code: 001.001.0011
+                    error: invalid.login.state
+                    message: The RelayState sent by the SAML IdP is invalid.
         '500':
           description: something went wrong
           content:
@@ -4983,6 +5286,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'messageId' - {error}
+        '404':
+          description: The specified message does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified message does not exist.:
+                  summary: The specified message does not exist.
+                  value:
+                    code: 001.044.0001
+                    error: message.not.found
+                    message: The specified message does not exist.
         '500':
           description: something went wrong
           content:
@@ -5026,6 +5342,36 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'messageId' - {error}
+        '403':
+          description: You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: The specified message does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified message does not exist.:
+                  summary: The specified message does not exist.
+                  value:
+                    code: 001.044.0001
+                    error: message.not.found
+                    message: The specified message does not exist.
         '500':
           description: something went wrong
           content:
@@ -5080,6 +5426,36 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'messageId' - {error}
+        '403':
+          description: You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: The specified message does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified message does not exist.:
+                  summary: The specified message does not exist.
+                  value:
+                    code: 001.044.0001
+                    error: message.not.found
+                    message: The specified message does not exist.
         '500':
           description: something went wrong
           content:
@@ -5151,7 +5527,8 @@ paths:
             Failed to validate 'query' parameter 'response_type' | Failed to
             validate 'query' parameter 'client_id' | Failed to validate 'query'
             parameter 'redirect_uri' | Failed to validate 'query' parameter
-            'scope' | Failed to validate 'query' parameter 'state'
+            'scope' | Failed to validate 'query' parameter 'state' | The
+            redirect_uri provided is either missing or failed to be validated.
           content:
             application/json:
               schema:
@@ -5200,6 +5577,36 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
+                The redirect_uri provided is either missing or failed to be validated.: &ref_3
+                  summary: >-
+                    The redirect_uri provided is either missing or failed to be
+                    validated.
+                  value:
+                    code: 001.006.0011
+                    error: oauth.invalid.redirect.uri
+                    message: >-
+                      The redirect_uri provided is either missing or failed to
+                      be validated.
+        '404':
+          description: OAuth missing query paramete | OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples: &ref_4
+                OAuth missing query paramete:
+                  summary: OAuth missing query paramete
+                  description: 'OAuth missing query parameter: ''client_id'''
+                  value:
+                    code: 001.006.0008
+                    error: missing.oAuth.query
+                    message: 'OAuth missing query parameter: ''client_id'''
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
           description: something went wrong
           content:
@@ -5269,7 +5676,8 @@ paths:
             Failed to validate 'query' parameter 'response_type' | Failed to
             validate 'query' parameter 'client_id' | Failed to validate 'query'
             parameter 'redirect_uri' | Failed to validate 'query' parameter
-            'scope' | Failed to validate 'query' parameter 'state'
+            'scope' | Failed to validate 'query' parameter 'state' | The
+            redirect_uri provided is either missing or failed to be validated.
           content:
             application/json:
               schema:
@@ -5318,6 +5726,14 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
+                The redirect_uri provided is either missing or failed to be validated.: *ref_3
+        '404':
+          description: OAuth missing query paramete | OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples: *ref_4
         '500':
           description: something went wrong
           content:
@@ -5440,6 +5856,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
+        '401':
+          description: The user has not consented to the specified scopes
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The user has not consented to the specified scopes:
+                  summary: The user has not consented to the specified scopes
+                  value:
+                    code: 001.006.0013
+                    error: consent.not.given
+                    message: The user has not consented to the specified scopes
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
           description: something went wrong
           content:
@@ -5487,6 +5929,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'clientId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
           description: something went wrong
           content:
@@ -5521,6 +5976,26 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OAuthTokenEndpointResponseDto'
+        '415':
+          description: Only 'application/json' and 'application/
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Only 'application/json' and 'application/:
+                  summary: Only 'application/json' and 'application/
+                  description: >-
+                    Only 'application/json' and
+                    'application/x-www-form-urlencoded' content types are
+                    supported for oauth requests.
+                  value:
+                    code: 001.006.0007
+                    error: invalid.oAuthApp.content.type
+                    message: >-
+                      Only 'application/json' and
+                      'application/x-www-form-urlencoded' content types are
+                      supported for oauth requests.
         '500':
           description: something went wrong
           content:
@@ -5765,7 +6240,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganizationDto'
         '400':
-          description: Failed to validate 'query' parameter 'noAvatar'
+          description: >-
+            Failed to validate 'query' parameter 'noAvatar' | The name 'user' is
+            not allowed to be used as the organization name
           content:
             application/json:
               schema:
@@ -5778,6 +6255,42 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'noAvatar' - {error}
+                The name 'user' is not allowed to be used as the organization name:
+                  summary: >-
+                    The name 'user' is not allowed to be used as the
+                    organization name
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: >-
+                      The name 'user' is not allowed to be used as the
+                      organization name
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: Organization with given name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization with given name already exists:
+                  summary: Organization with given name already exists
+                  value:
+                    code: 001.007.0002
+                    error: organization.already.exists
+                    message: Organization with given name already exists
         '500':
           description: something went wrong
           content:
@@ -5791,6 +6304,25 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+        '503':
+          description: >-
+            Failed to fetch the license because 'License server is not reached
+            at the moment'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to fetch the license because 'License server is not reached at the moment':
+                  summary: >-
+                    Failed to fetch the license because 'License server is not
+                    reached at the moment'
+                  value:
+                    code: 001.032.0003
+                    error: failed.to.fetch.license
+                    message: >-
+                      Failed to fetch the license because 'License server is not
+                      reached at the moment'
   /v1/org/{orgName}:
     get:
       description: |-
@@ -5947,6 +6479,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'userId' - {error}
+        '403':
+          description: Your role does not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your role does not have the required permission:
+                  summary: Your role does not have the required permission
+                  value:
+                    code: 001.007.0004
+                    error: organization.insufficient.role
+                    message: Your role does not have the required permission
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
         '500':
           description: something went wrong
           content:
@@ -6019,6 +6577,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
         '500':
           description: something went wrong
           content:
@@ -6067,6 +6638,54 @@ paths:
       responses:
         '204':
           description: No content
+        '400':
+          description: Failed to validate 'path' parameter 'orgName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/avatar:
+    patch:
+      description: |-
+
+        Required role: ADMIN
+      summary: Upload custom avatar for the organization
+      tags:
+        - Organization
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated organization details with new avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OrganizationDto'
         '400':
           description: Failed to validate 'path' parameter 'orgName'
           content:
@@ -6261,7 +6880,9 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'userId'
+            'path' parameter 'userId' | The organization must have at least one
+            owner. To remove the current owner from the organization, first
+            assign another member as owner.
           content:
             application/json:
               schema:
@@ -6281,6 +6902,44 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'userId' - {error}
+                The organization must have at least one owner. To remove the current owner from the organization, first assign another member as owner.:
+                  summary: >-
+                    The organization must have at least one owner. To remove the
+                    current owner from the organization, first assign another
+                    member as owner.
+                  value:
+                    code: 001.007.0003
+                    error: organization.must.have.owner
+                    message: >-
+                      The organization must have at least one owner. To remove
+                      the current owner from the organization, first assign
+                      another member as owner.
+        '403':
+          description: Your role does not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your role does not have the required permission:
+                  summary: Your role does not have the required permission
+                  value:
+                    code: 001.007.0004
+                    error: organization.insufficient.role
+                    message: Your role does not have the required permission
+        '404':
+          description: User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
         '500':
           description: something went wrong
           content:
@@ -6341,7 +7000,9 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'userId'
+            'path' parameter 'userId' | The organization must have at least one
+            owner. To remove the current owner from the organization, first
+            assign another member as owner.
           content:
             application/json:
               schema:
@@ -6361,6 +7022,52 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'userId' - {error}
+                The organization must have at least one owner. To remove the current owner from the organization, first assign another member as owner.:
+                  summary: >-
+                    The organization must have at least one owner. To remove the
+                    current owner from the organization, first assign another
+                    member as owner.
+                  value:
+                    code: 001.007.0003
+                    error: organization.must.have.owner
+                    message: >-
+                      The organization must have at least one owner. To remove
+                      the current owner from the organization, first assign
+                      another member as owner.
+        '403':
+          description: This resource is protected
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                This resource is protected:
+                  summary: This resource is protected
+                  value:
+                    code: 001.005.0001
+                    error: user.protected
+                    message: This resource is protected
+        '404':
+          description: >-
+            User has no helmut cloud account | User is not member of the
+            organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
         '500':
           description: something went wrong
           content:
@@ -6444,6 +7151,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'userId' - {error}
+        '404':
+          description: User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
         '500':
           description: something went wrong
           content:
@@ -6542,6 +7262,36 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'userId' - {error}
+        '403':
+          description: You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
         '500':
           description: something went wrong
           content:
@@ -6592,7 +7342,10 @@ paths:
         '204':
           description: No Content
         '400':
-          description: Failed to validate 'path' parameter 'orgName'
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | The organization
+            must have at least one owner. To remove the current owner from the
+            organization, first assign another member as owner.
           content:
             application/json:
               schema:
@@ -6605,6 +7358,31 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                The organization must have at least one owner. To remove the current owner from the organization, first assign another member as owner.:
+                  summary: >-
+                    The organization must have at least one owner. To remove the
+                    current owner from the organization, first assign another
+                    member as owner.
+                  value:
+                    code: 001.007.0003
+                    error: organization.must.have.owner
+                    message: >-
+                      The organization must have at least one owner. To remove
+                      the current owner from the organization, first assign
+                      another member as owner.
+        '404':
+          description: User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
         '500':
           description: something went wrong
           content:
@@ -6778,7 +7556,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/OrganizationMemberInvitationDto'
         '400':
-          description: Failed to validate 'path' parameter 'orgName'
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | User is already part
+            of the organization
           content:
             application/json:
               schema:
@@ -6791,6 +7571,51 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                User is already part of the organization:
+                  summary: User is already part of the organization
+                  value:
+                    code: 001.002.0002
+                    error: organization.member.already.exists
+                    message: User is already part of the organization
+        '403':
+          description: Your role does not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your role does not have the required permission:
+                  summary: Your role does not have the required permission
+                  value:
+                    code: 001.007.0004
+                    error: organization.insufficient.role
+                    message: Your role does not have the required permission
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: An invitation to this user has already been sent.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                An invitation to this user has already been sent.:
+                  summary: An invitation to this user has already been sent.
+                  value:
+                    code: 001.003.0001
+                    error: invitation.already.sent
+                    message: An invitation to this user has already been sent.
         '500':
           description: something went wrong
           content:
@@ -6933,7 +7758,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'invitationId'
+            'path' parameter 'invitationId' | The invitation has already been
+            responded to. | User is already part of the organization
           content:
             application/json:
               schema:
@@ -6955,6 +7781,56 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'invitationId' -
                       {error}
+                The invitation has already been responded to.:
+                  summary: The invitation has already been responded to.
+                  value:
+                    code: 001.003.0003
+                    error: invitation.already.responded
+                    message: The invitation has already been responded to.
+                User is already part of the organization:
+                  summary: User is already part of the organization
+                  value:
+                    code: 001.002.0002
+                    error: organization.member.already.exists
+                    message: User is already part of the organization
+        '403':
+          description: You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            The specified invitation does not exist. | User has no helmut cloud
+            account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified invitation does not exist.:
+                  summary: The specified invitation does not exist.
+                  value:
+                    code: 001.003.0002
+                    error: invitation.not.found
+                    message: The specified invitation does not exist.
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -7015,7 +7891,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'invitationId'
+            'path' parameter 'invitationId' | The invitation has already been
+            responded to.
           content:
             application/json:
               schema:
@@ -7037,8 +7914,54 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'invitationId' -
                       {error}
+                The invitation has already been responded to.:
+                  summary: The invitation has already been responded to.
+                  value:
+                    code: 001.003.0003
+                    error: invitation.already.responded
+                    message: The invitation has already been responded to.
+        '403':
+          description: User's email is not allowed in helmut cloud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's email is not allowed in helmut cloud:
+                  summary: User's email is not allowed in helmut cloud
+                  value:
+                    code: 001.005.0004
+                    error: user.email.not.allowed
+                    message: User's email is not allowed in helmut cloud
+        '404':
+          description: The specified invitation does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified invitation does not exist.:
+                  summary: The specified invitation does not exist.
+                  value:
+                    code: 001.003.0002
+                    error: invitation.not.found
+                    message: The specified invitation does not exist.
+        '409':
+          description: Too many resen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Too many resen:
+                  summary: Too many resen
+                  description: Too many resend-invitation-emails sent. Try again later.
+                  value:
+                    code: 001.003.0004
+                    error: invitation.resend.limit.exceeded
+                    message: Too many resend-invitation-emails sent. Try again later.
         '500':
-          description: something went wrong
+          description: something went wrong | Registration not found
           content:
             application/json:
               schema:
@@ -7050,6 +7973,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Registration not found:
+                  summary: Registration not found
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: Registration not found
   /v1/org/{orgName}/members/invitations/{invitationId}:
     delete:
       description: |-
@@ -7119,6 +8048,19 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'invitationId' -
                       {error}
+        '404':
+          description: The specified invitation does not exist.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified invitation does not exist.:
+                  summary: The specified invitation does not exist.
+                  value:
+                    code: 001.003.0002
+                    error: invitation.not.found
+                    message: The specified invitation does not exist.
         '500':
           description: something went wrong
           content:
@@ -7302,6 +8244,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: OAuth app with given name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuth app with given name already exists:
+                  summary: OAuth app with given name already exists
+                  value:
+                    code: 001.006.0001
+                    error: oauthApp.already.exists
+                    message: OAuth app with given name already exists
         '500':
           description: something went wrong
           content:
@@ -7386,6 +8354,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
           description: something went wrong
           content:
@@ -7475,6 +8456,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
+        '409':
+          description: OAuth app with given name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuth app with given name already exists:
+                  summary: OAuth app with given name already exists
+                  value:
+                    code: 001.006.0001
+                    error: oauthApp.already.exists
+                    message: OAuth app with given name already exists
         '500':
           description: something went wrong
           content:
@@ -7554,6 +8561,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
           description: something went wrong
           content:
@@ -7644,6 +8664,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
+        '409':
+          description: OAuth app secret already exists.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuth app secret already exists.:
+                  summary: OAuth app secret already exists.
+                  value:
+                    code: 001.006.0012
+                    error: oauth.secret.already.exists
+                    message: OAuth app secret already exists.
         '500':
           description: something went wrong
           content:
@@ -7742,6 +8788,83 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'name' - {error}
+        '404':
+          description: OAuthApp does not exist | The provided oauth secret does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
+                The provided oauth secret does not exist:
+                  summary: The provided oauth secret does not exist
+                  value:
+                    code: 001.006.0009
+                    error: oAuth.secret.not.found
+                    message: The provided oauth secret does not exist
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/settings/applications/oauth/{oAuthAppId}/avatar:
+    patch:
+      description: |-
+
+        Required role: ADMIN
+        Required scopes: IDP_ORGANIZATION_ADMIN
+      summary: Upload custom avatar for the OAuth App
+      tags:
+        - Organization.Settings.Application
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated OAuth App details with new avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OAuthAppDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'oAuthAppId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'oAuthAppId':
+                  summary: Failed to validate 'path' parameter 'oAuthAppId'
+                  description: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
         '500':
           description: something went wrong
           content:
@@ -7830,6 +8953,32 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'noAvatar' - {error}
+        '404':
+          description: User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
+        '409':
+          description: Team with given name already exists in organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Team with given name already exists in organization:
+                  summary: Team with given name already exists in organization
+                  value:
+                    code: 001.008.0002
+                    error: team.already.exists
+                    message: Team with given name already exists in organization
         '500':
           description: something went wrong
           content:
@@ -7914,6 +9063,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'teamName' - {error}
+        '404':
+          description: Team does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Team does not exist:
+                  summary: Team does not exist
+                  value:
+                    code: 001.008.0001
+                    error: team.not.found
+                    message: Team does not exist
         '500':
           description: something went wrong
           content:
@@ -7987,7 +9149,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'teamName'
+            'path' parameter 'teamName' | If users array provided,
+            usersOperation must be provided as well
           content:
             application/json:
               schema:
@@ -8007,6 +9170,48 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'teamName' - {error}
+                If users array provided, usersOperation must be provided as well:
+                  summary: >-
+                    If users array provided, usersOperation must be provided as
+                    well
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: >-
+                      If users array provided, usersOperation must be provided
+                      as well
+        '404':
+          description: Team does not exist | User is not member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Team does not exist:
+                  summary: Team does not exist
+                  value:
+                    code: 001.008.0001
+                    error: team.not.found
+                    message: Team does not exist
+                User is not member of the organization:
+                  summary: User is not member of the organization
+                  value:
+                    code: 001.002.0001
+                    error: organization.member.not.found
+                    message: User is not member of the organization
+        '409':
+          description: Team with given name already exists in organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Team with given name already exists in organization:
+                  summary: Team with given name already exists in organization
+                  value:
+                    code: 001.008.0002
+                    error: team.already.exists
+                    message: Team with given name already exists in organization
         '500':
           description: something went wrong
           content:
@@ -8117,6 +9322,19 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'membersLimit' -
                       {error}
+        '404':
+          description: Team does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Team does not exist:
+                  summary: Team does not exist
+                  value:
+                    code: 001.008.0001
+                    error: team.not.found
+                    message: Team does not exist
         '500':
           description: something went wrong
           content:
@@ -8403,6 +9621,64 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/teams/{teamName}/avatar:
+    patch:
+      description: |-
+
+        Required role: MANAGER
+        Required scopes: IDP_ORGANIZATION_WRITE
+      summary: Upload custom avatar for the team
+      tags:
+        - Organization.Team
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated team details with new avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/TeamDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'teamName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'teamName':
+                  summary: Failed to validate 'path' parameter 'teamName'
+                  description: Failed to validate 'path' parameter 'teamName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'teamName' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/register:
     post:
       summary: Register a user in hcloud system
@@ -8453,6 +9729,53 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'validationCode' -
                       {error}
+        '403':
+          description: >-
+            The given verification code was invalid | User's email is not
+            allowed in helmut cloud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The given verification code was invalid:
+                  summary: The given verification code was invalid
+                  value:
+                    code: 001.009.0001
+                    error: registration.verification.failed
+                    message: The given verification code was invalid
+                User's email is not allowed in helmut cloud:
+                  summary: User's email is not allowed in helmut cloud
+                  value:
+                    code: 001.005.0004
+                    error: user.email.not.allowed
+                    message: User's email is not allowed in helmut cloud
+        '409':
+          description: >-
+            User has already an account in helmut cloud | The given captcha was
+            not valid, reaso
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has already an account in helmut cloud:
+                  summary: User has already an account in helmut cloud
+                  value:
+                    code: 001.009.0003
+                    error: user.already.exists
+                    message: User has already an account in helmut cloud
+                The given captcha was not valid, reaso:
+                  summary: The given captcha was not valid, reaso
+                  description: >-
+                    The given captcha was not valid, reason: Failed to validate
+                    token against google
+                  value:
+                    code: 001.009.0002
+                    error: registration.invalid.captcha
+                    message: >-
+                      The given captcha was not valid, reason: Failed to
+                      validate token against google
         '500':
           description: something went wrong
           content:
@@ -8484,6 +9807,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '403':
+          description: The given verification code was invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The given verification code was invalid:
+                  summary: The given verification code was invalid
+                  value:
+                    code: 001.009.0001
+                    error: registration.verification.failed
+                    message: The given verification code was invalid
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -8511,6 +9860,46 @@ paths:
       responses:
         '204':
           description: no content
+        '403':
+          description: User's email is not allowed in helmut cloud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's email is not allowed in helmut cloud:
+                  summary: User's email is not allowed in helmut cloud
+                  value:
+                    code: 001.005.0004
+                    error: user.email.not.allowed
+                    message: User's email is not allowed in helmut cloud
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: Too many resen
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Too many resen:
+                  summary: Too many resen
+                  description: Too many resend-verification-emails sent. Try again later.
+                  value:
+                    code: 001.009.0004
+                    error: verification.email.resend.limit.exceeded
+                    message: Too many resend-verification-emails sent. Try again later.
         '500':
           description: something went wrong
           content:
@@ -8631,7 +10020,9 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
+            'path' parameter 'domainName' | No certificates found in the request
+            | The certificate sent is invalid. | Cannot link SAML provider to an
+            unverified domain.
           content:
             application/json:
               schema:
@@ -8651,6 +10042,54 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+                No certificates found in the request:
+                  summary: No certificates found in the request
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: No certificates found in the request
+                The certificate sent is invalid.:
+                  summary: The certificate sent is invalid.
+                  value:
+                    code: 001.022.0001
+                    error: saml.invalid.certificate
+                    message: The certificate sent is invalid.
+                Cannot link SAML provider to an unverified domain.:
+                  summary: Cannot link SAML provider to an unverified domain.
+                  value:
+                    code: 001.022.0004
+                    error: saml.unverified.domain
+                    message: Cannot link SAML provider to an unverified domain.
+        '404':
+          description: Your organization has no domain associated with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+        '409':
+          description: SAML provider already exists for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                SAML provider already exists for the specified domain.:
+                  summary: SAML provider already exists for the specified domain.
+                  value:
+                    code: 001.022.0002
+                    error: saml.provider.already.exists
+                    message: SAML provider already exists for the specified domain.
         '500':
           description: something went wrong
           content:
@@ -8693,7 +10132,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
+            'path' parameter 'domainName' | No certificates found in the request
+            | The certificate sent is invalid.
           content:
             application/json:
               schema:
@@ -8713,6 +10153,35 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+                No certificates found in the request:
+                  summary: No certificates found in the request
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: No certificates found in the request
+                The certificate sent is invalid.:
+                  summary: The certificate sent is invalid.
+                  value:
+                    code: 001.022.0001
+                    error: saml.invalid.certificate
+                    message: The certificate sent is invalid.
+        '404':
+          description: Your organization has no domain associated with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
         '500':
           description: something went wrong
           content:
@@ -8790,6 +10259,31 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+        '404':
+          description: >-
+            Your organization has no domain associated with the given name. |
+            SAML provider not found for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+                SAML provider not found for the specified domain.:
+                  summary: SAML provider not found for the specified domain.
+                  value:
+                    code: 001.022.0003
+                    error: saml.provider.not.found
+                    message: SAML provider not found for the specified domain.
         '500':
           description: something went wrong
           content:
@@ -8831,7 +10325,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
+            'path' parameter 'domainName' | No certificates found in the request
+            | The certificate sent is invalid.
           content:
             application/json:
               schema:
@@ -8851,6 +10346,43 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+                No certificates found in the request:
+                  summary: No certificates found in the request
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: No certificates found in the request
+                The certificate sent is invalid.:
+                  summary: The certificate sent is invalid.
+                  value:
+                    code: 001.022.0001
+                    error: saml.invalid.certificate
+                    message: The certificate sent is invalid.
+        '404':
+          description: >-
+            Your organization has no domain associated with the given name. |
+            SAML provider not found for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+                SAML provider not found for the specified domain.:
+                  summary: SAML provider not found for the specified domain.
+                  value:
+                    code: 001.022.0003
+                    error: saml.provider.not.found
+                    message: SAML provider not found for the specified domain.
         '500':
           description: something went wrong
           content:
@@ -8939,8 +10471,21 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'noAvatar' - {error}
+        '409':
+          description: Service account Some service account already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account Some service account already exists:
+                  summary: Service account Some service account already exists
+                  value:
+                    code: 001.034.0002
+                    error: service.account.already.exists
+                    message: Service account Some service account already exists
         '500':
-          description: something went wrong
+          description: something went wrong | unable to create service account
           content:
             application/json:
               schema:
@@ -8952,6 +10497,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                unable to create service account:
+                  summary: unable to create service account
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: unable to create service account
   /v1/org/{orgName}/service-accounts/{serviceAccountId}:
     delete:
       description: |-
@@ -9024,8 +10575,21 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'serviceAccountId' -
                       {error}
+        '404':
+          description: Service account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account not found:
+                  summary: Service account not found
+                  value:
+                    code: 001.034.0001
+                    error: service.account.not.found
+                    message: Service account not found
         '500':
-          description: something went wrong
+          description: something went wrong | unable to delete service account
           content:
             application/json:
               schema:
@@ -9037,6 +10601,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                unable to delete service account:
+                  summary: unable to delete service account
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: unable to delete service account
     get:
       description: |-
 
@@ -9112,6 +10682,19 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'serviceAccountId' -
                       {error}
+        '404':
+          description: Service account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account not found:
+                  summary: Service account not found
+                  value:
+                    code: 001.034.0001
+                    error: service.account.not.found
+                    message: Service account not found
         '500':
           description: something went wrong
           content:
@@ -9201,6 +10784,25 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'serviceAccountId' -
                       {error}
+        '404':
+          description: Service account not found | PAT does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account not found:
+                  summary: Service account not found
+                  value:
+                    code: 001.034.0001
+                    error: service.account.not.found
+                    message: Service account not found
+                PAT does not exist:
+                  summary: PAT does not exist
+                  value:
+                    code: 001.004.0001
+                    error: pat.not.found
+                    message: PAT does not exist
         '500':
           description: something went wrong
           content:
@@ -9296,8 +10898,34 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'serviceAccountId' -
                       {error}
+        '404':
+          description: Service account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account not found:
+                  summary: Service account not found
+                  value:
+                    code: 001.034.0001
+                    error: service.account.not.found
+                    message: Service account not found
+        '409':
+          description: Service account  some name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account  some name already exists:
+                  summary: Service account  some name already exists
+                  value:
+                    code: 001.034.0002
+                    error: service.account.already.exists
+                    message: Service account  some name already exists
         '500':
-          description: something went wrong
+          description: something went wrong | unable to create service account
           content:
             application/json:
               schema:
@@ -9309,6 +10937,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                unable to create service account:
+                  summary: unable to create service account
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: unable to create service account
   /v1/org/{orgName}/service-accounts/search:
     post:
       description: |-
@@ -9408,6 +11042,79 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/service-accounts/{serviceAccountId}/avatar:
+    patch:
+      summary: Upload custom avatar for the service account
+      tags:
+        - Organization.Service Accounts
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'serviceAccountId' | invalid avatar URL
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'serviceAccountId':
+                  summary: Failed to validate 'path' parameter 'serviceAccountId'
+                  description: >-
+                    Failed to validate 'path' parameter 'serviceAccountId' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'serviceAccountId' -
+                      {error}
+                invalid avatar URL:
+                  summary: invalid avatar URL
+                  value:
+                    code: 001.000.0004
+                    error: invalid.body
+                    message: invalid avatar URL
+        '404':
+          description: Service account not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Service account not found:
+                  summary: Service account not found
+                  value:
+                    code: 001.034.0001
+                    error: service.account.not.found
+                    message: Service account not found
         '500':
           description: something went wrong
           content:
@@ -9730,6 +11437,37 @@ paths:
       responses:
         '200':
           description: User object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/user/avatar:
+    patch:
+      summary: Upload custom avatar for the user
+      tags:
+        - User
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated user details with new avatar
           content:
             application/json:
               schema:
