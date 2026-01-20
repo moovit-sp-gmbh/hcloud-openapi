@@ -2867,13 +2867,16 @@ components:
           maxLength: 255
           description: Quartz cron expression
           example: 0 0 * * *
-        targetEventId:
+        targetEvent:
           type: string
-          minLength: 24
-          maxLength: 24
-          format: hexadecimal
-          description: ID of the target event
-          example: 63c7e6e4eae82d8001b65305
+          minLength: 1
+          maxLength: 128
+          pattern: ^[\w-.]{1,128}$
+          description: >-
+            Name of the event (only alphanumeric characters, underscores,
+            hyphens and dots are allowed; it should contain between 1 and 128
+            characters)
+          example: Dev_Camp-2025.1
         timezone:
           type: string
           description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
@@ -3064,7 +3067,7 @@ components:
       required:
         - name
         - expression
-        - targetEventId
+        - targetEvent
         - timezone
       description: Data for creating a new cron job
     JobEnabledPatchDto:
