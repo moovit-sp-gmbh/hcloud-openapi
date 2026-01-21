@@ -5473,10 +5473,6 @@ components:
         - high5:space:execute
         - high5:space:write
         - high5:space:delete
-        - fuse:space:read
-        - fuse:space:execute
-        - fuse:space:write
-        - fuse:space:delete
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
@@ -5513,16 +5509,6 @@ components:
         * high5:space:write - Access to read and write operations of spaces
 
         * high5:space:delete - Access to read, write and delete operations of
-        spaces
-
-        * fuse:space:read - Access to read operations of spaces
-
-        * fuse:space:execute - Access to the ability to start execution of
-        streams of spaces
-
-        * fuse:space:write - Access to read and write operations of spaces
-
-        * fuse:space:delete - Access to read, write and delete operations of
         spaces
 
         * cosmo:space:read - Access to read operations of spaces
