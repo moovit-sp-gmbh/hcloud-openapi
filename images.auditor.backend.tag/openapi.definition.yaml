@@ -91,7 +91,6 @@ components:
         - high5
         - auditor
         - mailer
-        - fuse
         - mothership
         - dali
         - cosmo
@@ -595,21 +594,21 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 004.000.0003
+                    code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
                   value:
-                    code: 004.000.0003
+                    code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'limit' - {error}
                 Failed to validate 'query' parameter 'page':
                   summary: Failed to validate 'query' parameter 'page'
                   description: Failed to validate 'query' parameter 'page' - {error}
                   value:
-                    code: 004.000.0003
+                    code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
         '401':
@@ -624,13 +623,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 004.001.0001
+                    code: 003.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 004.001.0002
+                    code: 003.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -638,7 +637,7 @@ paths:
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 004.001.0003
+                    code: 003.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
@@ -656,7 +655,7 @@ paths:
                     Required scopes ['idp:organization:read'] not included in
                     authorization
                   value:
-                    code: 004.001.0004
+                    code: 003.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -666,7 +665,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     ADMIN
                   value:
-                    code: 004.001.0004
+                    code: 003.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -681,7 +680,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 004.007.0001
+                    code: 003.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -694,6 +693,6 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 004.000.0002
+                    code: 003.000.0002
                     error: internal.server.error
                     message: something went wrong
