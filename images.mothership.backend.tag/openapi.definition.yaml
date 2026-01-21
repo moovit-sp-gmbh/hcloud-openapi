@@ -855,7 +855,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/connect/search:
@@ -943,21 +943,21 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'limit' - {error}
                 Failed to validate 'query' parameter 'page':
                   summary: Failed to validate 'query' parameter 'page'
                   description: Failed to validate 'query' parameter 'page' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
         '401':
@@ -972,13 +972,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 009.001.0001
+                    code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 009.001.0002
+                    code: 008.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -986,7 +986,7 @@ paths:
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 009.001.0003
+                    code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
@@ -1001,7 +1001,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     MEMBER
                   value:
-                    code: 009.001.0004
+                    code: 008.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -1016,7 +1016,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 009.007.0001
+                    code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -1029,7 +1029,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/connect:
@@ -1083,19 +1083,19 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Agent is offline:
                   summary: Agent is offline
                   value:
-                    code: 009.030.0002
+                    code: 008.030.0002
                     error: agent.offline
                     message: Agent is offline
                 Agent already connected to this organization.:
                   summary: Agent already connected to this organization.
                   value:
-                    code: 009.030.0004
+                    code: 008.030.0004
                     error: agent.already.connected
                     message: Agent already connected to this organization.
         '403':
@@ -1110,7 +1110,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     MEMBER
                   value:
-                    code: 009.001.0004
+                    code: 008.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -1125,7 +1125,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 009.007.0001
+                    code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -1138,7 +1138,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/connect/{email}:
@@ -1195,20 +1195,20 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Failed to validate 'path' parameter 'email':
                   summary: Failed to validate 'path' parameter 'email'
                   description: Failed to validate 'path' parameter 'email' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'email' - {error}
                 Agent not connected:
                   summary: Agent not connected
                   value:
-                    code: 009.030.0005
+                    code: 008.030.0005
                     error: agent.not.connected
                     message: Agent not connected
         '500':
@@ -1221,13 +1221,13 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
                 Database issues.:
                   summary: Database issues.
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
   /v1/connect/{email}:
@@ -1259,7 +1259,7 @@ paths:
                   summary: Failed to validate 'path' parameter 'email'
                   description: Failed to validate 'path' parameter 'email' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'email' - {error}
         '500':
@@ -1272,13 +1272,13 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
                 Database issues.:
                   summary: Database issues.
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
   /v1/hello:
@@ -1311,7 +1311,7 @@ paths:
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 009.001.0002
+                    code: 008.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -1319,13 +1319,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 009.001.0001
+                    code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 009.001.0003
+                    code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '500':
@@ -1338,13 +1338,13 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
                 Database issues.:
                   summary: Database issues.
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
   /v1/hello/again:
@@ -1377,7 +1377,7 @@ paths:
                 Agent is offline:
                   summary: Agent is offline
                   value:
-                    code: 009.030.0002
+                    code: 008.030.0002
                     error: agent.offline
                     message: Agent is offline
         '500':
@@ -1390,7 +1390,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
   /v1/register:
@@ -1421,7 +1421,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/stats:
@@ -1482,7 +1482,7 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 009.000.0003
+                    code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
         '401':
@@ -1497,13 +1497,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 009.001.0001
+                    code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 009.001.0002
+                    code: 008.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -1511,7 +1511,7 @@ paths:
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 009.001.0003
+                    code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
@@ -1526,7 +1526,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     ADMIN
                   value:
-                    code: 009.001.0004
+                    code: 008.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -1541,7 +1541,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 009.007.0001
+                    code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -1554,6 +1554,6 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 009.000.0002
+                    code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
