@@ -879,10 +879,6 @@ components:
         - high5:space:execute
         - high5:space:write
         - high5:space:delete
-        - fuse:space:read
-        - fuse:space:execute
-        - fuse:space:write
-        - fuse:space:delete
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
@@ -919,16 +915,6 @@ components:
         * high5:space:write - Access to read and write operations of spaces
 
         * high5:space:delete - Access to read, write and delete operations of
-        spaces
-
-        * fuse:space:read - Access to read operations of spaces
-
-        * fuse:space:execute - Access to the ability to start execution of
-        streams of spaces
-
-        * fuse:space:write - Access to read and write operations of spaces
-
-        * fuse:space:delete - Access to read, write and delete operations of
         spaces
 
         * cosmo:space:read - Access to read operations of spaces
@@ -1379,7 +1365,6 @@ components:
         - save_last_view
         - /account
         - /high5
-        - /fuse
         - /cosmo
       description: Last view the user was in
       example: /account
@@ -11246,6 +11231,38 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '403':
+          description: User's email is not allowed in helmut cloud
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's email is not allowed in helmut cloud:
+                  summary: User's email is not allowed in helmut cloud
+                  value:
+                    code: 001.005.0004
+                    error: user.email.not.allowed
+                    message: User's email is not allowed in helmut cloud
+        '404':
+          description: User has no helmut cloud account | Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
         '500':
           description: something went wrong
           content:
@@ -11269,6 +11286,19 @@ paths:
       responses:
         '204':
           description: No content
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -11322,6 +11352,19 @@ paths:
       responses:
         '204':
           description: No content
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -11376,8 +11419,21 @@ paths:
       responses:
         '204':
           description: No Content
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
-          description: something went wrong
+          description: something went wrong | unable to reach database
           content:
             application/json:
               schema:
@@ -11389,6 +11445,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                unable to reach database:
+                  summary: unable to reach database
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: unable to reach database
   /v1/user/password/reset:
     post:
       summary: Reset a user's password
@@ -11407,6 +11469,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '400':
+          description: The provided nonce does not match the expected one.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The provided nonce does not match the expected one.:
+                  summary: The provided nonce does not match the expected one.
+                  value:
+                    code: 001.005.0003
+                    error: invalid.reset.nonce
+                    message: The provided nonce does not match the expected one.
+        '403':
+          description: Failed to verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
         '500':
           description: something went wrong
           content:
@@ -11441,6 +11529,45 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '400':
+          description: The provided old password does not match the current one.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The provided old password does not match the current one.:
+                  summary: The provided old password does not match the current one.
+                  value:
+                    code: 001.005.0002
+                    error: old.password.mismatch
+                    message: The provided old password does not match the current one.
+        '403':
+          description: Failed to verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -11472,6 +11599,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/UserDto'
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -11500,8 +11640,47 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LicenseDto'
+        '400':
+          description: User is already part of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User is already part of the organization:
+                  summary: User is already part of the organization
+                  value:
+                    code: 001.002.0002
+                    error: organization.member.already.exists
+                    message: User is already part of the organization
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '409':
+          description: Organization with given name already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization with given name already exists:
+                  summary: Organization with given name already exists
+                  value:
+                    code: 001.007.0002
+                    error: organization.already.exists
+                    message: Organization with given name already exists
         '500':
-          description: something went wrong
+          description: something went wrong | Unexpected erro
           content:
             application/json:
               schema:
@@ -11513,6 +11692,17 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Unexpected erro:
+                  summary: Unexpected erro
+                  description: >-
+                    Unexpected error: User email is not 'hcloud' and does not
+                    contain '@‘
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Unexpected error: User email is not 'hcloud' and does not
+                      contain '@‘
     put:
       description: |-
 
@@ -11533,6 +11723,21 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/LicenseDto'
+        '403':
+          description: The specified license is not assigned to this organization.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified license is not assigned to this organization.:
+                  summary: The specified license is not assigned to this organization.
+                  value:
+                    code: 001.032.0004
+                    error: unassigned.license
+                    message: >-
+                      The specified license is not assigned to this
+                      organization.
         '500':
           description: something went wrong
           content:
@@ -11546,6 +11751,25 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+        '503':
+          description: >-
+            Failed to fetch the license because 'License server is not reachable
+            at the moment'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to fetch the license because 'License server is not reachable at the moment':
+                  summary: >-
+                    Failed to fetch the license because 'License server is not
+                    reachable at the moment'
+                  value:
+                    code: 001.032.0003
+                    error: failed.to.fetch.license
+                    message: >-
+                      Failed to fetch the license because 'License server is not
+                      reachable at the moment'
   /v1/user/orgs/search:
     post:
       description: |-
@@ -11839,6 +12063,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/GeneralSettingsDto'
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -12050,8 +12287,21 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'oAuthAppId' - {error}
+        '404':
+          description: OAuthApp does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                OAuthApp does not exist:
+                  summary: OAuthApp does not exist
+                  value:
+                    code: 001.006.0002
+                    error: oAuthApp.not.found
+                    message: OAuthApp does not exist
         '500':
-          description: something went wrong
+          description: something went wrong | Problems connecting to the database
           content:
             application/json:
               schema:
@@ -12063,6 +12313,12 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Problems connecting to the database:
+                  summary: Problems connecting to the database
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: Problems connecting to the database
   /v1/user/settings/pats/search:
     post:
       description: |-
@@ -12137,6 +12393,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'patId' - {error}
+        '404':
+          description: PAT does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PAT does not exist:
+                  summary: PAT does not exist
+                  value:
+                    code: 001.004.0001
+                    error: pat.not.found
+                    message: PAT does not exist
         '500':
           description: something went wrong
           content:
@@ -12180,7 +12449,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/PatDto'
         '400':
-          description: Failed to validate 'path' parameter 'patId'
+          description: >-
+            Failed to validate 'path' parameter 'patId' | Expiration date must
+            lie ahead at least one day
           content:
             application/json:
               schema:
@@ -12193,6 +12464,25 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'patId' - {error}
+                Expiration date must lie ahead at least one day:
+                  summary: Expiration date must lie ahead at least one day
+                  value:
+                    code: 001.004.0002
+                    error: invalid.pat.expiration.date
+                    message: Expiration date must lie ahead at least one day
+        '404':
+          description: PAT does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PAT does not exist:
+                  summary: PAT does not exist
+                  value:
+                    code: 001.004.0001
+                    error: pat.not.found
+                    message: PAT does not exist
         '500':
           description: something went wrong
           content:
@@ -12239,6 +12529,19 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'patId' - {error}
+        '404':
+          description: PAT does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PAT does not exist:
+                  summary: PAT does not exist
+                  value:
+                    code: 001.004.0001
+                    error: pat.not.found
+                    message: PAT does not exist
         '500':
           description: something went wrong
           content:
@@ -12340,7 +12643,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/PatDtoWithToken'
         '400':
-          description: Failed to validate 'path' parameter 'patId'
+          description: >-
+            Failed to validate 'path' parameter 'patId' | Expiration date must
+            lie ahead at least one day
           content:
             application/json:
               schema:
@@ -12353,6 +12658,25 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'patId' - {error}
+                Expiration date must lie ahead at least one day:
+                  summary: Expiration date must lie ahead at least one day
+                  value:
+                    code: 001.004.0002
+                    error: invalid.pat.expiration.date
+                    message: Expiration date must lie ahead at least one day
+        '404':
+          description: PAT does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                PAT does not exist:
+                  summary: PAT does not exist
+                  value:
+                    code: 001.004.0001
+                    error: pat.not.found
+                    message: PAT does not exist
         '500':
           description: something went wrong
           content:
@@ -12381,6 +12705,32 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TotpDeactivatedDto'
+        '400':
+          description: User TOTP has already been set, delete first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User TOTP has already been set, delete first:
+                  summary: User TOTP has already been set, delete first
+                  value:
+                    code: 001.029.0004
+                    error: totp.already.exists
+                    message: User TOTP has already been set, delete first
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
         '500':
           description: something went wrong
           content:
@@ -12410,6 +12760,38 @@ paths:
       responses:
         '204':
           description: No Content
+        '403':
+          description: Failed to verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
+        '404':
+          description: User has no helmut cloud account | User has no TOTP activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+                User has no TOTP activated:
+                  summary: User has no TOTP activated
+                  value:
+                    code: 001.029.0001
+                    error: totp.not.found
+                    message: User has no TOTP activated
         '500':
           description: something went wrong
           content:
@@ -12444,6 +12826,51 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/TotpActivatedDto'
+        '400':
+          description: User TOTP has already been set, delete first
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User TOTP has already been set, delete first:
+                  summary: User TOTP has already been set, delete first
+                  value:
+                    code: 001.029.0004
+                    error: totp.already.exists
+                    message: User TOTP has already been set, delete first
+        '403':
+          description: Failed to verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
+        '404':
+          description: User has no helmut cloud account | User has no TOTP activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+                User has no TOTP activated:
+                  summary: User has no TOTP activated
+                  value:
+                    code: 001.029.0001
+                    error: totp.not.found
+                    message: User has no TOTP activated
         '500':
           description: something went wrong
           content:
@@ -12471,6 +12898,59 @@ paths:
       responses:
         '204':
           description: No Content
+        '401':
+          description: You're not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+        '403':
+          description: >-
+            Failed to verify the given 2FA (TOTP) recover code | Failed to
+            verify the given 2FA (TOTP) token
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given 2FA (TOTP) recover code:
+                  summary: Failed to verify the given 2FA (TOTP) recover code
+                  value:
+                    code: 001.029.0002
+                    error: totp.recover.failed
+                    message: Failed to verify the given 2FA (TOTP) recover code
+                Failed to verify the given 2FA (TOTP) token:
+                  summary: Failed to verify the given 2FA (TOTP) token
+                  value:
+                    code: 001.029.0003
+                    error: totp.verification.failed
+                    message: Failed to verify the given 2FA (TOTP) token
+        '404':
+          description: User has no helmut cloud account | User has no TOTP activated
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+                User has no TOTP activated:
+                  summary: User has no TOTP activated
+                  value:
+                    code: 001.029.0001
+                    error: totp.not.found
+                    message: User has no TOTP activated
         '500':
           description: something went wrong
           content:
