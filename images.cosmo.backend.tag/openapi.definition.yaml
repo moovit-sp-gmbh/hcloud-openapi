@@ -2167,7 +2167,7 @@ components:
                                   - type: number
                                   - type: boolean
                         description: Metadata of the reference
-                        example:
+                        example: &ref_8
                           sequenceId: 32178932198
                     required:
                       - status
@@ -2794,7 +2794,7 @@ components:
             type: array
             items:
               type: string
-              enum: &ref_8
+              enum: &ref_9
                 - VIEW_ASSET_TAGS
                 - WRITE_ASSET_TAGS
                 - VIEW_ASSET_STATUS
@@ -2809,7 +2809,7 @@ components:
           description: >-
             Map of permissions granted to the share members over the share's
             assets in the context of each namespace.
-          example: &ref_9
+          example: &ref_10
             rush:
               - WRITE_ASSET_TAGS
         users:
@@ -8854,7 +8854,34 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetReferenceDto'
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                    description: ID of the referenced entity
+                  status:
+                    type: string
+                    description: Status of the reference
+                    example: approved
+                  metadata:
+                    type: object
+                    additionalProperties:
+                      anyOf:
+                        - type: string
+                        - type: number
+                        - type: boolean
+                        - type: array
+                          items:
+                            anyOf:
+                              - type: string
+                              - type: number
+                              - type: boolean
+                    description: Metadata of the reference
+                    example: *ref_8
+                required:
+                  - _id
+                  - status
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -10753,13 +10780,13 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: &ref_10
+                    example: &ref_11
                       - ae13321a-522d-48da-9733-27c97bcab124
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_11
+                      enum: &ref_12
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -10774,7 +10801,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_12
+                    example: &ref_13
                       - VIEW_ASSETS
                   namespaces:
                     type: object
@@ -10782,11 +10809,11 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_8
+                        enum: *ref_9
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_9
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -11218,27 +11245,27 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_10
+                    example: *ref_11
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_11
+                      enum: *ref_12
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_12
+                    example: *ref_13
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_8
+                        enum: *ref_9
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_9
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -11486,27 +11513,27 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_10
+                    example: *ref_11
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_11
+                      enum: *ref_12
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_12
+                    example: *ref_13
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_8
+                        enum: *ref_9
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_9
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -12146,27 +12173,27 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_10
+                      example: *ref_11
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_11
+                        enum: *ref_12
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_12
+                      example: *ref_13
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_8
+                          enum: *ref_9
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_9
+                      example: *ref_10
                     users:
                       type: array
                       items:
@@ -12379,27 +12406,27 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_10
+                      example: *ref_11
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_11
+                        enum: *ref_12
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_12
+                      example: *ref_13
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_8
+                          enum: *ref_9
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_9
+                      example: *ref_10
                     users:
                       type: array
                       items:
@@ -12943,27 +12970,27 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_10
+                    example: *ref_11
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_11
+                      enum: *ref_12
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_12
+                    example: *ref_13
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_8
+                        enum: *ref_9
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_9
+                    example: *ref_10
                   users:
                     type: array
                     items:
@@ -14822,7 +14849,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_13
+                              enum: &ref_14
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -14873,7 +14900,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_14
+                            example: &ref_15
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -15428,9 +15455,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_13
+                            enum: *ref_14
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_14
+                          example: *ref_15
                       required:
                         - entity
                         - permissions
