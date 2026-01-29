@@ -1205,15 +1205,8 @@ components:
           description: IDs of the assets to clone
           example:
             - c3a8d287-0dda-4af2-b8f0-7dd1e9574218
-        history:
-          type: boolean
-          description: >-
-            History flag. If this is set to true, then the asset's history will
-            also be cloned. When this flag is set, no folders IDs should exist
-            in the assetIds array.
       required:
         - assetIds
-        - history
     AssetCreateDto:
       type: object
       properties:
