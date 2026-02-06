@@ -1433,8 +1433,7 @@ paths:
       description: Provides detailed license usage metrics for a given organization
       summary: Retrieve usage statistics for a specific organization
       tags:
-        - Organization
-        - Statistics
+        - Organization.Statistics
       parameters:
         - schema:
             anyOf:
