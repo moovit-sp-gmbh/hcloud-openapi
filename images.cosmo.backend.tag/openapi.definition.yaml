@@ -112,6 +112,7 @@ components:
                 - CREATE_ASSET_COMMENTS
                 - EDIT_ASSET_COMMENTS
                 - DELETE_ASSET_COMMENTS
+                - VIEW_NAMESPACE_TAGS
             minItems: 1
           description: >-
             Namespaces to include in the share. Share consumers will only able
