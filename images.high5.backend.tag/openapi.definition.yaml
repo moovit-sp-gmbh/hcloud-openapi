@@ -2894,6 +2894,10 @@ components:
           type: boolean
           description: Whether the job is enabled
           example: true
+        target:
+          type: string
+          description: Target that executes the stream. Can be a user email or pool name
+          example: target@helmut.cloud
         lastStatus:
           type: number
           description: HTTP status code of the cron job last execution result
@@ -3069,6 +3073,7 @@ components:
         - expression
         - targetEvent
         - timezone
+        - target
       description: Data for creating a new cron job
     JobEnabledPatchDto:
       type: object
@@ -5157,6 +5162,10 @@ components:
         enabled:
           type: boolean
           description: Switch for turning the cronjob on/off
+        target:
+          type: string
+          description: Target that executes the stream. Can be a user email or pool name
+          example: target@helmut.cloud
         createDate:
           type: number
           minimum: 0
@@ -5349,6 +5358,7 @@ components:
         - creator
         - targetEvent
         - timezone
+        - target
         - createDate
         - modifyDate
       description: Scheduled HTTP task details
