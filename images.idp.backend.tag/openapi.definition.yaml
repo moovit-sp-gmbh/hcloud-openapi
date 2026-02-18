@@ -209,6 +209,18 @@ components:
           description: Callback URI for the OAuthApp
           example:
             - https://openidconnect.net/callback
+        allowAuthorizationCodeFlow:
+          type: boolean
+          default: false
+          description: >-
+            Set to true to allow authorization code flow through this
+            application
+          example: false
+        allowDeviceFlow:
+          type: boolean
+          default: false
+          description: Set to true to allow device flow through this application
+          example: false
       required:
         - name
         - callback
@@ -334,6 +346,11 @@ components:
             requested scope MUST NOT include any scope not originally granted,
             and if omitted is treated as equal to the scope originally granted
           example: hcloud:full
+        code_verifier:
+          type: string
+          description: >-
+            Optional value, used for PKCE
+            (https://www.rfc-editor.org/rfc/rfc7636#section-4)
       required:
         - grant_type
         - client_id
@@ -3105,6 +3122,14 @@ components:
           type: number
           description: Last modification date of the OAuthApp
           example: 1673527923627
+        allowAuthorizationCodeFlow:
+          type: boolean
+          description: >-
+            Will be true if the authorization code flow is enabled for this
+            application
+        allowDeviceFlow:
+          type: boolean
+          description: Will be true if the device flow is enabled for this application
       required:
         - _id
         - name
@@ -3116,6 +3141,8 @@ components:
         - clientSecrets
         - createDate
         - modifyDate
+        - allowAuthorizationCodeFlow
+        - allowDeviceFlow
       description: Represents an OAuth application registered in the system
       example:
         _id: 97ca7c7683160ed3ad9162fd
@@ -3146,6 +3173,8 @@ components:
             modifyDate: 1673527923628
         createDate: 1673527923627
         modifyDate: 1673527923627
+        allowAuthorizationCodeFlow: true
+        allowDeviceFlow: false
     TeamDto:
       type: object
       properties:
@@ -5502,6 +5531,25 @@ paths:
           required: false
           name: state
           in: query
+        - schema:
+            type: string
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge
+          in: query
+        - schema:
+            type: string
+            enum: &ref_3
+              - plain
+              - S256
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge_method
+          in: query
       responses:
         '302':
           description: >-
@@ -5512,8 +5560,10 @@ paths:
             Failed to validate 'query' parameter 'response_type' | Failed to
             validate 'query' parameter 'client_id' | Failed to validate 'query'
             parameter 'redirect_uri' | Failed to validate 'query' parameter
-            'scope' | Failed to validate 'query' parameter 'state' | The
-            redirect_uri provided is either missing or failed to be validated.
+            'scope' | Failed to validate 'query' parameter 'state' | Failed to
+            validate 'query' parameter 'code_challenge' | Failed to validate
+            'query' parameter 'code_challenge_method' | The redirect_uri
+            provided is either missing or failed to be validated.
           content:
             application/json:
               schema:
@@ -5562,7 +5612,29 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: &ref_3
+                Failed to validate 'query' parameter 'code_challenge':
+                  summary: Failed to validate 'query' parameter 'code_challenge'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'code_challenge' -
+                      {error}
+                Failed to validate 'query' parameter 'code_challenge_method':
+                  summary: Failed to validate 'query' parameter 'code_challenge_method'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge_method'
+                    - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter
+                      'code_challenge_method' - {error}
+                The redirect_uri provided is either missing or failed to be validated.: &ref_4
                   summary: >-
                     The redirect_uri provided is either missing or failed to be
                     validated.
@@ -5578,7 +5650,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: &ref_4
+              examples: &ref_5
                 OAuth missing query paramete:
                   summary: OAuth missing query paramete
                   description: 'OAuth missing query parameter: ''client_id'''
@@ -5651,6 +5723,23 @@ paths:
           required: false
           name: state
           in: query
+        - schema:
+            type: string
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge
+          in: query
+        - schema:
+            type: string
+            enum: *ref_3
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge_method
+          in: query
       responses:
         '302':
           description: >-
@@ -5661,8 +5750,10 @@ paths:
             Failed to validate 'query' parameter 'response_type' | Failed to
             validate 'query' parameter 'client_id' | Failed to validate 'query'
             parameter 'redirect_uri' | Failed to validate 'query' parameter
-            'scope' | Failed to validate 'query' parameter 'state' | The
-            redirect_uri provided is either missing or failed to be validated.
+            'scope' | Failed to validate 'query' parameter 'state' | Failed to
+            validate 'query' parameter 'code_challenge' | Failed to validate
+            'query' parameter 'code_challenge_method' | The redirect_uri
+            provided is either missing or failed to be validated.
           content:
             application/json:
               schema:
@@ -5711,14 +5802,36 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: *ref_3
+                Failed to validate 'query' parameter 'code_challenge':
+                  summary: Failed to validate 'query' parameter 'code_challenge'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'code_challenge' -
+                      {error}
+                Failed to validate 'query' parameter 'code_challenge_method':
+                  summary: Failed to validate 'query' parameter 'code_challenge_method'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge_method'
+                    - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter
+                      'code_challenge_method' - {error}
+                The redirect_uri provided is either missing or failed to be validated.: *ref_4
         '404':
           description: OAuth missing query paramete | OAuthApp does not exist
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: *ref_4
+              examples: *ref_5
         '500':
           description: something went wrong
           content:
@@ -5782,6 +5895,23 @@ paths:
           required: false
           name: state
           in: query
+        - schema:
+            type: string
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge
+          in: query
+        - schema:
+            type: string
+            enum: *ref_3
+            description: >-
+              Optional value, used for PKCE
+              (https://www.rfc-editor.org/rfc/rfc7636#section-4)
+          required: false
+          name: code_challenge_method
+          in: query
       responses:
         '302':
           description: >-
@@ -5792,7 +5922,9 @@ paths:
             Failed to validate 'query' parameter 'response_type' | Failed to
             validate 'query' parameter 'client_id' | Failed to validate 'query'
             parameter 'redirect_uri' | Failed to validate 'query' parameter
-            'scope' | Failed to validate 'query' parameter 'state'
+            'scope' | Failed to validate 'query' parameter 'state' | Failed to
+            validate 'query' parameter 'code_challenge' | Failed to validate
+            'query' parameter 'code_challenge_method'
           content:
             application/json:
               schema:
@@ -5841,6 +5973,28 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'state' - {error}
+                Failed to validate 'query' parameter 'code_challenge':
+                  summary: Failed to validate 'query' parameter 'code_challenge'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'code_challenge' -
+                      {error}
+                Failed to validate 'query' parameter 'code_challenge_method':
+                  summary: Failed to validate 'query' parameter 'code_challenge_method'
+                  description: >-
+                    Failed to validate 'query' parameter 'code_challenge_method'
+                    - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter
+                      'code_challenge_method' - {error}
         '401':
           description: The user has not consented to the specified scopes
           content:
