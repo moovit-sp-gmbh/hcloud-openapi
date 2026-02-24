@@ -354,7 +354,6 @@ components:
       required:
         - grant_type
         - client_id
-        - client_secret
       description: >-
         The input structure for requesting an OAuth access token using either
         authorization_code or refresh_token grant.
