@@ -1895,6 +1895,11 @@ components:
                   format: uri
                   description: URL of the preview
                   example: https://example.com/preview.jpg
+                tilePreviewVttUrl:
+                  type: string
+                  format: uri
+                  description: URL of the tile preview VTT file
+                  example: https://example.com/tile_preview.vtt
                 createDate:
                   type: number
                   minimum: 0
@@ -2107,6 +2112,27 @@ components:
         - tcOut
         - formatLongName
       description: Video metadata
+    Vtt:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: tile_preview
+        url:
+          type: string
+          format: uri
+          description: URL to the VTT file. Can be undefined if still being generated
+          example: https://example.com/tile_preview.vtt
+        type:
+          type: string
+          enum:
+            - VTT
+          description: Media type
+          example: VTT
+      required:
+        - name
+        - type
     AssetDetailedDto:
       oneOf:
         - allOf:
@@ -2160,6 +2186,11 @@ components:
                   format: uri
                   description: URL of the preview
                   example: https://example.com/preview.jpg
+                tilePreviewVttUrl:
+                  type: string
+                  format: uri
+                  description: URL of the tile preview VTT file
+                  example: https://example.com/tile_preview.vtt
                 createDate:
                   type: number
                   minimum: 0
@@ -2309,6 +2340,7 @@ components:
                         required:
                           - name
                           - type
+                      - $ref: '#/components/schemas/Vtt'
               required:
                 - createDate
                 - modifyDate
@@ -2341,6 +2373,7 @@ components:
         frameRate: 25
         thumbnailUrl: https://example.com/thumbnail.jpg?token=abc123&expires=1747146373
         previewUrl: https://example.com/preview.jpg?token=def456&expires=1747146373
+        tilePreviewVttUrl: https://example.com/tile_preview.vtt?token=ghi789&expires=1747146373
         permissions:
           - VIEW_ASSETS
         tag:
@@ -2482,6 +2515,11 @@ components:
               format: uri
               description: URL of the preview
               example: https://example.com/preview.jpg
+            tilePreviewVttUrl:
+              type: string
+              format: uri
+              description: URL of the tile preview VTT file
+              example: https://example.com/tile_preview.vtt
             createDate:
               type: number
               minimum: 0
