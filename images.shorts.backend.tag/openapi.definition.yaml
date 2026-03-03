@@ -56,12 +56,28 @@ components:
           description: ID of organization the short URL belongs to
           example: 381b5de208337dc792b65f67
         spaceId:
-          type: string
-          minLength: 24
-          maxLength: 24
-          format: hexadecimal
+          anyOf:
+            - type: string
+              minLength: 24
+              maxLength: 24
+              format: hexadecimal
+            - type: string
+              format: uuid
           description: ID of the space this short URL belongs to
-          example: 291b7de208337dc792b65f76
+          example: >-
+            mongoId 291b7de208337dc792b65f76 (high5) or uuid
+            bacee86b-42d7-4163-81f1-ebc036578f8b (cosmo)
+        expireDate:
+          type: number
+          description: Expiration date as a timestamp (in milliseconds)
+          example: 1700000000000
+        type:
+          type: string
+          enum:
+            - GENERIC
+            - COSMO
+          default: GENERIC
+          description: Type of the short URL, can be GENERIC or COSMO
       required:
         - url
         - organizationId
@@ -87,12 +103,21 @@ paths:
         - Short
       parameters:
         - schema:
-            type: string
-            minLength: 6
-            maxLength: 6
-            pattern: ^[A-NP-Za-km-z1-9]{6}$
-            description: 6-character unique identifier used to access the shortened URL
-            example: Az7M4q
+            anyOf:
+              - type: string
+                minLength: 34
+                maxLength: 34
+                pattern: ^[A-NP-Za-km-z1-9]{34}$
+                description: >-
+                  34-character unique identifier used to access the shortened
+                  URL
+                example: vQsSRTTkxL9LAMtv8Hog2LQ3zL9MEGy2U4
+              - type: string
+                minLength: 6
+                maxLength: 6
+                pattern: ^[A-NP-Za-km-z1-9]{6}$
+                description: 6-character unique identifier used to access the shortened URL
+                example: Az7M4q
           required: true
           name: slug
           in: path
