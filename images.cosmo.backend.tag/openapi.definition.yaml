@@ -88,6 +88,19 @@ components:
                     type: string
                     format: email
                   description: List of user to automatically add and notify of the share
+                public:
+                  type: boolean
+                  default: false
+                  description: Whether the share is a public link share or not
+                  example: false
+                visitsLimit:
+                  type: number
+                  minimum: 1
+                  maximum: 1000
+                  description: >-
+                    Maximum number of visits allowed for the share (only if it's
+                    a public link share)
+                  example: 100
               required:
                 - name
                 - items
@@ -241,6 +254,19 @@ components:
                     type: string
                     format: email
                   description: List of user to automatically add and notify of the share
+                public:
+                  type: boolean
+                  default: false
+                  description: Whether the share is a public link share or not
+                  example: false
+                visitsLimit:
+                  type: number
+                  minimum: 1
+                  maximum: 1000
+                  description: >-
+                    Maximum number of visits allowed for the share (only if it's
+                    a public link share)
+                  example: 100
             - type: object
               properties:
                 permissions:
@@ -2959,6 +2985,28 @@ components:
           description: >-
             Array of the users associated with the share. Only present when
             searching shares of a space.
+        publicLink:
+          type: object
+          properties:
+            link:
+              type: string
+              format: uri
+              description: >-
+                Public URL of the share, only present if the share is a public
+                link share.
+            visitsLimit:
+              type: number
+              minimum: 1
+              maximum: 1000
+              description: >-
+                Maximum number of visits allowed for the share (only if it's a
+                public link share)
+              example: 100
+          required:
+            - link
+          description: >-
+            Public link information, only present if the share is a public link
+            share.
         organization:
           $ref: '#/components/schemas/ReducedOrganization'
         space:
@@ -11020,6 +11068,28 @@ paths:
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
+                  publicLink:
+                    type: object
+                    properties:
+                      link:
+                        type: string
+                        format: uri
+                        description: >-
+                          Public URL of the share, only present if the share is
+                          a public link share.
+                      visitsLimit:
+                        type: number
+                        minimum: 1
+                        maximum: 1000
+                        description: >-
+                          Maximum number of visits allowed for the share (only
+                          if it's a public link share)
+                        example: 100
+                    required:
+                      - link
+                    description: >-
+                      Public link information, only present if the share is a
+                      public link share.
                   organization:
                     $ref: '#/components/schemas/ReducedOrganization'
                   space:
@@ -11493,6 +11563,28 @@ paths:
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
+                  publicLink:
+                    type: object
+                    properties:
+                      link:
+                        type: string
+                        format: uri
+                        description: >-
+                          Public URL of the share, only present if the share is
+                          a public link share.
+                      visitsLimit:
+                        type: number
+                        minimum: 1
+                        maximum: 1000
+                        description: >-
+                          Maximum number of visits allowed for the share (only
+                          if it's a public link share)
+                        example: 100
+                    required:
+                      - link
+                    description: >-
+                      Public link information, only present if the share is a
+                      public link share.
                   organization:
                     $ref: '#/components/schemas/ReducedOrganization'
                   space:
@@ -11782,6 +11874,28 @@ paths:
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
+                  publicLink:
+                    type: object
+                    properties:
+                      link:
+                        type: string
+                        format: uri
+                        description: >-
+                          Public URL of the share, only present if the share is
+                          a public link share.
+                      visitsLimit:
+                        type: number
+                        minimum: 1
+                        maximum: 1000
+                        description: >-
+                          Maximum number of visits allowed for the share (only
+                          if it's a public link share)
+                        example: 100
+                    required:
+                      - link
+                    description: >-
+                      Public link information, only present if the share is a
+                      public link share.
                   organization:
                     $ref: '#/components/schemas/ReducedOrganization'
                   space:
@@ -12852,6 +12966,28 @@ paths:
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
+                    publicLink:
+                      type: object
+                      properties:
+                        link:
+                          type: string
+                          format: uri
+                          description: >-
+                            Public URL of the share, only present if the share
+                            is a public link share.
+                        visitsLimit:
+                          type: number
+                          minimum: 1
+                          maximum: 1000
+                          description: >-
+                            Maximum number of visits allowed for the share (only
+                            if it's a public link share)
+                          example: 100
+                      required:
+                        - link
+                      description: >-
+                        Public link information, only present if the share is a
+                        public link share.
                     organization:
                       $ref: '#/components/schemas/ReducedOrganization'
                     space:
@@ -13106,6 +13242,28 @@ paths:
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
+                    publicLink:
+                      type: object
+                      properties:
+                        link:
+                          type: string
+                          format: uri
+                          description: >-
+                            Public URL of the share, only present if the share
+                            is a public link share.
+                        visitsLimit:
+                          type: number
+                          minimum: 1
+                          maximum: 1000
+                          description: >-
+                            Maximum number of visits allowed for the share (only
+                            if it's a public link share)
+                          example: 100
+                      required:
+                        - link
+                      description: >-
+                        Public link information, only present if the share is a
+                        public link share.
                     organization:
                       $ref: '#/components/schemas/ReducedOrganization'
                     space:
@@ -13691,6 +13849,28 @@ paths:
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
+                  publicLink:
+                    type: object
+                    properties:
+                      link:
+                        type: string
+                        format: uri
+                        description: >-
+                          Public URL of the share, only present if the share is
+                          a public link share.
+                      visitsLimit:
+                        type: number
+                        minimum: 1
+                        maximum: 1000
+                        description: >-
+                          Maximum number of visits allowed for the share (only
+                          if it's a public link share)
+                        example: 100
+                    required:
+                      - link
+                    description: >-
+                      Public link information, only present if the share is a
+                      public link share.
                   organization:
                     $ref: '#/components/schemas/ReducedOrganization'
                   space:
