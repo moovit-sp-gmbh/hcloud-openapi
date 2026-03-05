@@ -1130,6 +1130,78 @@ components:
           STRING: '#/components/schemas/STRING'
           SELECT: '#/components/schemas/SELECT'
           TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    namespace.<namespaceName>.metadata.<key> filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).metadata.(\w{1,64})
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_8
+              description: STRING for namespace.<namespaceName>.metadata.<key>
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).metadata.(\w{1,64})
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_9
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for namespace.<namespaceName>.metadata.<key>
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  pattern: ^namespace.(\w{1,64}).metadata.(\w{1,64})
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_10
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for namespace.<namespaceName>.metadata.<key>
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
     type:
       type: string
       enum:
@@ -1180,6 +1252,9 @@ components:
     namespace.<namespaceName>.tag:
       type: string
       pattern: ^namespace.(\w{1,64}).tag
+    namespace.<namespaceName>.metadata.<key>:
+      type: string
+      pattern: ^namespace.(\w{1,64}).metadata.(\w{1,64})
     AssetSearchDto:
       type: object
       properties:
@@ -1202,6 +1277,9 @@ components:
                   #/components/schemas/namespace.<namespaceName>.approvalStatus
                   filters
               - $ref: '#/components/schemas/namespace.<namespaceName>.tag filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.metadata.<key>
+                  filters
           description: Filters to apply to the search
         sorting:
           type: object
@@ -1224,6 +1302,8 @@ components:
                   - $ref: >-
                       #/components/schemas/namespace.<namespaceName>.approvalStatus
                   - $ref: '#/components/schemas/namespace.<namespaceName>.tag'
+                  - $ref: >-
+                      #/components/schemas/namespace.<namespaceName>.metadata.<key>
             direction:
               type: string
               enum:
