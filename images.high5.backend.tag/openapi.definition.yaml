@@ -235,6 +235,8 @@ components:
                       - initialY
                   path:
                     type: string
+                  streamId:
+                    type: string
                   kind:
                     type: string
                     enum:
@@ -411,6 +413,8 @@ components:
                       - initialX
                       - initialY
                   path:
+                    type: string
+                  streamId:
                     type: string
                   kind:
                     type: string
@@ -637,6 +641,8 @@ components:
                       - initialX
                       - initialY
                   path:
+                    type: string
+                  streamId:
                     type: string
                 required:
                   - kind
@@ -1001,6 +1007,8 @@ components:
                         - initialY
                     path:
                       type: string
+                    streamId:
+                      type: string
                     kind:
                       type: string
                       enum:
@@ -1177,6 +1185,8 @@ components:
                         - initialX
                         - initialY
                     path:
+                      type: string
+                    streamId:
                       type: string
                     kind:
                       type: string
@@ -1403,6 +1413,8 @@ components:
                         - initialX
                         - initialY
                     path:
+                      type: string
+                    streamId:
                       type: string
                   required:
                     - kind
@@ -2076,6 +2088,11 @@ components:
           type: boolean
           description: Indicates if the node failed or not
           example: false
+        streamId:
+          type: string
+          description: >-
+            ID of the stream the node originally belongs to. Will be the same as
+            the executed stream for non-embedded nodes.
         startTimestamp:
           type: number
           description: Timestamp when the node started
@@ -2448,6 +2465,8 @@ components:
                     - initialY
                 path:
                   type: string
+                streamId:
+                  type: string
                 kind:
                   type: string
                   enum:
@@ -2624,6 +2643,8 @@ components:
                     - initialX
                     - initialY
                 path:
+                  type: string
+                streamId:
                   type: string
                 kind:
                   type: string
@@ -2850,6 +2871,8 @@ components:
                     - initialX
                     - initialY
                 path:
+                  type: string
+                streamId:
                   type: string
               required:
                 - kind
@@ -4930,6 +4953,8 @@ components:
                     type: string
                   path:
                     type: string
+                  streamId:
+                    type: string
                   catalog:
                     type: object
                     properties:
@@ -6071,6 +6096,8 @@ components:
                           - initialY
                       path:
                         type: string
+                      streamId:
+                        type: string
                       kind:
                         type: string
                         enum:
@@ -6247,6 +6274,8 @@ components:
                           - initialX
                           - initialY
                       path:
+                        type: string
+                      streamId:
                         type: string
                       kind:
                         type: string
@@ -6473,6 +6502,8 @@ components:
                           - initialX
                           - initialY
                       path:
+                        type: string
+                      streamId:
                         type: string
                     required:
                       - kind
