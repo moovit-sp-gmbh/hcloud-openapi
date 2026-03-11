@@ -2369,7 +2369,7 @@ components:
                                   - type: number
                                   - type: boolean
                         description: Metadata of the reference
-                        example: &ref_16
+                        example: &ref_18
                           sequenceId: 32178932198
                     required:
                       - status
@@ -2892,7 +2892,7 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example:
+          example: &ref_15
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         mentionsTeams:
@@ -2900,7 +2900,7 @@ components:
           items:
             type: string
           description: Array of mentioned team ids
-          example:
+          example: &ref_16
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
       required:
@@ -2937,6 +2937,18 @@ components:
           description: Optional annotation for the comment
           example: >-
             PHN2ZyBpZD0ic3ZnIiB3aWR0aD0iNzI4IiBoZWlnaHQ9IjM4NCIgdmlld0JveD0iMCAwIDEwMCAxMDAiIHhtbG5zPSJodHRwOi8vd3d3LnczLm9yZy8yMDAwL3N2ZyIgY2xhc3M9InNpemUtZnVsbCI+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIC0yNS43OCwzMi44MSBDIC0yNy42Niw0Ni4zNSAtMzMuMjMsODguMDIgLTM1LjE2LDEwMC41MiBDIC0zNy4wOCwxMTMuMDIgLTM1LjM2LDk2LjM1IC0zNS40Miw5NS4zMSIgZGF0YS1kcmF1dV9pbmRleD0iMCI+PC9wYXRoPjxwYXRoIGZpbGw9InRyYW5zcGFyZW50IiBzdHJva2U9Im9rbGNoKDYyLjMlIDAuMjE0IDI1OS44MTUpIiBzdHJva2Utd2lkdGg9IjEiIHN0cm9rZS1saW5lY2FwPSJyb3VuZCIgZD0iTSAtMjYuNTYsMzQuNjQgQyAtMjUuMzYsNDEuMDkgLTIyLjY2LDU4LjQ5IC0yMC41Nyw2Ni45MyBDIC0xOC40OSw3NS4zNiAtMTguMjMsNzcuMTQgLTE2LjE1LDc2LjgyIEMgLTE0LjA2LDc2LjUxIC0xNS4yMSw3Mi4wOCAtMTAuMTYsNjUuMzYgQyAtNS4xMCw1OC42NSA0LjM4LDQ5LjY0IDkuMTEsNDMuMjMgQyAxMy44NSwzNi44MiAxMy4zOSwzMC43OCAxMy41NCwzMy4zMyBDIDEzLjcwLDM1Ljg5IDEyLjQwLDQ1LjczIDkuOTAsNTUuOTkgQyA3LjQwLDY2LjI1IDMuMzksNzcuOTIgMS4wNCw4NC42NCBDIC0xLjMwLDkxLjM1IC0xLjI1LDg4LjU5IC0xLjgyLDg5LjU4IiBkYXRhLWRyYXV1X2luZGV4PSIxIj48L3BhdGg+PHBhdGggZmlsbD0idHJhbnNwYXJlbnQiIHN0cm9rZT0ib2tsY2goNjIuMyUgMC4yMTQgMjU5LjgxNSkiIHN0cm9rZS13aWR0aD0iMSIgc3Ryb2tlLWxpbmVjYXA9InJvdW5kIiBkPSJNIDUyLjA4LDQyLjcxIEMgNTEuMzAsNDIuMzQgNTMuNzAsNDEuNjcgNDguMTgsNDAuODkgQyA0Mi42Niw0MC4xMCAzMC4xNiwzNy42MCAyNC40OCwzOC44MCBDIDE4LjgwLDQwLjAwIDIxLjA5LDQzLjIzIDE5Ljc5LDQ2Ljg4IEMgMTguNDksNTAuNTIgMTcuMDMsNTIuNDAgMTcuOTcsNTcuMDMgQyAxOC45MSw2MS42NyAyMC43Myw2NS4yNiAyNC40OCw3MC4wNSBDIDI4LjIzLDc0Ljg0IDM0LjExLDc3LjQwIDM2LjcyLDgwLjk5IEMgMzkuMzIsODQuNTggMzguMjMsODUuNjMgMzcuNTAsODguMDIgQyAzNi43Nyw5MC40MiAzNC44NCw5MS43NyAzMy4wNyw5Mi45NyBDIDMxLjMwLDk0LjE3IDMzLjU0LDk0LjMyIDI4LjY1LDk0LjAxIEMgMjMuNzUsOTMuNzAgMTIuNzYsOTIuMTkgOC41OSw5MS40MSBDIDQuNDMsOTAuNjMgNy43MSw5MC4zNiA3LjgxLDkwLjEwIEMgNy45Miw4OS44NCA4Ljg1LDkwLjEwIDkuMTEsOTAuMTAiIGRhdGEtZHJhdXVfaW5kZXg9IjIiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNjYuOTMsMjUuMjYgQyA2Ni44MiwzMC42OCA2OC4yOCwzOS4zOCA2Ni40MSw1Mi4zNCBDIDY0LjUzLDY1LjMxIDU5LjQ4LDgzLjE4IDU3LjU1LDkwLjEwIEMgNTUuNjMsOTcuMDMgNTYuOTMsODcuNjAgNTYuNzcsODYuOTgiIGRhdGEtZHJhdXVfaW5kZXg9IjMiPjwvcGF0aD48cGF0aCBmaWxsPSJ0cmFuc3BhcmVudCIgc3Ryb2tlPSJva2xjaCg2Mi4zJSAwLjIxNCAyNTkuODE1KSIgc3Ryb2tlLXdpZHRoPSIxIiBzdHJva2UtbGluZWNhcD0icm91bmQiIGQ9Ik0gNTMuMTMsMzMuNTkgQyA1My4yOCwzMy4zMyA0NS42OCwzMy44MCA1My45MSwzMi4yOSBDIDYyLjE0LDMwLjc4IDgzLjg1LDI4LjAyIDk0LjI3LDI2LjA0IEMgMTA0LjY5LDI0LjA2IDEwMS44MiwyMC4zMSAxMDUuOTksMjIuNDAgQyAxMTAuMTYsMjQuNDggMTEzLjA3LDMyLjg2IDExNS4xMCwzNi40NiBDIDExNy4xNCw0MC4wNSAxMTcuMjksMzguNDkgMTE2LjE1LDQwLjM2IEMgMTE1LjAwLDQyLjI0IDExNC41Myw0My40NCAxMDkuMzgsNDUuODMgQyAxMDQuMjIsNDguMjMgOTkuMDYsNTAuNDIgOTAuMzYsNTIuMzQgQyA4MS42Nyw1NC4yNyA3MC43OCw1NC44NCA2NS44OSw1NS40NyIgZGF0YS1kcmF1dV9pbmRleD0iNCI+PC9wYXRoPjwvc3ZnPg==
+        mentions:
+          type: array
+          items:
+            type: string
+          description: Array of mentioned user IDs
+          example: *ref_15
+        mentionsTeams:
+          type: array
+          items:
+            type: string
+          description: Array of mentioned team ids
+          example: *ref_16
       required:
         - text
     CommentEditAnnotationDto:
@@ -3164,7 +3176,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_15
+        space: &ref_17
           type: object
           additionalProperties:
             type: object
@@ -3173,10 +3185,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_15
-        asset: *ref_15
-        share: *ref_15
-        user: *ref_15
+        namespace: *ref_17
+        asset: *ref_17
+        share: *ref_17
+        user: *ref_17
       description: Map of all the permissions available in the Cosmo service
   parameters: {}
 paths:
@@ -7557,6 +7569,652 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/subscribe:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Subscribe to all asset updates in a space
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Unsubscribe from all asset updates in a space
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/subscribe:
+    put:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Subscribe to updates for a specific asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 009.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Unsubscribe from updates for a specific asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 009.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/locations:
     post:
       security:
@@ -9155,7 +9813,7 @@ paths:
                               - type: number
                               - type: boolean
                     description: Metadata of the reference
-                    example: *ref_16
+                    example: *ref_18
                 required:
                   - _id
                   - status
@@ -10587,6 +11245,18 @@ paths:
                   maxLength: 2048
                   description: Comment text
                   example: This is my comment
+                mentions:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of mentioned user IDs
+                  example: *ref_15
+                mentionsTeams:
+                  type: array
+                  items:
+                    type: string
+                  description: Array of mentioned team ids
+                  example: *ref_16
               required:
                 - text
       responses:
@@ -11057,13 +11727,13 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: &ref_17
+                    example: &ref_19
                       - ae13321a-522d-48da-9733-27c97bcab124
                   permissionGroups:
                     type: array
                     items:
                       type: string
-                      enum: &ref_18
+                      enum: &ref_20
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -11073,13 +11743,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_19
+                    example: &ref_21
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_20
+                      enum: &ref_22
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -11094,7 +11764,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_21
+                    example: &ref_23
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -11102,7 +11772,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_22
+                        enum: &ref_24
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
                           - ENABLE_APPROVAL
@@ -11114,7 +11784,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_23
+                    example: &ref_25
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -11123,7 +11793,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_24
+                        enum: &ref_26
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -11138,7 +11808,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_25
+                    example: &ref_27
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -11594,38 +12264,26 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_17
-                  permissionGroups:
-                    type: array
-                    items:
-                      type: string
-                      enum: *ref_18
-                    description: >-
-                      List of asset permission groups applied to the share (e.g.
-                      BASE, REVIEW).
                     example: *ref_19
-                  permissions:
+                  permissionGroups:
                     type: array
                     items:
                       type: string
                       enum: *ref_20
                     description: >-
+                      List of asset permission groups applied to the share (e.g.
+                      BASE, REVIEW).
+                    example: *ref_21
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_22
+                    description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_21
-                  namespaceGroups:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_22
-                    description: >-
-                      Namespaces to include in the share. Share consumers will
-                      only be able to read/write asset comments and statuses
-                      according to the permission groups set in this map.
                     example: *ref_23
-                  namespaces:
+                  namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
@@ -11633,9 +12291,21 @@ paths:
                         type: string
                         enum: *ref_24
                     description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_25
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_26
+                    description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_25
+                    example: *ref_27
                   users:
                     type: array
                     items:
@@ -11905,38 +12575,26 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_17
-                  permissionGroups:
-                    type: array
-                    items:
-                      type: string
-                      enum: *ref_18
-                    description: >-
-                      List of asset permission groups applied to the share (e.g.
-                      BASE, REVIEW).
                     example: *ref_19
-                  permissions:
+                  permissionGroups:
                     type: array
                     items:
                       type: string
                       enum: *ref_20
                     description: >-
+                      List of asset permission groups applied to the share (e.g.
+                      BASE, REVIEW).
+                    example: *ref_21
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_22
+                    description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_21
-                  namespaceGroups:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_22
-                    description: >-
-                      Namespaces to include in the share. Share consumers will
-                      only be able to read/write asset comments and statuses
-                      according to the permission groups set in this map.
                     example: *ref_23
-                  namespaces:
+                  namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
@@ -11944,9 +12602,21 @@ paths:
                         type: string
                         enum: *ref_24
                     description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_25
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_26
+                    description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_25
+                    example: *ref_27
                   users:
                     type: array
                     items:
@@ -12997,38 +13667,26 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_17
-                    permissionGroups:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_18
-                      description: >-
-                        List of asset permission groups applied to the share
-                        (e.g. BASE, REVIEW).
                       example: *ref_19
-                    permissions:
+                    permissionGroups:
                       type: array
                       items:
                         type: string
                         enum: *ref_20
                       description: >-
+                        List of asset permission groups applied to the share
+                        (e.g. BASE, REVIEW).
+                      example: *ref_21
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_22
+                      description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_21
-                    namespaceGroups:
-                      type: object
-                      additionalProperties:
-                        type: array
-                        items:
-                          type: string
-                          enum: *ref_22
-                      description: >-
-                        Namespaces to include in the share. Share consumers will
-                        only be able to read/write asset comments and statuses
-                        according to the permission groups set in this map.
                       example: *ref_23
-                    namespaces:
+                    namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
@@ -13036,9 +13694,21 @@ paths:
                           type: string
                           enum: *ref_24
                       description: >-
+                        Namespaces to include in the share. Share consumers will
+                        only be able to read/write asset comments and statuses
+                        according to the permission groups set in this map.
+                      example: *ref_25
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                          enum: *ref_26
+                      description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_25
+                      example: *ref_27
                     users:
                       type: array
                       items:
@@ -13273,38 +13943,26 @@ paths:
                         type: string
                         format: uuid
                       description: List of asset IDs that the share members have access to.
-                      example: *ref_17
-                    permissionGroups:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_18
-                      description: >-
-                        List of asset permission groups applied to the share
-                        (e.g. BASE, REVIEW).
                       example: *ref_19
-                    permissions:
+                    permissionGroups:
                       type: array
                       items:
                         type: string
                         enum: *ref_20
                       description: >-
+                        List of asset permission groups applied to the share
+                        (e.g. BASE, REVIEW).
+                      example: *ref_21
+                    permissions:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_22
+                      description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_21
-                    namespaceGroups:
-                      type: object
-                      additionalProperties:
-                        type: array
-                        items:
-                          type: string
-                          enum: *ref_22
-                      description: >-
-                        Namespaces to include in the share. Share consumers will
-                        only be able to read/write asset comments and statuses
-                        according to the permission groups set in this map.
                       example: *ref_23
-                    namespaces:
+                    namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
@@ -13312,9 +13970,21 @@ paths:
                           type: string
                           enum: *ref_24
                       description: >-
+                        Namespaces to include in the share. Share consumers will
+                        only be able to read/write asset comments and statuses
+                        according to the permission groups set in this map.
+                      example: *ref_25
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                          enum: *ref_26
+                      description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_25
+                      example: *ref_27
                     users:
                       type: array
                       items:
@@ -13880,38 +14550,26 @@ paths:
                       type: string
                       format: uuid
                     description: List of asset IDs that the share members have access to.
-                    example: *ref_17
-                  permissionGroups:
-                    type: array
-                    items:
-                      type: string
-                      enum: *ref_18
-                    description: >-
-                      List of asset permission groups applied to the share (e.g.
-                      BASE, REVIEW).
                     example: *ref_19
-                  permissions:
+                  permissionGroups:
                     type: array
                     items:
                       type: string
                       enum: *ref_20
                     description: >-
+                      List of asset permission groups applied to the share (e.g.
+                      BASE, REVIEW).
+                    example: *ref_21
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_22
+                    description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_21
-                  namespaceGroups:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_22
-                    description: >-
-                      Namespaces to include in the share. Share consumers will
-                      only be able to read/write asset comments and statuses
-                      according to the permission groups set in this map.
                     example: *ref_23
-                  namespaces:
+                  namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
@@ -13919,9 +14577,21 @@ paths:
                         type: string
                         enum: *ref_24
                     description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_25
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_26
+                    description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_25
+                    example: *ref_27
                   users:
                     type: array
                     items:
@@ -15802,7 +16472,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_26
+                              enum: &ref_28
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -15853,7 +16523,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_27
+                            example: &ref_29
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -16408,9 +17078,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_26
+                            enum: *ref_28
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_27
+                          example: *ref_29
                       required:
                         - entity
                         - permissions
