@@ -2275,7 +2275,18 @@ components:
             - data
           description: Stream execution payload
         target:
-          type: string
+          anyOf:
+            - type: string
+              format: email
+            - type: string
+              minLength: 1
+              maxLength: 128
+              pattern: ^[\w-.]{1,128}$
+              description: >-
+                Name of the pool (only alphanumeric characters, underscores,
+                hyphens and dots are allowed; it should contain between 1 and
+                128 characters)
+              example: My-Pool
           description: Target that executes the stream. Can be a user email or pool name.
         dry:
           type: boolean
