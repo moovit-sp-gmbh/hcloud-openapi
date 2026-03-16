@@ -1377,6 +1377,13 @@ components:
           description: IDs of the assets to clone
           example:
             - c3a8d287-0dda-4af2-b8f0-7dd1e9574218
+        parentId:
+          type: string
+          format: uuid
+          description: >-
+            ID of the target parent. If omitted, the assets will be placed at
+            the root level.
+          example: 24b9fe00-8cc2-4f15-bde7-72a8b2e3c7ef
       required:
         - assetIds
     AssetCreateDto:
