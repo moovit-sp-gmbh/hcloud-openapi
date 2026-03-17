@@ -2972,6 +2972,25 @@ components:
             - uuid-2
       required:
         - commentIds
+    ShareReducedUnlinkedUser:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the user
+          example: john.doe@example.com
+        linkedToShare:
+          type: boolean
+      required:
+        - email
+        - linkedToShare
+      description: >-
+        Representation of a user that has been invited to a share but is not yet
+        linked to an account
+      example:
+        email: mcloud@helmut.cloud
+        linkedToShare: false
     ShareDetailsDto:
       type: object
       properties:
@@ -3069,7 +3088,9 @@ components:
         users:
           type: array
           items:
-            $ref: '#/components/schemas/ReducedUser'
+            anyOf:
+              - $ref: '#/components/schemas/ReducedUser'
+              - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
           description: >-
             Array of the users associated with the share. Only present when
             searching shares of a space.
@@ -10234,11 +10255,15 @@ paths:
           name: refId
           in: query
         - schema:
-            type: number
-            minimum: 1
-            maximum: 100
-            default: 25
-            description: Page size
+            anyOf:
+              - type: number
+                minimum: 1
+                maximum: 100
+                default: 25
+                description: Page size
+              - type: number
+                minimum: -1
+                maximum: -1
           required: false
           name: limit
           in: query
@@ -11310,7 +11335,9 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReducedUser'
+                      anyOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -11805,7 +11832,9 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReducedUser'
+                      anyOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -12116,7 +12145,9 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReducedUser'
+                      anyOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -13208,7 +13239,9 @@ paths:
                     users:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ReducedUser'
+                        anyOf:
+                          - $ref: '#/components/schemas/ReducedUser'
+                          - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
@@ -13484,7 +13517,9 @@ paths:
                     users:
                       type: array
                       items:
-                        $ref: '#/components/schemas/ReducedUser'
+                        anyOf:
+                          - $ref: '#/components/schemas/ReducedUser'
+                          - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
@@ -14091,7 +14126,9 @@ paths:
                   users:
                     type: array
                     items:
-                      $ref: '#/components/schemas/ReducedUser'
+                      anyOf:
+                        - $ref: '#/components/schemas/ReducedUser'
+                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
