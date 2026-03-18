@@ -3173,43 +3173,23 @@ components:
       required:
         - enabled
       description: Enable or disable a job
-    Header:
-      type: object
-      properties:
-        key:
-          type: string
-          description: Name of the HTTP header
-          example: X-HCloud-Correlation-ID
-        value:
-          type: string
-          description: Value assigned to the HTTP header
-          example: 0199ce25-f8ab-72bf-9471-3c9e547c6ba0
-      required:
-        - key
-        - value
-      description: Single HTTP request header represented as key-value pair
     JobLogCreateDto:
       type: object
       properties:
-        statusCode:
-          type: number
-          description: Status code of the request triggered by the cronjob
-          example: 200
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Header'
-          description: Headers of the response to the triggered cronjob request
-          example:
-            - key: Content-Type
-              value: application/json
-        body:
+        payload:
           type: string
-          description: Body of the response to the triggered cronjob request
+          description: Payload of the response to the triggered cronjob request
           example: '{"success":true,"message":"Job executed"}'
+        errorMessage:
+          type: string
+          description: >-
+            Detailed description of the error to assist in debugging, provides
+            context on why the request failed
+          example: >-
+            An internal server error occurred while processing the cronjob
+            execution
       required:
-        - statusCode
-        - body
+        - payload
       description: Data for logging the result of a triggered cronjob request
     JoinTokenPostDto:
       type: object
@@ -5480,9 +5460,6 @@ components:
           description: ID of the cronjob log
         job:
           $ref: '#/components/schemas/ReducedJob'
-        statusCode:
-          type: number
-          description: Status code of the cronjob request result
         organization:
           allOf:
             - $ref: '#/components/schemas/ReducedOrganization'
@@ -5495,14 +5472,17 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedSpace'
             - description: Space the cronjob belongs to
-        headers:
-          type: array
-          items:
-            $ref: '#/components/schemas/Header'
-          description: Optional headers for the HTTP requests triggered by the cronjob
-        body:
+        payload:
           type: string
-          description: Optional body of the HTTP request
+          description: Optional payload of the HTTP request
+        errorMessage:
+          type: string
+          description: >-
+            Detailed description of the error to assist in debugging, provides
+            context on why the request failed
+          example: >-
+            An internal server error occurred while processing the cronjob
+            execution
         createDate:
           type: number
           minimum: 0
@@ -5510,7 +5490,6 @@ components:
       required:
         - _id
         - job
-        - statusCode
         - organization
         - creator
         - space
