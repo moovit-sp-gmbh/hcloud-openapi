@@ -404,7 +404,10 @@ components:
         copy:
           type: boolean
           default: false
-          description: Whether to copy the assets instead of moving them
+          description: >-
+            Whether to copy the assets instead of moving them. This copy is an
+            asset-only copy. It will create a new asset with the same underlying
+            media, but no comments, tags, etc. on any namespace.
           example: false
       required:
         - assetIds
