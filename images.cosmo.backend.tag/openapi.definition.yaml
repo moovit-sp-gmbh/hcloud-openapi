@@ -11723,7 +11723,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Item not found | Given space not found
+          description: >-
+            Organization not found | Asset not found | Item not found | Given
+            space not found
           content:
             application/json:
               schema:
@@ -11735,6 +11737,12 @@ paths:
                     code: 009.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 009.038.0001
+                    error: asset.not.found
+                    message: Asset not found
                 Item not found:
                   summary: Item not found
                   value:
@@ -17527,7 +17535,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given space not found | Role not found
+          description: >-
+            Organization not found | Given space not found | Role not found |
+            User not found in the space
           content:
             application/json:
               schema:
@@ -17551,6 +17561,12 @@ paths:
                     code: 009.048.0003
                     error: role.not.found
                     message: Role not found
+                User not found in the space:
+                  summary: User not found in the space
+                  value:
+                    code: 009.005.0001
+                    error: user.not.found
+                    message: User not found in the space
         '500':
           description: something went wrong
           content:
@@ -17928,7 +17944,9 @@ paths:
                       You have not enough rights to access/manipulate this
                       resource
         '404':
-          description: Organization not found | Given space not found | Role not found
+          description: >-
+            Organization not found | Given space not found | Role not found |
+            Team does not exist
           content:
             application/json:
               schema:
@@ -17952,6 +17970,12 @@ paths:
                     code: 009.048.0003
                     error: role.not.found
                     message: Role not found
+                Team does not exist:
+                  summary: Team does not exist
+                  value:
+                    code: 009.008.0001
+                    error: team.not.found
+                    message: Team does not exist
         '500':
           description: something went wrong
           content:
