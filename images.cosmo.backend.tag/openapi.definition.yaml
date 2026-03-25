@@ -100,6 +100,12 @@ components:
                     Maximum number of visits allowed for the share (only if it's
                     a public link share)
                   example: 100
+                deferred:
+                  type: boolean
+                  default: false
+                  description: >-
+                    If set to true, the share will only take effect after all
+                    its items are done encoding.
               required:
                 - name
                 - items
@@ -3012,6 +3018,11 @@ components:
           format: uuid
         name:
           type: string
+        waiting:
+          type: boolean
+          description: >-
+            Will be true only if the share was created as a deferred share and
+            its assets are not yet ready.
         creator:
           $ref: '#/components/schemas/ReducedUser'
         createDate:
@@ -3154,6 +3165,7 @@ components:
       required:
         - _id
         - name
+        - waiting
         - creator
         - createDate
         - permissions
@@ -11522,6 +11534,11 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  waiting:
+                    type: boolean
+                    description: >-
+                      Will be true only if the share was created as a deferred
+                      share and its assets are not yet ready.
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
@@ -11666,6 +11683,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - waiting
                   - creator
                   - createDate
         '400':
@@ -12069,6 +12087,11 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  waiting:
+                    type: boolean
+                    description: >-
+                      Will be true only if the share was created as a deferred
+                      share and its assets are not yet ready.
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
@@ -12171,6 +12194,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - waiting
                   - creator
                   - createDate
         '400':
@@ -12382,6 +12406,11 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  waiting:
+                    type: boolean
+                    description: >-
+                      Will be true only if the share was created as a deferred
+                      share and its assets are not yet ready.
                   creator:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
@@ -12484,6 +12513,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - waiting
                   - creator
                   - createDate
         '400':
@@ -13476,6 +13506,11 @@ paths:
                       format: uuid
                     name:
                       type: string
+                    waiting:
+                      type: boolean
+                      description: >-
+                        Will be true only if the share was created as a deferred
+                        share and its assets are not yet ready.
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
                     createDate:
@@ -13578,6 +13613,7 @@ paths:
                   required:
                     - _id
                     - name
+                    - waiting
                     - creator
                     - createDate
         '400':
@@ -13754,6 +13790,11 @@ paths:
                       format: uuid
                     name:
                       type: string
+                    waiting:
+                      type: boolean
+                      description: >-
+                        Will be true only if the share was created as a deferred
+                        share and its assets are not yet ready.
                     creator:
                       $ref: '#/components/schemas/ReducedUser'
                     createDate:
@@ -13856,6 +13897,7 @@ paths:
                   required:
                     - _id
                     - name
+                    - waiting
                     - creator
                     - createDate
         '400':
