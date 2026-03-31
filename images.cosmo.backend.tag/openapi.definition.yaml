@@ -1976,6 +1976,7 @@ components:
                     - FINISHED
                     - WAITING
                     - FAILED
+                    - POST_PROCESSING
                   description: Upload status of the asset
                   example: FINISHED
                 progress:
@@ -2272,6 +2273,7 @@ components:
                     - FINISHED
                     - WAITING
                     - FAILED
+                    - POST_PROCESSING
                   description: Upload status of the asset
                   example: FINISHED
                 progress:
@@ -2607,6 +2609,7 @@ components:
                 - FINISHED
                 - WAITING
                 - FAILED
+                - POST_PROCESSING
               description: Upload status of the asset
               example: FINISHED
             progress:
