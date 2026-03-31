@@ -5832,6 +5832,7 @@ components:
     OrganizationRole:
       type: string
       enum:
+        - MAYBE_GUEST
         - MEMBER
         - MANAGER
         - ADMIN
