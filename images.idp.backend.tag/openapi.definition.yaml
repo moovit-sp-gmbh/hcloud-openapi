@@ -183,6 +183,68 @@ components:
       description: DTO for patching message read status
       example:
         read: true
+    isScope:
+      type: string
+    CreateRedirectUrlParams:
+      type: object
+      properties:
+        response_type:
+          type: string
+          minLength: 1
+          description: >-
+            Type of authentication response requested (for Authorization Code
+            flow, use 'code')
+          example: code
+        client_id:
+          type: string
+          minLength: 1
+          description: Unique identifier of the client application making the request
+          example: hcloud-client-id-123
+        scope:
+          type: string
+          minLength: 1
+          description: >-
+            Space-separated list of scopes that the client is requesting access
+            to
+          example: openid profile email
+        state:
+          type: string
+          minLength: 1
+          description: >-
+            Opaque value used by the client to maintain state between the
+            request and callback, also used to prevent CSRF
+          example: af0ifjsldkj
+        redirect_uri:
+          type: string
+          format: uri
+          description: >-
+            URL where the response will be sent after successful authorization,
+            must match one of the pre-registered redirect URIs
+          example: https://app.hcloud.com/callback
+        code_challenge:
+          type: string
+          description: >-
+            PKCE code challenge derived from the code verifier to prevent
+            authorization code interception
+          example: E9MelAjY7_NI-z7i9WksDnuwALBs9T9DQvGvAJ_syWs
+        code_challenge_method:
+          type: string
+          description: Method used to derive the code challenge. Usually 'S256'
+          example: S256
+      required:
+        - response_type
+        - client_id
+        - scope
+        - state
+      description: Parameters required to generate an OAuth 2.0 authorization redirect URL
+      example:
+        response_type: code
+        client_id: hcloud-client-id-123
+        scope: openid profile
+        state: xyz789
+        redirect_uri: https://app.hcloud.com/callback
+        code_challenge: E9MelAjY7_NI-z7i9WksDnuwALBs9T9DQvGvAJ_syWs
+        code_challenge_method: S256
     OAuthAppCreateDto:
       type: object
       properties:
@@ -289,9 +351,12 @@ components:
       properties:
         secretName:
           type: string
+          minLength: 1
           maxLength: 255
-          pattern: ^[\w\-.]+$
-          description: Name of the new secret
+          pattern: ^[\w\-.]{1,255}$
+          description: >-
+            Name of the secret (only alphanumeric, underscores, hyphens and dots
+            are allowed; it should contain between 1 and 255 characters)
           example: default
       required:
         - secretName
@@ -1311,9 +1376,13 @@ components:
         password:
           type: string
           minLength: 8
-          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
-          description: Password of the user
-          example: Anewpassword!123
+          maxLength: 255
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,255}$
+          description: >-
+            Password of the user (only alphanumeric, underscores, hyphens, dots
+            and special characters are allowed; it should contain between 8 and
+            255 characters)
+          example: MySuperSecurePassword123!
         code:
           type: string
           format: uuid
@@ -1507,7 +1576,7 @@ components:
         new:
           type: string
           minLength: 8
-          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,255}$
           description: >-
             New password (must include uppercase, lowercase, number, and special
             character)
@@ -1541,8 +1610,6 @@ components:
           example: hmc@helmut.cloud
         password:
           type: string
-          minLength: 8
-          pattern: /^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$/
           description: Password of the user
           example: 123&/(Password
         token:
@@ -1589,8 +1656,12 @@ components:
         password:
           type: string
           minLength: 8
-          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
-          description: Password of the user
+          maxLength: 255
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,255}$
+          description: >-
+            Password of the user (only alphanumeric, underscores, hyphens, dots
+            and special characters are allowed; it should contain between 8 and
+            255 characters)
           example: MySuperSecurePassword123!
         company:
           type: string
@@ -1654,8 +1725,12 @@ components:
         password:
           type: string
           minLength: 8
-          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
-          description: Password of the user
+          maxLength: 255
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,255}$
+          description: >-
+            Password of the user (only alphanumeric, underscores, hyphens, dots
+            and special characters are allowed; it should contain between 8 and
+            255 characters)
           example: MySuperSecurePassword123!
         company:
           type: string
@@ -1742,9 +1817,9 @@ components:
           example: d6e65091-5810-4dc8-a321-9ea59f49e4fa
         newPassword:
           type: string
-          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,}$
+          pattern: ^(?=.*?[A-Z])(?=.*?[a-z])(?=.*?[0-9])(?=.*?[#?!@$%^&*-]).{8,255}$
           description: New password
-          example: Anewpassword!123
+          example: MySuperSecurePassword123!
         totpToken:
           type: string
           description: TOTP token. Required only if the user has 2FA enabled.
@@ -9560,6 +9635,12 @@ paths:
           required: false
           name: membersSample
           in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
       responses:
         '200':
           description: List of teams
@@ -9699,6 +9780,12 @@ paths:
           required: false
           name: page
           in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
       responses:
         '200':
           description: List of members
