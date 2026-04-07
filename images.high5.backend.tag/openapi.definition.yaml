@@ -7544,7 +7544,7 @@ paths:
                     error: database.not.found
                     message: Given database not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -7556,6 +7556,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
     delete:
       security:
         - bearerAuth:
@@ -7760,7 +7771,7 @@ paths:
                     error: database.not.found
                     message: Given database not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -7772,6 +7783,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/databases:
     post:
       security:
@@ -8187,7 +8209,7 @@ paths:
                     error: database.not.found
                     message: Given database not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -8199,6 +8221,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/events/{eventName}/streams/{streamId}/design:
     get:
       security:
@@ -9221,13 +9254,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/:key/search:
     post:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       summary: Search for items within a specified array
       tags:
         - Document.Array
@@ -9298,11 +9324,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -9323,9 +9344,7 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'query' parameter 'limit' | Failed to
-            validate 'query' parameter 'page' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName' | Failed to validate 'string' parameter 'key'
+            validate 'query' parameter 'page'
           content:
             application/json:
               schema:
@@ -9366,126 +9385,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -9501,13 +9400,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/push:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Add one or more elements to the end of an array
       tags:
         - Document.Array
@@ -9573,11 +9465,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -9595,11 +9482,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
-            Data type of the value does not match the existing documents data
-            type
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
           content:
             application/json:
               schema:
@@ -9633,28 +9517,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -9665,104 +9527,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -9778,13 +9542,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/unshift:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Add one or more elements to the beginning of an array
       tags:
         - Document.Array
@@ -9850,11 +9607,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -9872,11 +9624,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
-            Data type of the value does not match the existing documents data
-            type
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
           content:
             application/json:
               schema:
@@ -9910,28 +9659,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -9942,104 +9669,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -10055,13 +9684,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{index}:
     get:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       summary: Get element with specified index from the array
       tags:
         - Document.Array
@@ -10135,11 +9757,6 @@ paths:
           required: true
           name: index
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Item with the specified index
@@ -10152,10 +9769,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'index' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName' | Failed to validate 'string' parameter 'key' | Data type
-            of the value does not match the existing documents data type
+            validate 'path' parameter 'index' | Data type of the value does not
+            match the existing documents data type
           content:
             application/json:
               schema:
@@ -10196,28 +9811,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'index' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -10228,104 +9821,13 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found | Given array item not found
+          description: Given array item not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
                 Given array item not found:
                   summary: Given array item not found
                   value:
@@ -10346,13 +9848,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     delete:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Delete element with specified index from the array
       tags:
         - Document.Array
@@ -10426,11 +9921,6 @@ paths:
           required: true
           name: index
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No content
@@ -10439,10 +9929,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'index' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName' | Failed to validate 'string' parameter 'key' | Data type
-            of the value does not match the existing documents data type
+            validate 'path' parameter 'index' | Data type of the value does not
+            match the existing documents data type
           content:
             application/json:
               schema:
@@ -10483,28 +9971,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'index' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -10515,104 +9981,13 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found | Given array item not found
+          description: Given array item not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
                 Given array item not found:
                   summary: Given array item not found
                   value:
@@ -10634,13 +10009,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/search:
     post:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       summary: Search for documents by database name and search filter
       tags:
         - Document
@@ -10711,11 +10079,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -10736,9 +10099,7 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'query' parameter 'limit' | Failed to
-            validate 'query' parameter 'page' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName'
+            validate 'query' parameter 'page'
           content:
             application/json:
               schema:
@@ -10779,109 +10140,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
         '500':
           description: something went wrong
           content:
@@ -10897,13 +10155,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}:
     get:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       summary: Get document by it's key
       tags:
         - Document
@@ -10969,11 +10220,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Document object
@@ -10985,9 +10231,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            'dbName' | Failed to validate 'path' parameter 'key'
           content:
             application/json:
               schema:
@@ -11021,126 +10265,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -11155,13 +10279,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     put:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Patch a document
       tags:
         - Document
@@ -11227,11 +10344,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -11249,11 +10361,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
-            Data type of the value does not match the existing documents data
-            type
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
           content:
             application/json:
               schema:
@@ -11287,28 +10396,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -11319,104 +10406,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -11431,13 +10420,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     delete:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Delete a document from the database
       tags:
         - Document
@@ -11503,11 +10485,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No content
@@ -11515,9 +10492,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key'
+            'dbName' | Failed to validate 'path' parameter 'key'
           content:
             application/json:
               schema:
@@ -11551,126 +10526,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -11686,13 +10541,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents:
     post:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Add a new document to the database
       tags:
         - Document
@@ -11745,11 +10593,6 @@ paths:
           required: true
           name: dbName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -11767,8 +10610,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'spaceName' | Failed
-            to validate 'string' parameter 'dbName'
+            'dbName'
           content:
             application/json:
               schema:
@@ -11795,109 +10637,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'dbName' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
         '409':
           description: Document with given key already exists within a space
           content:
@@ -11926,13 +10665,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/inc:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Increment the numeric value stored in the document by one
       tags:
         - Document.Number
@@ -11998,11 +10730,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Updated document
@@ -12014,11 +10741,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
-            Data type of the value does not match the existing documents data
-            type
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
           content:
             application/json:
               schema:
@@ -12052,28 +10776,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -12084,104 +10786,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -12197,13 +10801,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/inc/{value}:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Increase the numeric value stored in the document by custom value
       tags:
         - Document.Number
@@ -12277,11 +10874,6 @@ paths:
           required: true
           name: value
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Updated document
@@ -12294,10 +10886,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'value' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName' | Failed to validate 'string' parameter 'key' | Data type
-            of the value does not match the existing documents data type
+            validate 'path' parameter 'value' | Data type of the value does not
+            match the existing documents data type
           content:
             application/json:
               schema:
@@ -12338,28 +10928,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'value' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -12370,104 +10938,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -12483,13 +10953,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/dec:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Decrement the numeric value stored in the document by one
       tags:
         - Document.Number
@@ -12555,11 +11018,6 @@ paths:
           required: true
           name: key
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Updated document
@@ -12571,11 +11029,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'spaceName' | Failed to validate 'string'
-            parameter 'dbName' | Failed to validate 'string' parameter 'key' |
-            Data type of the value does not match the existing documents data
-            type
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
           content:
             application/json:
               schema:
@@ -12609,28 +11064,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'key' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -12641,104 +11074,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -12754,13 +11089,6 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/dec/{value}:
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:write
-        - basicAuth:
-            - high5:space:write
-        - patAuth:
-            - high5:space:write
       summary: Subtract the numeric value stored in the document by custom value
       tags:
         - Document.Number
@@ -12834,11 +11162,6 @@ paths:
           required: true
           name: value
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Updated document
@@ -12851,10 +11174,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'dbName' | Failed to validate 'path' parameter 'key' | Failed to
-            validate 'path' parameter 'value' | Failed to validate 'path'
-            parameter 'spaceName' | Failed to validate 'string' parameter
-            'dbName' | Failed to validate 'string' parameter 'key' | Data type
-            of the value does not match the existing documents data type
+            validate 'path' parameter 'value' | Data type of the value does not
+            match the existing documents data type
           content:
             application/json:
               schema:
@@ -12895,28 +11216,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'value' - {error}
-                Failed to validate 'string' parameter 'dbName':
-                  summary: Failed to validate 'string' parameter 'dbName'
-                  description: >-
-                    Failed to validate 'string' parameter 'dbName' - Database
-                    name must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'dbName' - Database
-                      name must be provided
-                Failed to validate 'string' parameter 'key':
-                  summary: Failed to validate 'string' parameter 'key'
-                  description: >-
-                    Failed to validate 'string' parameter 'key' - Document key
-                    must be provided
-                  value:
-                    code: 002.000.0003
-                    error: invalid.parameter
-                    message: >-
-                      Failed to validate 'string' parameter 'key' - Document key
-                      must be provided
                 Data type of the value does not match the existing documents data type:
                   summary: >-
                     Data type of the value does not match the existing documents
@@ -12927,104 +11226,6 @@ paths:
                     message: >-
                       Data type of the value does not match the existing
                       documents data type
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
-            | You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:write'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:write'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
-        '404':
-          description: >-
-            Organization not found | Given space not found | Given database not
-            found | Given document not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 002.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Given space not found:
-                  summary: Given space not found
-                  value:
-                    code: 002.010.0001
-                    error: space.not.found
-                    message: Given space not found
-                Given database not found:
-                  summary: Given database not found
-                  value:
-                    code: 002.035.0001
-                    error: database.not.found
-                    message: Given database not found
-                Given document not found:
-                  summary: Given document not found
-                  value:
-                    code: 002.036.0002
-                    error: document.not.found
-                    message: Given document not found
         '500':
           description: something went wrong
           content:
@@ -17754,7 +15955,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -17766,6 +15967,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
     put:
       security:
         - bearerAuth:
@@ -17986,7 +16198,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -17998,6 +16210,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
     delete:
       security:
         - bearerAuth:
@@ -18186,7 +16409,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -18198,6 +16421,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/jobs/search:
     post:
       security:
@@ -18874,7 +17108,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -18886,6 +17120,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/jobs/{jobId}/enabled:
     patch:
       security:
@@ -19107,7 +17352,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -19119,6 +17364,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/jobs/{jobId}/next:
     get:
       security:
@@ -19336,7 +17592,9 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong | Failed to parse converted quartz expression
+          description: >-
+            something went wrong | Internal system failur | Failed to parse
+            converted quartz expression
           content:
             application/json:
               schema:
@@ -19348,6 +17606,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
                 Failed to parse converted quartz expression:
                   summary: Failed to parse converted quartz expression
                   value:
@@ -19664,7 +17933,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -19676,6 +17945,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/spaces/{spaceName}/jobs/{jobId}/logs/{logId}:
     get:
       security:
@@ -19885,7 +18165,7 @@ paths:
                     error: cronjob.not.found
                     message: Given cronjob not found
         '500':
-          description: something went wrong
+          description: something went wrong | Internal system failur
           content:
             application/json:
               schema:
@@ -19897,6 +18177,17 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+                Internal system failur:
+                  summary: Internal system failur
+                  description: >-
+                    Internal system failure: failed to complete the operation
+                    due to an unhandled exception
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: >-
+                      Internal system failure: failed to complete the operation
+                      due to an unhandled exception
   /v1/org/{orgName}/join/token:
     get:
       security:
