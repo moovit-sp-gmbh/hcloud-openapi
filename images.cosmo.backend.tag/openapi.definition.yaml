@@ -2209,10 +2209,10 @@ components:
           type: number
           example: 29.56
         tcIn:
-          type: string
-          example: '0.000000'
+          type: number
+          example: 36000.002
         tcOut:
-          type: string
+          type: number
         noOfFrames:
           type: number
           example: 739
@@ -2521,8 +2521,8 @@ components:
                 pixelFormat: yuv420p
                 aspectRatio: '16:9'
                 fieldOrder: progressive
-                tcIn: '00:00:00:00'
-                tcOut: '00:00:29:14'
+                tcIn: 0
+                tcOut: 29.14
                 formatLongName: QuickTime
     AssetPermissionsDto:
       type: object
