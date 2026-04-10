@@ -364,6 +364,20 @@ components:
       required:
         - high5_spaceName
         - executionTarget
+    SubscribeDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            type: string
+            enum:
+              - status
+              - tags
+              - comments
+      description: >-
+        Subscription configuration. If filters is omitted or empty, all
+        notification types will be sent.
     AssetPatchLocationDto:
       type: object
       properties:
@@ -8261,6 +8275,12 @@ paths:
           required: true
           name: spaceName
           in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribeDto'
       responses:
         '204':
           description: No content
@@ -8570,6 +8590,12 @@ paths:
           required: true
           name: assetId
           in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SubscribeDto'
       responses:
         '204':
           description: No content
