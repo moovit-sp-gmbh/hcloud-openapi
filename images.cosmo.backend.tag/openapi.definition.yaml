@@ -2887,6 +2887,18 @@ components:
               - commentRef
               - assetId
           description: Replies to this comment
+        completed:
+          type: boolean
+          description: Whether the task as been completed or not
+        completedAt:
+          type: number
+          minimum: 0
+          exclusiveMinimum: true
+          description: Timestamp at which the task as completed.
+        completedBy:
+          allOf:
+            - $ref: '#/components/schemas/ReducedUser'
+            - description: User who completed the task.
       required:
         - _id
         - text
@@ -2894,6 +2906,7 @@ components:
         - creator
         - commentType
         - assetId
+        - completed
     CommentCreateDto:
       type: object
       properties:
@@ -2952,6 +2965,10 @@ components:
     CommentEditDto:
       type: object
       properties:
+        completed:
+          type: boolean
+          description: Set the comment to completed/uncompleted.
+          example: true
         text:
           type: string
           maxLength: 2048
