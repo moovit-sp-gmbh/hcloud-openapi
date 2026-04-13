@@ -2405,6 +2405,16 @@ components:
                     properties:
                       status:
                         type: string
+                      statusAuthor:
+                        allOf:
+                          - $ref: '#/components/schemas/ReducedUser'
+                          - description: User who last set the status
+                      canWriteStatus:
+                        type: boolean
+                        description: >-
+                          Whether the current user can set or change the status
+                          in this namespace
+                        example: true
                       metadata:
                         type: object
                         additionalProperties:
@@ -2423,10 +2433,12 @@ components:
                           sequenceId: 32178932198
                     required:
                       - status
+                      - canWriteStatus
                   description: Information about the asset across namespaces.
                   example:
                     rush:
                       status: approved
+                      canWriteStatus: true
                 permissions:
                   type: array
                   items:
