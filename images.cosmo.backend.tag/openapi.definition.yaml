@@ -2013,6 +2013,12 @@ components:
                     According to status the upload or transcoding progress of
                     the asset
                   example: 75
+                queuePosition:
+                  type: number
+                  description: 1-indexed position in the transcoding queue
+                queueTotal:
+                  type: number
+                  description: Total number of assets currently in the transcoding queue
                 assetType:
                   type: string
                   enum:
@@ -2310,6 +2316,12 @@ components:
                     According to status the upload or transcoding progress of
                     the asset
                   example: 75
+                queuePosition:
+                  type: number
+                  description: 1-indexed position in the transcoding queue
+                queueTotal:
+                  type: number
+                  description: Total number of assets currently in the transcoding queue
                 assetType:
                   type: string
                   enum:
@@ -2658,6 +2670,12 @@ components:
                 According to status the upload or transcoding progress of the
                 asset
               example: 75
+            queuePosition:
+              type: number
+              description: 1-indexed position in the transcoding queue
+            queueTotal:
+              type: number
+              description: Total number of assets currently in the transcoding queue
             assetType:
               type: string
               enum:
