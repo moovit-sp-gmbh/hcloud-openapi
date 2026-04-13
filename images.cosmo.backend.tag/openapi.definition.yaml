@@ -11003,6 +11003,29 @@ paths:
           required: false
           name: replySample
           in: query
+        - schema:
+            type: string
+            enum:
+              - timecode
+              - creator
+              - createDate
+            default: createDate
+            description: Field to sort comments by
+            example: createDate
+          required: false
+          name: sort_field
+          in: query
+        - schema:
+            type: string
+            enum:
+              - asc
+              - desc
+            default: desc
+            description: Sort direction for comments
+            example: desc
+          required: false
+          name: sort_direction
+          in: query
       responses:
         '200':
           description: Comments of an entity
@@ -11019,7 +11042,9 @@ paths:
             'namespaceName' | Failed to validate 'query' parameter 'refId' |
             Failed to validate 'query' parameter 'limit' | Failed to validate
             'query' parameter 'page' | Failed to validate 'query' parameter
-            'annotation' | Failed to validate 'query' parameter 'replySample'
+            'annotation' | Failed to validate 'query' parameter 'replySample' |
+            Failed to validate 'query' parameter 'sort_field' | Failed to
+            validate 'query' parameter 'sort_direction'
           content:
             application/json:
               schema:
@@ -11088,6 +11113,26 @@ paths:
                     error: invalid.parameter
                     message: >-
                       Failed to validate 'query' parameter 'replySample' -
+                      {error}
+                Failed to validate 'query' parameter 'sort_field':
+                  summary: Failed to validate 'query' parameter 'sort_field'
+                  description: Failed to validate 'query' parameter 'sort_field' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'sort_field' -
+                      {error}
+                Failed to validate 'query' parameter 'sort_direction':
+                  summary: Failed to validate 'query' parameter 'sort_direction'
+                  description: >-
+                    Failed to validate 'query' parameter 'sort_direction' -
+                    {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'sort_direction' -
                       {error}
         '401':
           description: >-
