@@ -3173,9 +3173,36 @@ components:
       required:
         - enabled
       description: Enable or disable a job
+    Header:
+      type: object
+      properties:
+        key:
+          type: string
+          description: Name of the HTTP header
+          example: X-HCloud-Correlation-ID
+        value:
+          type: string
+          description: Value assigned to the HTTP header
+          example: 0199ce25-f8ab-72bf-9471-3c9e547c6ba0
+      required:
+        - key
+        - value
+      description: Single HTTP request header represented as key-value pair
     JobLogCreateDto:
       type: object
       properties:
+        statusCode:
+          type: integer
+          description: Status code of the request triggered by the cronjob
+          example: 200
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+          description: Headers of the response to the triggered cronjob request
+          example:
+            - key: Content-Type
+              value: application/json
         payload:
           type: string
           description: Payload of the response to the triggered cronjob request
@@ -3189,8 +3216,15 @@ components:
             An internal server error occurred while processing the cronjob
             execution
       required:
+        - statusCode
         - payload
       description: Data for logging the result of a triggered cronjob request
+      example:
+        statusCode: 200
+        headers:
+          - key: Content-Type
+            value: application/json
+        payload: '{"success":true,"message":"Job executed"}'
     JoinTokenPostDto:
       type: object
       properties:
@@ -5472,6 +5506,14 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedSpace'
             - description: Space the cronjob belongs to
+        statusCode:
+          type: number
+          description: Status code of the cronjob request result
+        headers:
+          type: array
+          items:
+            $ref: '#/components/schemas/Header'
+          description: Optional headers for the HTTP requests triggered by the cronjob
         payload:
           type: string
           description: Optional payload of the HTTP request
@@ -5493,6 +5535,7 @@ components:
         - organization
         - creator
         - space
+        - statusCode
         - createDate
       description: Simplified cron job log entry
     JoinTokenDto:
