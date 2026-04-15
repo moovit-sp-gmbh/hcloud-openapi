@@ -3263,6 +3263,7 @@ components:
           enum:
             - OPENED
             - SENT
+            - CLICKED
             - FAILED
             - BOUNCED
             - BLOCKED
