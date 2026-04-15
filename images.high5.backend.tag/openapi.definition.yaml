@@ -5079,7 +5079,6 @@ components:
           format: hexadecimal
           description: ID of the execution
       required:
-        - design
         - payload
         - dry
         - waveEngine
@@ -13251,6 +13250,15 @@ paths:
           in: path
         - schema:
             type: string
+            pattern: ^[a-fA-F0-9]{64}$
+            description: >-
+              SHA-256 hash of the client's cached design, used to determine if a
+              fresh download is required
+          required: false
+          name: hash
+          in: query
+        - schema:
+            type: string
           required: true
           name: authorization
           in: header
@@ -13266,7 +13274,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'streamId' | Failed to validate 'path' parameter 'secret' | Failed
-            to validate 'path' parameter 'spaceName'
+            to validate 'query' parameter 'hash' | Failed to validate 'path'
+            parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -13300,6 +13309,13 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'secret' - {error}
+                Failed to validate 'query' parameter 'hash':
+                  summary: Failed to validate 'query' parameter 'hash'
+                  description: Failed to validate 'query' parameter 'hash' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'hash' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
