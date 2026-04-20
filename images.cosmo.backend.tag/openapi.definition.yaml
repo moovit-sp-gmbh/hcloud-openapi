@@ -323,6 +323,20 @@ components:
           description: Emails addresses to resend to
       required:
         - emails
+    SharePublicLinkClickDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email addresses to send the share link to
+        shareIdHMAC:
+          type: string
+          format: Base64 URL
+          description: HMAC of the shareId provided in the public link
+      required:
+        - email
+        - shareIdHMAC
     SpaceCreateDto:
       type: object
       properties:
@@ -13929,6 +13943,138 @@ paths:
                     code: 009.007.0001
                     error: organization.not.found
                     message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Share not found:
+                  summary: Share not found
+                  value:
+                    code: 009.045.0001
+                    error: share.not.found
+                    message: Share not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/shares/{shareId}/email/publicLink:
+    post:
+      description: Sends a share email to the users after the public link has been clicked.
+      summary: Send the share email after public link got clicked
+      tags:
+        - Share
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: shareId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              type: object
+              properties:
+                email:
+                  type: string
+                  format: email
+                  description: Email addresses to send the share link to
+                shareIdHMAC:
+                  type: string
+                  format: Base64 URL
+                  description: HMAC of the shareId provided in the public link
+              required:
+                - email
+                - shareIdHMAC
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'shareId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'shareId':
+                  summary: Failed to validate 'path' parameter 'shareId'
+                  description: Failed to validate 'path' parameter 'shareId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'shareId' - {error}
+        '404':
+          description: Given space not found | Share not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
                 Given space not found:
                   summary: Given space not found
                   value:
