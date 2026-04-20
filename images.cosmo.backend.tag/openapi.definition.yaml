@@ -3256,6 +3256,14 @@ components:
           description: List of asset IDs that the share members have access to.
           example:
             - ae13321a-522d-48da-9733-27c97bcab124
+        thumbnails:
+          type: array
+          items:
+            type: string
+          description: List of thumbnail urls of maximum four assets.
+          example:
+            - >-
+              https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
       required:
         - _id
         - name
