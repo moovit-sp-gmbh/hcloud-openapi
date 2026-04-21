@@ -3251,19 +3251,44 @@ components:
         items:
           type: array
           items:
-            type: string
-            format: uuid
-          description: List of asset IDs that the share members have access to.
-          example:
-            - ae13321a-522d-48da-9733-27c97bcab124
-        thumbnails:
-          type: array
-          items:
-            type: string
-          description: List of thumbnail urls of maximum four assets.
-          example:
-            - >-
-              https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+            oneOf:
+              - type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - FOLDER
+                required:
+                  - _id
+                  - name
+                  - type
+              - type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - MEDIA_ASSET
+                  thumbnail:
+                    type: string
+                    description: Thumbnail URL
+                    example: >-
+                      https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                required:
+                  - _id
+                  - name
+                  - type
+                  - thumbnail
+          description: List of assets and folders in the share.
       required:
         - _id
         - name
@@ -12096,16 +12121,49 @@ paths:
                   items:
                     type: array
                     items:
-                      type: string
-                      format: uuid
-                    description: List of asset IDs that the share members have access to.
-                    example: &ref_19
-                      - ae13321a-522d-48da-9733-27c97bcab124
+                      oneOf:
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - FOLDER
+                          required:
+                            - _id
+                            - name
+                            - type
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - MEDIA_ASSET
+                            thumbnail:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnail
+                    description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
                     items:
                       type: string
-                      enum: &ref_20
+                      enum: &ref_19
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -12115,13 +12173,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_21
+                    example: &ref_20
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_22
+                      enum: &ref_21
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -12136,7 +12194,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_23
+                    example: &ref_22
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -12144,7 +12202,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_24
+                        enum: &ref_23
                           - BASE
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
@@ -12157,7 +12215,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_25
+                    example: &ref_24
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -12166,7 +12224,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_26
+                        enum: &ref_25
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -12181,7 +12239,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_27
+                    example: &ref_26
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -12650,51 +12708,85 @@ paths:
                   items:
                     type: array
                     items:
-                      type: string
-                      format: uuid
-                    description: List of asset IDs that the share members have access to.
-                    example: *ref_19
+                      oneOf:
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - FOLDER
+                          required:
+                            - _id
+                            - name
+                            - type
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - MEDIA_ASSET
+                            thumbnail:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnail
+                    description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
                     items:
                       type: string
-                      enum: *ref_20
+                      enum: *ref_19
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_21
+                    example: *ref_20
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_22
+                      enum: *ref_21
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_23
+                    example: *ref_22
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_24
+                        enum: *ref_23
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_25
+                    example: *ref_24
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_26
+                        enum: *ref_25
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_27
+                    example: *ref_26
                   users:
                     type: array
                     items:
@@ -12969,51 +13061,85 @@ paths:
                   items:
                     type: array
                     items:
-                      type: string
-                      format: uuid
-                    description: List of asset IDs that the share members have access to.
-                    example: *ref_19
+                      oneOf:
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - FOLDER
+                          required:
+                            - _id
+                            - name
+                            - type
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - MEDIA_ASSET
+                            thumbnail:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnail
+                    description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
                     items:
                       type: string
-                      enum: *ref_20
+                      enum: *ref_19
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_21
+                    example: *ref_20
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_22
+                      enum: *ref_21
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_23
+                    example: *ref_22
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_24
+                        enum: *ref_23
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_25
+                    example: *ref_24
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_26
+                        enum: *ref_25
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_27
+                    example: *ref_26
                   users:
                     type: array
                     items:
@@ -14207,51 +14333,85 @@ paths:
                     items:
                       type: array
                       items:
-                        type: string
-                        format: uuid
-                      description: List of asset IDs that the share members have access to.
-                      example: *ref_19
+                        oneOf:
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - FOLDER
+                            required:
+                              - _id
+                              - name
+                              - type
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - MEDIA_ASSET
+                              thumbnail:
+                                type: string
+                                description: Thumbnail URL
+                                example: >-
+                                  https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                            required:
+                              - _id
+                              - name
+                              - type
+                              - thumbnail
+                      description: List of assets and folders in the share.
                     permissionGroups:
                       type: array
                       items:
                         type: string
-                        enum: *ref_20
+                        enum: *ref_19
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_21
+                      example: *ref_20
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_22
+                        enum: *ref_21
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_23
+                      example: *ref_22
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_24
+                          enum: *ref_23
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_25
+                      example: *ref_24
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_26
+                          enum: *ref_25
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_27
+                      example: *ref_26
                     users:
                       type: array
                       items:
@@ -14497,51 +14657,85 @@ paths:
                     items:
                       type: array
                       items:
-                        type: string
-                        format: uuid
-                      description: List of asset IDs that the share members have access to.
-                      example: *ref_19
+                        oneOf:
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - FOLDER
+                            required:
+                              - _id
+                              - name
+                              - type
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - MEDIA_ASSET
+                              thumbnail:
+                                type: string
+                                description: Thumbnail URL
+                                example: >-
+                                  https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                            required:
+                              - _id
+                              - name
+                              - type
+                              - thumbnail
+                      description: List of assets and folders in the share.
                     permissionGroups:
                       type: array
                       items:
                         type: string
-                        enum: *ref_20
+                        enum: *ref_19
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_21
+                      example: *ref_20
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_22
+                        enum: *ref_21
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_23
+                      example: *ref_22
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_24
+                          enum: *ref_23
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_25
+                      example: *ref_24
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_26
+                          enum: *ref_25
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_27
+                      example: *ref_26
                     users:
                       type: array
                       items:
@@ -16946,7 +17140,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_28
+                              enum: &ref_27
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -16998,7 +17192,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_29
+                            example: &ref_28
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -17553,9 +17747,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_28
+                            enum: *ref_27
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_29
+                          example: *ref_28
                       required:
                         - entity
                         - permissions
