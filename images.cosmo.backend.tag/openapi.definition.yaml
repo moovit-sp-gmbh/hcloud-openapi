@@ -3278,7 +3278,7 @@ components:
                     type: string
                     enum:
                       - MEDIA_ASSET
-                  thumbnail:
+                  thumbnailUrl:
                     type: string
                     description: Thumbnail URL
                     example: >-
@@ -3287,7 +3287,7 @@ components:
                   - _id
                   - name
                   - type
-                  - thumbnail
+                  - thumbnailUrl
           description: List of assets and folders in the share.
       required:
         - _id
@@ -12148,7 +12148,7 @@ paths:
                               type: string
                               enum:
                                 - MEDIA_ASSET
-                            thumbnail:
+                            thumbnailUrl:
                               type: string
                               description: Thumbnail URL
                               example: >-
@@ -12157,7 +12157,7 @@ paths:
                             - _id
                             - name
                             - type
-                            - thumbnail
+                            - thumbnailUrl
                     description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
@@ -12735,7 +12735,7 @@ paths:
                               type: string
                               enum:
                                 - MEDIA_ASSET
-                            thumbnail:
+                            thumbnailUrl:
                               type: string
                               description: Thumbnail URL
                               example: >-
@@ -12744,7 +12744,7 @@ paths:
                             - _id
                             - name
                             - type
-                            - thumbnail
+                            - thumbnailUrl
                     description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
@@ -13088,7 +13088,7 @@ paths:
                               type: string
                               enum:
                                 - MEDIA_ASSET
-                            thumbnail:
+                            thumbnailUrl:
                               type: string
                               description: Thumbnail URL
                               example: >-
@@ -13097,7 +13097,7 @@ paths:
                             - _id
                             - name
                             - type
-                            - thumbnail
+                            - thumbnailUrl
                     description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
@@ -14360,7 +14360,7 @@ paths:
                                 type: string
                                 enum:
                                   - MEDIA_ASSET
-                              thumbnail:
+                              thumbnailUrl:
                                 type: string
                                 description: Thumbnail URL
                                 example: >-
@@ -14369,7 +14369,7 @@ paths:
                               - _id
                               - name
                               - type
-                              - thumbnail
+                              - thumbnailUrl
                       description: List of assets and folders in the share.
                     permissionGroups:
                       type: array
@@ -14684,7 +14684,7 @@ paths:
                                 type: string
                                 enum:
                                   - MEDIA_ASSET
-                              thumbnail:
+                              thumbnailUrl:
                                 type: string
                                 description: Thumbnail URL
                                 example: >-
@@ -14693,7 +14693,7 @@ paths:
                               - _id
                               - name
                               - type
-                              - thumbnail
+                              - thumbnailUrl
                       description: List of assets and folders in the share.
                     permissionGroups:
                       type: array
