@@ -213,16 +213,29 @@ components:
                   type: string
                   description: Share name
                 password:
-                  type: string
-                  description: Share password
-                  example: super-safe
+                  anyOf:
+                    - type: string
+                      description: Share password
+                      example: super-safe
+                    - type: object
+                      nullable: true
+                      enum:
+                        - null
+                    - nullable: true
+                  description: Share password. Set to null to remove the password
                 expires:
-                  type: number
-                  minimum: 0
-                  exclusiveMinimum: true
+                  anyOf:
+                    - type: number
+                      minimum: 0
+                      exclusiveMinimum: true
+                    - type: object
+                      nullable: true
+                      enum:
+                        - null
+                    - nullable: true
                   description: >-
                     UTC timestamp in milliseconds marking when the share should
-                    expire
+                    expire. Set to null to remove the expiration
                   example: 1752057295637
                 items:
                   type: array
