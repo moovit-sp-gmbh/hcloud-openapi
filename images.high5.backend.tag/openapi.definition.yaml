@@ -4418,7 +4418,7 @@ components:
         hash:
           type: string
           description: Hashed version of the key used for identification and matching
-          example: hcloud_38a0d5990a19a9d2143ca97334b0b616aa84ff7dd2f196d5
+          example: hlmc_f_38a0d5990a19a9d2143ca97334b0b616aa84ff7dd2f196d5
         databaseId:
           type: string
           format: hexadecimal
@@ -4465,7 +4465,7 @@ components:
         _id: 71f32d052ed0590e5d580ca1
         name: full-access-key
         permission: write
-        hash: hcloud_38a0d5990a19a9d2143ca97334b0b616aa84ff7dd2f196d5
+        hash: hlmc_f_38a0d5990a19a9d2143ca97334b0b616aa84ff7dd2f196d5
         databaseId: 913bd2c69777f03a8890db8c
         spaceId: 1f53d2c69777f03a88908513
         organizationId: 49d4d2c69777f03a88905629
