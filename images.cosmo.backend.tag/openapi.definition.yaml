@@ -2970,6 +2970,13 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedUser'
             - description: User who completed the task.
+        visibility:
+          type: string
+          enum:
+            - internal
+            - external
+          description: Visibility of the comment. Only present on parent comments.
+          example: internal
       required:
         - _id
         - text
@@ -3030,6 +3037,15 @@ components:
           example: &ref_16
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
+        visibility:
+          type: string
+          enum:
+            - internal
+            - external
+          description: >-
+            Visibility of the comment. Internal comments are only visible to org
+            members.
+          example: internal
       required:
         - text
         - refId
@@ -3080,6 +3096,15 @@ components:
             type: string
           description: Array of mentioned team ids
           example: *ref_16
+        visibility:
+          type: string
+          enum:
+            - internal
+            - external
+          description: >-
+            Visibility of the comment. Internal comments are only visible to org
+            members.
+          example: internal
       required:
         - text
     DeleteCommentsDto:
