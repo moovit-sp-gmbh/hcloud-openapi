@@ -16865,7 +16865,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | A permission was assigned to an
-            entity that does not match the permission category. {{name}
+            entity that does not match the permission category. {{name}}
           content:
             application/json:
               schema:
@@ -16885,10 +16885,10 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-                A permission was assigned to an entity that does not match the permission category. {{name}:
+                A permission was assigned to an entity that does not match the permission category. {{name}}:
                   summary: >-
                     A permission was assigned to an entity that does not match
-                    the permission category. {{name}
+                    the permission category. {{name}}
                   description: >-
                     A permission was assigned to an entity that does not match
                     the permission category. {{name}}: {{incoming}} assigned to
@@ -17477,7 +17477,7 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'roleId' | A permission was assigned to an entity that does not
-            match the permission category. {{name}
+            match the permission category. {{name}}
           content:
             application/json:
               schema:
@@ -17504,10 +17504,10 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'roleId' - {error}
-                A permission was assigned to an entity that does not match the permission category. {{name}:
+                A permission was assigned to an entity that does not match the permission category. {{name}}:
                   summary: >-
                     A permission was assigned to an entity that does not match
-                    the permission category. {{name}
+                    the permission category. {{name}}
                   description: >-
                     A permission was assigned to an entity that does not match
                     the permission category. {{name}}: {{incoming}} assigned to
