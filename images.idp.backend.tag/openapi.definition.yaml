@@ -2776,6 +2776,185 @@ components:
         scopes:
           - cosmo:space:delete
         app: *ref_0
+    DiscoveryDto:
+      type: object
+      properties:
+        issuer:
+          type: string
+          format: uri
+          description: >-
+            Authorization server's unique issuer identifier, represented as an
+            HTTPS URL without query or fragment components, used to locate
+            metadata and prevent mix-up attacks
+          example: https://eu-dev-1.app.helmut.cloud
+        authorization_endpoint:
+          type: string
+          format: uri
+          description: URL of the authorization server's authorization endpoint
+          example: >-
+            https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/authorize
+        token_endpoint:
+          type: string
+          format: uri
+          description: URL of the authorization server's token endpoint
+          example: >-
+            https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/access_token
+        device_authorization_endpoint:
+          type: string
+          format: uri
+          description: URL of the authorization server's device authorization endpoint
+          example: >-
+            https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/device/authorize
+        device_token_endpoint:
+          type: string
+          format: uri
+          description: URL of the authorization server's device token endpoint
+          example: >-
+            https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/device/access_token
+        jwks_uri:
+          type: string
+          format: uri
+          description: URL of the authorization server's JSON Web Key Set (JWKS) document
+          example: >-
+            https://eu-dev-1.app.helmut.cloud/api/account/v1/.well-known/jwks.json
+        userinfo_endpoint:
+          type: string
+          format: uri
+          description: URL of the OpenID Connect UserInfo endpoint
+          example: https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/info
+        http_logout_supported:
+          type: boolean
+          description: >-
+            Boolean value specifying whether the authorization server supports
+            HTTP-based logout
+          example: true
+        end_session_endpoint:
+          type: string
+          format: uri
+          description: >-
+            URL of the authorization server's endpoint that initiates logout of
+            the end-user
+          example: https://eu-dev-1.app.helmut.cloud/api/account/v1/user/sessions
+        scopes_supported:
+          type: array
+          items:
+            type: string
+          description: >-
+            List of the OAuth 2.0 'scope` values that this authorization server
+            supports
+          example:
+            - openid
+            - profile
+            - email
+            - offline_access
+        response_types_supported:
+          type: array
+          items:
+            type: string
+          description: >-
+            List of the OAuth 2.0 response_type values that this authorization
+            server supports
+          example:
+            - code
+            - token
+            - id_token
+        grant_types_supported:
+          type: array
+          items:
+            type: string
+          default:
+            - authorization_code
+            - refresh_token
+          description: >-
+            List of the OAuth 2.0 grant type values that this authorization
+            server supports
+          example:
+            - authorization_code
+            - refresh_token
+            - urn:ietf:params:oauth:grant-type:device_code
+        token_endpoint_auth_methods_supported:
+          type: array
+          items:
+            type: string
+          description: >-
+            List of client authentication methods supported by this token
+            endpoint
+          example:
+            - client_secret_basic
+            - client_secret_post
+        token_endpoint_auth_signing_alg_values_supported:
+          type: array
+          items:
+            type: string
+          description: >-
+            List of the JWS signing algorithms supported by the token endpoint
+            for the signature on the JWT used to authenticate the client
+          example:
+            - RS256
+            - ES256
+        service_documentation:
+          type: string
+          format: uri
+          description: >-
+            URL of a page containing human-readable information that developers
+            might want or need to know when using the authorization server
+          example: https://docs.helmut.cloud/api/auth
+        ui_locales_supported:
+          type: array
+          items:
+            type: string
+          description: >-
+            Languages and scripts supported for the user interface, represented
+            as BCP47 language tag values
+          example:
+            - en-US
+            - de-DE
+      required:
+        - issuer
+        - authorization_endpoint
+        - token_endpoint
+        - device_authorization_endpoint
+        - device_token_endpoint
+        - http_logout_supported
+        - scopes_supported
+        - response_types_supported
+        - token_endpoint_auth_methods_supported
+        - token_endpoint_auth_signing_alg_values_supported
+        - service_documentation
+        - ui_locales_supported
+      description: >-
+        OAuth 2.0 Authorization Server Metadata response, containing endpoint
+        locations and server capabilities as defined in RFC 8414
+      example:
+        issuer: https://eu-dev-1.app.helmut.cloud
+        authorization_endpoint: https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/authorize
+        token_endpoint: >-
+          https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/access_token
+        device_authorization_endpoint: >-
+          https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/device/authorize
+        device_token_endpoint: >-
+          https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/device/access_token
+        jwks_uri: https://eu-dev-1.app.helmut.cloud/api/account/v1/.well-known/jwks.json
+        userinfo_endpoint: https://eu-dev-1.app.helmut.cloud/api/account/v1/login/oauth/info
+        http_logout_supported: true
+        end_session_endpoint: https://eu-dev-1.app.helmut.cloud/api/account/v1/user/sessions
+        scopes_supported:
+          - openid
+          - profile
+          - email
+        response_types_supported:
+          - code
+        grant_types_supported:
+          - authorization_code
+          - refresh_token
+        token_endpoint_auth_methods_supported:
+          - client_secret_basic
+        token_endpoint_auth_signing_alg_values_supported:
+          - RS256
+        service_documentation: https://docs.helmut.cloud/api/auth
+        ui_locales_supported:
+          - en-US
+          - de-DE
     ReducedTeamDto:
       type: object
       properties:
@@ -6411,6 +6590,35 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/OAuthTokenEndpointResponseDto'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/.well-known/oauth-authorization-server:
+    get:
+      description: >-
+        Returns metadata about the OAuth 2.0 authorization server configuration,
+        including endpoint locations and supported capabilities as defined in
+        RFC 8414
+      summary: OAuth 2.0 Authorization Server Discovery
+      tags:
+        - Login.OAuth
+      responses:
+        '200':
+          description: Successful retrieval of authorization server metadata
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DiscoveryDto'
         '500':
           description: something went wrong
           content:
