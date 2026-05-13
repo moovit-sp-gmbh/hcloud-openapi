@@ -1872,9 +1872,7 @@ components:
           example: true
         trashAutoDeleteTTL:
           type: number
-          description: >-
-            Time to live for items in the trash in days. Only relevant if
-            trashAutoDelete is true.
+          description: Time to live for items in the trash in days.
           example: 30
         high5_spaceName:
           type: string
@@ -2095,6 +2093,18 @@ components:
                   description: Date of last change
                   format: UNIX timestamp
                   example: 1747142773233
+                deletedAt:
+                  type: number
+                  minimum: 0
+                  description: Date the asset was moved to trash
+                  format: UNIX timestamp
+                  example: 1747142773233
+                purgeAt:
+                  type: number
+                  minimum: 0
+                  description: Date the asset will be automatically deleted from trash
+                  format: UNIX timestamp
+                  example: 1747748773233
                 creator:
                   $ref: '#/components/schemas/ReducedUser'
                 organization:
@@ -2398,6 +2408,18 @@ components:
                   description: Date of last change
                   format: UNIX timestamp
                   example: 1747142773233
+                deletedAt:
+                  type: number
+                  minimum: 0
+                  description: Date the asset was moved to trash
+                  format: UNIX timestamp
+                  example: 1747142773233
+                purgeAt:
+                  type: number
+                  minimum: 0
+                  description: Date the asset will be automatically deleted from trash
+                  format: UNIX timestamp
+                  example: 1747748773233
                 creator:
                   $ref: '#/components/schemas/ReducedUser'
                 organization:
@@ -6007,6 +6029,12 @@ paths:
                       type: boolean
                       enum:
                         - false
+                    ttlDays:
+                      type: integer
+                      minimum: 0
+                      exclusiveMinimum: true
+                      maximum: 365
+                      description: Time to live in days (1-365)
                   required:
                     - enabled
                   additionalProperties: false
