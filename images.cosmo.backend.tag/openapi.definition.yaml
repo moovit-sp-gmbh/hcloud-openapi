@@ -59,6 +59,13 @@ components:
                 name:
                   type: string
                   description: Share name
+                active:
+                  type: boolean
+                  default: true
+                  description: >-
+                    Whether the share is active or not. Inactive shares cannot
+                    be accessed.
+                  example: true
                 password:
                   type: string
                   description: Share password
@@ -212,6 +219,12 @@ components:
                 name:
                   type: string
                   description: Share name
+                active:
+                  type: boolean
+                  description: >-
+                    Whether the share is active or not. Inactive shares cannot
+                    be accessed.
+                  example: true
                 password:
                   anyOf:
                     - type: string
@@ -3171,6 +3184,12 @@ components:
           format: uuid
         name:
           type: string
+        active:
+          type: boolean
+          description: >-
+            Whether the share is active or not. Inactive shares cannot be
+            accessed.
+          example: true
         waiting:
           type: boolean
           description: >-
@@ -3352,6 +3371,7 @@ components:
       required:
         - _id
         - name
+        - active
         - waiting
         - creator
         - createDate
@@ -12175,6 +12195,12 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  active:
+                    type: boolean
+                    description: >-
+                      Whether the share is active or not. Inactive shares cannot
+                      be accessed.
+                    example: true
                   waiting:
                     type: boolean
                     description: >-
@@ -12358,6 +12384,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - active
                   - waiting
                   - creator
                   - createDate
@@ -12762,6 +12789,12 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  active:
+                    type: boolean
+                    description: >-
+                      Whether the share is active or not. Inactive shares cannot
+                      be accessed.
+                    example: true
                   waiting:
                     type: boolean
                     description: >-
@@ -12903,6 +12936,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - active
                   - waiting
                   - creator
                   - createDate
@@ -13115,6 +13149,12 @@ paths:
                     format: uuid
                   name:
                     type: string
+                  active:
+                    type: boolean
+                    description: >-
+                      Whether the share is active or not. Inactive shares cannot
+                      be accessed.
+                    example: true
                   waiting:
                     type: boolean
                     description: >-
@@ -13256,6 +13296,7 @@ paths:
                 required:
                   - _id
                   - name
+                  - active
                   - waiting
                   - creator
                   - createDate
@@ -14387,6 +14428,12 @@ paths:
                       format: uuid
                     name:
                       type: string
+                    active:
+                      type: boolean
+                      description: >-
+                        Whether the share is active or not. Inactive shares
+                        cannot be accessed.
+                      example: true
                     waiting:
                       type: boolean
                       description: >-
@@ -14528,6 +14575,7 @@ paths:
                   required:
                     - _id
                     - name
+                    - active
                     - waiting
                     - creator
                     - createDate
@@ -14711,6 +14759,12 @@ paths:
                       format: uuid
                     name:
                       type: string
+                    active:
+                      type: boolean
+                      description: >-
+                        Whether the share is active or not. Inactive shares
+                        cannot be accessed.
+                      example: true
                     waiting:
                       type: boolean
                       description: >-
@@ -14852,6 +14906,7 @@ paths:
                   required:
                     - _id
                     - name
+                    - active
                     - waiting
                     - creator
                     - createDate
