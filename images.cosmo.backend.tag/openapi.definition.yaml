@@ -2503,7 +2503,7 @@ components:
                                   - type: number
                                   - type: boolean
                         description: Metadata of the reference
-                        example: &ref_18
+                        example: &ref_19
                           sequenceId: 32178932198
                     required:
                       - status
@@ -2923,6 +2923,15 @@ components:
               description: Timecode OUT
             color:
               type: string
+              enum:
+                - BLUE
+                - CYAN
+                - GREEN
+                - YELLOW
+                - RED
+                - ORANGE
+                - LAVENDER
+                - WHITE
               description: Comment color
           required:
             - in
@@ -3046,6 +3055,15 @@ components:
               description: Timecode OUT
             color:
               type: string
+              enum: &ref_15
+                - BLUE
+                - CYAN
+                - GREEN
+                - YELLOW
+                - RED
+                - ORANGE
+                - LAVENDER
+                - WHITE
               description: Comment color
           required:
             - in
@@ -3061,7 +3079,7 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: &ref_15
+          example: &ref_16
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         mentionsTeams:
@@ -3069,7 +3087,7 @@ components:
           items:
             type: string
           description: Array of mentioned team ids
-          example: &ref_16
+          example: &ref_17
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         visibility:
@@ -3109,6 +3127,7 @@ components:
               description: Timecode OUT
             color:
               type: string
+              enum: *ref_15
               description: Comment color
           required:
             - in
@@ -3124,13 +3143,13 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: *ref_15
+          example: *ref_16
         mentionsTeams:
           type: array
           items:
             type: string
           description: Array of mentioned team ids
-          example: *ref_16
+          example: *ref_17
         visibility:
           type: string
           enum:
@@ -3757,7 +3776,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_17
+        space: &ref_18
           type: object
           additionalProperties:
             type: object
@@ -3766,10 +3785,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_17
-        asset: *ref_17
-        share: *ref_17
-        user: *ref_17
+        namespace: *ref_18
+        asset: *ref_18
+        share: *ref_18
+        user: *ref_18
       description: Map of all the permissions available in the Cosmo service
     StatsDto:
       type: object
@@ -10742,7 +10761,7 @@ paths:
                               - type: number
                               - type: boolean
                     description: Metadata of the reference
-                    example: *ref_18
+                    example: *ref_19
                 required:
                   - _id
                   - status
@@ -12255,7 +12274,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: &ref_19
+                      enum: &ref_20
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -12265,13 +12284,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_20
+                    example: &ref_21
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_21
+                      enum: &ref_22
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -12286,7 +12305,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_22
+                    example: &ref_23
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -12294,7 +12313,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_23
+                        enum: &ref_24
                           - BASE
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
@@ -12307,7 +12326,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_24
+                    example: &ref_25
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -12316,7 +12335,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_25
+                        enum: &ref_26
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -12331,7 +12350,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_26
+                    example: &ref_27
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -12849,43 +12868,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_19
+                      enum: *ref_20
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_20
+                    example: *ref_21
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_21
+                      enum: *ref_22
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_22
+                    example: *ref_23
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_24
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_24
+                    example: *ref_25
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_26
+                    example: *ref_27
                   users:
                     type: array
                     items:
@@ -13209,43 +13228,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_19
+                      enum: *ref_20
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_20
+                    example: *ref_21
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_21
+                      enum: *ref_22
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_22
+                    example: *ref_23
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_24
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_24
+                    example: *ref_25
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_26
+                    example: *ref_27
                   users:
                     type: array
                     items:
@@ -14488,43 +14507,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_19
+                        enum: *ref_20
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_20
+                      example: *ref_21
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_21
+                        enum: *ref_22
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_22
+                      example: *ref_23
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_23
+                          enum: *ref_24
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_24
+                      example: *ref_25
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_25
+                          enum: *ref_26
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_26
+                      example: *ref_27
                     users:
                       type: array
                       items:
@@ -14819,43 +14838,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_19
+                        enum: *ref_20
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_20
+                      example: *ref_21
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_21
+                        enum: *ref_22
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_22
+                      example: *ref_23
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_23
+                          enum: *ref_24
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_24
+                      example: *ref_25
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_25
+                          enum: *ref_26
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_26
+                      example: *ref_27
                     users:
                       type: array
                       items:
@@ -17261,7 +17280,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_27
+                              enum: &ref_28
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -17313,7 +17332,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_28
+                            example: &ref_29
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -17868,9 +17887,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_27
+                            enum: *ref_28
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_28
+                          example: *ref_29
                       required:
                         - entity
                         - permissions
