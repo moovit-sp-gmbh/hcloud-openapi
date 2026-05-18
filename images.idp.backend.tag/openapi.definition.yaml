@@ -507,6 +507,7 @@ components:
     OrganizationRole:
       type: string
       enum:
+        - GUEST
         - MEMBER
         - MANAGER
         - ADMIN
@@ -3015,6 +3016,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/OrganizationRole'
             - description: >-
+                * GUEST - Guest of an organization
+
                 * MEMBER - Standard member of an organization
 
                 * MANAGER - Member of an organization that has the ability to
@@ -3130,6 +3133,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/OrganizationRole'
             - description: >-
+                * GUEST - Guest of an organization
+
                 * MEMBER - Standard member of an organization
 
                 * MANAGER - Member of an organization that has the ability to
@@ -3215,6 +3220,8 @@ components:
           allOf:
             - $ref: '#/components/schemas/OrganizationRole'
             - description: >-
+                * GUEST - Guest of an organization
+
                 * MEMBER - Standard member of an organization
 
                 * MANAGER - Member of an organization that has the ability to
@@ -4684,7 +4691,7 @@ paths:
                       Your organization has no domain associated with the given
                       name.
         '500':
-          description: something went wrong | Unable to delete domai
+          description: something went wrong | Unable to delete domain
           content:
             application/json:
               schema:
@@ -4696,8 +4703,8 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
-                Unable to delete domai:
-                  summary: Unable to delete domai
+                Unable to delete domain:
+                  summary: Unable to delete domain
                   description: 'Unable to delete domain: Problems connecting to the database'
                   value:
                     code: 001.000.0002
@@ -5898,14 +5905,14 @@ paths:
                       The redirect_uri provided is either missing or failed to
                       be validated.
         '404':
-          description: OAuth missing query paramete | OAuthApp does not exist
+          description: OAuth missing query parameter | OAuthApp does not exist
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples: &ref_5
-                OAuth missing query paramete:
-                  summary: OAuth missing query paramete
+                OAuth missing query parameter:
+                  summary: OAuth missing query parameter
                   description: 'OAuth missing query parameter: ''client_id'''
                   value:
                     code: 001.006.0008
@@ -6079,7 +6086,7 @@ paths:
                       'code_challenge_method' - {error}
                 The redirect_uri provided is either missing or failed to be validated.: *ref_4
         '404':
-          description: OAuth missing query paramete | OAuthApp does not exist
+          description: OAuth missing query parameter | OAuthApp does not exist
           content:
             application/json:
               schema:
@@ -6369,14 +6376,14 @@ paths:
               schema:
                 $ref: '#/components/schemas/OAuthTokenEndpointResponseDto'
         '415':
-          description: Only 'application/json' and 'application/
+          description: Only 'application/json' and 'application/x
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Only 'application/json' and 'application/:
-                  summary: Only 'application/json' and 'application/
+                Only 'application/json' and 'application/x:
+                  summary: Only 'application/json' and 'application/x
                   description: >-
                     Only 'application/json' and
                     'application/x-www-form-urlencoded' content types are
@@ -8368,14 +8375,14 @@ paths:
                     error: invitation.not.found
                     message: The specified invitation does not exist.
         '409':
-          description: Too many resen
+          description: Too many resend
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Too many resen:
-                  summary: Too many resen
+                Too many resend:
+                  summary: Too many resend
                   description: Too many resend-invitation-emails sent. Try again later.
                   value:
                     code: 001.003.0004
@@ -10186,7 +10193,7 @@ paths:
         '409':
           description: >-
             User has already an account in helmut cloud | The given captcha was
-            not valid, reaso
+            not valid, reason
           content:
             application/json:
               schema:
@@ -10198,8 +10205,8 @@ paths:
                     code: 001.009.0003
                     error: user.already.exists
                     message: User has already an account in helmut cloud
-                The given captcha was not valid, reaso:
-                  summary: The given captcha was not valid, reaso
+                The given captcha was not valid, reason:
+                  summary: The given captcha was not valid, reason
                   description: >-
                     The given captcha was not valid, reason: Failed to validate
                     token against google
@@ -10320,14 +10327,14 @@ paths:
                     error: user.not.found
                     message: User has no helmut cloud account
         '409':
-          description: Too many resen
+          description: Too many resend
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Too many resen:
-                  summary: Too many resen
+                Too many resend:
+                  summary: Too many resend
                   description: Too many resend-verification-emails sent. Try again later.
                   value:
                     code: 001.009.0004
@@ -12128,7 +12135,7 @@ paths:
                     error: organization.already.exists
                     message: Organization with given name already exists
         '500':
-          description: something went wrong | Unexpected erro
+          description: something went wrong | Unexpected error
           content:
             application/json:
               schema:
@@ -12140,8 +12147,8 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
-                Unexpected erro:
-                  summary: Unexpected erro
+                Unexpected error:
+                  summary: Unexpected error
                   description: >-
                     Unexpected error: User email is not 'hcloud' and does not
                     contain '@‘
