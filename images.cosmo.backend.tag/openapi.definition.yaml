@@ -4143,7 +4143,7 @@ paths:
         '403':
           description: >-
             Required scopes ['high5:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
+            | User's organization role is insufficient. Must be at least GUEST
           content:
             application/json:
               schema:
@@ -4159,10 +4159,10 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
-                User's organization role is insufficient. Must be at least MEMBER:
+                User's organization role is insufficient. Must be at least GUEST:
                   summary: >-
                     User's organization role is insufficient. Must be at least
-                    MEMBER
+                    GUEST
                   value:
                     code: 009.001.0004
                     error: insufficient.rights
