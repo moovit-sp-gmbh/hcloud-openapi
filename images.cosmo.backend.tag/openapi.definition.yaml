@@ -3218,6 +3218,30 @@ components:
           $ref: '#/components/schemas/ReducedUser'
         createDate:
           type: number
+        emailStatus:
+          type: array
+          items:
+            type: object
+            properties:
+              email:
+                type: string
+                example: example@helmut.cloud
+              status:
+                type: string
+                enum:
+                  - OPENED
+                  - SENT
+                  - CLICKED
+                  - FAILED
+                  - BOUNCED
+                  - BLOCKED
+                  - NOT_SENT
+                  - SPAM
+                  - UNKNOWN
+                example: CLICKED
+            required:
+              - email
+              - status
         permissionGroups:
           type: array
           items:
@@ -12229,6 +12253,30 @@ paths:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
                     type: number
+                  emailStatus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: example@helmut.cloud
+                        status:
+                          type: string
+                          enum:
+                            - OPENED
+                            - SENT
+                            - CLICKED
+                            - FAILED
+                            - BOUNCED
+                            - BLOCKED
+                            - NOT_SENT
+                            - SPAM
+                            - UNKNOWN
+                          example: CLICKED
+                      required:
+                        - email
+                        - status
                   items:
                     type: array
                     items:
@@ -12823,6 +12871,30 @@ paths:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
                     type: number
+                  emailStatus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: example@helmut.cloud
+                        status:
+                          type: string
+                          enum:
+                            - OPENED
+                            - SENT
+                            - CLICKED
+                            - FAILED
+                            - BOUNCED
+                            - BLOCKED
+                            - NOT_SENT
+                            - SPAM
+                            - UNKNOWN
+                          example: CLICKED
+                      required:
+                        - email
+                        - status
                   items:
                     type: array
                     items:
@@ -13183,6 +13255,30 @@ paths:
                     $ref: '#/components/schemas/ReducedUser'
                   createDate:
                     type: number
+                  emailStatus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: example@helmut.cloud
+                        status:
+                          type: string
+                          enum:
+                            - OPENED
+                            - SENT
+                            - CLICKED
+                            - FAILED
+                            - BOUNCED
+                            - BLOCKED
+                            - NOT_SENT
+                            - SPAM
+                            - UNKNOWN
+                          example: CLICKED
+                      required:
+                        - email
+                        - status
                   items:
                     type: array
                     items:
@@ -14462,6 +14558,30 @@ paths:
                       $ref: '#/components/schemas/ReducedUser'
                     createDate:
                       type: number
+                    emailStatus:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: example@helmut.cloud
+                          status:
+                            type: string
+                            enum:
+                              - OPENED
+                              - SENT
+                              - CLICKED
+                              - FAILED
+                              - BOUNCED
+                              - BLOCKED
+                              - NOT_SENT
+                              - SPAM
+                              - UNKNOWN
+                            example: CLICKED
+                        required:
+                          - email
+                          - status
                     items:
                       type: array
                       items:
@@ -14793,6 +14913,30 @@ paths:
                       $ref: '#/components/schemas/ReducedUser'
                     createDate:
                       type: number
+                    emailStatus:
+                      type: array
+                      items:
+                        type: object
+                        properties:
+                          email:
+                            type: string
+                            example: example@helmut.cloud
+                          status:
+                            type: string
+                            enum:
+                              - OPENED
+                              - SENT
+                              - CLICKED
+                              - FAILED
+                              - BOUNCED
+                              - BLOCKED
+                              - NOT_SENT
+                              - SPAM
+                              - UNKNOWN
+                            example: CLICKED
+                        required:
+                          - email
+                          - status
                     items:
                       type: array
                       items:
