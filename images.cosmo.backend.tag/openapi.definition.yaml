@@ -3238,6 +3238,10 @@ components:
                   - NOT_SENT
                   - SPAM
                   - UNKNOWN
+                  - DELIVERED
+                  - DELIVERED_DELAYED
+                  - SUPPRESSED
+                  - PENDING
                 example: CLICKED
             required:
               - email
@@ -3440,6 +3444,10 @@ components:
             - NOT_SENT
             - SPAM
             - UNKNOWN
+            - DELIVERED
+            - DELIVERED_DELAYED
+            - SUPPRESSED
+            - PENDING
           description: Email status
           example: OPENED
       required:
@@ -12273,6 +12281,10 @@ paths:
                             - NOT_SENT
                             - SPAM
                             - UNKNOWN
+                            - DELIVERED
+                            - DELIVERED_DELAYED
+                            - SUPPRESSED
+                            - PENDING
                           example: CLICKED
                       required:
                         - email
@@ -12891,6 +12903,10 @@ paths:
                             - NOT_SENT
                             - SPAM
                             - UNKNOWN
+                            - DELIVERED
+                            - DELIVERED_DELAYED
+                            - SUPPRESSED
+                            - PENDING
                           example: CLICKED
                       required:
                         - email
@@ -13275,6 +13291,10 @@ paths:
                             - NOT_SENT
                             - SPAM
                             - UNKNOWN
+                            - DELIVERED
+                            - DELIVERED_DELAYED
+                            - SUPPRESSED
+                            - PENDING
                           example: CLICKED
                       required:
                         - email
@@ -14578,6 +14598,10 @@ paths:
                               - NOT_SENT
                               - SPAM
                               - UNKNOWN
+                              - DELIVERED
+                              - DELIVERED_DELAYED
+                              - SUPPRESSED
+                              - PENDING
                             example: CLICKED
                         required:
                           - email
@@ -14933,6 +14957,10 @@ paths:
                               - NOT_SENT
                               - SPAM
                               - UNKNOWN
+                              - DELIVERED
+                              - DELIVERED_DELAYED
+                              - SUPPRESSED
+                              - PENDING
                             example: CLICKED
                         required:
                           - email
