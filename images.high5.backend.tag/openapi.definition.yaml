@@ -2912,9 +2912,180 @@ components:
           minLength: 1
           maxLength: 256
           description: Quartz cron expression
+          example: 0 0 0 * * ?
+        time:
+          oneOf:
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - minute
+                values:
+                  type: object
+                  properties:
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - hour
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                  required:
+                    - hour
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - day
+                values:
+                  type: object
+                  properties:
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - month
+                values:
+                  type: object
+                  properties:
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - year
+                values:
+                  type: object
+                  properties:
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - custom
+                values:
+                  type: object
+                  properties:
+                    year:
+                      type: number
+                      minimum: 0
+                    month:
+                      type: number
+                      minimum: 0
+                      maximum: 11
+                    day:
+                      type: number
+                      minimum: 0
+                      maximum: 30
+                    hour:
+                      type: number
+                      minimum: 0
+                      maximum: 23
+                    minute:
+                      type: number
+                      minimum: 0
+                      maximum: 59
+                  required:
+                    - year
+                    - month
+                    - day
+                    - hour
+                    - minute
+              required:
+                - type
+                - values
+          description: >-
+            Optional data related to the resolved expression (used on the
+            frontend only)
       required:
         - expression
       description: Object for patching cronjob expression
+      example:
+        expression: 0 0 0 * * ?
+        time:
+          type: month
+          values:
+            day: 0
+            hour: 0
+            minute: 0
     CronPatternDto:
       type: object
       properties:
@@ -2952,9 +3123,9 @@ components:
         expression:
           type: string
           minLength: 1
-          maxLength: 255
+          maxLength: 256
           description: Quartz cron expression
-          example: 0 0 * * *
+          example: 0 0 * * * ?
         targetEvent:
           type: string
           minLength: 1
@@ -2978,6 +3149,7 @@ components:
         payload:
           type: string
           description: Execution payload, limited to 1024kb
+          example: '{}'
         enabled:
           type: boolean
           description: Whether the job is enabled
@@ -3156,6 +3328,11 @@ components:
           description: >-
             Optional data related to the resolved expression (used on the
             frontend only)
+          example:
+            type: day
+            values:
+              hour: 0
+              minute: 0
       required:
         - name
         - expression
@@ -3163,6 +3340,22 @@ components:
         - timezone
         - target
       description: Data for creating a new cron job
+      example:
+        name: helmut4-daily-report
+        expression: 0 0 * * * ?
+        targetEvent: Helmut4-Report
+        timezone: Europe/Vatican
+        description: Triggers daily report generation
+        payload: '{}'
+        enabled: true
+        target: target@helmut.cloud
+        lastStatus: 200
+        lastTriggered: 1692275090717
+        time:
+          type: day
+          values:
+            hour: 0
+            minute: 0
     JobEnabledPatchDto:
       type: object
       properties:
@@ -5394,41 +5587,64 @@ components:
           type: string
           format: hexadecimal
           description: ID of the cronjob
+          example: 91c7f7e3ebe82d8001b65382
         name:
           type: string
           description: Name of the cronjob
+          example: Daily-Report
         expression:
           type: string
           description: Quartz cron expression
+          example: 0 12 * * * ?
         space:
           allOf:
             - $ref: '#/components/schemas/ReducedSpace'
             - description: Space the cronjob belongs to
+              example:
+                _id: 51c7e6dfeae82d8001b652fb
+                name: Helmut4
+                avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         organization:
           allOf:
             - $ref: '#/components/schemas/ReducedOrganization'
             - description: Organization the cronjob belongs to
+              example:
+                _id: 2436bb9988821e8f6400c2f7
+                name: DEV-software
+                avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         creator:
           allOf:
             - $ref: '#/components/schemas/ReducedUser'
             - description: Creator of the cronjob
+              example:
+                _id: 39280bfafe4fbcd791493ef5
+                name: Account MSP
+                email: account@moovit-sp.com
+                avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+                isGuest: false
         targetEvent:
           allOf:
             - $ref: '#/components/schemas/ReducedEvent'
             - description: Target event to be executed by job
-              example: *ref_0
+              example:
+                _id: 84562d052ed0590e5d580da0
+                name: Generate-Daily_Report
         timezone:
           type: string
-          description: Timezone of the Quartz expression in IANA format, e.g. Europe/Berlin
+          description: Timezone of the Quartz expression in IANA format
+          example: Europe/London
         description:
           type: string
           description: Description of the cronjob
+          example: Generates daily report
         payload:
           type: string
           description: Body for the HTTP request
+          example: '{}'
         enabled:
           type: boolean
           description: Switch for turning the cronjob on/off
+          example: true
         target:
           type: string
           description: Target that executes the stream. Can be a user email or pool name
@@ -5437,23 +5653,31 @@ components:
           type: number
           minimum: 0
           description: Create date of the cronjob as unix timestamp
+          example: 1777991726798
         modifyDate:
           type: number
           minimum: 0
           description: Date of last modification of the cronjob as unix timestamp
+          example: 1777991775000
         nextExecution:
           type: array
           items:
             type: number
             minimum: 0
           description: Dates of next executions of the cronjob as unix timestamp
+          example:
+            - 1777991869340
+            - 1777991870863
+            - 1777991872453
         lastStatus:
           type: number
           description: HTTP status code of the cronjob last execution result
+          example: 201
         lastTriggered:
           type: number
           minimum: 0
           description: Last triggered date of the cronjob as unix timestamp
+          example: 1777991775000
         time:
           oneOf:
             - type: object
@@ -5616,6 +5840,11 @@ components:
           description: >-
             Optional data related to the resolved expression (used on the
             frontend only)
+          example:
+            type: day
+            values:
+              hour: 12
+              minute: 0
       required:
         - _id
         - name
@@ -5629,6 +5858,45 @@ components:
         - createDate
         - modifyDate
       description: Scheduled HTTP task details
+      example:
+        _id: 91c7f7e3ebe82d8001b65382
+        name: Daily-Report
+        expression: 0 12 * * * ?
+        space:
+          _id: 51c7e6dfeae82d8001b652fb
+          name: Helmut4
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        organization:
+          _id: 2436bb9988821e8f6400c2f7
+          name: DEV-software
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 39280bfafe4fbcd791493ef5
+          name: Account MSP
+          email: account@moovit-sp.com
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
+        targetEvent:
+          _id: 84562d052ed0590e5d580da0
+          name: Generate-Daily_Report
+        timezone: Europe/London
+        description: Generates daily report
+        payload: '{}'
+        enabled: true
+        target: target@helmut.cloud
+        createDate: 1777991726798
+        modifyDate: 1777991775000
+        nextExecution:
+          - 1777991869340
+          - 1777991870863
+          - 1777991872453
+        lastStatus: 201
+        lastTriggered: 1777991775000
+        time:
+          type: day
+          values:
+            hour: 12
+            minute: 0
     ReducedJob:
       type: object
       properties:
