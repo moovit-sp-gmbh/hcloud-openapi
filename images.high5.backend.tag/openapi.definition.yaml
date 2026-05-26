@@ -1693,7 +1693,7 @@ components:
         - ARRAY
         - ANY
       description: Type of the document value
-      example: NUMBER_LIST
+      example: STRING
     DocumentCreateDto:
       type: object
       properties:
@@ -1714,13 +1714,21 @@ components:
           description: >-
             Document value (data type must match the type specified in the
             "type" field)
+          example: String type example
         ttl:
           type: integer
+          minimum: 1
           description: Time-to-live in seconds (undefined if missing)
+          example: 3600
       required:
         - key
         - type
       description: Data for creating a document with type-dependent value
+      example:
+        key: TestDocument
+        type: STRING
+        value: String type example
+        ttl: 3600
     DocumentPatchDto:
       type: object
       properties:
@@ -1734,7 +1742,15 @@ components:
             STRING_LIST, it must be Array<string>; for type BOOLEAN_LIST, it
             must be Array<boolean>; for type mixed ARRAY, it must be Array<any>;
             for type OBJECT, it must be object
+        ttl:
+          type: integer
+          minimum: 1
+          description: Time-to-live in seconds (undefined if missing)
+          example: 3600
       description: New value to patch existing document
+      example:
+        value: Another string
+        ttl: 7200
     EventCreateDto:
       type: object
       properties:
@@ -4917,6 +4933,10 @@ components:
         value:
           nullable: true
           description: Data stored in the document
+        ttl:
+          type: number
+          description: Time-to-live in seconds (undefined if missing)
+          example: 3600
         createDate:
           type: number
           minimum: 0
@@ -4959,6 +4979,7 @@ components:
           isGuest: false
         type: NUMBER
         value: 647931
+        ttl: 3600
         createDate: 1774045156
         modifyDate: 1774047958
     DocumentArrayItemDto:
