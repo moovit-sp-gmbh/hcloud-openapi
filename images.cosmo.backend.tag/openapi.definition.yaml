@@ -1630,7 +1630,7 @@ components:
           type: string
           minLength: 1
           maxLength: 20
-          pattern: ^[a-zA-Z0-9-]{1,20}$
+          pattern: ^[a-zA-Z0-9- ]{1,20}$
           description: Name for the tag
           example: my tag
         color:
@@ -1650,7 +1650,7 @@ components:
           type: string
           minLength: 1
           maxLength: 20
-          pattern: ^[a-zA-Z0-9-]{1,20}$
+          pattern: ^[a-zA-Z0-9- ]{1,20}$
           description: Name for the tag
           example: my tag
         color:
@@ -10756,7 +10756,7 @@ paths:
             type: string
             minLength: 1
             maxLength: 20
-            pattern: ^[a-zA-Z0-9-]{1,20}$
+            pattern: ^[a-zA-Z0-9- ]{1,20}$
             description: Name of the tag (it should contain between 1 and 20 characters)
             example: My Tag
           required: true
@@ -17095,7 +17095,7 @@ paths:
             type: string
             minLength: 1
             maxLength: 20
-            pattern: ^[a-zA-Z0-9-]{1,20}$
+            pattern: ^[a-zA-Z0-9- ]{1,20}$
             description: Name of the tag (it should contain between 1 and 20 characters)
             example: My Tag
           required: true
@@ -17327,7 +17327,7 @@ paths:
             type: string
             minLength: 1
             maxLength: 20
-            pattern: ^[a-zA-Z0-9-]{1,20}$
+            pattern: ^[a-zA-Z0-9- ]{1,20}$
             description: Name of the tag (it should contain between 1 and 20 characters)
             example: My Tag
           required: true
