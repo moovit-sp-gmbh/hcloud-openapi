@@ -1766,6 +1766,28 @@ components:
         keys:
           - foo
           - baz
+    DocumentPatchSchema:
+      type: object
+      properties:
+        value:
+          nullable: true
+          description: >-
+            Document value - data type must match the type specified in the type
+            field of the existing document - for type NUMBER, it must be number;
+            for type STRING, it must be string; for type BOOLEAN, it must be
+            boolean; for type NUMBER_LIST, it must be Array<number>; for type
+            STRING_LIST, it must be Array<string>; for type BOOLEAN_LIST, it
+            must be Array<boolean>; for type mixed ARRAY, it must be Array<any>;
+            for type OBJECT, it must be object
+        ttl:
+          type: integer
+          minimum: 1
+          description: Time-to-live in seconds (undefined if missing)
+          example: 3600
+      description: New value to patch existing document
+      example: &ref_0
+        value: Another string
+        ttl: 7200
     DocumentPatchDto:
       type: object
       properties:
@@ -1785,8 +1807,39 @@ components:
           description: Time-to-live in seconds (undefined if missing)
           example: 3600
       description: New value to patch existing document
+      example: *ref_0
+    DocumentUpsertDto:
+      allOf:
+        - $ref: '#/components/schemas/DocumentPatchDto'
+        - type: object
+          properties:
+            ttl:
+              type: integer
+              minimum: 1
+              description: Time-to-live in seconds (undefined if missing)
+              example: 7200
+            key:
+              type: string
+              minLength: 1
+              maxLength: 64
+              pattern: ^[\w-.]{1,64}$
+              description: >-
+                Key of the document (only alphanumeric characters, underscores,
+                hyphens and dots are allowed; it should contain between 1 and 64
+                characters)
+              example: My_personal_web-page_address.1
+            type:
+              allOf:
+                - $ref: '#/components/schemas/DocumentType'
+                - description: Explicit document type; auto-detected from value if omitted
+                  example: NUMBER
+      description: >-
+        Data to update the existing document or create a new one if it does not
+        exist (upsert)
       example:
-        value: Another string
+        key: Upserted-Doc
+        type: NUMBER
+        value: 17
         ttl: 7200
     EventCreateDto:
       type: object
@@ -5145,7 +5198,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedEvent'
             - description: Event the stream belongs to
-              example: &ref_0
+              example: &ref_1
                 _id: 8127e64ff912d31ffa27a5b4
                 name: Helmut Mc Cloud
         space:
@@ -7125,7 +7178,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedEvent'
             - description: Event the snapshot belongs to
-              example: *ref_0
+              example: *ref_1
         space:
           allOf:
             - $ref: '#/components/schemas/ReducedSpace'
@@ -7255,7 +7308,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedEvent'
             - description: Event the stream belongs to
-              example: *ref_0
+              example: *ref_1
         space:
           allOf:
             - $ref: '#/components/schemas/ReducedSpace'
@@ -7614,7 +7667,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/ReducedEvent'
             - description: Event the webhook belongs to
-              example: *ref_0
+              example: *ref_1
         executeDate:
           type: number
           description: Date of creation of the log as unix timestamp
@@ -12362,6 +12415,11 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/search:
     post:
+      description: >-
+        Returns a paginated list of documents in the specified database that
+        match the given search filter. Use `limit` and `page` query parameters
+        for pagination. The `total` response header contains the total number of
+        matching documents regardless of pagination
       summary: Search for documents by database name and search filter
       tags:
         - Document
@@ -12508,7 +12566,11 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}:
     get:
-      summary: Get document by it's key
+      description: >-
+        Returns a single document identified by its key within the specified
+        database. For ARRAY-type documents, the full array items are collected
+        and included in the response value
+      summary: Get document by its key
       tags:
         - Document
       parameters:
@@ -12631,7 +12693,12 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
-    put:
+    patch:
+      description: >-
+        Updates the value stored in an existing document. The type of the new
+        value must match the document's current type; a type mismatch returns an
+        error. For ARRAY-type documents, existing items are replaced with the
+        new ones
       summary: Patch a document
       tags:
         - Document
@@ -12772,7 +12839,159 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+    put:
+      description: >-
+        Creates the document if it does not exist, or updates it if it does. The
+        document is looked up by the `key` URL parameter. An optional `key`
+        field in the body overrides the document key. If `type` is not provided,
+        it is auto-detected from the value. When updating, the resolved type
+        must match the existing document's type; a mismatch returns an error. An
+        optional `ttl` sets the document's expiry time in seconds
+      summary: Upsert a document
+      tags:
+        - Document
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+            pattern: ^[\w-.]{1,128}$
+            description: >-
+              Name of the database (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 128
+              characters)
+            example: Helmut4-Storage
+          required: true
+          name: dbName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[\w-.]{1,64}$
+            description: >-
+              Key of the document (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 64
+              characters)
+            example: My_personal_web-page_address.1
+          required: true
+          name: key
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentUpsertDto'
+      responses:
+        '200':
+          description: Created or updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'dbName':
+                  summary: Failed to validate 'path' parameter 'dbName'
+                  description: Failed to validate 'path' parameter 'dbName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'dbName' - {error}
+                Failed to validate 'path' parameter 'key':
+                  summary: Failed to validate 'path' parameter 'key'
+                  description: Failed to validate 'path' parameter 'key' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'key' - {error}
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
     delete:
+      description: >-
+        Permanently deletes the document identified by its key. For ARRAY-type
+        documents, all associated array items stored in the sub-collection are
+        also deleted
       summary: Delete a document from the database
       tags:
         - Document
@@ -12894,6 +13113,10 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents:
     post:
+      description: >-
+        Creates a new document in the specified database. The `type` field
+        determines the expected data type of `value`. Returns 409 if a document
+        with the same key already exists in the space
       summary: Add a new document to the database
       tags:
         - Document
