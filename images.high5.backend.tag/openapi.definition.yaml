@@ -1729,6 +1729,43 @@ components:
         type: STRING
         value: String type example
         ttl: 3600
+    DocumentObjectPartialPairsDto:
+      type: object
+      properties:
+        pairs:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: Key/value pairs to upsert into the object document
+          example:
+            foo: bar
+      required:
+        - pairs
+      description: >-
+        Key/value pairs to add or update inside an OBJECT type document without
+        replacing the entire value
+      example:
+        pairs:
+          foo: bar
+    DocumentObjectDeleteKeysDto:
+      type: object
+      properties:
+        keys:
+          type: array
+          items:
+            type: string
+          minItems: 1
+          description: Keys to remove from the object document
+          example:
+            - foo
+            - baz
+      required:
+        - keys
+      description: List of keys to remove from an OBJECT type document
+      example:
+        keys:
+          - foo
+          - baz
     DocumentPatchDto:
       type: object
       properties:
@@ -11238,6 +11275,9 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/:key/search:
     post:
+      description: >-
+        Searches for items within an array document using the specified filter
+        criteria and returns a paginated list of matching results
       summary: Search for items within a specified array
       tags:
         - Document.Array
@@ -11384,6 +11424,9 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/push:
     patch:
+      description: >-
+        Appends one or more elements to the end of an array document and returns
+        the updated document
       summary: Add one or more elements to the end of an array
       tags:
         - Document.Array
@@ -11526,6 +11569,9 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/unshift:
     patch:
+      description: >-
+        Prepends one or more elements to the beginning of an array document and
+        returns the updated document
       summary: Add one or more elements to the beginning of an array
       tags:
         - Document.Array
@@ -11668,6 +11714,9 @@ paths:
                     message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/index/{index}:
     get:
+      description: >-
+        Retrieves a single element from an array document by its zero-based
+        index position
       summary: Get element with specified index from the array
       tags:
         - Document.Array
@@ -11832,6 +11881,7 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     delete:
+      description: Removes the element at the specified index from an array document
       summary: Delete element with specified index from the array
       tags:
         - Document.Array
@@ -11978,6 +12028,325 @@ paths:
                     code: 002.036.0004
                     error: array.item.not.found
                     message: Given array item not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/partial:
+    patch:
+      description: >-
+        Creates or updates specific key/value pairs within an object document
+        without overwriting other existing fields
+      summary: >-
+        Add or update one or more key/value pairs inside an object document
+        without replacing the entire value
+      tags:
+        - Document.Object
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+            pattern: ^[\w-.]{1,128}$
+            description: >-
+              Name of the database (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 128
+              characters)
+            example: Helmut4-Storage
+          required: true
+          name: dbName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[\w-.]{1,64}$
+            description: >-
+              Key of the document (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 64
+              characters)
+            example: My_personal_web-page_address.1
+          required: true
+          name: key
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentObjectPartialPairsDto'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'dbName':
+                  summary: Failed to validate 'path' parameter 'dbName'
+                  description: Failed to validate 'path' parameter 'dbName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'dbName' - {error}
+                Failed to validate 'path' parameter 'key':
+                  summary: Failed to validate 'path' parameter 'key'
+                  description: Failed to validate 'path' parameter 'key' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'key' - {error}
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
+        '404':
+          description: Given document not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given document not found:
+                  summary: Given document not found
+                  value:
+                    code: 002.036.0002
+                    error: document.not.found
+                    message: Given document not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/databases/{dbName}/documents/{key}/keys:
+    patch:
+      description: >-
+        Removes one or more specified keys from an object document without
+        affecting the remaining fields
+      summary: Remove one or more keys from an object document
+      tags:
+        - Document.Object
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 128
+            pattern: ^[\w-.]{1,128}$
+            description: >-
+              Name of the database (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 128
+              characters)
+            example: Helmut4-Storage
+          required: true
+          name: dbName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 64
+            pattern: ^[\w-.]{1,64}$
+            description: >-
+              Key of the document (only alphanumeric characters, underscores,
+              hyphens and dots are allowed; it should contain between 1 and 64
+              characters)
+            example: My_personal_web-page_address.1
+          required: true
+          name: key
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DocumentObjectDeleteKeysDto'
+      responses:
+        '200':
+          description: Updated document
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DocumentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'dbName' | Failed to validate 'path' parameter 'key' | Data type of
+            the value does not match the existing documents data type
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'dbName':
+                  summary: Failed to validate 'path' parameter 'dbName'
+                  description: Failed to validate 'path' parameter 'dbName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'dbName' - {error}
+                Failed to validate 'path' parameter 'key':
+                  summary: Failed to validate 'path' parameter 'key'
+                  description: Failed to validate 'path' parameter 'key' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'key' - {error}
+                Data type of the value does not match the existing documents data type:
+                  summary: >-
+                    Data type of the value does not match the existing documents
+                    data type
+                  value:
+                    code: 002.036.0001
+                    error: document.type.mismatch
+                    message: >-
+                      Data type of the value does not match the existing
+                      documents data type
+        '404':
+          description: Given object keys not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Given object keys not found:
+                  summary: Given object keys not found
+                  description: 'Given object keys not found: age, company'
+                  value:
+                    code: 002.036.0005
+                    error: object.keys.not.found
+                    message: 'Given object keys not found: age, company'
         '500':
           description: something went wrong
           content:
