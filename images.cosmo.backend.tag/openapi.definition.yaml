@@ -3568,6 +3568,24 @@ components:
       required:
         - email
         - status
+    EmailCooldownDto:
+      type: object
+      properties:
+        message:
+          type: string
+          enum:
+            - Some emails were in cooldown and were not resent
+        emailsInCooldown:
+          type: array
+          items:
+            type: string
+            format: email
+          description: List of email addresses that were skipped due to cooldown
+          example:
+            - example@helmut.cloud
+      required:
+        - message
+        - emailsInCooldown
     SearchFilterType:
       type: string
       enum:
@@ -14471,6 +14489,12 @@ paths:
           name: shareId
           in: path
       responses:
+        '200':
+          description: Some emails were in cooldown and were not resent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCooldownDto'
         '204':
           description: No Content
         '400':
@@ -14673,6 +14697,12 @@ paths:
               required:
                 - emails
       responses:
+        '200':
+          description: Some emails were in cooldown and were not resent
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/EmailCooldownDto'
         '204':
           description: No Content
         '400':
