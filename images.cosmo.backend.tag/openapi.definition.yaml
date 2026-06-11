@@ -4261,7 +4261,7 @@ components:
           items:
             type: string
             format: uuid
-          minItems: 1
+          minItems: 2
           description: >-
             IDs of the assets to add to stack. The first item of this list will
             be the bottom of the stack.
