@@ -1259,6 +1259,37 @@ components:
           - 761b2de208337dc792b65f93
           - 385b2de208337dc792b65f38
           - 97ab2de208337dc792b65f11
+    TeamMembersSearchDto:
+      type: object
+      properties:
+        teamIds:
+          type: array
+          items:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          minItems: 1
+          description: List of team IDs to search members across
+          example:
+            - 761b2de208337dc792b65f93
+            - 385b2de208337dc792b65f38
+        name:
+          type: string
+          minLength: 1
+          description: >-
+            Name search query — returns members whose name contains this string
+            (case-insensitive)
+          example: john
+      required:
+        - teamIds
+        - name
+      description: Payload for searching members by name across a set of teams
+      example:
+        teamIds:
+          - 761b2de208337dc792b65f93
+          - 385b2de208337dc792b65f38
+        name: john
     UsersOperation:
       type: string
       enum:
