@@ -113,6 +113,11 @@ components:
                   description: >-
                     If set to true, the share will only take effect after all
                     its items are done encoding.
+                message:
+                  type: string
+                  description: >-
+                    Optional message for private shares that will be displayed
+                    in the email. Requires public to be false.
               required:
                 - name
                 - items
@@ -280,6 +285,11 @@ components:
                     Maximum number of visits allowed for the share (only if it's
                     a public link share)
                   example: 100
+                message:
+                  type: string
+                  description: >-
+                    Optional message for private shares that will be displayed
+                    in the email. Requires public to be false.
             - type: object
               properties:
                 permissions:
@@ -3528,6 +3538,11 @@ components:
           exclusiveMinimum: true
           description: UTC timestamp in milliseconds marking when the share should expire
           example: 1752057295637
+        message:
+          type: string
+          description: >-
+            Optional message for private shares that will be displayed in the
+            email. Requires public to be false.
         items:
           type: array
           items:
@@ -13188,6 +13203,11 @@ paths:
                       UTC timestamp in milliseconds marking when the share
                       should expire
                     example: 1752057295637
+                  message:
+                    type: string
+                    description: >-
+                      Optional message for private shares that will be displayed
+                      in the email. Requires public to be false.
                 required:
                   - _id
                   - name
@@ -13768,6 +13788,11 @@ paths:
                       UTC timestamp in milliseconds marking when the share
                       should expire
                     example: 1752057295637
+                  message:
+                    type: string
+                    description: >-
+                      Optional message for private shares that will be displayed
+                      in the email. Requires public to be false.
                 required:
                   - _id
                   - name
@@ -14156,6 +14181,11 @@ paths:
                       UTC timestamp in milliseconds marking when the share
                       should expire
                     example: 1752057295637
+                  message:
+                    type: string
+                    description: >-
+                      Optional message for private shares that will be displayed
+                      in the email. Requires public to be false.
                 required:
                   - _id
                   - name
@@ -15475,6 +15505,11 @@ paths:
                         UTC timestamp in milliseconds marking when the share
                         should expire
                       example: 1752057295637
+                    message:
+                      type: string
+                      description: >-
+                        Optional message for private shares that will be
+                        displayed in the email. Requires public to be false.
                   required:
                     - _id
                     - name
@@ -15834,6 +15869,11 @@ paths:
                         UTC timestamp in milliseconds marking when the share
                         should expire
                       example: 1752057295637
+                    message:
+                      type: string
+                      description: >-
+                        Optional message for private shares that will be
+                        displayed in the email. Requires public to be false.
                   required:
                     - _id
                     - name
