@@ -8065,6 +8065,11 @@ paths:
           required: false
           name: page
           in: query
+        - schema:
+            type: string
+          required: false
+          name: search
+          in: query
       responses:
         '200':
           description: Users and teams of the asset
@@ -8099,7 +8104,8 @@ paths:
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'assetId' | Failed to validate 'query' parameter 'limit' | Failed to
-            validate 'query' parameter 'page'
+            validate 'query' parameter 'page' | Failed to validate 'query'
+            parameter 'search'
           content:
             application/json:
               schema:
@@ -8140,6 +8146,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                Failed to validate 'query' parameter 'search':
+                  summary: Failed to validate 'query' parameter 'search'
+                  description: Failed to validate 'query' parameter 'search' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'search' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
