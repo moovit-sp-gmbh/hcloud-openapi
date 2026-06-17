@@ -1606,7 +1606,7 @@ components:
       properties:
         status:
           type: string
-          enum: &ref_14
+          enum: &ref_17
             - approved
             - rejected
             - none
@@ -2001,31 +2001,16 @@ components:
           type: string
           format: uuid
           description: Item ID
+          example: 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
         name:
           type: string
           description: Item name
-        type:
-          type: string
-          enum:
-            - ASSET
-            - MEDIA_ASSET
-            - REFERENCE
-            - SPACE
-            - PRODUCTION
-            - PROJECT
-            - FOLDER
-            - COMMENT
-            - TAG
-            - STACK
-            - UNKNOWN
-          description: Item type
+          example: myasset.mp4
       required:
         - _id
         - name
-        - type
       example: &ref_13
         name: my space
-        type: SPACE
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
     ReducedOrganization:
       type: object
@@ -2075,6 +2060,10 @@ components:
             - $ref: '#/components/schemas/BaseAssetDto'
             - type: object
               properties:
+                type:
+                  type: string
+                  enum:
+                    - MEDIA_ASSET
                 extension:
                   type: string
                   description: Media_Asset extension
@@ -2224,10 +2213,65 @@ components:
                   example:
                     - VIEW_ASSETS
               required:
+                - type
                 - createDate
                 - modifyDate
                 - creator
                 - organization
+          example: *ref_13
+        - allOf:
+            - $ref: '#/components/schemas/BaseAssetDto'
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - SPACE
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Allowed operations on the asset
+                  example:
+                    - VIEW_ASSETS
+              required:
+                - type
+          example: *ref_13
+        - allOf:
+            - $ref: '#/components/schemas/BaseAssetDto'
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - FOLDER
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Allowed operations on the asset
+                  example:
+                    - VIEW_ASSETS
+              required:
+                - type
+          example: *ref_13
+        - allOf:
+            - $ref: '#/components/schemas/BaseAssetDto'
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - STACK
+                permissions:
+                  type: array
+                  items:
+                    type: string
+                  description: Allowed operations on the asset
+                  example:
+                    - VIEW_ASSETS
+              required:
+                - type
           example: *ref_13
     Unknown:
       type: object
@@ -2384,258 +2428,268 @@ components:
       required:
         - name
         - type
-    AssetDetailedDto:
-      oneOf:
-        - allOf:
-            - $ref: '#/components/schemas/BaseAssetDto'
-            - type: object
-              properties:
-                extension:
-                  type: string
-                  description: Media_Asset extension
-                  example: .mov
-                status:
-                  type: string
-                  enum:
-                    - UPLOADING
-                    - UPLOADED
-                    - PROCESSING
-                    - FINISHED
-                    - WAITING
-                    - FAILED
-                    - POST_PROCESSING
-                  description: Upload status of the asset
-                  example: FINISHED
-                progress:
-                  type: number
-                  description: >-
-                    According to status the upload or transcoding progress of
-                    the asset
-                  example: 75
-                queuePosition:
-                  type: number
-                  description: 1-indexed position in the transcoding queue
-                queueTotal:
-                  type: number
-                  description: Total number of assets currently in the transcoding queue
-                assetType:
-                  type: string
-                  enum:
-                    - VIDEO
-                    - IMAGE
-                    - DOCUMENT
-                    - UNKNOWN
-                    - FOLDER
-                  description: Media_Asset Type
-                  example: VIDEO
-                breadcrumb:
-                  type: array
-                  items:
-                    $ref: '#/components/schemas/BaseAssetDto'
-                duration:
-                  type: number
-                  description: Duration of the video if the asset is a video asset
-                  example: 29.56
-                frameRate:
-                  type: number
-                  description: Frame rate of the video if the asset is a video asset
-                  example: 25
-                thumbnailUrl:
-                  type: string
-                  format: uri
-                  description: URL of the thumbnail
-                  example: https://example.com/thumbnail.jpg
-                previewUrl:
-                  type: string
-                  format: uri
-                  description: URL of the preview
-                  example: https://example.com/preview.jpg
-                tilePreviewVttUrl:
-                  type: string
-                  format: uri
-                  description: URL of the tile preview VTT file
-                  example: https://example.com/tile_preview.vtt
-                createDate:
-                  type: number
-                  minimum: 0
-                  description: Date of creation
-                  format: UNIX timestamp
-                  example: 1747142773233
-                modifyDate:
-                  type: number
-                  minimum: 0
-                  description: Date of last change
-                  format: UNIX timestamp
-                  example: 1747142773233
-                deletedAt:
-                  type: number
-                  minimum: 0
-                  description: Date the asset was moved to trash
-                  format: UNIX timestamp
-                  example: 1747142773233
-                purgeAt:
-                  type: number
-                  minimum: 0
-                  description: Date the asset will be automatically deleted from trash
-                  format: UNIX timestamp
-                  example: 1747748773233
-                creator:
-                  $ref: '#/components/schemas/ReducedUser'
-                organization:
-                  $ref: '#/components/schemas/ReducedOrganization'
-                space:
-                  $ref: '#/components/schemas/ReducedSpace'
-                tag:
-                  type: object
-                  properties:
-                    name:
-                      type: string
-                      description: Name of the tag associated with the asset
-                      example: Needs Review
-                    color:
-                      type: string
-                      description: Color of the tag associated with the asset
-                      example: '#4A90E2'
-                  required:
-                    - name
-                    - color
-                  description: Tag associated with the asset
-                upload:
-                  type: object
-                  properties:
-                    url:
-                      type: string
-                      format: uri
-                    token:
-                      type: string
-                    expiration:
-                      type: number
-                    libraryId:
-                      type: number
-                    videoId:
-                      type: string
-                  required:
-                    - url
-                    - token
-                    - expiration
-                namespaces:
-                  type: object
-                  additionalProperties:
-                    type: object
-                    properties:
-                      status:
-                        type: string
-                      statusAuthor:
-                        allOf:
-                          - $ref: '#/components/schemas/ReducedUser'
-                          - description: User who last set the status
-                      canWriteStatus:
-                        type: boolean
-                        description: >-
-                          Whether the current user can set or change the status
-                          in this namespace
-                        example: true
-                      metadata:
-                        type: object
-                        additionalProperties:
-                          anyOf:
-                            - type: string
-                            - type: number
-                            - type: boolean
-                            - type: array
-                              items:
-                                anyOf:
-                                  - type: string
-                                  - type: number
-                                  - type: boolean
-                        description: Metadata of the reference
-                        example: &ref_20
-                          sequenceId: 32178932198
-                    required:
-                      - status
-                      - canWriteStatus
-                  description: Information about the asset across namespaces.
-                  example:
-                    rush:
-                      status: approved
-                      canWriteStatus: true
-                permissions:
-                  type: array
-                  items:
+    MediaAssetDetailedDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: Item ID
+          example: 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
+        name:
+          type: string
+          description: Item name
+          example: myasset.mp4
+        type:
+          type: string
+          enum:
+            - MEDIA_ASSET
+        extension:
+          type: string
+          description: Media_Asset extension
+          example: .mov
+        status:
+          type: string
+          enum:
+            - UPLOADING
+            - UPLOADED
+            - PROCESSING
+            - FINISHED
+            - WAITING
+            - FAILED
+            - POST_PROCESSING
+          description: Upload status of the asset
+          example: FINISHED
+        progress:
+          type: number
+          description: According to status the upload or transcoding progress of the asset
+          example: 75
+        queuePosition:
+          type: number
+          description: 1-indexed position in the transcoding queue
+        queueTotal:
+          type: number
+          description: Total number of assets currently in the transcoding queue
+        assetType:
+          type: string
+          enum:
+            - VIDEO
+            - IMAGE
+            - DOCUMENT
+            - UNKNOWN
+            - FOLDER
+          description: Media_Asset Type
+          example: VIDEO
+        breadcrumb:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseAssetDto'
+        duration:
+          type: number
+          description: Duration of the video if the asset is a video asset
+          example: 29.56
+        frameRate:
+          type: number
+          description: Frame rate of the video if the asset is a video asset
+          example: 25
+        thumbnailUrl:
+          type: string
+          format: uri
+          description: URL of the thumbnail
+          example: https://example.com/thumbnail.jpg
+        previewUrl:
+          type: string
+          format: uri
+          description: URL of the preview
+          example: https://example.com/preview.jpg
+        tilePreviewVttUrl:
+          type: string
+          format: uri
+          description: URL of the tile preview VTT file
+          example: https://example.com/tile_preview.vtt
+        createDate:
+          type: number
+          minimum: 0
+          description: Date of creation
+          format: UNIX timestamp
+          example: 1747142773233
+        modifyDate:
+          type: number
+          minimum: 0
+          description: Date of last change
+          format: UNIX timestamp
+          example: 1747142773233
+        deletedAt:
+          type: number
+          minimum: 0
+          description: Date the asset was moved to trash
+          format: UNIX timestamp
+          example: 1747142773233
+        purgeAt:
+          type: number
+          minimum: 0
+          description: Date the asset will be automatically deleted from trash
+          format: UNIX timestamp
+          example: 1747748773233
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+        tag:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the tag associated with the asset
+              example: Needs Review
+            color:
+              type: string
+              description: Color of the tag associated with the asset
+              example: '#4A90E2'
+          required:
+            - name
+            - color
+          description: Tag associated with the asset
+        upload:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            token:
+              type: string
+            expiration:
+              type: number
+            libraryId:
+              type: number
+            videoId:
+              type: string
+          required:
+            - url
+            - token
+            - expiration
+        namespaces:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              status:
+                type: string
+              statusAuthor:
+                allOf:
+                  - $ref: '#/components/schemas/ReducedUser'
+                  - description: User who last set the status
+              canWriteStatus:
+                type: boolean
+                description: >-
+                  Whether the current user can set or change the status in this
+                  namespace
+                example: true
+              metadata:
+                type: object
+                additionalProperties:
+                  anyOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: array
+                      items:
+                        anyOf:
+                          - type: string
+                          - type: number
+                          - type: boolean
+                description: Metadata of the reference
+                example: &ref_14
+                  sequenceId: 32178932198
+            required:
+              - status
+              - canWriteStatus
+          description: Information about the asset across namespaces.
+          example: &ref_15
+            rush:
+              status: approved
+              canWriteStatus: true
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Allowed operations on the asset
+          example: &ref_16
+            - VIEW_ASSETS
+        media:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Unknown'
+              - $ref: '#/components/schemas/Image'
+              - type: object
+                properties:
+                  name:
                     type: string
-                  description: Allowed operations on the asset
-                  example:
-                    - VIEW_ASSETS
-                media:
-                  type: array
-                  items:
-                    oneOf:
-                      - $ref: '#/components/schemas/Unknown'
-                      - $ref: '#/components/schemas/Image'
-                      - type: object
-                        properties:
-                          name:
-                            type: string
-                            description: Name of the media
-                            example: original
-                          url:
-                            type: string
-                            format: uri
-                            description: >-
-                              URL to the media. Can be undefined if the media is
-                              still being uploaded
-                            example: https://example.com
-                          type:
-                            type: string
-                            enum:
-                              - AUDIO
-                            description: Media type
-                            example: AUDIO
-                          metadata:
-                            type: array
-                            items:
-                              $ref: '#/components/schemas/AudioMetadata'
-                            description: Media metadata
-                        required:
-                          - name
-                          - type
-                      - type: object
-                        properties:
-                          name:
-                            type: string
-                            description: Name of the media
-                            example: original
-                          url:
-                            type: string
-                            format: uri
-                            description: >-
-                              URL to the media. Can be undefined if the media is
-                              still being uploaded
-                            example: https://example.com
-                          type:
-                            type: string
-                            enum:
-                              - VIDEO
-                            description: Media type
-                            example: VIDEO
-                          metadata:
-                            type: array
-                            items:
-                              anyOf:
-                                - $ref: '#/components/schemas/AudioMetadata'
-                                - $ref: '#/components/schemas/VideoMetadata'
-                            description: Media metadata
-                        required:
-                          - name
-                          - type
-                      - $ref: '#/components/schemas/Vtt'
-              required:
-                - createDate
-                - modifyDate
-                - creator
-                - organization
-                - space
-          example: *ref_13
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - AUDIO
+                    description: Media type
+                    example: AUDIO
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AudioMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - type
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - VIDEO
+                    description: Media type
+                    example: VIDEO
+                  metadata:
+                    type: array
+                    items:
+                      anyOf:
+                        - $ref: '#/components/schemas/AudioMetadata'
+                        - $ref: '#/components/schemas/VideoMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - type
+              - $ref: '#/components/schemas/Vtt'
+      required:
+        - _id
+        - name
+        - type
+        - createDate
+        - modifyDate
+        - creator
+        - organization
+        - space
       example:
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
         name: my asset
@@ -2684,6 +2738,316 @@ components:
                 tcIn: 0
                 tcOut: 29.14
                 formatLongName: QuickTime
+    StackDetailedDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: Item ID
+          example: 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
+        name:
+          type: string
+          description: Item name
+          example: myasset.mp4
+        extension:
+          type: string
+          description: Media_Asset extension
+          example: .mov
+        status:
+          type: string
+          enum:
+            - UPLOADING
+            - UPLOADED
+            - PROCESSING
+            - FINISHED
+            - WAITING
+            - FAILED
+            - POST_PROCESSING
+          description: Upload status of the asset
+          example: FINISHED
+        progress:
+          type: number
+          description: According to status the upload or transcoding progress of the asset
+          example: 75
+        queuePosition:
+          type: number
+          description: 1-indexed position in the transcoding queue
+        queueTotal:
+          type: number
+          description: Total number of assets currently in the transcoding queue
+        assetType:
+          type: string
+          enum:
+            - VIDEO
+            - IMAGE
+            - DOCUMENT
+            - UNKNOWN
+            - FOLDER
+          description: Media_Asset Type
+          example: VIDEO
+        breadcrumb:
+          type: array
+          items:
+            $ref: '#/components/schemas/BaseAssetDto'
+        duration:
+          type: number
+          description: Duration of the video if the asset is a video asset
+          example: 29.56
+        frameRate:
+          type: number
+          description: Frame rate of the video if the asset is a video asset
+          example: 25
+        thumbnailUrl:
+          type: string
+          format: uri
+          description: URL of the thumbnail
+          example: https://example.com/thumbnail.jpg
+        previewUrl:
+          type: string
+          format: uri
+          description: URL of the preview
+          example: https://example.com/preview.jpg
+        tilePreviewVttUrl:
+          type: string
+          format: uri
+          description: URL of the tile preview VTT file
+          example: https://example.com/tile_preview.vtt
+        createDate:
+          type: number
+          minimum: 0
+          description: Date of creation
+          format: UNIX timestamp
+          example: 1747142773233
+        modifyDate:
+          type: number
+          minimum: 0
+          description: Date of last change
+          format: UNIX timestamp
+          example: 1747142773233
+        deletedAt:
+          type: number
+          minimum: 0
+          description: Date the asset was moved to trash
+          format: UNIX timestamp
+          example: 1747142773233
+        purgeAt:
+          type: number
+          minimum: 0
+          description: Date the asset will be automatically deleted from trash
+          format: UNIX timestamp
+          example: 1747748773233
+        creator:
+          $ref: '#/components/schemas/ReducedUser'
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+        tag:
+          type: object
+          properties:
+            name:
+              type: string
+              description: Name of the tag associated with the asset
+              example: Needs Review
+            color:
+              type: string
+              description: Color of the tag associated with the asset
+              example: '#4A90E2'
+          required:
+            - name
+            - color
+          description: Tag associated with the asset
+        upload:
+          type: object
+          properties:
+            url:
+              type: string
+              format: uri
+            token:
+              type: string
+            expiration:
+              type: number
+            libraryId:
+              type: number
+            videoId:
+              type: string
+          required:
+            - url
+            - token
+            - expiration
+        namespaces:
+          type: object
+          additionalProperties:
+            type: object
+            properties:
+              status:
+                type: string
+              statusAuthor:
+                allOf:
+                  - $ref: '#/components/schemas/ReducedUser'
+                  - description: User who last set the status
+              canWriteStatus:
+                type: boolean
+                description: >-
+                  Whether the current user can set or change the status in this
+                  namespace
+                example: true
+              metadata:
+                type: object
+                additionalProperties:
+                  anyOf:
+                    - type: string
+                    - type: number
+                    - type: boolean
+                    - type: array
+                      items:
+                        anyOf:
+                          - type: string
+                          - type: number
+                          - type: boolean
+                description: Metadata of the reference
+                example: *ref_14
+            required:
+              - status
+              - canWriteStatus
+          description: Information about the asset across namespaces.
+          example: *ref_15
+        permissions:
+          type: array
+          items:
+            type: string
+          description: Allowed operations on the asset
+          example: *ref_16
+        media:
+          type: array
+          items:
+            oneOf:
+              - $ref: '#/components/schemas/Unknown'
+              - $ref: '#/components/schemas/Image'
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - AUDIO
+                    description: Media type
+                    example: AUDIO
+                  metadata:
+                    type: array
+                    items:
+                      $ref: '#/components/schemas/AudioMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - type
+              - type: object
+                properties:
+                  name:
+                    type: string
+                    description: Name of the media
+                    example: original
+                  url:
+                    type: string
+                    format: uri
+                    description: >-
+                      URL to the media. Can be undefined if the media is still
+                      being uploaded
+                    example: https://example.com
+                  type:
+                    type: string
+                    enum:
+                      - VIDEO
+                    description: Media type
+                    example: VIDEO
+                  metadata:
+                    type: array
+                    items:
+                      anyOf:
+                        - $ref: '#/components/schemas/AudioMetadata'
+                        - $ref: '#/components/schemas/VideoMetadata'
+                    description: Media metadata
+                required:
+                  - name
+                  - type
+              - $ref: '#/components/schemas/Vtt'
+        type:
+          type: string
+          enum:
+            - STACK
+        stack:
+          type: array
+          items:
+            type: object
+            properties:
+              version:
+                type: number
+                description: Position of the asset in the stack. Minimum is 1
+                example: 2
+              assetId:
+                type: string
+                format: uuid
+                description: ID of the asset
+                example: d980adfe-e096-4f2a-ab8e-88642797dcba
+            required:
+              - version
+              - assetId
+          minItems: 2
+      required:
+        - _id
+        - name
+        - createDate
+        - modifyDate
+        - creator
+        - organization
+        - space
+        - type
+        - stack
+      description: >-
+        The Stack object is a view of the top asset of the stack plus the
+        'stack' property.
+    FolderDetailedDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: uuid
+          description: Item ID
+          example: 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
+        name:
+          type: string
+          description: Item name
+          example: myasset.mp4
+        type:
+          type: string
+          enum:
+            - FOLDER
+      required:
+        - _id
+        - name
+        - type
+    AssetDetailedDto:
+      oneOf:
+        - $ref: '#/components/schemas/MediaAssetDetailedDto'
+        - $ref: '#/components/schemas/StackDetailedDto'
+        - $ref: '#/components/schemas/FolderDetailedDto'
+      discriminator:
+        propertyName: type
+        mapping:
+          MEDIA_ASSET: '#/components/schemas/MediaAssetDetailedDto'
+          STACK: '#/components/schemas/StackDetailedDto'
+          FOLDER: '#/components/schemas/FolderDetailedDto'
     AssetPermissionsDto:
       type: object
       additionalProperties:
@@ -2795,6 +3159,10 @@ components:
         - $ref: '#/components/schemas/BaseAssetDto'
         - type: object
           properties:
+            type:
+              type: string
+              enum:
+                - REFERENCE
             extension:
               type: string
               description: Media_Asset extension
@@ -2939,6 +3307,7 @@ components:
               required:
                 - status
           required:
+            - type
             - createDate
             - modifyDate
             - creator
@@ -2974,7 +3343,7 @@ components:
       properties:
         status:
           type: string
-          enum: *ref_14
+          enum: *ref_17
       required:
         - status
     CommentDto:
@@ -3180,7 +3549,7 @@ components:
               description: Timecode OUT
             color:
               type: string
-              enum: &ref_15
+              enum: &ref_18
                 - BLUE
                 - CYAN
                 - GREEN
@@ -3204,7 +3573,7 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: &ref_16
+          example: &ref_19
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         mentionsTeams:
@@ -3212,7 +3581,7 @@ components:
           items:
             type: string
           description: Array of mentioned team ids
-          example: &ref_17
+          example: &ref_20
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         visibility:
@@ -3241,7 +3610,7 @@ components:
             Optional custom key/value metadata for integration with third-party
             systems. Values can be strings, numbers, booleans, or arrays
             thereof.
-          example: &ref_18
+          example: &ref_21
             externalId: ext-123
             syncStatus: pending
             priority: 1
@@ -3273,7 +3642,7 @@ components:
               description: Timecode OUT
             color:
               type: string
-              enum: *ref_15
+              enum: *ref_18
               description: Comment color
           required:
             - in
@@ -3289,13 +3658,13 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: *ref_16
+          example: *ref_19
         mentionsTeams:
           type: array
           items:
             type: string
           description: Array of mentioned team ids
-          example: *ref_17
+          example: *ref_20
         visibility:
           type: string
           enum:
@@ -3322,7 +3691,7 @@ components:
             Optional custom key/value metadata for integration with third-party
             systems. Values can be strings, numbers, booleans, or arrays
             thereof.
-          example: *ref_18
+          example: *ref_21
       required:
         - text
     DeleteCommentsDto:
@@ -3995,7 +4364,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_19
+        space: &ref_22
           type: object
           additionalProperties:
             type: object
@@ -4004,10 +4373,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_19
-        asset: *ref_19
-        share: *ref_19
-        user: *ref_19
+        namespace: *ref_22
+        asset: *ref_22
+        share: *ref_22
+        user: *ref_22
       description: Map of all the permissions available in the Cosmo service
     StatsDto:
       type: object
@@ -11536,7 +11905,7 @@ paths:
                               - type: number
                               - type: boolean
                     description: Metadata of the reference
-                    example: *ref_20
+                    example: *ref_14
                 required:
                   - _id
                   - status
@@ -13077,7 +13446,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: &ref_21
+                      enum: &ref_23
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -13087,13 +13456,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_22
+                    example: &ref_24
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_23
+                      enum: &ref_25
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -13108,7 +13477,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_24
+                    example: &ref_26
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -13116,7 +13485,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_25
+                        enum: &ref_27
                           - BASE
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
@@ -13129,7 +13498,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_26
+                    example: &ref_28
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -13138,7 +13507,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_27
+                        enum: &ref_29
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -13153,7 +13522,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_28
+                    example: &ref_30
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -13704,33 +14073,21 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_21
+                      enum: *ref_23
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_22
+                    example: *ref_24
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_23
+                      enum: *ref_25
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_24
-                  namespaceGroups:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_25
-                    description: >-
-                      Namespaces to include in the share. Share consumers will
-                      only be able to read/write asset comments and statuses
-                      according to the permission groups set in this map.
                     example: *ref_26
-                  namespaces:
+                  namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
@@ -13738,9 +14095,21 @@ paths:
                         type: string
                         enum: *ref_27
                     description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_28
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_29
+                    description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_28
+                    example: *ref_30
                   users:
                     type: array
                     items:
@@ -14097,33 +14466,21 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_21
+                      enum: *ref_23
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_22
+                    example: *ref_24
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_23
+                      enum: *ref_25
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_24
-                  namespaceGroups:
-                    type: object
-                    additionalProperties:
-                      type: array
-                      items:
-                        type: string
-                        enum: *ref_25
-                    description: >-
-                      Namespaces to include in the share. Share consumers will
-                      only be able to read/write asset comments and statuses
-                      according to the permission groups set in this map.
                     example: *ref_26
-                  namespaces:
+                  namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
@@ -14131,9 +14488,21 @@ paths:
                         type: string
                         enum: *ref_27
                     description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_28
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_29
+                    description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_28
+                    example: *ref_30
                   users:
                     type: array
                     items:
@@ -15421,33 +15790,21 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_21
+                        enum: *ref_23
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_22
+                      example: *ref_24
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_25
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_24
-                    namespaceGroups:
-                      type: object
-                      additionalProperties:
-                        type: array
-                        items:
-                          type: string
-                          enum: *ref_25
-                      description: >-
-                        Namespaces to include in the share. Share consumers will
-                        only be able to read/write asset comments and statuses
-                        according to the permission groups set in this map.
                       example: *ref_26
-                    namespaces:
+                    namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
@@ -15455,9 +15812,21 @@ paths:
                           type: string
                           enum: *ref_27
                       description: >-
+                        Namespaces to include in the share. Share consumers will
+                        only be able to read/write asset comments and statuses
+                        according to the permission groups set in this map.
+                      example: *ref_28
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                          enum: *ref_29
+                      description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_28
+                      example: *ref_30
                     users:
                       type: array
                       items:
@@ -15785,33 +16154,21 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_21
+                        enum: *ref_23
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_22
+                      example: *ref_24
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_25
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_24
-                    namespaceGroups:
-                      type: object
-                      additionalProperties:
-                        type: array
-                        items:
-                          type: string
-                          enum: *ref_25
-                      description: >-
-                        Namespaces to include in the share. Share consumers will
-                        only be able to read/write asset comments and statuses
-                        according to the permission groups set in this map.
                       example: *ref_26
-                    namespaces:
+                    namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
@@ -15819,9 +16176,21 @@ paths:
                           type: string
                           enum: *ref_27
                       description: >-
+                        Namespaces to include in the share. Share consumers will
+                        only be able to read/write asset comments and statuses
+                        according to the permission groups set in this map.
+                      example: *ref_28
+                    namespaces:
+                      type: object
+                      additionalProperties:
+                        type: array
+                        items:
+                          type: string
+                          enum: *ref_29
+                      description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_28
+                      example: *ref_30
                     users:
                       type: array
                       items:
@@ -18233,7 +18602,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_29
+                              enum: &ref_31
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -18285,7 +18654,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_30
+                            example: &ref_32
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -18841,9 +19210,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_29
+                            enum: *ref_31
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_30
+                          example: *ref_32
                       required:
                         - entity
                         - permissions
@@ -20368,6 +20737,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/BaseAssetDto'
+                      type:
+                        type: string
+                        enum:
+                          - STACK
+                    required:
+                      - type
                 example: *ref_13
         '400':
           description: >-
@@ -20949,6 +21324,12 @@ paths:
                         type: array
                         items:
                           $ref: '#/components/schemas/BaseAssetDto'
+                      type:
+                        type: string
+                        enum:
+                          - STACK
+                    required:
+                      - type
                 example: *ref_13
         '400':
           description: >-
