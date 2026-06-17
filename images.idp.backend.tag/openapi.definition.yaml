@@ -964,6 +964,7 @@ components:
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
+        - cosmo:space:storage:read
       description: >-
         * hcloud:full - Full access to HCloud
 
@@ -1005,6 +1006,8 @@ components:
 
         * cosmo:space:delete - Access to read, write and delete operations of
         spaces
+
+        * cosmo:space:storage:read - Access to read storage of spaces
       example: idp:organization:write
     PatCreateDto:
       type: object
@@ -3682,6 +3685,26 @@ components:
           - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
           - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
         allowUnencryptedAssertion: true
+    OIDCProviderDto:
+      type: object
+      properties:
+        authorizationEndpoint:
+          type: string
+          description: Authorization endpoint of the provider
+          example: https://example.com/oidc/authorization
+        tokenEndpoint:
+          type: string
+          description: Token endpoint of the provider
+          example: https://example.com/oidc/token
+        discoveryEndpoint:
+          type: string
+          description: Discovery endpoint of the provider
+          example: https://example.com/.well-known/openid-configuration
+        clientId:
+          type: string
+          description: ClientID associated with the OIDC provider
+      required:
+        - clientId
     ServiceAccountDto:
       type: object
       properties:
@@ -5285,6 +5308,18 @@ paths:
           required: true
           name: origin
           in: query
+        - schema:
+            type: string
+            enum:
+              - 'true'
+              - 'false'
+            default: 'false'
+            description: >-
+              Whether or not redirect in the response. If true the response
+              status code can be 302
+          required: false
+          name: redirect
+          in: query
       responses:
         '200':
           description: Success
@@ -5295,7 +5330,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'query' parameter 'email' | Failed to validate
-            'query' parameter 'origin'
+            'query' parameter 'origin' | Failed to validate 'query' parameter
+            'redirect'
           content:
             application/json:
               schema:
@@ -5315,6 +5351,13 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'origin' - {error}
+                Failed to validate 'query' parameter 'redirect':
+                  summary: Failed to validate 'query' parameter 'redirect'
+                  description: Failed to validate 'query' parameter 'redirect' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'redirect' - {error}
         '500':
           description: something went wrong
           content:
@@ -10854,6 +10897,464 @@ paths:
                     code: 001.022.0003
                     error: saml.provider.not.found
                     message: SAML provider not found for the specified domain.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/settings/domains/oidc:
+    get:
+      description: |-
+
+        Required organization role: ADMIN
+      summary: Gets all providers for an organization
+      tags:
+        - Organization.Settings.Domains.OIDC
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+      responses:
+        '200':
+          description: Available OIDC IdPs
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/OIDCProviderDto'
+        '400':
+          description: Failed to validate 'path' parameter 'orgName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/settings/domains/{domainName}/oidc:
+    post:
+      description: >-
+        Creates a new provider for the specified domain in an organization
+
+        There are multiple ways the process can fail besides
+        authentication/authorization:
+
+        - The domain is not verified
+
+        - There is already an IdP associated with this organization and domain
+
+
+        Required organization role: ADMIN
+      summary: Creates a new provider for the specified domain in an organization
+      tags:
+        - Organization.Settings.Domains.OIDC
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            pattern: >-
+              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          required: true
+          name: domainName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    clientId:
+                      type: string
+                    clientSecret:
+                      type: string
+                  required:
+                    - clientId
+                    - clientSecret
+                - anyOf:
+                    - type: object
+                      properties:
+                        discoveryEndpoint:
+                          type: string
+                      required:
+                        - discoveryEndpoint
+                    - type: object
+                      properties:
+                        authorizationEndpoint:
+                          type: string
+                        tokenEndpoint:
+                          type: string
+                      required:
+                        - authorizationEndpoint
+                        - tokenEndpoint
+      responses:
+        '201':
+          description: Created OIDCProvider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCProviderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'domainName' | Cannot link oidc provider to an
+            unverified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'domainName':
+                  summary: Failed to validate 'path' parameter 'domainName'
+                  description: Failed to validate 'path' parameter 'domainName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'domainName' - {error}
+                Cannot link oidc provider to an unverified domain.:
+                  summary: Cannot link oidc provider to an unverified domain.
+                  value:
+                    code: 001.056.0003
+                    error: oidc.unverified.domain
+                    message: Cannot link oidc provider to an unverified domain.
+        '404':
+          description: Your organization has no domain associated with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+        '409':
+          description: oidc provider already exists for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                oidc provider already exists for the specified domain.:
+                  summary: oidc provider already exists for the specified domain.
+                  value:
+                    code: 001.056.0001
+                    error: oidc.provider.already.exists
+                    message: oidc provider already exists for the specified domain.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    patch:
+      description: |-
+
+        Required organization role: ADMIN
+      summary: Edit the current configuration of the OIDC provider linked with a domain
+      tags:
+        - Organization.Settings.Domains.OIDC
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            pattern: >-
+              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          required: true
+          name: domainName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              allOf:
+                - type: object
+                  properties:
+                    clientId:
+                      type: string
+                    clientSecret:
+                      type: string
+                - anyOf:
+                    - type: object
+                      properties:
+                        discoveryEndpoint:
+                          type: string
+                    - type: object
+                      properties:
+                        authorizationEndpoint:
+                          type: string
+                        tokenEndpoint:
+                          type: string
+      responses:
+        '200':
+          description: Updated OIDCProvider
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/OIDCProviderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'domainName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'domainName':
+                  summary: Failed to validate 'path' parameter 'domainName'
+                  description: Failed to validate 'path' parameter 'domainName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'domainName' - {error}
+        '404':
+          description: >-
+            Your organization has no domain associated with the given name. |
+            OIDC provider not found for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+                OIDC provider not found for the specified domain.:
+                  summary: OIDC provider not found for the specified domain.
+                  value:
+                    code: 001.056.0002
+                    error: domain.oidc.provider.not.found
+                    message: OIDC provider not found for the specified domain.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      description: |-
+
+        Required organization role: ADMIN
+      summary: Deletes a OIDC IdP
+      tags:
+        - Organization.Settings.Domains.OIDC
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            pattern: >-
+              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          required: true
+          name: domainName
+          in: path
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'domainName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'domainName':
+                  summary: Failed to validate 'path' parameter 'domainName'
+                  description: Failed to validate 'path' parameter 'domainName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'domainName' - {error}
+        '404':
+          description: >-
+            Your organization has no domain associated with the given name. |
+            OIDC provider not found for the specified domain.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+                OIDC provider not found for the specified domain.:
+                  summary: OIDC provider not found for the specified domain.
+                  value:
+                    code: 001.056.0002
+                    error: domain.oidc.provider.not.found
+                    message: OIDC provider not found for the specified domain.
         '500':
           description: something went wrong
           content:
