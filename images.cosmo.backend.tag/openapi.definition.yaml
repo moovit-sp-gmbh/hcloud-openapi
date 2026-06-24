@@ -3375,22 +3375,21 @@ components:
               type: number
               minimum: 0
               description: Timecode OUT
-            color:
-              type: string
-              enum:
-                - BLUE
-                - CYAN
-                - GREEN
-                - YELLOW
-                - RED
-                - ORANGE
-                - LAVENDER
-                - WHITE
-              description: Comment color
           required:
             - in
-            - color
           description: Timestamp the comment refers to
+        color:
+          type: string
+          enum:
+            - BLUE
+            - CYAN
+            - GREEN
+            - YELLOW
+            - RED
+            - ORANGE
+            - LAVENDER
+            - WHITE
+          description: Comment color
         creator:
           $ref: '#/components/schemas/ReducedUser'
         annotation:
@@ -3547,22 +3546,21 @@ components:
               type: number
               minimum: 0
               description: Timecode OUT
-            color:
-              type: string
-              enum: &ref_18
-                - BLUE
-                - CYAN
-                - GREEN
-                - YELLOW
-                - RED
-                - ORANGE
-                - LAVENDER
-                - WHITE
-              description: Comment color
           required:
             - in
-            - color
           description: Timestamp the comment refers to
+        color:
+          type: string
+          enum: &ref_18
+            - BLUE
+            - CYAN
+            - GREEN
+            - YELLOW
+            - RED
+            - ORANGE
+            - LAVENDER
+            - WHITE
+          description: Comment color
         annotation:
           type: string
           description: Optional annotation for the comment
@@ -3640,14 +3638,13 @@ components:
               type: number
               minimum: 0
               description: Timecode OUT
-            color:
-              type: string
-              enum: *ref_18
-              description: Comment color
           required:
             - in
-            - color
           description: Timestamp the comment refers to
+        color:
+          type: string
+          enum: *ref_18
+          description: Comment color
         annotation:
           type: string
           description: Optional annotation for the comment
