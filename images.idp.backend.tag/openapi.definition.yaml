@@ -2351,9 +2351,25 @@ components:
                       type: number
                   required:
                     - quota
+                executionLogPeriodInDays:
+                  type: object
+                  properties:
+                    quota:
+                      type: number
+                  required:
+                    - quota
+                executionLogMaxLimit:
+                  type: object
+                  properties:
+                    quota:
+                      type: number
+                  required:
+                    - quota
               required:
                 - spaces
                 - executionsPerMonth
+                - executionLogPeriodInDays
+                - executionLogMaxLimit
               description: License quota for the High5 service
             fuse:
               type: object
@@ -2487,6 +2503,10 @@ components:
                   quota: 100
             executionsPerMonth:
               quota: 300
+            executionLogPeriodInDays:
+              quota: 0
+            executionLogMaxLimit:
+              quota: 0
           fuse:
             spaces:
               quota: 20
