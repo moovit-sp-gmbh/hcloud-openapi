@@ -6141,6 +6141,7 @@ components:
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
+        - cosmo:space:storage:read
       description: >-
         * hcloud:full - Full access to HCloud
 
@@ -6182,6 +6183,8 @@ components:
 
         * cosmo:space:delete - Access to read, write and delete operations of
         spaces
+
+        * cosmo:space:storage:read - Access to read storage of spaces
       example: idp:organization:write
     UserDto:
       type: object
