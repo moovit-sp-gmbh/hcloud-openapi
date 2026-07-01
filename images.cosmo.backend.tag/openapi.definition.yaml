@@ -3624,6 +3624,7 @@ components:
               description: Timecode OUT
           required:
             - in
+          additionalProperties: false
           description: Timestamp the comment refers to
         color:
           type: string
@@ -3716,6 +3717,7 @@ components:
               description: Timecode OUT
           required:
             - in
+          additionalProperties: false
           description: Timestamp the comment refers to
         color:
           type: string
