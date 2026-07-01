@@ -2212,6 +2212,44 @@ components:
                   description: Allowed operations on the asset
                   example:
                     - VIEW_ASSETS
+                stack:
+                  type: object
+                  properties:
+                    version:
+                      type: number
+                      description: Which version of the stack the asset is
+                      example: 1
+                    stack:
+                      type: object
+                      properties:
+                        _id:
+                          type: string
+                          format: uuid
+                          description: ID of the stack
+                          example: 24813116-24bd-44a5-9d30-13a10280f3fb
+                        name:
+                          type: string
+                          description: Name of the stack
+                          example: myasset.jpg
+                        thumbnail:
+                          type: object
+                          properties:
+                            name:
+                              type: string
+                            url:
+                              type: string
+                          required:
+                            - name
+                      required:
+                        - _id
+                        - name
+                      description: Details about the stack the asset is part of
+                  required:
+                    - version
+                    - stack
+                  description: >-
+                    Information about whether or not the asset is in a stack and
+                    what is it's position in it
               required:
                 - type
                 - createDate
@@ -2681,6 +2719,44 @@ components:
                   - name
                   - type
               - $ref: '#/components/schemas/Vtt'
+        stack:
+          type: object
+          properties:
+            version:
+              type: number
+              description: Which version of the stack the asset is
+              example: 1
+            stack:
+              type: object
+              properties:
+                _id:
+                  type: string
+                  format: uuid
+                  description: ID of the stack
+                  example: 24813116-24bd-44a5-9d30-13a10280f3fb
+                name:
+                  type: string
+                  description: Name of the stack
+                  example: myasset.jpg
+                thumbnail:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    url:
+                      type: string
+                  required:
+                    - name
+              required:
+                - _id
+                - name
+              description: Details about the stack the asset is part of
+          required:
+            - version
+            - stack
+          description: >-
+            Information about whether or not the asset is in a stack and what is
+            it's position in it
       required:
         - _id
         - name
@@ -20726,21 +20802,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/BaseAssetDto'
-                  - type: object
-                    properties:
-                      breadcrumb:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/BaseAssetDto'
-                      type:
-                        type: string
-                        enum:
-                          - STACK
-                    required:
-                      - type
-                example: *ref_13
+                $ref: '#/components/schemas/StackDetailedDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -21313,21 +21375,7 @@ paths:
           content:
             application/json:
               schema:
-                allOf:
-                  - $ref: '#/components/schemas/BaseAssetDto'
-                  - type: object
-                    properties:
-                      breadcrumb:
-                        type: array
-                        items:
-                          $ref: '#/components/schemas/BaseAssetDto'
-                      type:
-                        type: string
-                        enum:
-                          - STACK
-                    required:
-                      - type
-                example: *ref_13
+                $ref: '#/components/schemas/StackDetailedDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
