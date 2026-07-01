@@ -6770,9 +6770,7 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: >-
-            Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
+          description: Required scopes ['cosmo:space:write'] not included in authorization
           content:
             application/json:
               schema:
@@ -6782,16 +6780,6 @@ paths:
                   summary: >-
                     Required scopes ['cosmo:space:write'] not included in
                     authorization
-                  value:
-                    code: 009.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 009.001.0004
                     error: insufficient.rights
@@ -6960,9 +6948,7 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: >-
-            Required scopes ['cosmo:space:write'] not included in authorization
-            | User's organization role is insufficient. Must be at least MEMBER
+          description: Required scopes ['cosmo:space:write'] not included in authorization
           content:
             application/json:
               schema:
@@ -6972,16 +6958,6 @@ paths:
                   summary: >-
                     Required scopes ['cosmo:space:write'] not included in
                     authorization
-                  value:
-                    code: 009.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
                   value:
                     code: 009.001.0004
                     error: insufficient.rights
