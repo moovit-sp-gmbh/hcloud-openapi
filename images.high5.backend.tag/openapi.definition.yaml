@@ -4228,6 +4228,51 @@ components:
         _id: 82f7e64ff912d31ffa27a5b7
         name: Moovit Software Products
         avatarUrl: https://example.com/asset/some_avatar.webp
+    CapturedRequestDto:
+      type: object
+      properties:
+        method:
+          type: string
+          description: Http method of the catched request
+          example: POST
+        headers:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: HTTP headers of the catched request
+          example:
+            content-type: application/json
+            user-agent: Postman
+        body:
+          nullable: true
+          description: HTTP body of the catched request
+          example:
+            key: value
+        space:
+          $ref: '#/components/schemas/ReducedSpace'
+        organization:
+          $ref: '#/components/schemas/ReducedOrganization'
+      required:
+        - method
+        - headers
+        - space
+        - organization
+      description: Detailed representation of a captured request
+      example:
+        method: POST
+        headers:
+          content-type: application/json
+          user-agent: Postman
+        body:
+          key: value
+        space:
+          _id: 41c7e64ff912d31ffa27a5b4
+          name: MySpace
+          avatarUrl: https://example.com/asset/some_avatar.webp
+        organization:
+          _id: 7157e64ff912d31ffa27a5f4
+          name: Moovit Software Products
+          avatarUrl: https://example.com/asset/some_avatar.webp
     ReducedUser:
       type: object
       properties:
@@ -4263,7 +4308,7 @@ components:
         - name
         - email
         - avatarUrl
-      description: Creator of the request
+      description: Creator of the database
       example:
         _id: 3817e64ff912d31ffa27a571
         name: Helmut Mc Cloud
@@ -4271,60 +4316,6 @@ components:
         avatarUrl: https://example.com/asset/some_avatar.webp
         isGuest: false
         isAgent: false
-    CapturedRequestDto:
-      type: object
-      properties:
-        method:
-          type: string
-          description: Http method of the catched request
-          example: POST
-        headers:
-          type: object
-          additionalProperties:
-            nullable: true
-          description: HTTP headers of the catched request
-          example:
-            content-type: application/json
-            user-agent: Postman
-        body:
-          nullable: true
-          description: HTTP body of the catched request
-          example:
-            key: value
-        space:
-          $ref: '#/components/schemas/ReducedSpace'
-        organization:
-          $ref: '#/components/schemas/ReducedOrganization'
-        creator:
-          $ref: '#/components/schemas/ReducedUser'
-      required:
-        - method
-        - headers
-        - space
-        - organization
-        - creator
-      description: Detailed representation of a captured request
-      example:
-        method: POST
-        headers:
-          content-type: application/json
-          user-agent: Postman
-        body:
-          key: value
-        space:
-          _id: 41c7e64ff912d31ffa27a5b4
-          name: MySpace
-          avatarUrl: https://example.com/asset/some_avatar.webp
-        organization:
-          _id: 7157e64ff912d31ffa27a5f4
-          name: Moovit Software Products
-          avatarUrl: https://example.com/asset/some_avatar.webp
-        creator:
-          _id: 9287e64ff912d31ffa27a5b1
-          name: Helmut Mc Cloud
-          email: mcloud@helmut.cloud
-          avatarUrl: https://example.com/asset/some_avatar.webp
-          isGuest: false
     DatabaseDto:
       type: object
       properties:
@@ -4346,9 +4337,7 @@ components:
             - $ref: '#/components/schemas/ReducedOrganization'
             - description: Organization the database belongs to
         creator:
-          allOf:
-            - $ref: '#/components/schemas/ReducedUser'
-            - description: Creator of the database
+          $ref: '#/components/schemas/ReducedUser'
         createDate:
           type: number
           description: Date of creation as unix timestamp
@@ -7704,13 +7693,6 @@ components:
 paths:
   /v1/org/{orgName}/spaces/{spaceName}/request/catch:
     get:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       description: >-
         Captures incoming HTTP request headers and body from any method and
         forwards them to NATS for persistence. Requests with payloads exceeding
@@ -7754,11 +7736,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Request successfully captured and forwarded to NATS
@@ -7770,7 +7747,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'spaceName'
+            'orgName' | Failed to validate 'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -7790,71 +7767,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
           description: Organization not found | Given space not found
           content:
@@ -7901,13 +7813,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     post:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       description: >-
         Captures incoming HTTP request headers and body from any method and
         forwards them to NATS for persistence. Requests with payloads exceeding
@@ -7951,11 +7856,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Request successfully captured and forwarded to NATS
@@ -7967,7 +7867,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'spaceName'
+            'orgName' | Failed to validate 'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -7987,71 +7887,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
           description: Organization not found | Given space not found
           content:
@@ -8098,13 +7933,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     put:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       description: >-
         Captures incoming HTTP request headers and body from any method and
         forwards them to NATS for persistence. Requests with payloads exceeding
@@ -8148,11 +7976,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Request successfully captured and forwarded to NATS
@@ -8164,7 +7987,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'spaceName'
+            'orgName' | Failed to validate 'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -8184,71 +8007,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
           description: Organization not found | Given space not found
           content:
@@ -8295,13 +8053,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     patch:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       description: >-
         Captures incoming HTTP request headers and body from any method and
         forwards them to NATS for persistence. Requests with payloads exceeding
@@ -8345,11 +8096,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Request successfully captured and forwarded to NATS
@@ -8361,7 +8107,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'spaceName'
+            'orgName' | Failed to validate 'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -8381,71 +8127,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
           description: Organization not found | Given space not found
           content:
@@ -8492,13 +8173,6 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     delete:
-      security:
-        - bearerAuth:
-            - high5:space:read
-        - basicAuth:
-            - high5:space:read
-        - patAuth:
-            - high5:space:read
       description: >-
         Captures incoming HTTP request headers and body from any method and
         forwards them to NATS for persistence. Requests with payloads exceeding
@@ -8542,11 +8216,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Request successfully captured and forwarded to NATS
@@ -8558,7 +8227,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'spaceName'
+            'orgName' | Failed to validate 'path' parameter 'spaceName'
           content:
             application/json:
               schema:
@@ -8578,71 +8247,6 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 002.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 002.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 002.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
-            User's organization role is insufficient. Must be at least MEMBER |
-            You do not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['high5:space:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['high5:space:read'] not included in
-                    authorization
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 002.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                You do not have the required permission:
-                  summary: You do not have the required permission
-                  value:
-                    code: 002.010.0003
-                    error: space.insufficient.permission
-                    message: You do not have the required permission
         '404':
           description: Organization not found | Given space not found
           content:
