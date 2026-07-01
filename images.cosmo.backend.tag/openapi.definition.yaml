@@ -3806,6 +3806,240 @@ components:
           example: *ref_21
       required:
         - text
+    timecode_in filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - timecode_in
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: *ref_11
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for timecode_in
+    visibility filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - visibility
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum:
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for visibility
+    author filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - author
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: *ref_8
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for author
+    completed filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - completed
+        type:
+          type: string
+          enum:
+            - BOOLEAN
+        value:
+          type: boolean
+        comparator:
+          type: string
+          enum: &ref_22
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: BOOLEAN for completed
+    timestamp.in filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - timestamp.in
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: *ref_11
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for timestamp.in
+    timestamp.out filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - timestamp.out
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: *ref_11
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for timestamp.out
+    hasAnnotation filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - hasAnnotation
+        type:
+          type: string
+          enum:
+            - BOOLEAN
+        value:
+          type: boolean
+        comparator:
+          type: string
+          enum: *ref_22
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: BOOLEAN for hasAnnotation
+    timecode_in:
+      type: string
+      enum:
+        - timecode_in
+    visibility:
+      type: string
+      enum:
+        - visibility
+    author:
+      type: string
+      enum:
+        - author
+    completed:
+      type: string
+      enum:
+        - completed
+    timestamp.in:
+      type: string
+      enum:
+        - timestamp.in
+    timestamp.out:
+      type: string
+      enum:
+        - timestamp.out
+    hasAnnotation:
+      type: string
+      enum:
+        - hasAnnotation
+    CommentSearchDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/timecode_in filters'
+              - $ref: '#/components/schemas/visibility filters'
+              - $ref: '#/components/schemas/createDate filters'
+              - $ref: '#/components/schemas/author filters'
+              - $ref: '#/components/schemas/completed filters'
+              - $ref: '#/components/schemas/timestamp.in filters'
+              - $ref: '#/components/schemas/timestamp.out filters'
+              - $ref: '#/components/schemas/hasAnnotation filters'
+          description: Filters to apply to the search
+        sorting:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/timecode_in'
+                  - $ref: '#/components/schemas/visibility'
+                  - $ref: '#/components/schemas/createDate'
+                  - $ref: '#/components/schemas/author'
+                  - $ref: '#/components/schemas/completed'
+                  - $ref: '#/components/schemas/timestamp.in'
+                  - $ref: '#/components/schemas/timestamp.out'
+                  - $ref: '#/components/schemas/hasAnnotation'
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+          required:
+            - fields
+          description: Sorting to apply to the search
     DeleteCommentsDto:
       type: object
       properties:
@@ -4476,7 +4710,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_22
+        space: &ref_23
           type: object
           additionalProperties:
             type: object
@@ -4485,10 +4719,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_22
-        asset: *ref_22
-        share: *ref_22
-        user: *ref_22
+        namespace: *ref_23
+        asset: *ref_23
+        share: *ref_23
+        user: *ref_23
       description: Map of all the permissions available in the Cosmo service
     StatsDto:
       type: object
@@ -13503,6 +13737,283 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/namespaces/{namespaceName}/comments/search:
+    post:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Search comments
+      tags:
+        - Comment
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
+          required: true
+          name: namespaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+            description: ID of the entity the comments should refer to
+          required: true
+          name: refId
+          in: query
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: annotation
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/CommentSearchDto'
+      responses:
+        '200':
+          description: Filtered comments
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/CommentDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'namespaceName' | Failed to validate 'query' parameter 'refId' |
+            Failed to validate 'query' parameter 'limit' | Failed to validate
+            'query' parameter 'page' | Failed to validate 'query' parameter
+            'annotation'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'namespaceName':
+                  summary: Failed to validate 'path' parameter 'namespaceName'
+                  description: >-
+                    Failed to validate 'path' parameter 'namespaceName' -
+                    {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'namespaceName' -
+                      {error}
+                Failed to validate 'query' parameter 'refId':
+                  summary: Failed to validate 'query' parameter 'refId'
+                  description: Failed to validate 'query' parameter 'refId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'refId' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+                Failed to validate 'query' parameter 'annotation':
+                  summary: Failed to validate 'query' parameter 'annotation'
+                  description: Failed to validate 'query' parameter 'annotation' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'annotation' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Item not found | Given space not found |
+            Namespace not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 009.037.0001
+                    error: item.not.found
+                    message: Item not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Namespace not found:
+                  summary: Namespace not found
+                  value:
+                    code: 009.040.0001
+                    error: namespace.not.found
+                    message: Namespace not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/shares:
     post:
       security:
@@ -13658,7 +14169,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: &ref_23
+                      enum: &ref_24
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -13668,13 +14179,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_24
+                    example: &ref_25
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_25
+                      enum: &ref_26
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -13689,7 +14200,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_26
+                    example: &ref_27
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -13697,7 +14208,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_27
+                        enum: &ref_28
                           - BASE
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
@@ -13710,7 +14221,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_28
+                    example: &ref_29
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -13719,7 +14230,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_29
+                        enum: &ref_30
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -13734,7 +14245,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_30
+                    example: &ref_31
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -14285,43 +14796,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_23
+                      enum: *ref_24
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_24
+                    example: *ref_25
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_25
+                      enum: *ref_26
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_26
+                    example: *ref_27
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_27
+                        enum: *ref_28
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_28
+                    example: *ref_29
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_29
+                        enum: *ref_30
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_30
+                    example: *ref_31
                   users:
                     type: array
                     items:
@@ -14678,43 +15189,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_23
+                      enum: *ref_24
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_24
+                    example: *ref_25
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_25
+                      enum: *ref_26
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_26
+                    example: *ref_27
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_27
+                        enum: *ref_28
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_28
+                    example: *ref_29
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_29
+                        enum: *ref_30
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_30
+                    example: *ref_31
                   users:
                     type: array
                     items:
@@ -16002,43 +16513,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_24
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_24
+                      example: *ref_25
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_26
+                      example: *ref_27
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_27
+                          enum: *ref_28
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_28
+                      example: *ref_29
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_29
+                          enum: *ref_30
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_30
+                      example: *ref_31
                     users:
                       type: array
                       items:
@@ -16366,43 +16877,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_23
+                        enum: *ref_24
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_24
+                      example: *ref_25
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_26
+                      example: *ref_27
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_27
+                          enum: *ref_28
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_28
+                      example: *ref_29
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_29
+                          enum: *ref_30
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_30
+                      example: *ref_31
                     users:
                       type: array
                       items:
@@ -19123,7 +19634,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_31
+                              enum: &ref_32
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -19176,7 +19687,7 @@ paths:
                                 - ADD_USERS_TO_SHARES
                                 - REMOVE_USERS_FROM_SHARES
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_32
+                            example: &ref_33
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -19732,9 +20243,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_31
+                            enum: *ref_32
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_32
+                          example: *ref_33
                       required:
                         - entity
                         - permissions
