@@ -957,6 +957,7 @@ components:
         - idp:organization:write
         - idp:organization:delete
         - idp:organization:admin
+        - idp:storage:read
         - high5:space:read
         - high5:space:execute
         - high5:space:write
@@ -964,7 +965,6 @@ components:
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
-        - cosmo:space:storage:read
       description: >-
         * hcloud:full - Full access to HCloud
 
@@ -1007,7 +1007,7 @@ components:
         * cosmo:space:delete - Access to read, write and delete operations of
         spaces
 
-        * cosmo:space:storage:read - Access to read storage of spaces
+        * idp:storage:read - Access to read storage configuration
       example: idp:organization:write
     PatCreateDto:
       type: object
@@ -1198,7 +1198,7 @@ components:
           type: string
           minLength: 3
           maxLength: 255
-          pattern: ^(?!-)(?!.*--)[\w-. ]{3,255}(?<!-)$
+          pattern: ^(?!-)(?!.*--)[\p{L}\p{M}0-9_. -]{3,255}(?<!-)$
           description: Service account name
           example: ci-worker
       required:
@@ -1677,7 +1677,7 @@ components:
           type: string
           minLength: 3
           maxLength: 255
-          pattern: ^(?!-)(?!.*--)[\w-. ]{3,255}(?<!-)$
+          pattern: ^(?!-)(?!.*--)[\p{L}\p{M}0-9_. -]{3,255}(?<!-)$
           description: >-
             Name of the user (only alphanumeric characters, underscores,
             hyphens, dots and spaces are allowed; it should contain between 3
@@ -1746,7 +1746,7 @@ components:
           type: string
           minLength: 3
           maxLength: 255
-          pattern: ^(?!-)(?!.*--)[\w-. ]{3,255}(?<!-)$
+          pattern: ^(?!-)(?!.*--)[\p{L}\p{M}0-9_. -]{3,255}(?<!-)$
           description: >-
             Name of the user (only alphanumeric characters, underscores,
             hyphens, dots and spaces are allowed; it should contain between 3
@@ -4355,6 +4355,276 @@ components:
           - MUWES4KBJ54DUURPIB3GCVLHHY4GGLST
         createDate: 1665569820033
         modifyDate: 1665569820033
+    StorageDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hexadecimal
+          description: ID of the Storage
+          example: 63ca7c7683160ed3ad9162ff
+        name:
+          type: string
+          description: Name of the storage
+          example: S3 Storage
+        isDefault:
+          type: boolean
+          description: Whether this is the platform default storage
+          example: false
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL of the avatar
+          example: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          allOf:
+            - $ref: '#/components/schemas/ReducedUser'
+            - description: Creator of the storage
+        createDate:
+          type: number
+          description: Creation date of the storage
+          example: 1660922024145
+        modifyDate:
+          type: number
+          description: Date of last database entry modification
+          example: 1660922024145
+        endpoint:
+          type: string
+          description: Endpoint of the storage
+          example: https://s3.amazonaws.com
+        bucket:
+          type: string
+          description: Bucket name of the storage
+          example: my-bucket
+        region:
+          type: string
+          description: Region of the storage
+          example: us-east-1
+        organization:
+          allOf:
+            - $ref: '#/components/schemas/ReducedOrganization'
+            - description: >-
+                Organization the storage belongs to, only set for non default
+                organizations
+        valid:
+          type: boolean
+          description: Whether the storage is valid or not
+          example: false
+        errorMessage:
+          type: string
+          description: Error message if the storage is not valid
+          example: Unable to reach s3 storage
+        signedUrl:
+          type: string
+          description: Signed URL for accessing the storage
+          example: >-
+            https://s3.amazonaws.com/my-bucket/storage-verification/test.mp4?AWSAccessKeyId=AKIAIOSFODNN7EXAMPLE&Expires=1609459200&Signature=EXAMPLESIGNATURE
+        testBucketName:
+          type: string
+          description: Name of the test bucket
+          example: my-bucket_hcloud_test_1609459200000
+      required:
+        - _id
+        - name
+        - isDefault
+        - avatarUrl
+        - creator
+        - createDate
+        - modifyDate
+        - endpoint
+        - bucket
+        - region
+        - valid
+      description: Storage
+      example:
+        _id: 63ca7c7683160ed3ad9162ff
+        name: S3 Storage
+        isDefault: false
+        endpoint: https://s3.amazonaws.com
+        bucket: my-bucket
+        region: us-east-1
+        organization:
+          _id: 63c7e64ff912d31ffa27a5b1
+          name: My Organization
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+        creator:
+          _id: 7184c915f173f39d71bb8b9c
+          name: Helmut Mc Cloud
+          email: hmc@helmut.cloud
+          avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+          isGuest: false
+        createDate: 1660922024145
+        modifyDate: 1660922024145
+        valid: false
+        errorMessage: Unable to reach s3 storage
+        signedUrl: >-
+          https://s3.amazonaws.com/my-bucket/storage-verification/test.mp4?AWSAccessKeyId=AKIAIOSFODNN7EXAMPLE&Expires=1609459200&Signature=EXAMPLESIGNATURE
+        testBucketName: my-bucket_hcloud_test_1609459200000
+    StorageCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[\w-.]{1,32}$
+          description: >-
+            Name of the storage (only alphanumeric characters, hyphens and dots
+            are allowed; it should contain between 1 and 32 characters)
+          example: Helmut4
+        endpoint:
+          type: string
+          format: uri
+        bucket:
+          type: string
+        region:
+          type: string
+        accessKeyId:
+          type: string
+        secretAccessKey:
+          type: string
+      required:
+        - name
+        - endpoint
+        - bucket
+        - region
+        - accessKeyId
+        - secretAccessKey
+      description: The input structure for creating storage
+      example:
+        name: S3 Storage
+        endpoint: https://s3.eu-central-1.amazonaws.com
+        bucket: moov-ag-cosmo
+        region: eu-central-1
+        accessKeyId: AKIAIOSFODNN7EXAMPLE
+        secretAccessKey: AKIAIOSFODNN7EXAMPLE
+    StoragePatchDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 1
+          maxLength: 32
+          pattern: ^[\w-.]{1,32}$
+          description: >-
+            Name of the storage (only alphanumeric characters, hyphens and dots
+            are allowed; it should contain between 1 and 32 characters)
+          example: Helmut4
+        endpoint:
+          type: string
+          format: uri
+        bucket:
+          type: string
+        region:
+          type: string
+        accessKeyId:
+          type: string
+        secretAccessKey:
+          type: string
+        avatarUrl:
+          type: string
+        valid:
+          type: boolean
+          description: >-
+            Whether the storage is valid. This is set to true if the internal
+            storage connection test together with web cors tests succeeds and
+            false if any of the steps fail.
+        errorMessage:
+          type: string
+          description: Error message if the storage is invalid.
+        testBucketName:
+          type: string
+          description: >-
+            The name of the bucket used for testing the storage connection. If
+            set we housekeep the bucket created during validation.
+      description: The input structure for patching storage
+      example:
+        name: S3 Storage
+        endpoint: https://s3.eu-central-1.amazonaws.com
+        bucket: moov-ag-cosmo
+        region: eu-central-1
+        accessKeyId: AKIAIOSFODNN7EXAMPLE
+        secretAccessKey: AKIAIOSFODNN7EXAMPLE
+        avatarUrl: https://example.com/avatar.png
+        valid: false
+        errorMessage: Unable to reach s3 storage
+        testBucketName: moov-ag-cosmo_hcloud_test_1609459200000
+    StorageConfigurationDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hexadecimal
+          description: ID of the Storage
+          example: 63ca7c7683160ed3ad9162ff
+        name:
+          type: string
+          description: Name of the storage
+          example: S3 Storage
+        endpoint:
+          type: string
+          description: Endpoint of the storage
+          example: https://s3.amazonaws.com
+        bucket:
+          type: string
+          description: Bucket name of the storage
+          example: my-bucket
+        region:
+          type: string
+          description: Region of the storage
+          example: us-east-1
+        accessKeyId:
+          type: string
+          description: Access key id of the storage
+          example: AKIAIOSFODNN7EXAMPLE
+        secretAccessKey:
+          type: string
+          description: Secret access key of the storage
+          example: AKIAIOSFODNN7EXAMPLE
+        isDefault:
+          type: boolean
+          description: Whether this storage is the default storage or not
+          example: false
+        valid:
+          type: boolean
+          description: Whether the storage is valid or not
+          example: false
+      required:
+        - _id
+        - name
+        - endpoint
+        - bucket
+        - region
+        - accessKeyId
+        - secretAccessKey
+        - isDefault
+        - valid
+      description: Storage configuration details
+      example:
+        _id: 63ca7c7683160ed3ad9162ff
+        name: S3 Storage
+        endpoint: https://s3.amazonaws.com
+        bucket: my-bucket
+        region: us-east-1
+        accessKeyId: AKIAIOSFODNN7EXAMPLE
+        secretAccessKey: AKIAIOSFODNN7EXAMPLE
+        isDefault: false
+        valid: true
+    ID of the storage. If default got passed the default storage will be returned.:
+      anyOf:
+        - type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+        - type: string
+          enum:
+            - default
+    The id of the storage to delete:
+      type: string
+      minLength: 24
+      maxLength: 24
+      format: hexadecimal
   parameters: {}
 paths:
   /v1/org/{orgName}/settings/domains:
@@ -13958,6 +14228,565 @@ paths:
                     code: 001.029.0001
                     error: totp.not.found
                     message: User has no TOTP activated
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/storage:
+    post:
+      description: |-
+
+        Required scopes: IDP_ORGANIZATION_WRITE
+      summary: Create a new storage
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: noAvatar
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StorageCreateDto'
+      responses:
+        '201':
+          description: Created storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'query' parameter 'noAvatar' | Storage name not allowed | Storage
+            already exists
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'query' parameter 'noAvatar':
+                  summary: Failed to validate 'query' parameter 'noAvatar'
+                  description: Failed to validate 'query' parameter 'noAvatar' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'noAvatar' - {error}
+                Storage name not allowed:
+                  summary: Storage name not allowed
+                  value:
+                    code: 001.055.0003
+                    error: storage.name.not.allowed
+                    message: Storage name not allowed
+                Storage already exists:
+                  summary: Storage already exists
+                  value:
+                    code: 001.055.0001
+                    error: storage.already.exists
+                    message: Storage already exists
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/storage/{storageId}:
+    patch:
+      description: |-
+
+        Required scopes: IDP_ORGANIZATION_WRITE
+      summary: Update a storage
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: storageId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StoragePatchDto'
+      responses:
+        '200':
+          description: Updated storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'storageId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'storageId':
+                  summary: Failed to validate 'path' parameter 'storageId'
+                  description: Failed to validate 'path' parameter 'storageId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'storageId' - {error}
+        '404':
+          description: Storage not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      description: |-
+
+        Required scopes: IDP_ORGANIZATION_WRITE
+      summary: Delete storage
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            $ref: '#/components/schemas/The id of the storage to delete'
+          required: true
+          name: storageId
+          in: path
+      responses:
+        '204':
+          description: Storage deleted successfully
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'storageId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'storageId':
+                  summary: Failed to validate 'path' parameter 'storageId'
+                  description: Failed to validate 'path' parameter 'storageId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'storageId' - {error}
+        '404':
+          description: Storage not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/storage/search:
+    post:
+      description: |-
+
+        Required scopes: IDP_ORGANIZATION_READ
+      summary: Search storages
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: number
+            minimum: 1
+            maximum: 100
+            default: 25
+            description: Page size
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/Search'
+      responses:
+        '200':
+          description: Search results
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/StorageDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'query' parameter 'limit' | Failed to validate 'query' parameter
+            'page'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/storage/{storageIdOrDefault}:
+    get:
+      description: |-
+
+        Required scopes: IDP_STORAGE_READ
+      summary: Get storage configuration
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            $ref: >-
+              #/components/schemas/ID of the storage. If default got passed the
+              default storage will be returned.
+          required: true
+          name: storageIdOrDefault
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+            default: false
+          required: false
+          name: decrypt
+          in: query
+      responses:
+        '200':
+          description: Storage configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageConfigurationDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'storageIdOrDefault' | Failed to
+            validate 'query' parameter 'decrypt'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'storageIdOrDefault':
+                  summary: Failed to validate 'path' parameter 'storageIdOrDefault'
+                  description: >-
+                    Failed to validate 'path' parameter 'storageIdOrDefault' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'storageIdOrDefault' -
+                      {error}
+                Failed to validate 'query' parameter 'decrypt':
+                  summary: Failed to validate 'query' parameter 'decrypt'
+                  description: Failed to validate 'query' parameter 'decrypt' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'decrypt' - {error}
+        '404':
+          description: Storage not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/:orgName/storage/{storageId}/test:
+    get:
+      description: |-
+
+        Required scopes: IDP_STORAGE_READ
+      summary: Test storage configuration
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: storageId
+          in: path
+      responses:
+        '200':
+          description: Storage configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'storageId' | Storage does not
+            fulfill requirements
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'storageId':
+                  summary: Failed to validate 'path' parameter 'storageId'
+                  description: Failed to validate 'path' parameter 'storageId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'storageId' - {error}
+                Storage does not fulfill requirements:
+                  summary: Storage does not fulfill requirements
+                  description: >-
+                    Storage does not fulfill requirements: 'Can't connect to s3
+                    storage'
+                  value:
+                    code: 001.055.0004
+                    error: storage.does.not.fulfill.requirements
+                    message: >-
+                      Storage does not fulfill requirements: 'Can't connect to
+                      s3 storage'
+        '404':
+          description: Storage not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
         '500':
           description: something went wrong
           content:
