@@ -383,6 +383,15 @@ components:
           pattern: ^[\w-.]{1,32}$
           description: Name for the space
           example: my_space
+        storageId:
+          type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+          description: >-
+            ID of the storage to be used for the space. If not provided, the
+            default storage will be used.
+          example: 607f1f77bcf86cd799439011
       required:
         - name
     SpaceRenameDto:
@@ -1716,6 +1725,7 @@ components:
                 - UPDATE_SPACE_NAME
                 - DELETE_SPACE
                 - CONNECT_HIGH5_SPACE
+                - MODIFY_STORAGE
                 - VIEW_ASSETS
                 - VIEW_ASSET_DETAILS
                 - VIEW_ASSET_ACTIVITY
@@ -1789,6 +1799,7 @@ components:
                 - UPDATE_SPACE_NAME
                 - DELETE_SPACE
                 - CONNECT_HIGH5_SPACE
+                - MODIFY_STORAGE
                 - VIEW_ASSETS
                 - VIEW_ASSET_DETAILS
                 - VIEW_ASSET_ACTIVITY
@@ -1891,6 +1902,26 @@ components:
         - name
         - email
         - avatarUrl
+    ReducedStorage:
+      type: object
+      properties:
+        _id:
+          type: string
+          description: ID of the storage configuration
+          example: 69f3415ade47e429503a6124
+        name:
+          type: string
+          description: Name of the storage configuration
+          example: Default Storage
+        isDefault:
+          type: boolean
+          description: Whether this storage configuration is the default one
+          example: true
+      required:
+        - _id
+        - name
+        - isDefault
+      description: Reduced representation of a storage configuration
     SpaceDto:
       type: object
       properties:
@@ -1962,9 +1993,12 @@ components:
               - UPDATE_SPACE_NAME
               - DELETE_SPACE
               - CONNECT_HIGH5_SPACE
+              - MODIFY_STORAGE
           description: Permissions the request user has on the space
           example:
             - UPDATE_SPACE_AVATAR
+        storage:
+          $ref: '#/components/schemas/ReducedStorage'
       required:
         - _id
         - name
@@ -1973,6 +2007,7 @@ components:
         - avatarUrl
         - storageUsed
         - trashAutoDelete
+        - storage
     ReducedTeam:
       type: object
       properties:
@@ -2250,6 +2285,8 @@ components:
                   description: >-
                     Information about whether or not the asset is in a stack and
                     what is it's position in it
+                storage:
+                  $ref: '#/components/schemas/ReducedStorage'
               required:
                 - type
                 - createDate
@@ -4557,11 +4594,11 @@ paths:
     post:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Create a space
       tags:
         - Space
@@ -4611,7 +4648,10 @@ paths:
         '400':
           description: >-
             Failed to validate 'query' parameter 'noAvatar' | Failed to validate
-            'path' parameter 'orgName'
+            'path' parameter 'orgName' | Invalid storage configuration. Please
+            run test in idp in order to validate. If still invalid, please
+            recheck the storage configuration and/or contact your cloud storage
+            administrator.
           content:
             application/json:
               schema:
@@ -4631,6 +4671,20 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                Invalid storage configuration. Please run test in idp in order to validate. If still invalid, please recheck the storage configuration and/or contact your cloud storage administrator.:
+                  summary: >-
+                    Invalid storage configuration. Please run test in idp in
+                    order to validate. If still invalid, please recheck the
+                    storage configuration and/or contact your cloud storage
+                    administrator.
+                  value:
+                    code: 009.055.0004
+                    error: storage.invalid
+                    message: >-
+                      Invalid storage configuration. Please run test in idp in
+                      order to validate. If still invalid, please recheck the
+                      storage configuration and/or contact your cloud storage
+                      administrator.
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -4662,16 +4716,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -4718,11 +4772,11 @@ paths:
     get:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: List spaces
       tags:
         - Space
@@ -4839,16 +4893,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least GUEST
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -4896,11 +4950,11 @@ paths:
     get:
       security:
         - bearerAuth:
-            - high5:space:read
+            - cosmo:space:read
         - basicAuth:
-            - high5:space:read
+            - cosmo:space:read
         - patAuth:
-            - high5:space:read
+            - cosmo:space:read
       summary: Fetch a space
       tags:
         - Space
@@ -5001,16 +5055,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:read'] not included in authorization |
+            Required scopes ['cosmo:space:read'] not included in authorization |
             User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:read'] not included in authorization:
+                Required scopes ['cosmo:space:read'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:read'] not included in
+                    Required scopes ['cosmo:space:read'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -5227,11 +5281,11 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Rename a space
       tags:
         - Space
@@ -5338,7 +5392,7 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
             | You have not enough rights to access/manipulate this resource
           content:
@@ -5346,9 +5400,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -5408,15 +5462,230 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/storage/{storageId}:
+    patch:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Update space storage
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+            description: >-
+              ID of the storage configuration to use for that space. If not
+              provided, the default storage will be used. Only available if
+              space is empty
+          required: false
+          name: storageId
+          in: path
+      responses:
+        '200':
+          description: Updated space storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'storageId' | Invalid storage configuration. Please run test in idp
+            in order to validate. If still invalid, please recheck the storage
+            configuration and/or contact your cloud storage administrator.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'storageId':
+                  summary: Failed to validate 'path' parameter 'storageId'
+                  description: Failed to validate 'path' parameter 'storageId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'storageId' - {error}
+                Invalid storage configuration. Please run test in idp in order to validate. If still invalid, please recheck the storage configuration and/or contact your cloud storage administrator.:
+                  summary: >-
+                    Invalid storage configuration. Please run test in idp in
+                    order to validate. If still invalid, please recheck the
+                    storage configuration and/or contact your cloud storage
+                    administrator.
+                  value:
+                    code: 009.055.0004
+                    error: storage.invalid
+                    message: >-
+                      Invalid storage configuration. Please run test in idp in
+                      order to validate. If still invalid, please recheck the
+                      storage configuration and/or contact your cloud storage
+                      administrator.
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least ADMIN |
+            You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least ADMIN:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    ADMIN
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/high5/link/space:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Link a high5 space to a cosmo space
       tags:
         - Space
@@ -5523,16 +5792,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -5586,11 +5855,11 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Unlink a high5 space from a cosmo space
       tags:
         - Space
@@ -5691,16 +5960,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -5754,15 +6023,15 @@ paths:
     patch:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       description: |-
 
         Required role: MEMBER
-        Required scopes: HIGH5_SPACE_WRITE
+        Required scopes: COSMO_SPACE_WRITE
       summary: Upload custom avatar for the Cosmo Space
       tags:
         - Space
@@ -5833,7 +6102,7 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
             | You have not enough rights to access/manipulate this resource
           content:
@@ -5841,9 +6110,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -5909,11 +6178,11 @@ paths:
     get:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: List users of space
       tags:
         - Space
@@ -6097,16 +6366,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -6154,11 +6423,11 @@ paths:
     put:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Move assets to trash bin
       tags:
         - Asset
@@ -6268,16 +6537,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -6344,11 +6613,11 @@ paths:
     delete:
       security:
         - bearerAuth:
-            - high5:space:write
+            - cosmo:space:write
         - basicAuth:
-            - high5:space:write
+            - cosmo:space:write
         - patAuth:
-            - high5:space:write
+            - cosmo:space:write
       summary: Move assets out of trash bin
       tags:
         - Asset
@@ -6458,16 +6727,16 @@ paths:
                     message: Your authentication token is invalid
         '403':
           description: >-
-            Required scopes ['high5:space:write'] not included in authorization
+            Required scopes ['cosmo:space:write'] not included in authorization
             | User's organization role is insufficient. Must be at least MEMBER
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
-                Required scopes ['high5:space:write'] not included in authorization:
+                Required scopes ['cosmo:space:write'] not included in authorization:
                   summary: >-
-                    Required scopes ['high5:space:write'] not included in
+                    Required scopes ['cosmo:space:write'] not included in
                     authorization
                   value:
                     code: 009.001.0004
@@ -10001,6 +10270,183 @@ paths:
                     code: 009.050.0002
                     error: hc.uploader.waveform.not.found
                     message: Hc Uploader Video waveform not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/assets/{assetId}/vtt:
+    get:
+      security:
+        - bearerAuth:
+            - cosmo:space:read
+        - basicAuth:
+            - cosmo:space:read
+        - patAuth:
+            - cosmo:space:read
+      summary: Get VTT for a specific asset
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\w-+@.]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: assetId
+          in: path
+      responses:
+        '200':
+          description: VTT content
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: VTT content for the asset
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'assetId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'assetId':
+                  summary: Failed to validate 'path' parameter 'assetId'
+                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'assetId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:read'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Given space not found | Asset not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 009.038.0001
+                    error: asset.not.found
+                    message: Asset not found
         '500':
           description: something went wrong
           content:
@@ -18694,6 +19140,7 @@ paths:
                                 - UPDATE_SPACE_NAME
                                 - DELETE_SPACE
                                 - CONNECT_HIGH5_SPACE
+                                - MODIFY_STORAGE
                                 - VIEW_ASSETS
                                 - VIEW_ASSET_DETAILS
                                 - VIEW_ASSET_ACTIVITY
