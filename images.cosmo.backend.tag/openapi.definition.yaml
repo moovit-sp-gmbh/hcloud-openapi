@@ -4088,6 +4088,12 @@ components:
             Whether the share is active or not. Inactive shares cannot be
             accessed.
           example: true
+        invalidLink:
+          type: boolean
+          description: >-
+            True if the parent Space was renamed and share links may no longer
+            be valid.
+          example: false
         waiting:
           type: boolean
           description: >-
@@ -4303,6 +4309,7 @@ components:
         - _id
         - name
         - active
+        - invalidLink
         - waiting
         - creator
         - createDate
@@ -14063,6 +14070,12 @@ paths:
                       Whether the share is active or not. Inactive shares cannot
                       be accessed.
                     example: true
+                  invalidLink:
+                    type: boolean
+                    description: >-
+                      True if the parent Space was renamed and share links may
+                      no longer be valid.
+                    example: false
                   waiting:
                     type: boolean
                     description: >-
@@ -14280,6 +14293,7 @@ paths:
                   - _id
                   - name
                   - active
+                  - invalidLink
                   - waiting
                   - creator
                   - createDate
@@ -14690,6 +14704,12 @@ paths:
                       Whether the share is active or not. Inactive shares cannot
                       be accessed.
                     example: true
+                  invalidLink:
+                    type: boolean
+                    description: >-
+                      True if the parent Space was renamed and share links may
+                      no longer be valid.
+                    example: false
                   waiting:
                     type: boolean
                     description: >-
@@ -14865,6 +14885,7 @@ paths:
                   - _id
                   - name
                   - active
+                  - invalidLink
                   - waiting
                   - creator
                   - createDate
@@ -15083,6 +15104,12 @@ paths:
                       Whether the share is active or not. Inactive shares cannot
                       be accessed.
                     example: true
+                  invalidLink:
+                    type: boolean
+                    description: >-
+                      True if the parent Space was renamed and share links may
+                      no longer be valid.
+                    example: false
                   waiting:
                     type: boolean
                     description: >-
@@ -15258,6 +15285,7 @@ paths:
                   - _id
                   - name
                   - active
+                  - invalidLink
                   - waiting
                   - creator
                   - createDate
@@ -16407,6 +16435,12 @@ paths:
                         Whether the share is active or not. Inactive shares
                         cannot be accessed.
                       example: true
+                    invalidLink:
+                      type: boolean
+                      description: >-
+                        True if the parent Space was renamed and share links may
+                        no longer be valid.
+                      example: false
                     waiting:
                       type: boolean
                       description: >-
@@ -16582,6 +16616,7 @@ paths:
                     - _id
                     - name
                     - active
+                    - invalidLink
                     - waiting
                     - creator
                     - createDate
@@ -16771,6 +16806,12 @@ paths:
                         Whether the share is active or not. Inactive shares
                         cannot be accessed.
                       example: true
+                    invalidLink:
+                      type: boolean
+                      description: >-
+                        True if the parent Space was renamed and share links may
+                        no longer be valid.
+                      example: false
                     waiting:
                       type: boolean
                       description: >-
@@ -16946,6 +16987,7 @@ paths:
                     - _id
                     - name
                     - active
+                    - invalidLink
                     - waiting
                     - creator
                     - createDate
