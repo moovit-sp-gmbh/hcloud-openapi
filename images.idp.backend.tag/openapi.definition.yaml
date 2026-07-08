@@ -1455,7 +1455,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         token:
@@ -1477,7 +1480,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         password:
@@ -1526,7 +1532,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user that forgot their password
           example: hmc@helmut.cloud
         captcha:
@@ -1757,7 +1766,10 @@ components:
           example: Helmut Mc Cloud
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         password:
@@ -1826,7 +1838,10 @@ components:
           example: Helmut Mc Cloud
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         password:
@@ -1892,7 +1907,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         targetUrl:
@@ -1915,7 +1933,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         nonce:
@@ -1975,7 +1996,10 @@ components:
           example: 563b2de208337dc792b65dc2
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: >-
             Email of a user. Must be undefined if userIds are defined and
             vice-versa.
@@ -1994,7 +2018,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the user
           example: hmc@helmut.cloud
         verificationCode:
@@ -3900,7 +3927,10 @@ components:
       properties:
         email:
           type: string
+          minLength: 1
+          maxLength: 255
           format: email
+          pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
           description: Email of the User
           example: hmc@helmut.cloud
       required:
@@ -5274,7 +5304,9 @@ paths:
         - schema:
             type: string
             minLength: 1
+            maxLength: 255
             format: email
+            pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
             description: Email address
             example: john.doe@helmut.cloud
           required: true
@@ -5675,7 +5707,9 @@ paths:
         - schema:
             type: string
             minLength: 1
+            maxLength: 255
             format: email
+            pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
             description: Email of the user
             example: john.doe@helmut.cloud
           required: true
@@ -5797,7 +5831,9 @@ paths:
         - schema:
             type: string
             minLength: 1
+            maxLength: 255
             format: email
+            pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
             description: >-
               The user's email. The email domain will be used to determine the
               appropriate SAML 2.0 provider to use going forward
