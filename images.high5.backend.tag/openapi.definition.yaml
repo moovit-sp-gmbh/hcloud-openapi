@@ -6123,6 +6123,7 @@ components:
         - idp:organization:write
         - idp:organization:delete
         - idp:organization:admin
+        - idp:storage:read
         - high5:space:read
         - high5:space:execute
         - high5:space:write
@@ -6130,7 +6131,6 @@ components:
         - cosmo:space:read
         - cosmo:space:write
         - cosmo:space:delete
-        - cosmo:space:storage:read
       description: >-
         * hcloud:full - Full access to HCloud
 
@@ -6173,7 +6173,7 @@ components:
         * cosmo:space:delete - Access to read, write and delete operations of
         spaces
 
-        * cosmo:space:storage:read - Access to read storage of spaces
+        * idp:storage:read - Access to read storage configuration
       example: idp:organization:write
     UserDto:
       type: object
@@ -13431,6 +13431,9 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns a paginated list of events in the given space filtered by the
+        provided search criteria
       summary: Search events of a space
       tags:
         - Event
@@ -13653,6 +13656,7 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: Returns a single event identified by its name within the given space
       summary: Retrieve the event by it's name
       tags:
         - Event
@@ -13873,7 +13877,11 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
-      summary: Delete  an event by it's name
+      description: >-
+        Deletes an event along with all its streams and designs. If jobs linked
+        to this event exist, a 409 is returned unless deleteLinkedJobs=true is
+        provided, in which case linked jobs are deleted as well
+      summary: Delete an event by it's name
       tags:
         - Event
       parameters:
@@ -13926,6 +13934,16 @@ paths:
           name: eventName
           in: path
         - schema:
+            type: boolean
+            nullable: true
+            description: >-
+              If true, all jobs linked to this event are deleted together with
+              the event; if omitted or false and linked jobs exist, a 409 is
+              returned
+          required: false
+          name: deleteLinkedJobs
+          in: query
+        - schema:
             type: string
           required: true
           name: authorization
@@ -13937,8 +13955,9 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'eventName' | Failed to validate 'path' parameter 'spaceName' |
-            Failed to validate 'string' parameter 'eventName'
+            'eventName' | Failed to validate 'query' parameter
+            'deleteLinkedJobs' | Failed to validate 'path' parameter 'spaceName'
+            | Failed to validate 'string' parameter 'eventName'
           content:
             application/json:
               schema:
@@ -13965,6 +13984,17 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'eventName' - {error}
+                Failed to validate 'query' parameter 'deleteLinkedJobs':
+                  summary: Failed to validate 'query' parameter 'deleteLinkedJobs'
+                  description: >-
+                    Failed to validate 'query' parameter 'deleteLinkedJobs' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'deleteLinkedJobs' -
+                      {error}
                 Failed to validate 'string' parameter 'eventName':
                   summary: Failed to validate 'string' parameter 'eventName'
                   description: >-
@@ -14068,6 +14098,24 @@ paths:
                     code: 002.017.0001
                     error: event.not.found
                     message: Given event not found
+        '409':
+          description: Event still has 2 linked job(s)
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Event still has 2 linked job(s):
+                  summary: Event still has 2 linked job(s)
+                  description: >-
+                    Event still has 2 linked job(s) - delete them first or
+                    confirm cascade deletion
+                  value:
+                    code: 002.017.0003
+                    error: event.has.linked.jobs
+                    message: >-
+                      Event still has 2 linked job(s) - delete them first or
+                      confirm cascade deletion
         '500':
           description: something went wrong
           content:
@@ -14090,6 +14138,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Creates a new event in the given space. The event name must be unique
+        within the space
       summary: Create a new event for a space
       tags:
         - Event
@@ -14283,6 +14334,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Renames an existing event. All jobs linked to this event are
+        automatically updated to reflect the new name
       summary: Change an event's name
       tags:
         - Event
