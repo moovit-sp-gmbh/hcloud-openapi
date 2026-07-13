@@ -101,7 +101,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -280,7 +280,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -443,7 +443,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -652,7 +652,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -845,7 +845,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1075,7 +1075,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1288,7 +1288,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1497,7 +1497,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1690,7 +1690,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1851,7 +1851,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -1994,7 +1994,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -2173,7 +2173,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -2336,7 +2336,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -2516,7 +2516,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -2826,6 +2826,354 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 007.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/avatar/org/{orgName}/storages/{storageName}:
+    post:
+      security:
+        - bearerAuth:
+            - idp:organization:write
+        - basicAuth:
+            - idp:organization:write
+        - patAuth:
+            - idp:organization:write
+      summary: Create a new avatar for the storage
+      tags:
+        - Storage.Avatar
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the storage (only alphanumeric characters, hyphens and
+              dots are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: storageName
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '201':
+          description: Public URL of the created avatar
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AvatarDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'storageName' | An error occurred while
+            transferring the file | An error occurred while processing the image
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 007.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'storageName':
+                  summary: Failed to validate 'path' parameter 'storageName'
+                  description: Failed to validate 'path' parameter 'storageName' - {error}
+                  value:
+                    code: 007.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'storageName' -
+                      {error}
+                An error occurred while transferring the file:
+                  summary: An error occurred while transferring the file
+                  value:
+                    code: 007.026.0004
+                    error: file.transfer.error
+                    message: An error occurred while transferring the file
+                An error occurred while processing the image:
+                  summary: An error occurred while processing the image
+                  value:
+                    code: 007.026.0003
+                    error: image.processing.error
+                    message: An error occurred while processing the image
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 007.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 007.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 007.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['idp:organization:write'] not included in
+            authorization | User's organization role is insufficient. Must be at
+            least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['idp:organization:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['idp:organization:write'] not included in
+                    authorization
+                  value:
+                    code: 007.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 007.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 007.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 007.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - idp:organization:delete
+        - basicAuth:
+            - idp:organization:delete
+        - patAuth:
+            - idp:organization:delete
+      summary: Delete avatar for the storage
+      tags:
+        - Storage.Avatar
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the storage (only alphanumeric characters, hyphens and
+              dots are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: storageName
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'storageName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 007.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'storageName':
+                  summary: Failed to validate 'path' parameter 'storageName'
+                  description: Failed to validate 'path' parameter 'storageName' - {error}
+                  value:
+                    code: 007.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'storageName' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 007.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 007.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 007.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['idp:organization:delete'] not included in
+            authorization | User's organization role is insufficient. Must be at
+            least MEMBER
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['idp:organization:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['idp:organization:delete'] not included in
+                    authorization
+                  value:
+                    code: 007.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 007.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 007.007.0001
+                    error: organization.not.found
+                    message: Organization not found
         '500':
           description: something went wrong
           content:
