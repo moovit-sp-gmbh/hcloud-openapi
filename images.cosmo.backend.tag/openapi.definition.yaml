@@ -2223,6 +2223,9 @@ components:
                       type: number
                     videoId:
                       type: string
+                    fetchUrl:
+                      type: string
+                      format: uri
                   required:
                     - url
                     - token
@@ -2641,6 +2644,9 @@ components:
               type: number
             videoId:
               type: string
+            fetchUrl:
+              type: string
+              format: uri
           required:
             - url
             - token
@@ -2985,6 +2991,9 @@ components:
               type: number
             videoId:
               type: string
+            fetchUrl:
+              type: string
+              format: uri
           required:
             - url
             - token
