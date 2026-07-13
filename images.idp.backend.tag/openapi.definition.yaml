@@ -1806,7 +1806,7 @@ components:
             - type: string
               minLength: 3
               maxLength: 255
-              pattern: ^[\w-+@.]{3,255}$
+              pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
               description: >-
                 Name of the user's private organization, allowed everything
                 defined in the RFC for the email specification (it should
@@ -4534,15 +4534,6 @@ components:
           type: string
           description: Error message if the storage is not valid
           example: Unable to reach s3 storage
-        signedUrl:
-          type: string
-          description: Signed URL for accessing the storage
-          example: >-
-            https://s3.amazonaws.com/my-bucket/storage-verification/test.mp4?AWSAccessKeyId=AKIAIOSFODNN7EXAMPLE&Expires=1609459200&Signature=EXAMPLESIGNATURE
-        testBucketName:
-          type: string
-          description: Name of the test bucket
-          example: my-bucket_hcloud_test_1609459200000
       required:
         - _id
         - name
@@ -4578,9 +4569,6 @@ components:
         modifyDate: 1660922024145
         valid: false
         errorMessage: Unable to reach s3 storage
-        signedUrl: >-
-          https://s3.amazonaws.com/my-bucket/storage-verification/test.mp4?AWSAccessKeyId=AKIAIOSFODNN7EXAMPLE&Expires=1609459200&Signature=EXAMPLESIGNATURE
-        testBucketName: my-bucket_hcloud_test_1609459200000
     StorageCreateDto:
       type: object
       properties:
@@ -4642,22 +4630,6 @@ components:
           type: string
         secretAccessKey:
           type: string
-        avatarUrl:
-          type: string
-        valid:
-          type: boolean
-          description: >-
-            Whether the storage is valid. This is set to true if the internal
-            storage connection test together with web cors tests succeeds and
-            false if any of the steps fail.
-        errorMessage:
-          type: string
-          description: Error message if the storage is invalid.
-        testBucketName:
-          type: string
-          description: >-
-            The name of the bucket used for testing the storage connection. If
-            set we housekeep the bucket created during validation.
       description: The input structure for patching storage
       example:
         name: S3 Storage
@@ -4666,10 +4638,6 @@ components:
         region: eu-central-1
         accessKeyId: AKIAIOSFODNN7EXAMPLE
         secretAccessKey: AKIAIOSFODNN7EXAMPLE
-        avatarUrl: https://example.com/avatar.png
-        valid: false
-        errorMessage: Unable to reach s3 storage
-        testBucketName: moov-ag-cosmo_hcloud_test_1609459200000
     StorageConfigurationDto:
       type: object
       properties:
@@ -4770,7 +4738,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -4837,7 +4805,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -4933,7 +4901,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -5095,7 +5063,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -5381,7 +5349,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -5466,7 +5434,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7385,7 +7353,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7579,7 +7547,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7664,7 +7632,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7726,7 +7694,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7799,7 +7767,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -7909,7 +7877,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8039,7 +8007,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8166,7 +8134,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8271,7 +8239,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8391,7 +8359,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8485,7 +8453,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8595,7 +8563,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8715,7 +8683,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8787,7 +8755,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -8930,7 +8898,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9065,7 +9033,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9160,7 +9128,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9270,7 +9238,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9369,7 +9337,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9465,7 +9433,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9580,7 +9548,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9673,7 +9641,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9789,7 +9757,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9906,7 +9874,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -9996,7 +9964,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10110,7 +10078,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10206,7 +10174,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10342,7 +10310,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10468,7 +10436,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10622,7 +10590,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -10751,7 +10719,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11078,7 +11046,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11157,7 +11125,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11300,7 +11268,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11421,7 +11389,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11524,7 +11492,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11654,7 +11622,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11731,7 +11699,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -11880,7 +11848,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12009,7 +11977,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12113,7 +12081,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12220,7 +12188,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12323,7 +12291,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12425,7 +12393,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12533,7 +12501,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12662,7 +12630,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12768,7 +12736,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -12877,7 +12845,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -14727,7 +14695,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -14827,7 +14795,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -14928,7 +14896,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
@@ -14945,6 +14913,108 @@ paths:
       responses:
         '204':
           description: Storage deleted successfully
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'storageId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'storageId':
+                  summary: Failed to validate 'path' parameter 'storageId'
+                  description: Failed to validate 'path' parameter 'storageId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'storageId' - {error}
+        '404':
+          description: Storage not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/storage/{storageId}/avatar:
+    patch:
+      description: |-
+
+        Required scopes: IDP_ORGANIZATION_WRITE
+      summary: Update a storage avatar
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: storageId
+          in: path
+      requestBody:
+        required: true
+        content:
+          multipart/form-data:
+            schema:
+              $ref: '#/components/schemas/CustomAvatarDto'
+      responses:
+        '200':
+          description: Updated storage
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -15017,7 +15087,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
