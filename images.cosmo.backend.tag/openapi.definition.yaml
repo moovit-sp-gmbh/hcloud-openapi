@@ -4360,20 +4360,29 @@ components:
     EmailCooldownDto:
       type: object
       properties:
-        message:
-          type: string
-          enum:
-            - Some emails were in cooldown and were not resent
         emailsInCooldown:
           type: array
           items:
-            type: string
-            format: email
-          description: List of email addresses that were skipped due to cooldown
+            type: object
+            properties:
+              email:
+                type: string
+                description: Email address
+                example: example@helmut.cloud
+              remainingCooldownInSeconds:
+                type: number
+                description: Remaining cooldown in seconds
+                example: 15
+            required:
+              - email
+              - remainingCooldownInSeconds
+          description: >-
+            List of email addresses that were skipped due to cooldown along with
+            their remaining cooldown in seconds
           example:
-            - example@helmut.cloud
+            - email: example@helmut.cloud
+              remainingCooldownInSeconds: 120
       required:
-        - message
         - emailsInCooldown
     SearchFilterType:
       type: string
