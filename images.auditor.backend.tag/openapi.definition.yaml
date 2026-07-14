@@ -533,7 +533,7 @@ paths:
               - type: string
                 minLength: 3
                 maxLength: 255
-                pattern: ^[\w-+@.]{3,255}$
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
                 description: >-
                   Name of the user's private organization, allowed everything
                   defined in the RFC for the email specification (it should
