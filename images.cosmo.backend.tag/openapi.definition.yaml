@@ -4834,6 +4834,36 @@ components:
             - f2130bf6-f1bb-4bc4-9749-6c7b08e66a68
       required:
         - assetIds
+    StackAddAssetsDto:
+      type: object
+      properties:
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: IDs of the assets to attach to the stack.
+          example:
+            - 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+            - f2130bf6-f1bb-4bc4-9749-6c7b08e66a68
+      required:
+        - assetIds
+    StackRemoveAssetsDto:
+      type: object
+      properties:
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          minItems: 1
+          description: IDs of the assets to detach from the stack.
+          example:
+            - 4bd96ba6-2be3-4cd4-91a3-8af692cf7f84
+            - f2130bf6-f1bb-4bc4-9749-6c7b08e66a68
+      required:
+        - assetIds
     StackReorderDto:
       type: object
       properties:
@@ -21953,7 +21983,7 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/stacks/{stackId}/assets/{assetId}:
+  /v1/org/{orgName}/spaces/{spaceName}/stacks/{stackId}/assets/add:
     post:
       security:
         - bearerAuth:
@@ -21962,7 +21992,7 @@ paths:
             - cosmo:space:write
         - patAuth:
             - cosmo:space:write
-      summary: Attaches an asset to a stack
+      summary: Attaches one or more assets to a stack
       tags:
         - Stack
       parameters:
@@ -22007,21 +22037,25 @@ paths:
           required: true
           name: stackId
           in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: assetId
-          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StackAddAssetsDto'
       responses:
-        '204':
-          description: No Content
+        '200':
+          description: The stack after the assets were attached to it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StackDetailedDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'stackId' | Failed to validate 'path' parameter 'assetId' | One or
-            more specified assets are already part of the stack
+            'stackId' | One or more specified assets are already part of the
+            stack
           content:
             application/json:
               schema:
@@ -22048,13 +22082,6 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'stackId' - {error}
-                Failed to validate 'path' parameter 'assetId':
-                  summary: Failed to validate 'path' parameter 'assetId'
-                  description: Failed to validate 'path' parameter 'assetId' - {error}
-                  value:
-                    code: 009.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'assetId' - {error}
                 One or more specified assets are already part of the stack:
                   summary: One or more specified assets are already part of the stack
                   value:
@@ -22153,7 +22180,8 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
-    delete:
+  /v1/org/{orgName}/spaces/{spaceName}/stacks/{stackId}/assets/remove:
+    post:
       security:
         - bearerAuth:
             - cosmo:space:write
@@ -22161,7 +22189,7 @@ paths:
             - cosmo:space:write
         - patAuth:
             - cosmo:space:write
-      summary: Detaches an asset from a stack
+      summary: Detaches one or more assets from a stack
       tags:
         - Stack
       parameters:
@@ -22206,20 +22234,28 @@ paths:
           required: true
           name: stackId
           in: path
-        - schema:
-            type: string
-            format: uuid
-          required: true
-          name: assetId
-          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/StackRemoveAssetsDto'
       responses:
+        '200':
+          description: The stack after the assets were detached from it
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StackDetailedDto'
         '204':
-          description: No Content
+          description: >-
+            The stack was disbanded because there is only one asset left in the
+            stack after the removal
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'stackId' | Failed to validate 'path' parameter 'assetId'
+            'stackId' | A stack cannot be composed of a single asset
           content:
             application/json:
               schema:
@@ -22246,13 +22282,12 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'stackId' - {error}
-                Failed to validate 'path' parameter 'assetId':
-                  summary: Failed to validate 'path' parameter 'assetId'
-                  description: Failed to validate 'path' parameter 'assetId' - {error}
+                A stack cannot be composed of a single asset:
+                  summary: A stack cannot be composed of a single asset
                   value:
-                    code: 009.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'assetId' - {error}
+                    code: 009.054.0004
+                    error: stack.must.have.multiple.assets
+                    message: A stack cannot be composed of a single asset
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
