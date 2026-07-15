@@ -3230,8 +3230,16 @@ components:
           type: string
           minLength: 1
           maxLength: 256
-          description: Quartz cron expression
+          description: Quartz cron expression, provide either this or 'timestamp', not both
           example: 0 0 * * * ?
+        timestamp:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: >-
+            Future Unix timestamp in milliseconds, provide either this or
+            'expression', not both
+          example: 1846653338319
         targetEvent:
           type: string
           minLength: 1
@@ -3441,7 +3449,6 @@ components:
               minute: 0
       required:
         - name
-        - expression
         - targetEvent
         - timezone
         - target
@@ -18005,6 +18012,9 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns the cronjob with the given ID from the specified space,
+        optionally including the timestamps of the next three executions
       summary: Retrieve a cronjob by its ID
       tags:
         - Job
@@ -18242,6 +18252,10 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Fully replaces all fields of the specified cronjob with the provided
+        data, accepting either a Quartz cron expression or a future Unix
+        timestamp
       summary: Updates a cronjob
       tags:
         - Job
@@ -18323,7 +18337,7 @@ paths:
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
             'jobId' | Failed to validate 'query' parameter 'nextExecution' |
             Failed to validate 'path' parameter 'spaceName' | Failed to validate
-            'path' parameter 'jobId'
+            'path' parameter 'jobId' | The provided timestamp is in the past
           content:
             application/json:
               schema:
@@ -18361,6 +18375,17 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'nextExecution' -
                       {error}
+                The provided timestamp is in the past:
+                  summary: The provided timestamp is in the past
+                  description: >-
+                    The provided timestamp is in the past - a scheduled event
+                    must be created with a future timestamp
+                  value:
+                    code: 002.020.0004
+                    error: cronjob.timestamp.in.past
+                    message: >-
+                      The provided timestamp is in the past - a scheduled event
+                      must be created with a future timestamp
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -18485,6 +18510,9 @@ paths:
             - high5:space:delete
         - patAuth:
             - high5:space:delete
+      description: >-
+        Permanently deletes the specified cronjob along with all of its
+        associated execution logs
       summary: Deletes a cronjob
       tags:
         - Job
@@ -18697,6 +18725,10 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns a paginated list of cronjobs within the specified space that
+        match the provided search filter, returning all cronjobs of the space if
+        no filter is given
       summary: >-
         Retrieves all cronjobs that match the provided search filter. Will
         return all cronjobs of the specified space if no search filter is
@@ -18944,6 +18976,10 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Creates a new cronjob in the specified space using either a Quartz cron
+        expression or a future Unix timestamp, which is automatically converted
+        to a one-time Quartz expression
       summary: Creates a new cronjob
       tags:
         - Job
@@ -19015,7 +19051,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'query' parameter
-            'nextExecution' | Failed to validate 'path' parameter 'spaceName'
+            'nextExecution' | Failed to validate 'path' parameter 'spaceName' |
+            The provided timestamp is in the past
           content:
             application/json:
               schema:
@@ -19046,6 +19083,17 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter 'nextExecution' -
                       {error}
+                The provided timestamp is in the past:
+                  summary: The provided timestamp is in the past
+                  description: >-
+                    The provided timestamp is in the past - a scheduled event
+                    must be created with a future timestamp
+                  value:
+                    code: 002.020.0004
+                    error: cronjob.timestamp.in.past
+                    message: >-
+                      The provided timestamp is in the past - a scheduled event
+                      must be created with a future timestamp
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -19152,6 +19200,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Updates the Quartz cron expression of the specified cronjob without
+        affecting any other fields
       summary: Updates the quartz cron expression of the cronjob
       tags:
         - Job
@@ -19396,6 +19447,7 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: Enables or disables the specified cronjob by updating its enabled flag
       summary: Sets the cronjob's enabled flag
       tags:
         - Job
@@ -19640,6 +19692,10 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns up to 10 UTC timestamps (in milliseconds) for the upcoming
+        executions of the specified cronjob, defaulting to 3 if no amount is
+        provided
       summary: >-
         Retrieves the timestamps (in milliseconds, UTC+0) of the next n cronjob
         executions
@@ -19885,6 +19941,10 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
+      description: >-
+        Resolves a Quartz cron expression against a given timezone and returns
+        the UTC timestamps (in milliseconds) of the next n upcoming executions
+        without requiring an existing cronjob
       summary: >-
         Resolve a Quartz cron expression along with a timezone to get the next
         execution(s)
