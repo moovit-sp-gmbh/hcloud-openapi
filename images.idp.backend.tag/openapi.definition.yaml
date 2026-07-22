@@ -168,14 +168,14 @@ components:
             sending message to team members)
           example: Devs
         source:
-          type: integer
+          type: string
           enum:
-            - 0
-            - 1
-            - 2
-            - 3
+            - GLOBAL
+            - COSMO
+            - HIGH5
+            - IDP
           description: The system or service that originated this message
-          example: 0
+          example: GLOBAL
         type:
           type: string
           enum:
@@ -226,7 +226,7 @@ components:
       example:
         to: john.doe@helmut.cloud
         recipient: USER
-        source: 0
+        source: GLOBAL
         type: MESSAGES
         properties:
           message: Hello and welcome to our platform!
@@ -2639,14 +2639,14 @@ components:
             - $ref: '#/components/schemas/ReducedUser'
             - description: Recipient of the message
         source:
-          type: integer
+          type: string
           enum:
-            - 0
-            - 1
-            - 2
-            - 3
+            - GLOBAL
+            - COSMO
+            - HIGH5
+            - IDP
           description: The system or service that originated this message
-          example: 0
+          example: GLOBAL
         type:
           type: string
           enum:
