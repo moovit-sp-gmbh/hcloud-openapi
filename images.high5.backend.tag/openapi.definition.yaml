@@ -5335,6 +5335,90 @@ components:
         - status
         - log
       description: The current status and latest log of a High5 stream execution
+    DesignBuild:
+      type: object
+      properties:
+        nodes:
+          type: array
+          items:
+            type: object
+            properties:
+              uuid:
+                type: string
+              name:
+                type: string
+              path:
+                type: string
+              streamId:
+                type: string
+              catalog:
+                type: object
+                properties:
+                  version:
+                    type: string
+                  url:
+                    type: string
+              bypass:
+                type: boolean
+              startNode:
+                type: boolean
+              onSuccess:
+                type: string
+              onFail:
+                type: string
+              inputs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    originalValue:
+                      nullable: true
+                    value:
+                      nullable: true
+                  required:
+                    - name
+              outputs:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    value:
+                      nullable: true
+                  required:
+                    - name
+              additionalConnectors:
+                type: array
+                items:
+                  type: object
+                  properties:
+                    name:
+                      type: string
+                    targetUuid:
+                      type: string
+                  required:
+                    - name
+                    - targetUuid
+              breakpoint:
+                type: boolean
+              color:
+                type: string
+              nodeType:
+                $ref: '#/components/schemas/NodeType'
+            required:
+              - uuid
+              - name
+              - path
+              - color
+              - nodeType
+        startNode:
+          type: string
+      required:
+        - nodes
+      description: Published design definition
     WaveEngineDto:
       type: object
       properties:
@@ -5430,89 +5514,7 @@ components:
       type: object
       properties:
         design:
-          type: object
-          properties:
-            nodes:
-              type: array
-              items:
-                type: object
-                properties:
-                  uuid:
-                    type: string
-                  name:
-                    type: string
-                  path:
-                    type: string
-                  streamId:
-                    type: string
-                  catalog:
-                    type: object
-                    properties:
-                      version:
-                        type: string
-                      url:
-                        type: string
-                  bypass:
-                    type: boolean
-                  startNode:
-                    type: boolean
-                  onSuccess:
-                    type: string
-                  onFail:
-                    type: string
-                  inputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        originalValue:
-                          nullable: true
-                        value:
-                          nullable: true
-                      required:
-                        - name
-                  outputs:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        value:
-                          nullable: true
-                      required:
-                        - name
-                  additionalConnectors:
-                    type: array
-                    items:
-                      type: object
-                      properties:
-                        name:
-                          type: string
-                        targetUuid:
-                          type: string
-                      required:
-                        - name
-                        - targetUuid
-                  breakpoint:
-                    type: boolean
-                  color:
-                    type: string
-                  nodeType:
-                    $ref: '#/components/schemas/NodeType'
-                required:
-                  - uuid
-                  - name
-                  - path
-                  - color
-                  - nodeType
-            startNode:
-              type: string
-          required:
-            - nodes
-          description: Published design definition
+          $ref: '#/components/schemas/DesignBuild'
         payload:
           type: object
           properties:
@@ -5543,6 +5545,15 @@ components:
           type: string
           format: hexadecimal
           description: ID of the execution
+          example: 29c7e6e4eae82d8001b6a175
+        streamName:
+          type: string
+          description: Name of the stream being executed
+          example: Test-Stream
+        eventName:
+          type: string
+          description: Name of the event the stream belongs to
+          example: Helmut4.webhook.test
       required:
         - payload
         - dry
@@ -5551,6 +5562,8 @@ components:
         - info
         - debug
         - executionId
+        - streamName
+        - eventName
       description: Complete execution package for a stream
     ExecutionTreeNodeDto:
       type: object
@@ -31301,7 +31314,7 @@ paths:
                     sequential, incremental by 1, starting from 1 and not
                     exceeding total events stream count.
                   value:
-                    code: 002.014.0003
+                    code: 002.014.0002
                     error: stream.invalid.order
                     message: >-
                       The stream order provided is invalid. It should be
