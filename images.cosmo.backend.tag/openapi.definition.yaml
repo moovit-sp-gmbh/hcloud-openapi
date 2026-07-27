@@ -16908,12 +16908,22 @@ paths:
                     error: share.not.found
                     message: Share not found
         '409':
-          description: The HMAC supplied is incorrect.
+          description: >-
+            Share link is no longer valid because the space was renamed | The
+            HMAC supplied is incorrect.
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Share link is no longer valid because the space was renamed:
+                  summary: Share link is no longer valid because the space was renamed
+                  value:
+                    code: 009.045.0010
+                    error: share.link.invalid
+                    message: >-
+                      Share link is no longer valid because the space was
+                      renamed
                 The HMAC supplied is incorrect.:
                   summary: The HMAC supplied is incorrect.
                   value:
@@ -20071,6 +20081,21 @@ paths:
                     code: 009.038.0001
                     error: asset.not.found
                     message: Asset not found
+        '409':
+          description: Share link is no longer valid because the space was renamed
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Share link is no longer valid because the space was renamed:
+                  summary: Share link is no longer valid because the space was renamed
+                  value:
+                    code: 009.045.0010
+                    error: share.link.invalid
+                    message: >-
+                      Share link is no longer valid because the space was
+                      renamed
         '500':
           description: something went wrong
           content:
