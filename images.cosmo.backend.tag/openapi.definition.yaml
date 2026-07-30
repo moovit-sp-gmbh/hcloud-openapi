@@ -1416,6 +1416,79 @@ components:
           required:
             - fields
           description: Sorting to apply to the search
+    AssetBulkDeleteByFilterDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/type filters'
+              - $ref: '#/components/schemas/assetType filters'
+              - $ref: '#/components/schemas/_id filters'
+              - $ref: '#/components/schemas/name filters'
+              - $ref: '#/components/schemas/createDate filters'
+              - $ref: '#/components/schemas/modifyDate filters'
+              - $ref: '#/components/schemas/size filters'
+              - $ref: '#/components/schemas/extension filters'
+              - $ref: '#/components/schemas/creator.name filters'
+              - $ref: '#/components/schemas/creator._id filters'
+              - $ref: '#/components/schemas/resolution filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.approvalStatus
+                  filters
+              - $ref: '#/components/schemas/namespace.<namespaceName>.tag filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.metadata.<key>
+                  filters
+          description: Filters to apply to the search
+        sorting:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/type'
+                  - $ref: '#/components/schemas/assetType'
+                  - $ref: '#/components/schemas/_id'
+                  - $ref: '#/components/schemas/name'
+                  - $ref: '#/components/schemas/createDate'
+                  - $ref: '#/components/schemas/modifyDate'
+                  - $ref: '#/components/schemas/size'
+                  - $ref: '#/components/schemas/extension'
+                  - $ref: '#/components/schemas/creator.name'
+                  - $ref: '#/components/schemas/creator._id'
+                  - $ref: '#/components/schemas/resolution'
+                  - $ref: >-
+                      #/components/schemas/namespace.<namespaceName>.approvalStatus
+                  - $ref: '#/components/schemas/namespace.<namespaceName>.tag'
+                  - $ref: >-
+                      #/components/schemas/namespace.<namespaceName>.metadata.<key>
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+          required:
+            - fields
+          description: Sorting to apply to the search
+        mode:
+          type: string
+          enum:
+            - TRASHBIN
+            - PERMANENT
+          default: TRASHBIN
+          description: >-
+            * TRASHBIN - Move the matching assets to the trash bin of the space
+
+            * PERMANENT - Permanently delete the matching assets. This is a
+            non-recoverable action.
+          example: TRASHBIN
+      description: >-
+        Deletes all assets of a space that match the given filters. All filters
+        must match for an asset to be deleted (AND combination).
     AssetRenameDto:
       type: object
       properties:
@@ -3756,6 +3829,34 @@ components:
           MEDIA_ASSET: '#/components/schemas/MediaAssetDetailedDto'
           STACK: '#/components/schemas/StackDetailedDto'
           FOLDER: '#/components/schemas/FolderDetailedDto'
+    AssetBulkDeleteResultDto:
+      type: object
+      properties:
+        mode:
+          type: string
+          enum:
+            - TRASHBIN
+            - PERMANENT
+          description: The deletion mode that was applied
+        count:
+          type: integer
+          description: Number of assets that matched the filters and were deleted
+        assetIds:
+          type: array
+          items:
+            type: string
+            format: uuid
+          description: IDs of the deleted assets
+      required:
+        - mode
+        - count
+        - assetIds
+      example:
+        mode: TRASHBIN
+        count: 2
+        assetIds:
+          - 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
+          - 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
     AssetPermissionsDto:
       type: object
       additionalProperties:
@@ -10258,6 +10359,271 @@ paths:
                     code: TODO
                     error: TODO
                     message: TODO
+  /v1/org/{orgName}/spaces/{spaceName}/assets/bulk-delete:
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      description: >-
+        Deletes all assets of the space that match the given filters. All
+        filters must match for an asset to be deleted (AND combination).
+
+        To match one of multiple values for the same field, provide an array as
+        the filter value.
+
+        Depending on the mode, the matching assets are either moved to the trash
+        bin (TRASHBIN, default) or permanently deleted (PERMANENT).
+
+        Folders are never deleted by this endpoint and assets that are already
+        in the trash bin are ignored. Stacks are deleted as a whole, including
+        all of their versions.
+
+        The operation is all-or-nothing: if the user is not allowed to delete
+        one of the matching assets, no assets are deleted at all.
+      summary: Bulk delete assets by filter
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the namespace (only alphanumeric characters, hyphens
+                  and dots are allowed; it should contain between 3 and 64
+                  characters)
+                example: My-Namespace
+              - type: string
+                enum:
+                  - '*'
+              - type: array
+                items:
+                  anyOf:
+                    - type: string
+                      minLength: 3
+                      maxLength: 64
+                      pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
+                    - type: string
+                      minLength: 3
+                      maxLength: 64
+                      pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                      description: >-
+                        Name of the namespace (only alphanumeric characters,
+                        hyphens and dots are allowed; it should contain between
+                        3 and 64 characters)
+                      example: My-Namespace
+                    - type: string
+                      enum:
+                        - '*'
+            description: >-
+              Use * to fetch from all namespaces. Can only be used if spaceName
+              is also defined.
+          required: false
+          name: namespace
+          in: query
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AssetBulkDeleteByFilterDto'
+      responses:
+        '200':
+          description: Summary of the deleted assets
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AssetBulkDeleteResultDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'query' parameter
+            'namespace'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'query' parameter 'namespace':
+                  summary: Failed to validate 'query' parameter 'namespace'
+                  description: Failed to validate 'query' parameter 'namespace' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'namespace' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | You have not enough rights to access/manipulate this resource
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: >-
+            Organization not found | Given space not found | Asset not found |
+            Item not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 009.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Asset not found:
+                  summary: Asset not found
+                  value:
+                    code: 009.038.0001
+                    error: asset.not.found
+                    message: Asset not found
+                Item not found:
+                  summary: Item not found
+                  value:
+                    code: 009.037.0001
+                    error: item.not.found
+                    message: Item not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/assets/permissions:
     post:
       security:
