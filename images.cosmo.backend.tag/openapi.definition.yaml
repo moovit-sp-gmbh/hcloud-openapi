@@ -5137,6 +5137,27 @@ components:
                   - name
                   - type
                   - thumbnailUrl
+              - type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  type:
+                    type: string
+                    enum:
+                      - STACK
+                  thumbnailUrl:
+                    type: string
+                    description: Thumbnail URL
+                    example: >-
+                      https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                required:
+                  - _id
+                  - name
+                  - type
+                  - thumbnailUrl
           description: List of assets and folders in the share.
       required:
         - _id
@@ -16367,6 +16388,27 @@ paths:
                             - name
                             - type
                             - thumbnailUrl
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - STACK
+                            thumbnailUrl:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnailUrl
                     description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
@@ -17041,6 +17083,27 @@ paths:
                             - name
                             - type
                             - thumbnailUrl
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - STACK
+                            thumbnailUrl:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnailUrl
                     description: List of assets and folders in the share.
                   permissionGroups:
                     type: array
@@ -17481,6 +17544,27 @@ paths:
                               type: string
                               enum:
                                 - MEDIA_ASSET
+                            thumbnailUrl:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnailUrl
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - STACK
                             thumbnailUrl:
                               type: string
                               description: Thumbnail URL
@@ -18862,6 +18946,27 @@ paths:
                               - name
                               - type
                               - thumbnailUrl
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - STACK
+                              thumbnailUrl:
+                                type: string
+                                description: Thumbnail URL
+                                example: >-
+                                  https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                            required:
+                              - _id
+                              - name
+                              - type
+                              - thumbnailUrl
                       description: List of assets and folders in the share.
                     permissionGroups:
                       type: array
@@ -19263,6 +19368,27 @@ paths:
                                 type: string
                                 enum:
                                   - MEDIA_ASSET
+                              thumbnailUrl:
+                                type: string
+                                description: Thumbnail URL
+                                example: >-
+                                  https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                            required:
+                              - _id
+                              - name
+                              - type
+                              - thumbnailUrl
+                          - type: object
+                            properties:
+                              _id:
+                                type: string
+                                format: uuid
+                              name:
+                                type: string
+                              type:
+                                type: string
+                                enum:
+                                  - STACK
                               thumbnailUrl:
                                 type: string
                                 description: Thumbnail URL
