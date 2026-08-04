@@ -51,6 +51,488 @@ components:
       type: string
       description: Share password
       example: super-safe
+    active filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - active
+        type:
+          type: string
+          enum:
+            - BOOLEAN
+        value:
+          type: boolean
+        comparator:
+          type: string
+          enum: &ref_24
+            - is
+            - is not
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: BOOLEAN for active
+    NUMBER:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - createDate
+        type:
+          type: string
+          enum:
+            - NUMBER
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: &ref_0
+            - is
+            - is not
+            - greater than
+            - less than
+            - greater than or equal
+            - less than or equal
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: NUMBER for createDate
+    DATE:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - createDate
+        type:
+          type: string
+          enum:
+            - DATE
+        value:
+          type: number
+        comparator:
+          type: string
+          enum: &ref_1
+            - is
+            - is not
+            - greater than
+            - less than
+            - greater than or equal
+            - less than or equal
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: DATE for createDate
+    createDate filters:
+      oneOf:
+        - $ref: '#/components/schemas/NUMBER'
+        - $ref: '#/components/schemas/DATE'
+      discriminator:
+        propertyName: type
+        mapping:
+          NUMBER: '#/components/schemas/NUMBER'
+          DATE: '#/components/schemas/DATE'
+    expires filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/NUMBER'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - expires
+                type:
+                  type: string
+                  enum:
+                    - NUMBER
+                value:
+                  type: number
+                comparator:
+                  type: string
+                  enum: *ref_0
+              description: NUMBER for expires
+        - allOf:
+            - $ref: '#/components/schemas/DATE'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - expires
+                type:
+                  type: string
+                  enum:
+                    - DATE
+                value:
+                  type: number
+                comparator:
+                  type: string
+                  enum: *ref_1
+              description: DATE for expires
+      discriminator:
+        propertyName: type
+        mapping:
+          NUMBER: '#/components/schemas/NUMBER'
+          DATE: '#/components/schemas/DATE'
+    STRING:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - assetName
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: &ref_2
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for assetName
+    SELECT:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - assetName
+        type:
+          type: string
+          enum:
+            - SELECT
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: &ref_3
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+        allowedValues:
+          type: array
+          items:
+            type: string
+      required:
+        - key
+        - type
+        - value
+        - comparator
+        - allowedValues
+      description: SELECT for assetName
+    TYPEAHEAD:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - assetName
+        type:
+          type: string
+          enum:
+            - TYPEAHEAD
+        value:
+          type: string
+        comparator:
+          type: string
+          enum: &ref_4
+            - is
+            - is not
+            - starts with
+            - ends with
+            - contains
+        allowedValues:
+          type: array
+          items:
+            type: string
+      required:
+        - key
+        - type
+        - value
+        - comparator
+        - allowedValues
+      description: TYPEAHEAD for assetName
+    assetName filters:
+      oneOf:
+        - $ref: '#/components/schemas/STRING'
+        - $ref: '#/components/schemas/SELECT'
+        - $ref: '#/components/schemas/TYPEAHEAD'
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    creator.name filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+              description: STRING for creator.name
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_3
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for creator.name
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - creator.name
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_4
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for creator.name
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    access filters:
+      type: object
+      properties:
+        key:
+          type: string
+          enum:
+            - access
+        type:
+          type: string
+          enum:
+            - STRING
+        value:
+          anyOf:
+            - type: string
+            - type: array
+              items:
+                type: string
+        comparator:
+          type: string
+          enum: *ref_2
+      required:
+        - key
+        - type
+        - value
+        - comparator
+      description: STRING for access
+    permissions filters:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - permissions
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+              description: STRING for permissions
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - permissions
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_3
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for permissions
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - permissions
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_4
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for permissions
+      discriminator:
+        propertyName: type
+        mapping:
+          STRING: '#/components/schemas/STRING'
+          SELECT: '#/components/schemas/SELECT'
+          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
+    active:
+      type: string
+      enum:
+        - active
+    createDate:
+      type: string
+      enum:
+        - createDate
+    expires:
+      type: string
+      enum:
+        - expires
+    assetName:
+      type: string
+      enum:
+        - assetName
+    creator.name:
+      type: string
+      enum:
+        - creator.name
+    access:
+      type: string
+      enum:
+        - access
+    permissions:
+      type: string
+      enum:
+        - permissions
+    ShareSearchDto:
+      type: object
+      properties:
+        filters:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/active filters'
+              - $ref: '#/components/schemas/createDate filters'
+              - $ref: '#/components/schemas/expires filters'
+              - $ref: '#/components/schemas/assetName filters'
+              - $ref: '#/components/schemas/creator.name filters'
+              - $ref: '#/components/schemas/access filters'
+              - $ref: '#/components/schemas/permissions filters'
+          description: Filters to apply to the search
+        sorting:
+          type: object
+          properties:
+            fields:
+              type: array
+              items:
+                anyOf:
+                  - $ref: '#/components/schemas/active'
+                  - $ref: '#/components/schemas/createDate'
+                  - $ref: '#/components/schemas/expires'
+                  - $ref: '#/components/schemas/assetName'
+                  - $ref: '#/components/schemas/creator.name'
+                  - $ref: '#/components/schemas/access'
+                  - $ref: '#/components/schemas/permissions'
+            direction:
+              type: string
+              enum:
+                - ASC
+                - DESC
+              default: ASC
+          required:
+            - fields
+          description: Sorting to apply to the search
     ShareCreateDto:
       allOf:
         - allOf:
@@ -127,7 +609,7 @@ components:
                   type: array
                   items:
                     type: string
-                    enum: &ref_0
+                    enum: &ref_5
                       - VIEW_ASSETS
                       - VIEW_ASSET_DETAILS
                       - VIEW_ASSET_ACTIVITY
@@ -139,13 +621,13 @@ components:
                       - MOVE_ASSETS
                       - RENAME_ASSETS
                   description: List of the permissions to apply (legacy, v1).
-                  example: &ref_1
+                  example: &ref_6
                     - VIEW_ASSETS
                 assetPermissionGroups:
                   type: array
                   items:
                     type: string
-                    enum: &ref_2
+                    enum: &ref_7
                       - VIEW_ASSETS_ONLY
                       - BASE
                       - ENABLE_DOWNLOAD
@@ -153,7 +635,7 @@ components:
                       - ENABLE_ACTIVITY
                       - ENABLE_DELETION
                   description: List of the permissions to apply (new, v2).
-                  example: &ref_3
+                  example: &ref_8
                     - BASE
         - type: object
           properties:
@@ -163,7 +645,7 @@ components:
                 type: array
                 items:
                   type: string
-                  enum: &ref_4
+                  enum: &ref_9
                     - VIEW_ASSET_TAGS
                     - WRITE_ASSET_TAGS
                     - VIEW_ASSET_STATUS
@@ -180,7 +662,7 @@ components:
                 Namespaces to include in the share. Share consumers will only
                 able to read/write asset comments and statuses according to the
                 permissions set in this map. (legacy, v1).
-              example: &ref_5
+              example: &ref_10
                 rush:
                   - VIEW_ASSET_STATUS
             namespaceGroups:
@@ -189,7 +671,7 @@ components:
                 type: array
                 items:
                   type: string
-                  enum: &ref_6
+                  enum: &ref_11
                     - BASE
                     - ENABLE_COMMENTS
                     - ENABLE_COMMENT_DELETION
@@ -202,7 +684,7 @@ components:
                 Namespaces to include in the share. Share consumers will only
                 able to read/write asset comments and statuses according to the
                 permission groups set in this map. (new, v2).
-              example: &ref_7
+              example: &ref_12
                 rush:
                   - ENABLE_COMMENTS
     ShareLinkDto:
@@ -296,16 +778,16 @@ components:
                   type: array
                   items:
                     type: string
-                    enum: *ref_0
+                    enum: *ref_5
                   description: List of the permissions to apply (legacy, v1).
-                  example: *ref_1
+                  example: *ref_6
                 assetPermissionGroups:
                   type: array
                   items:
                     type: string
-                    enum: *ref_2
+                    enum: *ref_7
                   description: List of the permissions to apply (new, v2).
-                  example: *ref_3
+                  example: *ref_8
         - type: object
           properties:
             namespaces:
@@ -314,24 +796,24 @@ components:
                 type: array
                 items:
                   type: string
-                  enum: *ref_4
+                  enum: *ref_9
               description: >-
                 Namespaces to include in the share. Share consumers will only
                 able to read/write asset comments and statuses according to the
                 permissions set in this map. (legacy, v1).
-              example: *ref_5
+              example: *ref_10
             namespaceGroups:
               type: object
               additionalProperties:
                 type: array
                 items:
                   type: string
-                  enum: *ref_6
+                  enum: *ref_11
               description: >-
                 Namespaces to include in the share. Share consumers will only
                 able to read/write asset comments and statuses according to the
                 permission groups set in this map. (new, v2).
-              example: *ref_7
+              example: *ref_12
       description: Object used to patch shares
     DeleteSharesDto:
       type: object
@@ -513,110 +995,75 @@ components:
         - value
         - comparator
       description: STRING for type
-    STRING:
-      type: object
-      properties:
-        key:
-          type: string
-          enum:
-            - assetType
-        type:
-          type: string
-          enum:
-            - STRING
-        value:
-          anyOf:
-            - type: string
-            - type: array
-              items:
-                type: string
-        comparator:
-          type: string
-          enum: &ref_8
-            - is
-            - is not
-            - starts with
-            - ends with
-            - contains
-      required:
-        - key
-        - type
-        - value
-        - comparator
-      description: STRING for assetType
-    SELECT:
-      type: object
-      properties:
-        key:
-          type: string
-          enum:
-            - assetType
-        type:
-          type: string
-          enum:
-            - SELECT
-        value:
-          anyOf:
-            - type: string
-            - type: array
-              items:
-                type: string
-        comparator:
-          type: string
-          enum: &ref_9
-            - is
-            - is not
-            - starts with
-            - ends with
-            - contains
-        allowedValues:
-          type: array
-          items:
-            type: string
-      required:
-        - key
-        - type
-        - value
-        - comparator
-        - allowedValues
-      description: SELECT for assetType
-    TYPEAHEAD:
-      type: object
-      properties:
-        key:
-          type: string
-          enum:
-            - assetType
-        type:
-          type: string
-          enum:
-            - TYPEAHEAD
-        value:
-          type: string
-        comparator:
-          type: string
-          enum: &ref_10
-            - is
-            - is not
-            - starts with
-            - ends with
-            - contains
-        allowedValues:
-          type: array
-          items:
-            type: string
-      required:
-        - key
-        - type
-        - value
-        - comparator
-        - allowedValues
-      description: TYPEAHEAD for assetType
     assetType filters:
       oneOf:
-        - $ref: '#/components/schemas/STRING'
-        - $ref: '#/components/schemas/SELECT'
-        - $ref: '#/components/schemas/TYPEAHEAD'
+        - allOf:
+            - $ref: '#/components/schemas/STRING'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - assetType
+                type:
+                  type: string
+                  enum:
+                    - STRING
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_2
+              description: STRING for assetType
+        - allOf:
+            - $ref: '#/components/schemas/SELECT'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - assetType
+                type:
+                  type: string
+                  enum:
+                    - SELECT
+                value:
+                  anyOf:
+                    - type: string
+                    - type: array
+                      items:
+                        type: string
+                comparator:
+                  type: string
+                  enum: *ref_3
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: SELECT for assetType
+        - allOf:
+            - $ref: '#/components/schemas/TYPEAHEAD'
+            - properties:
+                key:
+                  type: string
+                  enum:
+                    - assetType
+                type:
+                  type: string
+                  enum:
+                    - TYPEAHEAD
+                value:
+                  type: string
+                comparator:
+                  type: string
+                  enum: *ref_4
+                allowedValues:
+                  type: array
+                  items:
+                    type: string
+              description: TYPEAHEAD for assetType
       discriminator:
         propertyName: type
         mapping:
@@ -672,7 +1119,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_8
+                  enum: *ref_2
               description: STRING for name
         - allOf:
             - $ref: '#/components/schemas/SELECT'
@@ -693,7 +1140,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_9
+                  enum: *ref_3
                 allowedValues:
                   type: array
                   items:
@@ -714,7 +1161,7 @@ components:
                   type: string
                 comparator:
                   type: string
-                  enum: *ref_10
+                  enum: *ref_4
                 allowedValues:
                   type: array
                   items:
@@ -726,71 +1173,6 @@ components:
           STRING: '#/components/schemas/STRING'
           SELECT: '#/components/schemas/SELECT'
           TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
-    NUMBER:
-      type: object
-      properties:
-        key:
-          type: string
-          enum:
-            - createDate
-        type:
-          type: string
-          enum:
-            - NUMBER
-        value:
-          type: number
-        comparator:
-          type: string
-          enum: &ref_11
-            - is
-            - is not
-            - greater than
-            - less than
-            - greater than or equal
-            - less than or equal
-      required:
-        - key
-        - type
-        - value
-        - comparator
-      description: NUMBER for createDate
-    DATE:
-      type: object
-      properties:
-        key:
-          type: string
-          enum:
-            - createDate
-        type:
-          type: string
-          enum:
-            - DATE
-        value:
-          type: number
-        comparator:
-          type: string
-          enum: &ref_12
-            - is
-            - is not
-            - greater than
-            - less than
-            - greater than or equal
-            - less than or equal
-      required:
-        - key
-        - type
-        - value
-        - comparator
-      description: DATE for createDate
-    createDate filters:
-      oneOf:
-        - $ref: '#/components/schemas/NUMBER'
-        - $ref: '#/components/schemas/DATE'
-      discriminator:
-        propertyName: type
-        mapping:
-          NUMBER: '#/components/schemas/NUMBER'
-          DATE: '#/components/schemas/DATE'
     modifyDate filters:
       oneOf:
         - allOf:
@@ -808,7 +1190,7 @@ components:
                   type: number
                 comparator:
                   type: string
-                  enum: *ref_11
+                  enum: *ref_0
               description: NUMBER for modifyDate
         - allOf:
             - $ref: '#/components/schemas/DATE'
@@ -825,7 +1207,7 @@ components:
                   type: number
                 comparator:
                   type: string
-                  enum: *ref_12
+                  enum: *ref_1
               description: DATE for modifyDate
       discriminator:
         propertyName: type
@@ -847,7 +1229,7 @@ components:
           type: number
         comparator:
           type: string
-          enum: *ref_11
+          enum: *ref_0
       required:
         - key
         - type
@@ -875,7 +1257,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_8
+                  enum: *ref_2
               description: STRING for extension
         - allOf:
             - $ref: '#/components/schemas/SELECT'
@@ -896,7 +1278,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_9
+                  enum: *ref_3
                 allowedValues:
                   type: array
                   items:
@@ -917,87 +1299,12 @@ components:
                   type: string
                 comparator:
                   type: string
-                  enum: *ref_10
+                  enum: *ref_4
                 allowedValues:
                   type: array
                   items:
                     type: string
               description: TYPEAHEAD for extension
-      discriminator:
-        propertyName: type
-        mapping:
-          STRING: '#/components/schemas/STRING'
-          SELECT: '#/components/schemas/SELECT'
-          TYPEAHEAD: '#/components/schemas/TYPEAHEAD'
-    creator.name filters:
-      oneOf:
-        - allOf:
-            - $ref: '#/components/schemas/STRING'
-            - properties:
-                key:
-                  type: string
-                  enum:
-                    - creator.name
-                type:
-                  type: string
-                  enum:
-                    - STRING
-                value:
-                  anyOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                comparator:
-                  type: string
-                  enum: *ref_8
-              description: STRING for creator.name
-        - allOf:
-            - $ref: '#/components/schemas/SELECT'
-            - properties:
-                key:
-                  type: string
-                  enum:
-                    - creator.name
-                type:
-                  type: string
-                  enum:
-                    - SELECT
-                value:
-                  anyOf:
-                    - type: string
-                    - type: array
-                      items:
-                        type: string
-                comparator:
-                  type: string
-                  enum: *ref_9
-                allowedValues:
-                  type: array
-                  items:
-                    type: string
-              description: SELECT for creator.name
-        - allOf:
-            - $ref: '#/components/schemas/TYPEAHEAD'
-            - properties:
-                key:
-                  type: string
-                  enum:
-                    - creator.name
-                type:
-                  type: string
-                  enum:
-                    - TYPEAHEAD
-                value:
-                  type: string
-                comparator:
-                  type: string
-                  enum: *ref_10
-                allowedValues:
-                  type: array
-                  items:
-                    type: string
-              description: TYPEAHEAD for creator.name
       discriminator:
         propertyName: type
         mapping:
@@ -1047,7 +1354,7 @@ components:
           type: number
         comparator:
           type: string
-          enum: *ref_11
+          enum: *ref_0
       required:
         - key
         - type
@@ -1074,7 +1381,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_8
+                  enum: *ref_2
               description: STRING for namespace.<namespaceName>.approvalStatus
         - allOf:
             - $ref: '#/components/schemas/SELECT'
@@ -1094,7 +1401,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_9
+                  enum: *ref_3
                 allowedValues:
                   type: array
                   items:
@@ -1114,7 +1421,7 @@ components:
                   type: string
                 comparator:
                   type: string
-                  enum: *ref_10
+                  enum: *ref_4
                 allowedValues:
                   type: array
                   items:
@@ -1146,7 +1453,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_8
+                  enum: *ref_2
               description: STRING for namespace.<namespaceName>.tag
         - allOf:
             - $ref: '#/components/schemas/SELECT'
@@ -1166,7 +1473,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_9
+                  enum: *ref_3
                 allowedValues:
                   type: array
                   items:
@@ -1186,7 +1493,7 @@ components:
                   type: string
                 comparator:
                   type: string
-                  enum: *ref_10
+                  enum: *ref_4
                 allowedValues:
                   type: array
                   items:
@@ -1218,7 +1525,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_8
+                  enum: *ref_2
               description: STRING for namespace.<namespaceName>.metadata.<key>
         - allOf:
             - $ref: '#/components/schemas/SELECT'
@@ -1238,7 +1545,7 @@ components:
                         type: string
                 comparator:
                   type: string
-                  enum: *ref_9
+                  enum: *ref_3
                 allowedValues:
                   type: array
                   items:
@@ -1258,7 +1565,7 @@ components:
                   type: string
                 comparator:
                   type: string
-                  enum: *ref_10
+                  enum: *ref_4
                 allowedValues:
                   type: array
                   items:
@@ -1286,10 +1593,6 @@ components:
       type: string
       enum:
         - name
-    createDate:
-      type: string
-      enum:
-        - createDate
     modifyDate:
       type: string
       enum:
@@ -1302,10 +1605,6 @@ components:
       type: string
       enum:
         - extension
-    creator.name:
-      type: string
-      enum:
-        - creator.name
     creator._id:
       type: string
       enum:
@@ -4663,7 +4962,7 @@ components:
           type: number
         comparator:
           type: string
-          enum: *ref_11
+          enum: *ref_0
       required:
         - key
         - type
@@ -4717,7 +5016,7 @@ components:
                 type: string
         comparator:
           type: string
-          enum: *ref_8
+          enum: *ref_2
       required:
         - key
         - type
@@ -4739,9 +5038,7 @@ components:
           type: boolean
         comparator:
           type: string
-          enum: &ref_24
-            - is
-            - is not
+          enum: *ref_24
       required:
         - key
         - type
@@ -4763,7 +5060,7 @@ components:
           type: number
         comparator:
           type: string
-          enum: *ref_11
+          enum: *ref_0
       required:
         - key
         - type
@@ -4785,7 +5082,7 @@ components:
           type: number
         comparator:
           type: string
-          enum: *ref_11
+          enum: *ref_0
       required:
         - key
         - type
@@ -19291,7 +19588,7 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/Search'
+              $ref: '#/components/schemas/ShareSearchDto'
       responses:
         '200':
           description: Array of filtered shares
