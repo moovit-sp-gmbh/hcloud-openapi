@@ -1697,7 +1697,7 @@ components:
       properties:
         status:
           type: string
-          enum: &ref_18
+          enum: &ref_19
             - approved
             - rejected
             - none
@@ -2025,6 +2025,14 @@ components:
           description: Members as key-value pairs (email / optional name)
           example:
             alice@example.com: Alice Example
+        teamIds:
+          type: array
+          items:
+            type: string
+          default: []
+          description: IDs of internal teams referenced by the address book
+          example:
+            - 641fa07a-2812-4d07-8de7-cd20daade955
         createDate:
           type: number
           description: Creation timestamp in milliseconds
@@ -2392,6 +2400,17 @@ components:
           description: Members as key-value pairs (email -> optional name)
           example: &ref_13
             alice@example.com: Alice Example
+        teamIds:
+          type: array
+          items:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          default: []
+          description: IDs of IDP internal teams referenced by the address book
+          example: &ref_14
+            - 6a4b95698b6a81b01de0ba7d
       required:
         - name
     AddressBookUpdateDto:
@@ -2436,6 +2455,36 @@ components:
             - alice@example.com
       required:
         - emails
+    AddressBookTeamAddDto:
+      type: object
+      properties:
+        teamIds:
+          type: array
+          items:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          minItems: 1
+          description: IDs of IDP internal teams referenced by the address book
+          example: *ref_14
+      required:
+        - teamIds
+    AddressBookTeamRemoveDto:
+      type: object
+      properties:
+        teamIds:
+          type: array
+          items:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          minItems: 1
+          description: IDs of IDP internal teams referenced by the address book
+          example: *ref_14
+      required:
+        - teamIds
     ReducedStorage:
       type: object
       properties:
@@ -2605,7 +2654,7 @@ components:
       required:
         - _id
         - name
-      example: &ref_14
+      example: &ref_15
         name: my space
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
     ReducedOrganization:
@@ -2877,7 +2926,7 @@ components:
                 - modifyDate
                 - creator
                 - organization
-          example: *ref_14
+          example: *ref_15
         - allOf:
             - $ref: '#/components/schemas/BaseAssetDto'
             - type: object
@@ -2895,7 +2944,7 @@ components:
                     - VIEW_ASSETS
               required:
                 - type
-          example: *ref_14
+          example: *ref_15
         - allOf:
             - $ref: '#/components/schemas/BaseAssetDto'
             - type: object
@@ -2913,7 +2962,7 @@ components:
                     - VIEW_ASSETS
               required:
                 - type
-          example: *ref_14
+          example: *ref_15
         - allOf:
             - $ref: '#/components/schemas/BaseAssetDto'
             - type: object
@@ -2931,7 +2980,7 @@ components:
                     - VIEW_ASSETS
               required:
                 - type
-          example: *ref_14
+          example: *ref_15
     Unknown:
       type: object
       properties:
@@ -3302,13 +3351,13 @@ components:
                           - type: number
                           - type: boolean
                 description: Metadata of the reference
-                example: &ref_15
+                example: &ref_16
                   sequenceId: 32178932198
             required:
               - status
               - canWriteStatus
           description: Information about the asset across namespaces.
-          example: &ref_16
+          example: &ref_17
             rush:
               status: approved
               canWriteStatus: true
@@ -3317,7 +3366,7 @@ components:
           items:
             type: string
           description: Allowed operations on the asset
-          example: &ref_17
+          example: &ref_18
             - VIEW_ASSETS
         media:
           type: array
@@ -3688,18 +3737,18 @@ components:
                           - type: number
                           - type: boolean
                 description: Metadata of the reference
-                example: *ref_15
+                example: *ref_16
             required:
               - status
               - canWriteStatus
           description: Information about the asset across namespaces.
-          example: *ref_16
+          example: *ref_17
         permissions:
           type: array
           items:
             type: string
           description: Allowed operations on the asset
-          example: *ref_17
+          example: *ref_18
         media:
           type: array
           items:
@@ -4172,7 +4221,7 @@ components:
       properties:
         status:
           type: string
-          enum: *ref_18
+          enum: *ref_19
       required:
         - status
     CommentDto:
@@ -4460,7 +4509,7 @@ components:
           description: Timestamp the comment refers to
         color:
           type: string
-          enum: &ref_19
+          enum: &ref_20
             - BLUE
             - CYAN
             - GREEN
@@ -4480,7 +4529,7 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: &ref_20
+          example: &ref_21
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         mentionsTeams:
@@ -4488,7 +4537,7 @@ components:
           items:
             type: string
           description: Array of mentioned team ids
-          example: &ref_21
+          example: &ref_22
             - 66b0994fa5bc5f142de5fb2f
             - 36b0294fa1bc5f142de5fc2f
         visibility:
@@ -4517,7 +4566,7 @@ components:
             Optional custom key/value metadata for integration with third-party
             systems. Values can be strings, numbers, booleans, or arrays
             thereof.
-          example: &ref_22
+          example: &ref_23
             externalId: ext-123
             syncStatus: pending
             priority: 1
@@ -4548,7 +4597,7 @@ components:
           description: Timestamp the comment refers to
         color:
           type: string
-          enum: *ref_19
+          enum: *ref_20
           description: Comment color
         annotation:
           type: string
@@ -4560,13 +4609,13 @@ components:
           items:
             type: string
           description: Array of mentioned user IDs
-          example: *ref_20
+          example: *ref_21
         mentionsTeams:
           type: array
           items:
             type: string
           description: Array of mentioned team ids
-          example: *ref_21
+          example: *ref_22
         visibility:
           type: string
           enum:
@@ -4593,7 +4642,7 @@ components:
             Optional custom key/value metadata for integration with third-party
             systems. Values can be strings, numbers, booleans, or arrays
             thereof.
-          example: *ref_22
+          example: *ref_23
         text:
           type: string
           maxLength: 2048
@@ -4690,7 +4739,7 @@ components:
           type: boolean
         comparator:
           type: string
-          enum: &ref_23
+          enum: &ref_24
             - is
             - is not
       required:
@@ -4758,7 +4807,7 @@ components:
           type: boolean
         comparator:
           type: string
-          enum: *ref_23
+          enum: *ref_24
       required:
         - key
         - type
@@ -5254,7 +5303,7 @@ components:
     PermissionsDto:
       type: object
       properties:
-        space: &ref_24
+        space: &ref_25
           type: object
           additionalProperties:
             type: object
@@ -5263,10 +5312,10 @@ components:
                 type: string
             required:
               - description
-        namespace: *ref_24
-        asset: *ref_24
-        share: *ref_24
-        user: *ref_24
+        namespace: *ref_25
+        asset: *ref_25
+        share: *ref_25
+        user: *ref_25
       description: Map of all the permissions available in the Cosmo service
     StatsDto:
       type: object
@@ -5752,7 +5801,7 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/address-book/:bookId:
+  /v1/org/{orgName}/spaces/{spaceName}/address-book/{bookId}:
     get:
       security:
         - bearerAuth:
@@ -5800,6 +5849,12 @@ paths:
           required: true
           name: spaceName
           in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
       responses:
         '200':
           description: Address book
@@ -5810,7 +5865,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
           content:
             application/json:
               schema:
@@ -5830,6 +5886,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -5955,6 +6018,12 @@ paths:
           required: true
           name: spaceName
           in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
       requestBody:
         required: true
         content:
@@ -5971,8 +6040,9 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName' | An address book with this name
-            already exists in the space
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId' | An address book with this name already exists in the
+            space
           content:
             application/json:
               schema:
@@ -5992,6 +6062,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
                 An address book with this name already exists in the space:
                   summary: An address book with this name already exists in the space
                   value:
@@ -6123,13 +6200,20 @@ paths:
           required: true
           name: spaceName
           in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
       responses:
         '204':
           description: No content
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
           content:
             application/json:
               schema:
@@ -6149,6 +6233,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -6227,7 +6318,7 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/spaces/{spaceName}/address-book/:bookId/members:
+  /v1/org/{orgName}/spaces/{spaceName}/address-book/{bookId}/members:
     post:
       security:
         - bearerAuth:
@@ -6275,6 +6366,12 @@ paths:
           required: true
           name: spaceName
           in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
       requestBody:
         required: true
         content:
@@ -6291,7 +6388,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
           content:
             application/json:
               schema:
@@ -6311,6 +6409,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -6436,6 +6541,12 @@ paths:
           required: true
           name: spaceName
           in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
       requestBody:
         required: true
         content:
@@ -6452,7 +6563,8 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'spaceName'
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
           content:
             application/json:
               schema:
@@ -6472,6 +6584,364 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Address book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Address book not found:
+                  summary: Address book not found
+                  value:
+                    code: 009.057.0001
+                    error: address-book.not.found
+                    message: Address book not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/address-book/{bookId}/teams:
+    post:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Add team references to an address book
+      tags:
+        - Address Book
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressBookTeamAddDto'
+      responses:
+        '200':
+          description: Updated address book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressBookDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['cosmo:space:write'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['cosmo:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['cosmo:space:write'] not included in
+                    authorization
+                  value:
+                    code: 009.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '404':
+          description: Organization not found | Address book not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 009.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Address book not found:
+                  summary: Address book not found
+                  value:
+                    code: 009.057.0001
+                    error: address-book.not.found
+                    message: Address book not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - cosmo:space:write
+        - basicAuth:
+            - cosmo:space:write
+        - patAuth:
+            - cosmo:space:write
+      summary: Remove team references from an address book
+      tags:
+        - Address Book
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            format: uuid
+          required: true
+          name: bookId
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/AddressBookTeamRemoveDto'
+      responses:
+        '200':
+          description: Updated address book
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/AddressBookDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'bookId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'bookId':
+                  summary: Failed to validate 'path' parameter 'bookId'
+                  description: Failed to validate 'path' parameter 'bookId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'bookId' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -14549,7 +15019,7 @@ paths:
                               - type: number
                               - type: boolean
                     description: Metadata of the reference
-                    example: *ref_15
+                    example: *ref_16
                 required:
                   - _id
                   - status
@@ -16414,7 +16884,7 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: &ref_25
+                      enum: &ref_26
                         - VIEW_ASSETS_ONLY
                         - BASE
                         - ENABLE_DOWNLOAD
@@ -16424,13 +16894,13 @@ paths:
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: &ref_26
+                    example: &ref_27
                       - BASE
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: &ref_27
+                      enum: &ref_28
                         - VIEW_ASSETS
                         - VIEW_ASSET_DETAILS
                         - VIEW_ASSET_ACTIVITY
@@ -16445,7 +16915,7 @@ paths:
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: &ref_28
+                    example: &ref_29
                       - VIEW_ASSETS
                   namespaceGroups:
                     type: object
@@ -16453,7 +16923,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_29
+                        enum: &ref_30
                           - BASE
                           - ENABLE_COMMENTS
                           - ENABLE_COMMENT_DELETION
@@ -16466,7 +16936,7 @@ paths:
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: &ref_30
+                    example: &ref_31
                       rush:
                         - ENABLE_COMMENTS
                   namespaces:
@@ -16475,7 +16945,7 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: &ref_31
+                        enum: &ref_32
                           - VIEW_ASSET_TAGS
                           - WRITE_ASSET_TAGS
                           - VIEW_ASSET_STATUS
@@ -16490,7 +16960,7 @@ paths:
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: &ref_32
+                    example: &ref_33
                       rush:
                         - WRITE_ASSET_TAGS
                   users:
@@ -17109,43 +17579,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_25
+                      enum: *ref_26
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_26
+                    example: *ref_27
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_27
+                      enum: *ref_28
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_28
+                    example: *ref_29
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_29
+                        enum: *ref_30
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_30
+                    example: *ref_31
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_31
+                        enum: *ref_32
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_32
+                    example: *ref_33
                   users:
                     type: array
                     items:
@@ -17580,43 +18050,43 @@ paths:
                     type: array
                     items:
                       type: string
-                      enum: *ref_25
+                      enum: *ref_26
                     description: >-
                       List of asset permission groups applied to the share (e.g.
                       BASE, REVIEW).
-                    example: *ref_26
+                    example: *ref_27
                   permissions:
                     type: array
                     items:
                       type: string
-                      enum: *ref_27
+                      enum: *ref_28
                     description: >-
                       List of permissions granted to the share members over the
                       share's assets.
-                    example: *ref_28
+                    example: *ref_29
                   namespaceGroups:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_29
+                        enum: *ref_30
                     description: >-
                       Namespaces to include in the share. Share consumers will
                       only be able to read/write asset comments and statuses
                       according to the permission groups set in this map.
-                    example: *ref_30
+                    example: *ref_31
                   namespaces:
                     type: object
                     additionalProperties:
                       type: array
                       items:
                         type: string
-                        enum: *ref_31
+                        enum: *ref_32
                     description: >-
                       Map of permissions granted to the share members over the
                       share's assets in the context of each namespace.
-                    example: *ref_32
+                    example: *ref_33
                   users:
                     type: array
                     items:
@@ -18972,43 +19442,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_26
+                      example: *ref_27
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_27
+                        enum: *ref_28
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_28
+                      example: *ref_29
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_29
+                          enum: *ref_30
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_30
+                      example: *ref_31
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_31
+                          enum: *ref_32
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_32
+                      example: *ref_33
                     users:
                       type: array
                       items:
@@ -19404,43 +19874,43 @@ paths:
                       type: array
                       items:
                         type: string
-                        enum: *ref_25
+                        enum: *ref_26
                       description: >-
                         List of asset permission groups applied to the share
                         (e.g. BASE, REVIEW).
-                      example: *ref_26
+                      example: *ref_27
                     permissions:
                       type: array
                       items:
                         type: string
-                        enum: *ref_27
+                        enum: *ref_28
                       description: >-
                         List of permissions granted to the share members over
                         the share's assets.
-                      example: *ref_28
+                      example: *ref_29
                     namespaceGroups:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_29
+                          enum: *ref_30
                       description: >-
                         Namespaces to include in the share. Share consumers will
                         only be able to read/write asset comments and statuses
                         according to the permission groups set in this map.
-                      example: *ref_30
+                      example: *ref_31
                     namespaces:
                       type: object
                       additionalProperties:
                         type: array
                         items:
                           type: string
-                          enum: *ref_31
+                          enum: *ref_32
                       description: >-
                         Map of permissions granted to the share members over the
                         share's assets in the context of each namespace.
-                      example: *ref_32
+                      example: *ref_33
                     users:
                       type: array
                       items:
@@ -22235,7 +22705,7 @@ paths:
                             type: array
                             items:
                               type: string
-                              enum: &ref_33
+                              enum: &ref_34
                                 - VIEW_SPACE
                                 - VIEW_MEMBERS
                                 - UPDATE_MEMBERS
@@ -22289,7 +22759,7 @@ paths:
                                 - REMOVE_USERS_FROM_SHARES
                                 - MANAGE_ADDRESS_BOOK
                             description: List of permissions assigned to a specific entity.
-                            example: &ref_34
+                            example: &ref_35
                               - VIEW_ASSETS
                               - VIEW_ASSET_COMMENTS
                         required:
@@ -22883,9 +23353,9 @@ paths:
                           type: array
                           items:
                             type: string
-                            enum: *ref_33
+                            enum: *ref_34
                           description: List of permissions assigned to a specific entity.
-                          example: *ref_34
+                          example: *ref_35
                       required:
                         - entity
                         - permissions
