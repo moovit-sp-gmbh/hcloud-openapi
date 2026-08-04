@@ -1016,6 +1016,242 @@ components:
             - company
         excludeTeamByName: Dev-Ops
         excludeServiceAccounts: true
+    AuthenticatorAssertionResponseDto:
+      type: object
+      properties:
+        clientDataJSON:
+          type: string
+          description: >-
+            Base64url-encoded clientDataJSON, containing the ceremony type,
+            challenge and origin
+          example: >-
+            eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiRFY2V3haWnd5VnJjZmpUSGtyRFM5aXpaUWhvbnhFbnYiLCJvcmlnaW4iOiJodHRwczovL2FwcC5oZWxtdXQuY2xvdWQifQ
+        authenticatorData:
+          type: string
+          description: >-
+            Base64url-encoded authenticator data, including the relying party ID
+            hash, flags and signature counter
+          example: rXTVnSKu3rrcCvYJjgzWyq9fmon1JG4oziVhexY7J54FAAAADA
+        signature:
+          type: string
+          description: >-
+            Base64url-encoded signature over the authenticator data and client
+            data hash, produced with the credential's private key
+          example: >-
+            1TbYaif6TB9ad4YW3SOjImm4xFIyXP8DLHH84zcqs1gdm2nJA3JU1kyBvg5nII7HaFXNWDhIHeOk5VvFkCBEZ0nYnyVH3g
+        userHandle:
+          type: string
+          description: >-
+            Base64url-encoded user handle (the userID set at registration),
+            returned by the browser for discoverable credentials
+          example: NzkxNGI4OTYxYWI2YjgwZTRlNDYwNjcz
+      required:
+        - clientDataJSON
+        - authenticatorData
+        - signature
+      description: >-
+        The authenticator's assertion response, used to verify this login
+        attempt
+    AuthenticatorAttachment:
+      type: string
+      enum:
+        - platform
+        - cross-platform
+      description: >-
+        How the authenticator used for this login attempt is connected to the
+        client device
+      example: platform
+    PasskeyAuthenticationVerifyDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Base64url-encoded credential ID used to sign the challenge
+          example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        rawId:
+          type: string
+          description: Base64url-encoded raw credential ID (identical to id)
+          example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        response:
+          $ref: '#/components/schemas/AuthenticatorAssertionResponseDto'
+        authenticatorAttachment:
+          $ref: '#/components/schemas/AuthenticatorAttachment'
+        clientExtensionResults:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: >-
+            Authenticator extension outputs returned by the browser (rarely
+            used)
+          example: {}
+        type:
+          type: string
+          enum:
+            - public-key
+          description: WebAuthn credential type, always 'public-key'
+          example: public-key
+      required:
+        - id
+        - rawId
+        - response
+        - clientExtensionResults
+        - type
+      description: >-
+        A WebAuthn public key credential produced by the browser during passkey
+        authentication
+      example:
+        id: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        rawId: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        response:
+          clientDataJSON: >-
+            eyJ0eXBlIjoid2ViYXV0aG4uZ2V0IiwiY2hhbGxlbmdlIjoiRFY2V3haWnd5VnJjZmpUSGtyRFM5aXpaUWhvbnhFbnYiLCJvcmlnaW4iOiJodHRwczovL2FwcC5oZWxtdXQuY2xvdWQifQ
+          authenticatorData: rXTVnSKu3rrcCvYJjgzWyq9fmon1JG4oziVhexY7J54FAAAADA
+          signature: >-
+            1TbYaif6TB9ad4YW3SOjImm4xFIyXP8DLHH84zcqs1gdm2nJA3JU1kyBvg5nII7HaFXNWDhIHeOk5VvFkCBEZ0nYnyVH3g
+        authenticatorAttachment: platform
+        clientExtensionResults: {}
+        type: public-key
+    AuthenticatorTransport:
+      type: string
+      enum:
+        - ble
+        - cable
+        - hybrid
+        - internal
+        - nfc
+        - smart-card
+        - usb
+      description: >-
+        * ble - Bluetooth Low Energy
+
+        * cable - Cloud-assisted Bluetooth Low Energy (caBLE)
+
+        * hybrid - A client device (e.g. a phone) reachable via QR code + BLE
+        pairing
+
+        * internal - The authenticator is part of the client device itself
+        (platform authenticator)
+
+        * nfc - Near Field Communication
+
+        * smart-card - Smart Card
+
+        * usb - USB
+      example: internal
+    AuthenticatorAttestationResponseDto:
+      type: object
+      properties:
+        clientDataJSON:
+          type: string
+          description: >-
+            Base64url-encoded clientDataJSON, containing the ceremony type,
+            challenge and origin
+          example: >-
+            eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiamQ2UXpRdURlSDJTeWNlZmtDNWVqZVFXdlc2VkpEemsiLCJvcmlnaW4iOiJodHRwczovL2FwcC5oZWxtdXQuY2xvdWQifQ
+        attestationObject:
+          type: string
+          description: >-
+            Base64url-encoded CBOR attestationObject, containing the
+            authenticator data and attestation statement
+          example: >-
+            tYkxQjmbwYcYJciUeMOXSe8OWeMFCk5XL5KFPEsK8WXrmlh59TQu4PRPPP4OtSrGjW6Sg0vnoholZO0gyxiMG8fRccoJysk8RQsrrlBeWtHY1bkAnhPKmWII
+        authenticatorData:
+          type: string
+          description: >-
+            Base64url-encoded authenticator data (optional convenience duplicate
+            of the data already embedded in attestationObject)
+          example: Ajc43n0d867BogQGiOgdwWkQMsByWPKt0aOA6E0bbJwFAAAAAw
+        transports:
+          type: array
+          items:
+            $ref: '#/components/schemas/AuthenticatorTransport'
+          description: >-
+            Transports supported by this authenticator, as reported by the
+            browser
+          example:
+            - internal
+        publicKeyAlgorithm:
+          type: integer
+          description: COSE algorithm identifier used by the credential's public key
+          example: -7
+        publicKey:
+          type: string
+          description: >-
+            Base64url-encoded DER SubjectPublicKeyInfo of the credential's
+            public key
+          example: >-
+            1uOUJ3Jfb0C5IIr2Qx3ulQ95A6x7niwj6SRZai16UhdLbB4lMMerGuua3Wf2HylislrPdKUfnY5D0sfxFQvnAEBwvtM1elZBvahCakFBZuOCnQOVteezgPLX2Q
+      required:
+        - clientDataJSON
+        - attestationObject
+      description: The authenticator's attestation response
+    PasskeyRegistrationVerifyDto:
+      type: object
+      properties:
+        id:
+          type: string
+          description: Base64url-encoded credential ID
+          example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        rawId:
+          type: string
+          description: Base64url-encoded raw credential ID (identical to id)
+          example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        response:
+          $ref: '#/components/schemas/AuthenticatorAttestationResponseDto'
+        authenticatorAttachment:
+          allOf:
+            - $ref: '#/components/schemas/AuthenticatorAttachment'
+            - description: >-
+                * platform - The authenticator is built into the client device
+                (e.g. Touch ID, Windows Hello)
+
+                * cross-platform - The authenticator is a removable/external
+                device (e.g. USB security key, phone via hybrid transport)
+        clientExtensionResults:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: >-
+            Authenticator extension outputs returned by the browser (rarely
+            used)
+          example: {}
+        type:
+          type: string
+          enum:
+            - public-key
+          description: WebAuthn credential type, always 'public-key'
+          example: public-key
+        name:
+          type: string
+          minLength: 3
+          maxLength: 128
+          pattern: ^[\w-. ]{3,128}$
+          description: User-friendly label for this passkey
+          example: MacBook Touch ID
+      required:
+        - id
+        - rawId
+        - response
+        - clientExtensionResults
+        - type
+        - name
+      description: >-
+        A WebAuthn public key credential produced by the browser during passkey
+        registration, together with a label for the new passkey
+      example:
+        id: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        rawId: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        response:
+          clientDataJSON: >-
+            eyJ0eXBlIjoid2ViYXV0aG4uY3JlYXRlIiwiY2hhbGxlbmdlIjoiamQ2UXpRdURlSDJTeWNlZmtDNWVqZVFXdlc2VkpEemsiLCJvcmlnaW4iOiJodHRwczovL2FwcC5oZWxtdXQuY2xvdWQifQ
+          attestationObject: >-
+            tYkxQjmbwYcYJciUeMOXSe8OWeMFCk5XL5KFPEsK8WXrmlh59TQu4PRPPP4OtSrGjW6Sg0vnoholZO0gyxiMG8fRccoJysk8RQsrrlBeWtHY1bkAnhPKmWII
+          transports:
+            - internal
+        authenticatorAttachment: platform
+        clientExtensionResults: {}
+        type: public-key
+        name: MacBook Touch ID
     Scope:
       type: string
       enum:
@@ -3701,6 +3937,276 @@ components:
         name: Helmut Mc Cloud
         avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
         isGuest: false
+    PasskeyRegistrationOptionsDto:
+      type: object
+      properties:
+        rp:
+          type: object
+          properties:
+            id:
+              type: string
+              description: >-
+                Domain identifying the relying party requesting this passkey
+                registration
+              example: helmut.cloud
+            name:
+              type: string
+              description: Human-readable name of the relying party shown to the user
+              example: helmut.cloud
+          required:
+            - id
+            - name
+          description: Relying party this passkey is being registered for
+          example:
+            id: helmut.cloud
+            name: helmut.cloud
+        user:
+          type: object
+          properties:
+            id:
+              type: string
+              description: >-
+                Opaque, base64url-encoded identifier for the user this passkey
+                belongs to
+              example: NzkxNGI4OTYxYWI2YjgwZTRlNDYwNjcz
+            name:
+              type: string
+              description: Username shown to help the user pick the right passkey
+              example: hmc@helmut.cloud
+            displayName:
+              type: string
+              description: Full display name shown alongside the passkey
+              example: Helmut Mc Cloud
+          required:
+            - id
+            - name
+            - displayName
+          description: User this passkey is being registered for
+          example:
+            id: NzkxNGI4OTYxYWI2YjgwZTRlNDYwNjcz
+            name: hmc@helmut.cloud
+            displayName: Helmut Mc Cloud
+        challenge:
+          type: string
+          description: >-
+            Random value the authenticator must sign to prove possession of the
+            newly created private key
+          example: qMLSNNXoZen8QznSAkNyZ4tLricXiXYLlY6MLZFBxOk
+        pubKeyCredParams:
+          type: array
+          items:
+            type: object
+            properties:
+              alg:
+                type: number
+                description: >-
+                  COSE algorithm identifier accepted for the credential's public
+                  key
+                example: -7
+              type:
+                type: string
+                enum:
+                  - public-key
+                description: WebAuthn credential type, always 'public-key'
+                example: public-key
+            required:
+              - alg
+              - type
+          description: >-
+            Public key algorithms accepted for the new credential, in order of
+            preference
+          example:
+            - alg: -7
+              type: public-key
+            - alg: -257
+              type: public-key
+        timeout:
+          type: number
+          description: >-
+            Maximum time in milliseconds the user has to complete the
+            registration
+          example: 60000
+        excludeCredentials:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Base64url-encoded credential ID
+                example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+              transports:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthenticatorTransport'
+                description: Transports supported by this credential's authenticator
+                example:
+                  - internal
+            required:
+              - id
+          description: >-
+            Credentials already registered for this user, so the authenticator
+            can avoid creating a duplicate passkey for one of them
+          example:
+            - id: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+              transports:
+                - internal
+        authenticatorSelection:
+          type: object
+          properties:
+            authenticatorAttachment:
+              allOf:
+                - $ref: '#/components/schemas/AuthenticatorAttachment'
+                - description: >-
+                    Preferred connection type for the authenticator, if the
+                    relying party wants to restrict it
+            residentKey:
+              type: string
+              description: >-
+                Whether the credential must be discoverable without the relying
+                party specifying it beforehand
+              example: required
+            requireResidentKey:
+              type: boolean
+              description: >-
+                Legacy equivalent of requiring a discoverable credential, kept
+                for older clients
+              example: true
+            userVerification:
+              type: string
+              description: >-
+                Whether the authenticator must verify the user's identity, for
+                example via biometrics or a PIN
+              example: required
+          description: >-
+            Constraints the relying party places on which authenticators may be
+            used and how they must behave
+          example:
+            residentKey: required
+            requireResidentKey: true
+            userVerification: required
+        attestation:
+          type: string
+          description: >-
+            Level of attestation statement requested from the authenticator
+            about its provenance
+          example: none
+        extensions:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: Additional authenticator extension inputs, rarely used
+          example: {}
+      required:
+        - rp
+        - user
+        - challenge
+        - pubKeyCredParams
+      description: Options the client uses to create a new passkey with an authenticator
+    DeviceType:
+      type: string
+      enum:
+        - SINGLE_DEVICE
+        - MULTI_DEVICE
+      description: Whether the credential can be synced across multiple devices
+      example: SINGLE_DEVICE
+    PasskeyDto:
+      type: object
+      properties:
+        credentialId:
+          type: string
+          description: Base64url-encoded credential ID
+          example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        name:
+          type: string
+          description: User-friendly label for this passkey
+          example: MacBook Touch ID
+        deviceType:
+          $ref: '#/components/schemas/DeviceType'
+        createDate:
+          type: number
+          description: Creation date of the passkey
+          example: 1782296100000
+        lastUsedDate:
+          type: number
+          description: Date the passkey was last used to log in
+          example: 1784885400000
+      required:
+        - credentialId
+        - name
+        - createDate
+      description: >-
+        Public representation of a registered passkey (never includes the public
+        key or signature counter)
+      example:
+        credentialId: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+        name: MacBook Touch ID
+        deviceType: SINGLE_DEVICE
+        createDate: 1782296100000
+        lastUsedDate: 1784885400000
+    PasskeyAuthenticationOptionsDto:
+      type: object
+      properties:
+        challenge:
+          type: string
+          description: >-
+            Random value the authenticator must sign to prove possession of the
+            private key
+          example: JYLCesz2cQHJXegfDJsF0tGFQUUPwzZiKO7OiLbq9no
+        timeout:
+          type: number
+          description: >-
+            Maximum time in milliseconds the user has to complete the
+            authentication
+          example: 60000
+        rpId:
+          type: string
+          description: Domain identifying the relying party this passkey was registered for
+          example: helmut.cloud
+        allowCredentials:
+          type: array
+          items:
+            type: object
+            properties:
+              id:
+                type: string
+                description: Base64url-encoded credential ID
+                example: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+              transports:
+                type: array
+                items:
+                  $ref: '#/components/schemas/AuthenticatorTransport'
+                description: Transports supported by this credential's authenticator
+                example:
+                  - internal
+            required:
+              - id
+          description: >-
+            Credentials allowed to complete this authentication; left empty here
+            so that any registered passkey can be offered without knowing the
+            user's identity beforehand
+          example:
+            - id: Ig53kF0inOyoeDTTFb7gkE01xIKKP4YEe6lkq7px1UM
+              transports:
+                - internal
+        userVerification:
+          type: string
+          description: >-
+            Whether the authenticator must verify the user's identity, for
+            example via biometrics or a PIN
+          example: required
+        extensions:
+          type: object
+          additionalProperties:
+            nullable: true
+          description: Additional authenticator extension inputs, rarely used
+          example: {}
+      required:
+        - challenge
+      description: >-
+        Options the client uses to authenticate with an existing passkey; the
+        allowed credential list is intentionally omitted so any matching passkey
+        can be offered without prior identification of the user
     FullSAMLProviderDto:
       type: object
       properties:
@@ -10740,6 +11246,325 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'teamName' - {error}
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/user/passkey/options:
+    post:
+      description: |-
+
+        Required scopes: IDP_USER_WRITE
+      summary: >-
+        Create WebAuthn registration options to set up a new passkey for the
+        authenticated user
+      tags:
+        - User.Settings.Passkey
+      responses:
+        '200':
+          description: Public key credential creation options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyRegistrationOptionsDto'
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/user/passkey/verify:
+    post:
+      description: |-
+
+        Required scopes: IDP_USER_WRITE
+      summary: Verify a WebAuthn registration response and persist the new passkey
+      tags:
+        - User.Settings.Passkey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyRegistrationVerifyDto'
+      responses:
+        '201':
+          description: The newly created passkey
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyDto'
+        '403':
+          description: Failed to verify the given passkey response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given passkey response:
+                  summary: Failed to verify the given passkey response
+                  value:
+                    code: 001.058.0003
+                    error: passkey.verification.failed
+                    message: Failed to verify the given passkey response
+        '404':
+          description: User has no helmut cloud account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User has no helmut cloud account:
+                  summary: User has no helmut cloud account
+                  value:
+                    code: 001.005.0005
+                    error: user.not.found
+                    message: User has no helmut cloud account
+        '410':
+          description: The passkey challenge is invalid, expired or has already been used
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The passkey challenge is invalid, expired or has already been used:
+                  summary: >-
+                    The passkey challenge is invalid, expired or has already
+                    been used
+                  value:
+                    code: 001.058.0001
+                    error: passkey.challenge.expired
+                    message: >-
+                      The passkey challenge is invalid, expired or has already
+                      been used
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/user/passkey:
+    get:
+      description: |-
+
+        Required scopes: IDP_USER_READ
+      summary: List the passkeys registered for the authenticated user
+      tags:
+        - User.Settings.Passkey
+      responses:
+        '200':
+          description: List of passkeys
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/PasskeyDto'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/user/passkey/{credentialId}:
+    delete:
+      description: |-
+
+        Required scopes: IDP_USER_DELETE
+      summary: Delete a passkey of the authenticated user
+      tags:
+        - User.Settings.Passkey
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: credentialId
+          in: path
+      responses:
+        '204':
+          description: No Content
+        '400':
+          description: Failed to validate 'path' parameter 'credentialId'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'credentialId':
+                  summary: Failed to validate 'path' parameter 'credentialId'
+                  description: Failed to validate 'path' parameter 'credentialId' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'credentialId' -
+                      {error}
+        '404':
+          description: The specified passkey does not exist
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The specified passkey does not exist:
+                  summary: The specified passkey does not exist
+                  value:
+                    code: 001.058.0002
+                    error: passkey.not.found
+                    message: The specified passkey does not exist
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/auth/passkey/options:
+    post:
+      description: |-
+
+        No authentication required
+      summary: >-
+        Create WebAuthn authentication options to log in with a passkey
+        (discoverable credential, no prior identification needed)
+      tags:
+        - Auth.Passkey
+      responses:
+        '200':
+          description: Public key credential request options
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/PasskeyAuthenticationOptionsDto'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/auth/passkey/verify:
+    post:
+      description: >-
+
+        No authentication required. On success, sets the Authorization header
+        and auth_token cookie
+      summary: >-
+        Verify a WebAuthn authentication response and authorize the user against
+        the system
+      tags:
+        - Auth.Passkey
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/PasskeyAuthenticationVerifyDto'
+      responses:
+        '200':
+          description: User object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/UserDto'
+        '401':
+          description: You're not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+        '403':
+          description: Failed to verify the given passkey response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given passkey response:
+                  summary: Failed to verify the given passkey response
+                  value:
+                    code: 001.058.0003
+                    error: passkey.verification.failed
+                    message: Failed to verify the given passkey response
+        '410':
+          description: The passkey challenge is invalid, expired or has already been used
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                The passkey challenge is invalid, expired or has already been used:
+                  summary: >-
+                    The passkey challenge is invalid, expired or has already
+                    been used
+                  value:
+                    code: 001.058.0001
+                    error: passkey.challenge.expired
+                    message: >-
+                      The passkey challenge is invalid, expired or has already
+                      been used
         '500':
           description: something went wrong
           content:
