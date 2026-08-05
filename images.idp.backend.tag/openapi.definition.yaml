@@ -11276,6 +11276,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasskeyRegistrationOptionsDto'
+        '403':
+          description: Failed to verify the given passkey response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given passkey response:
+                  summary: Failed to verify the given passkey response
+                  value:
+                    code: 001.058.0003
+                    error: passkey.verification.failed
+                    message: Failed to verify the given passkey response
         '404':
           description: User has no helmut cloud account
           content:
@@ -11485,6 +11498,19 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/PasskeyAuthenticationOptionsDto'
+        '403':
+          description: Failed to verify the given passkey response
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to verify the given passkey response:
+                  summary: Failed to verify the given passkey response
+                  value:
+                    code: 001.058.0003
+                    error: passkey.verification.failed
+                    message: Failed to verify the given passkey response
         '500':
           description: something went wrong
           content:
