@@ -3743,6 +3743,29 @@ components:
       required:
         - enableDev
       description: Parameters for patching the dev visibility setting in a space
+    SpacePatchEventExecutionTargetDto:
+      type: object
+      properties:
+        eventExecutionTarget:
+          anyOf:
+            - type: string
+              format: email
+            - type: string
+              minLength: 1
+              maxLength: 128
+              pattern: ^[\w-.]{1,128}$
+              description: >-
+                Name of the pool (only alphanumeric characters, underscores,
+                hyphens and dots are allowed; it should contain between 1 and
+                128 characters)
+              example: My-Pool
+          description: Target that executes the stream. Can be a user email or pool name
+          example: target@helmut.cloud
+      required:
+        - eventExecutionTarget
+      description: Parameters for patching the internal event execution target of a space
+      example:
+        eventExecutionTarget: target@helmut.cloud
     SpacePatchNameDto:
       type: object
       properties:
@@ -7262,6 +7285,12 @@ components:
           description: >-
             Specifies to the front-end whether to display development versions
             of Wave Engines and Node Catalogs
+        eventExecutionTarget:
+          type: string
+          description: >-
+            Target that executes this space's internal hcloud.high5.* events;
+            can be a user email or pool name
+          example: target@helmut.cloud
         createDate:
           type: number
           minimum: 0
@@ -26606,6 +26635,9 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns spaces in the organization matching the search filter, scoped to
+        the requesting user's access, with total count in the 'total' header
       summary: Search spaces in an organization
       tags:
         - Space
@@ -26795,6 +26827,7 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: Returns the space identified by its name within the organization
       summary: Get a space by it's name
       tags:
         - Space
@@ -26975,6 +27008,7 @@ paths:
             - high5:space:delete
         - patAuth:
             - high5:space:delete
+      description: Deletes the space and all of its associated data
       summary: Delete a space and its corresponding data by the space's name
       tags:
         - Space
@@ -27158,6 +27192,10 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Creates a new space in the organization after checking the license
+        quota, optionally without a default avatar, and grants the creator OWNER
+        permission
       summary: Create a new space
       tags:
         - Space
@@ -27369,6 +27407,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Renames the space after verifying the new name is not already in use
+        within the organization
       summary: Rename a Space
       tags:
         - Space
@@ -27562,6 +27603,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Toggles whether the front-end displays versions under development for
+        Wave Engines and Node Catalogs in this space
       summary: >-
         Specifies to the front-end whether to display the versions under
         development of Wave Engines and Node Catalogs
@@ -27742,6 +27786,229 @@ paths:
                     code: 002.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/target:
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      description: >-
+        Validates that the given target resolves to an existing pool or an
+        execution-target-flagged org member, then sets it as the default
+        execution target for this space's internal hcloud.high5.* events
+      summary: >-
+        Set the execution target used when this Space fires its own internal
+        events
+      tags:
+        - Space
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/SpacePatchEventExecutionTargetDto'
+      responses:
+        '200':
+          description: Updated Space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SpaceDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '409':
+          description: >-
+            Requested target target@helmut.cloud is a member of the organization
+            but not an execution target | Requested target target@helmut.cloud
+            is not a member of the organization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Requested target target@helmut.cloud is a member of the organization but not an execution target:
+                  summary: >-
+                    Requested target target@helmut.cloud is a member of the
+                    organization but not an execution target
+                  value:
+                    code: 002.015.0010
+                    error: execution.target.not.execution.target
+                    message: >-
+                      Requested target target@helmut.cloud is a member of the
+                      organization but not an execution target
+                Requested target target@helmut.cloud is not a member of the organization:
+                  summary: >-
+                    Requested target target@helmut.cloud is not a member of the
+                    organization
+                  value:
+                    code: 002.015.0004
+                    error: execution.target.not.member
+                    message: >-
+                      Requested target target@helmut.cloud is not a member of
+                      the organization
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/wave/engine:
     patch:
       security:
@@ -27751,12 +28018,14 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Sets the default Wave Engine version used when executing streams in this
+        space
       summary: >-
         Update the default wave engine that should be used on stream execution
         for that space
       tags:
-        - Space
-        - Wave
+        - Space.Wave
       parameters:
         - schema:
             anyOf:
@@ -27967,10 +28236,10 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: Returns the Wave Engine currently active for this space
       summary: Get the currently active wave engine for a space
       tags:
-        - Space
-        - Wave
+        - Space.Wave
       parameters:
         - schema:
             anyOf:
@@ -28159,10 +28428,12 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Adds a new wave catalog to the space or updates an existing one,
+        checking the license quota unless the catalog is already registered
       summary: Add or update a new wave catalog to a space
       tags:
-        - Space
-        - Wave
+        - Space.Wave
       parameters:
         - schema:
             anyOf:
@@ -28359,10 +28630,10 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: Returns the wave catalogs currently active for this space
       summary: Get the currently active wave catalogs for a space
       tags:
-        - Space
-        - Wave
+        - Space.Wave
       parameters:
         - schema:
             anyOf:
@@ -28543,10 +28814,10 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: Removes the specified wave catalog from the space
       summary: Delete a catalog from a space
       tags:
-        - Space
-        - Wave
+        - Space.Wave
       parameters:
         - schema:
             anyOf:
@@ -28744,6 +29015,10 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Returns streams in the space matching the search filter, or all streams
+        if no filter is provided, paginated with total count in the 'total'
+        header
       summary: >-
         Retrieves all streams of the space that match the provided search
         filter. Will return all streams if no search filter is provided
@@ -28968,6 +29243,9 @@ paths:
             - high5:space:write
         - patAuth:
             - high5:space:write
+      description: >-
+        Uploads a custom avatar image and sets it as the space's avatar,
+        restricted to org owners/admins or space owners/managers
       summary: Upload custom avatar for the High5 Space
       tags:
         - Space
