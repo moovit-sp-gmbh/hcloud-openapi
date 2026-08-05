@@ -6053,7 +6053,7 @@ paths:
                   summary: An address book with this name already exists in the space
                   value:
                     code: 009.057.0002
-                    error: address-book.name.in.use
+                    error: address.book.name.in.use
                     message: An address book with this name already exists in the space
         '401':
           description: >-
@@ -6282,7 +6282,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -6399,7 +6399,7 @@ paths:
                   summary: An address book with this name already exists in the space
                   value:
                     code: 009.057.0002
-                    error: address-book.name.in.use
+                    error: address.book.name.in.use
                     message: An address book with this name already exists in the space
         '401':
           description: >-
@@ -6464,7 +6464,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -6629,7 +6629,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -6805,7 +6805,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -6980,7 +6980,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -7156,7 +7156,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
@@ -7331,7 +7331,7 @@ paths:
                   summary: Address book not found
                   value:
                     code: 009.057.0001
-                    error: address-book.not.found
+                    error: address.book.not.found
                     message: Address book not found
         '500':
           description: something went wrong
