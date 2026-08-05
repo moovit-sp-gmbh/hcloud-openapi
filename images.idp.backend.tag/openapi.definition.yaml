@@ -1225,7 +1225,7 @@ components:
           type: string
           minLength: 3
           maxLength: 128
-          pattern: ^[\w-. ]{3,128}$
+          pattern: ^[\w-.@ ]{3,128}$
           description: User-friendly label for this passkey
           example: MacBook Touch ID
       required:
