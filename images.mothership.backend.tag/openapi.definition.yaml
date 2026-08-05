@@ -1173,9 +1173,7 @@ paths:
         - schema:
             type: string
             minLength: 1
-            maxLength: 255
             format: email
-            pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
             description: Email address
             example: john.doe@helmut.cloud
           required: true
@@ -1241,9 +1239,7 @@ paths:
         - schema:
             type: string
             minLength: 1
-            maxLength: 255
             format: email
-            pattern: ^[\p{L}\p{M}\p{N}._%+-]+@(?:[\p{L}\p{M}\p{N}-]+\.)+[\p{L}]{2,}$
             description: Email address
             example: john.doe@helmut.cloud
           required: true
