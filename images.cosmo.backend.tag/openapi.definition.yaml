@@ -3219,12 +3219,19 @@ components:
                     what is it's position in it
                 storage:
                   $ref: '#/components/schemas/ReducedStorage'
+                commentCount:
+                  type: number
+                  description: >-
+                    Number of parent comments linked to the asset. Replies are
+                    not included.
+                  example: 3
               required:
                 - type
                 - createDate
                 - modifyDate
                 - creator
                 - organization
+                - commentCount
           example: *ref_15
         - allOf:
             - $ref: '#/components/schemas/BaseAssetDto'
@@ -3277,8 +3284,15 @@ components:
                   description: Allowed operations on the asset
                   example:
                     - VIEW_ASSETS
+                commentCount:
+                  type: number
+                  description: >-
+                    Number of parent comments linked to the asset. Replies are
+                    not included.
+                  example: 3
               required:
                 - type
+                - commentCount
           example: *ref_15
     Unknown:
       type: object
@@ -3768,6 +3782,12 @@ components:
           description: >-
             Information about whether or not the asset is in a stack and what is
             it's position in it
+        commentCount:
+          type: number
+          description: >-
+            Number of parent comments linked to the asset. Replies are not
+            included.
+          example: 3
       required:
         - _id
         - name
@@ -3777,6 +3797,7 @@ components:
         - creator
         - organization
         - space
+        - commentCount
       example:
         _id: 2e1d01be-fc17-4acd-a3d9-ddacedebc59f
         name: my asset
@@ -3796,6 +3817,7 @@ components:
           name: Marketing Assets
           avatarUrl: https://example.com/space-avatar.png
         type: MEDIA_ASSET
+        commentCount: 3
         assetType: VIDEO
         extension: .mov
         duration: 29.56
@@ -4111,6 +4133,12 @@ components:
                   - name
                   - type
               - $ref: '#/components/schemas/Vtt'
+        commentCount:
+          type: number
+          description: >-
+            Number of parent comments linked to the asset. Replies are not
+            included.
+          example: 3
         type:
           type: string
           enum:
@@ -4141,6 +4169,7 @@ components:
         - creator
         - organization
         - space
+        - commentCount
         - type
         - stack
       description: >-
