@@ -4065,26 +4065,26 @@ components:
               description: >-
                 Whether the credential must be discoverable without the relying
                 party specifying it beforehand
-              example: required
+              example: preferred
             requireResidentKey:
               type: boolean
               description: >-
                 Legacy equivalent of requiring a discoverable credential, kept
                 for older clients
-              example: true
+              example: false
             userVerification:
               type: string
               description: >-
                 Whether the authenticator must verify the user's identity, for
                 example via biometrics or a PIN
-              example: required
+              example: preferred
           description: >-
             Constraints the relying party places on which authenticators may be
             used and how they must behave
           example:
-            residentKey: required
-            requireResidentKey: true
-            userVerification: required
+            residentKey: preferred
+            requireResidentKey: false
+            userVerification: preferred
         attestation:
           type: string
           description: >-
@@ -4194,7 +4194,7 @@ components:
           description: >-
             Whether the authenticator must verify the user's identity, for
             example via biometrics or a PIN
-          example: required
+          example: preferred
         extensions:
           type: object
           additionalProperties:
