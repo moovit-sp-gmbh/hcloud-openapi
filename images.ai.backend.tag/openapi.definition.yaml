@@ -798,6 +798,13 @@ paths:
                     error: internal.server.error
                     message: something went wrong
     get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
       summary: Get the message history of a High5 stream
       tags:
         - AI
@@ -863,6 +870,11 @@ paths:
           required: false
           name: page
           in: query
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
       responses:
         '200':
           description: Message history of the stream
@@ -918,8 +930,38 @@ paths:
                     code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 003.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 003.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 003.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
         '403':
           description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
             User's organization role is insufficient. Must be at least MEMBER |
             You do not have the required permission
           content:
@@ -927,6 +969,16 @@ paths:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 003.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
                 User's organization role is insufficient. Must be at least MEMBER:
                   summary: >-
                     User's organization role is insufficient. Must be at least
