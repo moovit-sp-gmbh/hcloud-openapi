@@ -47,17 +47,6 @@ components:
         - code
         - message
       description: API errors obey this shape
-    ExampleCreateDto:
-      type: object
-      properties:
-        name:
-          type: string
-          minLength: 1
-          maxLength: 128
-          description: Name of the example
-          example: my-example
-      required:
-        - name
     AIHigh5StreamRequestDto:
       type: object
       properties:
@@ -95,26 +84,6 @@ components:
         - message
         - type
         - payload
-    ExampleDto:
-      type: object
-      properties:
-        _id:
-          type: string
-          format: hexadecimal
-          description: ID of the example
-          example: 527d1df208337bc792b55f73
-        name:
-          type: string
-          description: Name of the example
-          example: my-example
-        createdAt:
-          type: integer
-          description: Creation timestamp in unix format
-          example: 1749040000000
-      required:
-        - _id
-        - name
-        - createdAt
     ReducedOrganization:
       type: object
       properties:
@@ -261,344 +230,6 @@ components:
         - createDate
   parameters: {}
 paths:
-  /v1/org/{orgName}/examples:
-    post:
-      security:
-        - bearerAuth:
-            - idp:organization:read
-        - basicAuth:
-            - idp:organization:read
-        - patAuth:
-            - idp:organization:read
-      summary: Create an example
-      tags:
-        - Example
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              $ref: '#/components/schemas/ExampleCreateDto'
-      responses:
-        '201':
-          description: Created example
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/ExampleDto'
-        '400':
-          description: Failed to validate 'path' parameter 'orgName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 003.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | You're
-            not authorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 003.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 003.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 003.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['idp:organization:read'] not included in
-            authorization | User's organization role is insufficient. Must be at
-            least ADMIN
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['idp:organization:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['idp:organization:read'] not included in
-                    authorization
-                  value:
-                    code: 003.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least ADMIN:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    ADMIN
-                  value:
-                    code: 003.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 003.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 003.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    get:
-      security:
-        - bearerAuth:
-            - idp:organization:read
-        - basicAuth:
-            - idp:organization:read
-        - patAuth:
-            - idp:organization:read
-      summary: List all examples of an organization
-      tags:
-        - Example
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: number
-            minimum: 1
-            maximum: 100
-            default: 25
-            description: Page size
-          required: false
-          name: limit
-          in: query
-        - schema:
-            type: number
-            nullable: true
-            minimum: 0
-            default: 0
-            description: Page index
-          required: false
-          name: page
-          in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
-      responses:
-        '200':
-          description: List of examples
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/ExampleDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'query' parameter 'limit' | Failed to validate 'query' parameter
-            'page'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 003.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'query' parameter 'limit':
-                  summary: Failed to validate 'query' parameter 'limit'
-                  description: Failed to validate 'query' parameter 'limit' - {error}
-                  value:
-                    code: 003.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'query' parameter 'limit' - {error}
-                Failed to validate 'query' parameter 'page':
-                  summary: Failed to validate 'query' parameter 'page'
-                  description: Failed to validate 'query' parameter 'page' - {error}
-                  value:
-                    code: 003.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'query' parameter 'page' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | You're
-            not authorized
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 003.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 003.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 003.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-        '403':
-          description: >-
-            Required scopes ['idp:organization:read'] not included in
-            authorization | User's organization role is insufficient. Must be at
-            least MEMBER
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Required scopes ['idp:organization:read'] not included in authorization:
-                  summary: >-
-                    Required scopes ['idp:organization:read'] not included in
-                    authorization
-                  value:
-                    code: 003.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                User's organization role is insufficient. Must be at least MEMBER:
-                  summary: >-
-                    User's organization role is insufficient. Must be at least
-                    MEMBER
-                  value:
-                    code: 003.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 003.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 003.000.0002
-                    error: internal.server.error
-                    message: something went wrong
   /v1/high5/org/{orgName}/spaces/{spaceName}/streams/{streamId}:
     post:
       security:
@@ -689,21 +320,21 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Failed to validate 'path' parameter 'spaceName':
                   summary: Failed to validate 'path' parameter 'spaceName'
                   description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'streamId':
                   summary: Failed to validate 'path' parameter 'streamId'
                   description: Failed to validate 'path' parameter 'streamId' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'streamId' - {error}
         '401':
@@ -718,13 +349,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 003.001.0001
+                    code: 011.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 003.001.0002
+                    code: 011.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -732,7 +363,7 @@ paths:
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 003.001.0003
+                    code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
@@ -750,7 +381,7 @@ paths:
                     Required scopes ['high5:space:write'] not included in
                     authorization
                   value:
-                    code: 003.001.0004
+                    code: 011.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -760,7 +391,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     MEMBER
                   value:
-                    code: 003.001.0004
+                    code: 011.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -768,7 +399,7 @@ paths:
                 You do not have the required permission:
                   summary: You do not have the required permission
                   value:
-                    code: 003.010.0003
+                    code: 011.010.0003
                     error: space.insufficient.permission
                     message: You do not have the required permission
         '404':
@@ -781,7 +412,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 003.007.0001
+                    code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -794,7 +425,7 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 003.000.0002
+                    code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
     get:
@@ -899,35 +530,35 @@ paths:
                   summary: Failed to validate 'path' parameter 'orgName'
                   description: Failed to validate 'path' parameter 'orgName' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
                 Failed to validate 'path' parameter 'spaceName':
                   summary: Failed to validate 'path' parameter 'spaceName'
                   description: Failed to validate 'path' parameter 'spaceName' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'spaceName' - {error}
                 Failed to validate 'path' parameter 'streamId':
                   summary: Failed to validate 'path' parameter 'streamId'
                   description: Failed to validate 'path' parameter 'streamId' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'streamId' - {error}
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'limit' - {error}
                 Failed to validate 'query' parameter 'page':
                   summary: Failed to validate 'query' parameter 'page'
                   description: Failed to validate 'query' parameter 'page' - {error}
                   value:
-                    code: 003.000.0003
+                    code: 011.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
         '401':
@@ -942,13 +573,13 @@ paths:
                 You're not authorized:
                   summary: You're not authorized
                   value:
-                    code: 003.001.0001
+                    code: 011.001.0001
                     error: unauthorized
                     message: You're not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
-                    code: 003.001.0002
+                    code: 011.001.0002
                     error: missing.auth.token
                     message: >-
                       Expected an authentication token that has not been
@@ -956,7 +587,7 @@ paths:
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
-                    code: 003.001.0003
+                    code: 011.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
@@ -974,7 +605,7 @@ paths:
                     Required scopes ['high5:space:read'] not included in
                     authorization
                   value:
-                    code: 003.001.0004
+                    code: 011.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -984,7 +615,7 @@ paths:
                     User's organization role is insufficient. Must be at least
                     MEMBER
                   value:
-                    code: 003.001.0004
+                    code: 011.001.0004
                     error: insufficient.rights
                     message: >-
                       You have not enough rights to access/manipulate this
@@ -992,7 +623,7 @@ paths:
                 You do not have the required permission:
                   summary: You do not have the required permission
                   value:
-                    code: 003.010.0003
+                    code: 011.010.0003
                     error: space.insufficient.permission
                     message: You do not have the required permission
         '404':
@@ -1005,7 +636,7 @@ paths:
                 Organization not found:
                   summary: Organization not found
                   value:
-                    code: 003.007.0001
+                    code: 011.007.0001
                     error: organization.not.found
                     message: Organization not found
         '500':
@@ -1018,6 +649,6 @@ paths:
                 something went wrong:
                   summary: something went wrong
                   value:
-                    code: 003.000.0002
+                    code: 011.000.0002
                     error: internal.server.error
                     message: something went wrong
