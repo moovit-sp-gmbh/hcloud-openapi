@@ -3942,21 +3942,10 @@ components:
         - order
       description: Patch order of a stream
     StreamPatchOrderDto:
-      type: object
-      properties:
-        streamId:
-          type: string
-          minLength: 24
-          maxLength: 24
-          format: hexadecimal
-          description: ID of the stream
-        order:
-          type: number
-          description: New order number for the streamId given
-      required:
-        - streamId
-        - order
-      description: Patch order of a stream
+      type: array
+      items:
+        $ref: '#/components/schemas/StreamPatchOrderSingleDto'
+      description: Array of stream order patches
     MoveDirection:
       type: string
       enum:
@@ -31526,12 +31515,7 @@ paths:
         content:
           application/json:
             schema:
-              allOf:
-                - $ref: '#/components/schemas/StreamPatchOrderDto'
-                - type: array
-                  items:
-                    $ref: '#/components/schemas/StreamPatchOrderDto'
-                  description: Array of stream order patches
+              $ref: '#/components/schemas/StreamPatchOrderDto'
       responses:
         '200':
           description: Ordered streams
