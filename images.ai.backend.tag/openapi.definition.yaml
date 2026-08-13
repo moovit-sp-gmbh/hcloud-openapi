@@ -436,7 +436,7 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
-      summary: Get the message history of a High5 stream
+      summary: Get the message history of a High5 stream ai chat
       tags:
         - AI
       parameters:
@@ -508,7 +508,7 @@ paths:
           in: header
       responses:
         '200':
-          description: Message history of the stream
+          description: Message history of the ai chat
           content:
             application/json:
               schema:
