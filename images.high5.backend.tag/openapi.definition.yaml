@@ -3270,7 +3270,7 @@ components:
           example: true
         target:
           type: string
-          description: Target that executes the stream. Can be a user email or pool name
+          description: Target that executes the stream, can be a user email or pool name
           example: target@helmut.cloud
         lastStatus:
           type: number
@@ -3961,6 +3961,251 @@ components:
       required:
         - direction
       description: Patch the order of a single stream
+    WatchFolderResourceType:
+      type: string
+      enum:
+        - S3
+        - LOCAL
+      description: Type of storage resource to scan
+      example: S3
+    S3Credentials:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum:
+            - S3
+        accessKeyId:
+          type: string
+          minLength: 3
+          format: hexadecimal
+          description: Access Key ID or compatible credential identifier
+          example: 1573c63204e1eb862ce99d9ffd7b2a91
+        secretAccessKey:
+          type: string
+          minLength: 3
+          format: hexadecimal
+          description: Secret Access Key or compatible credential secret
+          example: 4817af2e5a931982df148987d942a3b79751c2defde52b7b951a95e217031847
+        region:
+          type: string
+          description: AWS region or region identifier for S3-compatible storage
+          example: us-east-1
+        endpoint:
+          type: string
+          description: >-
+            Custom endpoint URL for S3-compatible storage providers (e.g.
+            Cloudflare R2, MinIO). Omit for AWS S3
+          example: https://account.r2.cloudflarestorage.com
+        bucket:
+          type: string
+          description: Name of the S3 bucket to scan
+          example: my-ingest-bucket
+      required:
+        - resourceType
+        - accessKeyId
+        - secretAccessKey
+        - region
+        - bucket
+      description: Credentials for accessing an S3 or S3-compatible storage bucket
+      example:
+        resourceType: S3
+        accessKeyId: 1573c63204e1eb862ce99d9ffd7b2a91
+        secretAccessKey: 4817af2e5a931982df148987d942a3b79751c2defde52b7b951a95e217031847
+        region: us-east-1
+        endpoint: https://account.r2.cloudflarestorage.com
+        bucket: my-ingest-bucket
+    LocalCredentials:
+      type: object
+      properties:
+        resourceType:
+          type: string
+          enum:
+            - LOCAL
+      required:
+        - resourceType
+      description: >-
+        Marker credentials for scanning a local filesystem path on the agent; no
+        secrets required
+      example:
+        resourceType: LOCAL
+    WatchFolderCredentials:
+      oneOf:
+        - $ref: '#/components/schemas/S3Credentials'
+        - $ref: '#/components/schemas/LocalCredentials'
+      discriminator:
+        propertyName: resourceType
+        mapping:
+          S3: '#/components/schemas/S3Credentials'
+          LOCAL: '#/components/schemas/LocalCredentials'
+      description: Storage credentials, structure depends on resourceType
+      example:
+        resourceType: S3
+        accessKeyId: 1573c63204e1eb862ce99d9ffd7b2a91
+        secretAccessKey: 4817af2e5a931982df148987d942a3b79751c2defde52b7b951a95e217031847
+        region: us-east-1
+        bucket: my-ingest-bucket
+    WatchFolderCreateDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 128
+          pattern: ^[\w-.]{2,128}$
+          description: >-
+            Name of the WatchFolder (only alphanumeric characters, underscores,
+            hyphens, dots and spaces are allowed; it should contain between 2
+            and 128 characters)
+          example: Wave-Catalog-Folder
+        target:
+          anyOf:
+            - type: string
+              format: email
+            - type: string
+              minLength: 1
+              maxLength: 128
+              pattern: ^[\w-.]{1,128}$
+              description: >-
+                Name of the pool (only alphanumeric characters, underscores,
+                hyphens and dots are allowed; it should contain between 1 and
+                128 characters)
+              example: My-Pool
+          description: >-
+            Target that will execute the watch folder scan, can be a user email
+            or pool name
+          example: target@helmut.cloud
+        resourceType:
+          $ref: '#/components/schemas/WatchFolderResourceType'
+        path:
+          type: string
+          description: Folder path or prefix to scan
+          example: ingest/raw/
+        interval:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Interval between scans in seconds
+          example: 60
+        eventName:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[\w-.]{1,128}$
+          description: Name of the High5 event to execute when a stable file is detected
+          example: ingest.video.ready
+        credentials:
+          $ref: '#/components/schemas/WatchFolderCredentials'
+      required:
+        - name
+        - target
+        - resourceType
+        - path
+        - interval
+        - eventName
+        - credentials
+      description: >-
+        Watch folder creation details, Watchfolders provide a long-established
+        mechanism for ingesting files of various types into remote systems
+      example:
+        name: Wave-Catalog-Folder
+        target: target@helmut.cloud
+        resourceType: S3
+        path: ingest/raw/
+        interval: 60
+        eventName: ingest.video.ready
+        credentials:
+          resourceType: S3
+          accessKeyId: AKIAIOSFODNN7EXAMPLE
+          secretAccessKey: secret
+          region: us-east-1
+          bucket: my-bucket
+    WatchFolderPatchDto:
+      type: object
+      properties:
+        name:
+          type: string
+          minLength: 2
+          maxLength: 128
+          pattern: ^[\w-.]{2,128}$
+          description: >-
+            Name of the WatchFolder (only alphanumeric characters, underscores,
+            hyphens, dots and spaces are allowed; it should contain between 2
+            and 128 characters)
+          example: Wave-Catalog-Folder
+        target:
+          anyOf:
+            - type: string
+              format: email
+            - type: string
+              minLength: 1
+              maxLength: 128
+              pattern: ^[\w-.]{1,128}$
+              description: >-
+                Name of the pool (only alphanumeric characters, underscores,
+                hyphens and dots are allowed; it should contain between 1 and
+                128 characters)
+              example: My-Pool
+          description: >-
+            Target that will execute the watch folder scan, can be a user email
+            or pool name
+          example: target@helmut.cloud
+        resourceType:
+          $ref: '#/components/schemas/WatchFolderResourceType'
+        path:
+          type: string
+          description: Folder path or prefix to scan
+          example: ingest/raw/
+        interval:
+          type: integer
+          minimum: 0
+          exclusiveMinimum: true
+          description: Interval between scans in seconds
+          example: 60
+        eventName:
+          type: string
+          minLength: 1
+          maxLength: 128
+          pattern: ^[\w-.]{1,128}$
+          description: Name of the High5 event to execute when a stable file is detected
+          example: ingest.video.ready
+        credentials:
+          $ref: '#/components/schemas/WatchFolderCredentials'
+      description: Watch folder update details
+      example:
+        name: Default-Node-Catalog-Folder
+        target: target@helmut.cloud
+    WatchFolderScanReportDto:
+      type: object
+      properties:
+        files:
+          type: array
+          items:
+            type: object
+            properties:
+              path:
+                type: string
+                minLength: 1
+                description: File path relative to the configured folder prefix
+                example: ingest/raw/video.mp4
+              size:
+                type: integer
+                minimum: 0
+                description: File size in bytes
+                example: 1048576
+            required:
+              - path
+              - size
+          description: List of files discovered during the scan
+      required:
+        - files
+      description: Scan report submitted by the agent after scanning the watch folder
+      example:
+        files:
+          - path: ingest/raw/video.mp4
+            size: 1048576
+          - path: ingest/raw/audio.wav
+            size: 524288
     IncomingWebhookNetworkSettingsDto:
       type: object
       properties:
@@ -7535,6 +7780,219 @@ components:
                 count: 19
               '3':
                 count: 33
+    WatchFolderDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hexadecimal
+          description: Database ID of the watch folder
+          example: 60f7c1b5e6b3f5001f8e8e8e
+        name:
+          type: string
+          description: Name of the watch folder
+          example: Some Watch Folder
+        target:
+          type: string
+          description: >-
+            Target that will execute the watch folder scan, can be a user email
+            or pool name
+          example: target@helmut.cloud
+        space:
+          allOf:
+            - $ref: '#/components/schemas/ReducedSpace'
+            - description: Space the watch folder belongs to
+        organization:
+          allOf:
+            - $ref: '#/components/schemas/ReducedOrganization'
+            - description: Organization the watch folder belongs to
+        creator:
+          allOf:
+            - $ref: '#/components/schemas/ReducedUser'
+            - description: Creator of the watch folder
+        createDate:
+          type: integer
+          description: Date of creation as unix timestamp
+          example: 1626857141000
+        resourceType:
+          $ref: '#/components/schemas/WatchFolderResourceType'
+        path:
+          type: string
+          description: Folder path or prefix to scan
+          example: ingest/raw/
+        interval:
+          type: integer
+          description: Interval between scans in seconds
+          example: 60
+        eventName:
+          type: string
+          description: Name of the High5 event to execute when a stable file is detected
+          example: ingest.video.ready
+        credentials:
+          allOf:
+            - $ref: '#/components/schemas/WatchFolderCredentials'
+            - description: Storage credentials (decrypted)
+      required:
+        - _id
+        - name
+        - target
+        - space
+        - organization
+        - creator
+        - createDate
+        - resourceType
+        - path
+        - interval
+        - eventName
+        - credentials
+      description: >-
+        Full representation of a watch folder configuration, Watchfolders
+        provide a long-established mechanism for ingesting files of various
+        types into remote systems
+      example:
+        _id: 60f7c1b5e6b3f5001f8e8e8e
+        name: Wave-Catalog-Folder
+        target: target@helmut.cloud
+        space:
+          _id: 41c7e64ff912d31ffa27a5b4
+          name: MySpace
+          avatarUrl: https://example.com/asset/some_avatar.webp
+        organization:
+          _id: 7157e64ff912d31ffa27a5f4
+          name: Moovit Software Products
+          avatarUrl: https://example.com/asset/some_avatar.webp
+        creator:
+          _id: 9287e64ff912d31ffa27a5b1
+          name: Helmut Mc Cloud
+          email: mcloud@helmut.cloud
+          avatarUrl: https://example.com/asset/some_avatar.webp
+          isGuest: false
+        createDate: 1626857141000
+        resourceType: S3
+        path: ingest/raw/
+        interval: 60
+        eventName: ingest.video.ready
+        credentials:
+          resourceType: S3
+          accessKeyId: AKIAIOSFODNN7EXAMPLE
+          secretAccessKey: '***'
+          region: us-east-1
+          bucket: my-bucket
+    WatchFolderScanConfigDto:
+      type: object
+      properties:
+        path:
+          type: string
+          description: Folder path or prefix to scan
+          example: ingest/raw/
+        credentials:
+          allOf:
+            - $ref: '#/components/schemas/WatchFolderCredentials'
+            - description: Storage credentials (decrypted)
+      required:
+        - path
+        - credentials
+      description: >-
+        Scan configuration handed to the agent that owns the currently active
+        scan, identified by the one-time scan secret
+      example:
+        path: ingest/raw/
+        credentials:
+          resourceType: S3
+          accessKeyId: AKIAIOSFODNN7EXAMPLE
+          secretAccessKey: 4817af2e5a931982df148987d942a3b79751c2defde52b7b951a95e217031847
+          region: us-east-1
+          bucket: my-bucket
+    WatchFolderFileStatus:
+      type: string
+      enum:
+        - NEW
+        - GROWING
+        - STABLE
+        - PROCESSING
+        - PROCESSED
+        - MISSING
+      description: >-
+        * NEW - File was first observed; size not yet verified as stable
+
+        * GROWING - File size changed between consecutive scans; write or upload
+        still in progress
+
+        * STABLE - File size unchanged between consecutive scans; stream
+        execution has been triggered
+
+        * PROCESSING - Stream execution has been triggered and is currently in
+        progress; file will not be re-triggered
+
+        * PROCESSED - Stream execution completed successfully; file has been
+        fully processed and will not be re-triggered
+
+        * MISSING - File was no longer found during the most recent scan; if it
+        reappears it is treated as new again
+      example: STABLE
+    WatchFolderFileDto:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hexadecimal
+          description: Database ID of the file entry
+          example: 64ab1c2d3e4f5a6b7c8d9e0f
+        watchFolderId:
+          type: string
+          format: hexadecimal
+          description: ID of the watch folder this file belongs to
+          example: 60f7c1b5e6b3f5001f8e8e8e
+        spaceId:
+          type: string
+          format: hexadecimal
+          description: ID of the space
+          example: 41c7e64ff912d31ffa27a5b4
+        organizationId:
+          type: string
+          format: hexadecimal
+          description: ID of the organization
+          example: 7157e64ff912d31ffa27a5f4
+        path:
+          type: string
+          description: File path as reported by the agent
+          example: ingest/raw/video.mp4
+        size:
+          type: integer
+          minimum: 0
+          description: File size in bytes at the last scan
+          example: 104857600
+        status:
+          $ref: '#/components/schemas/WatchFolderFileStatus'
+        lastSeen:
+          type: integer
+          description: Unix timestamp of the last scan that observed this file
+          example: 1626857141000
+        createDate:
+          type: integer
+          description: Unix timestamp when the file entry was first created
+          example: 1626857000000
+      required:
+        - _id
+        - watchFolderId
+        - spaceId
+        - organizationId
+        - path
+        - size
+        - status
+        - lastSeen
+        - createDate
+      description: Represents a file tracked by a watch folder
+      example:
+        _id: 64ab1c2d3e4f5a6b7c8d9e0f
+        watchFolderId: 60f7c1b5e6b3f5001f8e8e8e
+        spaceId: 41c7e64ff912d31ffa27a5b4
+        organizationId: 7157e64ff912d31ffa27a5f4
+        path: ingest/raw/video.mp4
+        size: 104857600
+        status: STABLE
+        lastSeen: 1626857141000
+        createDate: 1626857000000
     WebhookEncryptionSettings:
       type: object
       properties:
@@ -32685,6 +33143,1570 @@ paths:
                     code: 002.014.0001
                     error: stream.not.found
                     message: Given stream not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/watchfolders:
+    get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      description: >-
+        Get all watch folders the user is assigned to as target, directly or
+        through a pool. Used by idp to compute NATS permissions and by the agent
+        to join the watch folders it is already assigned to on
+        startup/reconnect.
+      summary: Get all watch folders the user is assigned to as target
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: List of watch folders
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatchFolderDto'
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: Required scopes ['high5:space:read'] not included in authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/watchfolders/{watchFolderId}:
+    get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      description: Retrieves a specific watch folder by its unique database identifier
+      summary: Get a watch folder by it's ID
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: Watch folder object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchFolderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER |
+            You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    patch:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      description: Updates an existing watch folder's properties
+      summary: Update existing watch folder
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchFolderPatchDto'
+      responses:
+        '200':
+          description: Watch folder object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchFolderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'spaceName' |
+            The provided watch folder name is already in use in this space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+                The provided watch folder name is already in use in this space:
+                  summary: >-
+                    The provided watch folder name is already in use in this
+                    space
+                  value:
+                    code: 002.059.0002
+                    error: watchFolder.name.in.use
+                    message: >-
+                      The provided watch folder name is already in use in this
+                      space
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    delete:
+      security:
+        - bearerAuth:
+            - high5:space:delete
+        - basicAuth:
+            - high5:space:delete
+        - patAuth:
+            - high5:space:delete
+      description: Permanently deletes a watch folder from the system
+      summary: Delete a watch folder by it's ID
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:delete'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:delete'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:delete'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/watchfolders:
+    post:
+      security:
+        - bearerAuth:
+            - high5:space:write
+        - basicAuth:
+            - high5:space:write
+        - patAuth:
+            - high5:space:write
+      description: Creates a new watch folder in the specified space and organization
+      summary: Create a new watch folder
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchFolderCreateDto'
+      responses:
+        '201':
+          description: Watch folder object
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchFolderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'spaceName' | The provided watch folder name is already in use in
+            this space
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                The provided watch folder name is already in use in this space:
+                  summary: >-
+                    The provided watch folder name is already in use in this
+                    space
+                  value:
+                    code: 002.059.0002
+                    error: watchFolder.name.in.use
+                    message: >-
+                      The provided watch folder name is already in use in this
+                      space
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:write'] not included in authorization
+            | User's organization role is insufficient. Must be at least MEMBER
+            | You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:write'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:write'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: Organization not found | Given space not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/watchfolders/{watchFolderId}/scan/{scanSecret}:
+    get:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: >-
+        Returns the path and decrypted credentials to scan, for the agent that
+        received this scan's NATS dispatch. Requires the one-time scan secret
+        handed out with that dispatch, not general space read access.
+      summary: Get the scan configuration for a watch folder
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+            pattern: ^[0-9a-f]{128}$
+          required: true
+          name: scanSecret
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: Scan configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/WatchFolderScanConfigDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'scanSecret' |
+            Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+                Failed to validate 'path' parameter 'scanSecret':
+                  summary: Failed to validate 'path' parameter 'scanSecret'
+                  description: Failed to validate 'path' parameter 'scanSecret' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'scanSecret' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            User's organization role is insufficient. Must be at least MEMBER |
+            You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+    post:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: >-
+        Accepts a list of files discovered by the agent and updates file
+        tracking state. Requires the one-time scan secret handed out with that
+        scan's NATS dispatch, not general space write access.
+      summary: Submit a watch folder scan report
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+            pattern: ^[0-9a-f]{128}$
+          required: true
+          name: scanSecret
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/WatchFolderScanReportDto'
+      responses:
+        '204':
+          description: No content
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'scanSecret' |
+            Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+                Failed to validate 'path' parameter 'scanSecret':
+                  summary: Failed to validate 'path' parameter 'scanSecret'
+                  description: Failed to validate 'path' parameter 'scanSecret' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'scanSecret' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            User's organization role is insufficient. Must be at least MEMBER |
+            You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/spaces/{spaceName}/watchfolders/{watchFolderId}/files:
+    get:
+      security:
+        - bearerAuth:
+            - high5:space:read
+        - basicAuth:
+            - high5:space:read
+        - patAuth:
+            - high5:space:read
+      description: Returns the list of files metadata currently tracked by the watch folder
+      summary: Get scan results for a watch folder
+      tags:
+        - WatchFolder
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: watchFolderId
+          in: path
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      responses:
+        '200':
+          description: List of tracked files
+          content:
+            application/json:
+              schema:
+                type: array
+                items:
+                  $ref: '#/components/schemas/WatchFolderFileDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'watchFolderId' | Failed to validate 'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'watchFolderId':
+                  summary: Failed to validate 'path' parameter 'watchFolderId'
+                  description: >-
+                    Failed to validate 'path' parameter 'watchFolderId' -
+                    {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'watchFolderId' -
+                      {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:read'] not included in authorization |
+            User's organization role is insufficient. Must be at least MEMBER |
+            You do not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:read'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:read'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+        '404':
+          description: >-
+            Organization not found | Given space not found | The requested watch
+            folder could not be found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                The requested watch folder could not be found:
+                  summary: The requested watch folder could not be found
+                  value:
+                    code: 002.059.0001
+                    error: watchFolder.not.found
+                    message: The requested watch folder could not be found
         '500':
           description: something went wrong
           content:
