@@ -1785,6 +1785,14 @@ components:
             * PERMANENT - Permanently delete the matching assets. This is a
             non-recoverable action.
           example: TRASHBIN
+        dryRun:
+          type: boolean
+          default: false
+          description: >-
+            If true, nothing is deleted. The response reports which assets would
+            have been deleted, so the user can verify the filters first. Delete
+            permissions are only checked by an actual run.
+          example: false
       description: >-
         Deletes all assets of a space that match the given filters. All filters
         must match for an asset to be deleted (AND combination).
@@ -4215,21 +4223,35 @@ components:
             - TRASHBIN
             - PERMANENT
           description: The deletion mode that was applied
+        dryRun:
+          type: boolean
+          description: Whether this was a dry run, in which case nothing was deleted
+        total:
+          type: integer
+          description: Total number of assets matching the filters, regardless of the limit
         count:
           type: integer
-          description: Number of assets that matched the filters and were deleted
+          description: >-
+            Number of assets that were deleted, capped by the limit. On a dry
+            run, the number that would be deleted.
         assetIds:
           type: array
           items:
             type: string
             format: uuid
-          description: IDs of the deleted assets
+          description: >-
+            IDs of the deleted assets. On a dry run, the IDs that would be
+            deleted.
       required:
         - mode
+        - dryRun
+        - total
         - count
         - assetIds
       example:
         mode: TRASHBIN
+        dryRun: false
+        total: 2
         count: 2
         assetIds:
           - 6047b32c-7d3d-4a2f-bfc8-35ba7182d9a6
@@ -11210,7 +11232,7 @@ paths:
         - patAuth:
             - cosmo:space:write
       description: >-
-        Deletes all assets of the space that match the given filters. All
+        Deletes the assets of the space that match the given filters. All
         filters must match for an asset to be deleted (AND combination).
 
         To match one of multiple values for the same field, provide an array as
@@ -11223,8 +11245,16 @@ paths:
         in the trash bin are ignored. Stacks are deleted as a whole, including
         all of their versions.
 
-        The operation is all-or-nothing: if the user is not allowed to delete
-        one of the matching assets, no assets are deleted at all.
+        At most `limit` assets are deleted per call. Matching more than that is
+        not an error - `total` reports how many assets match in total, so the
+        caller can repeat the call until `total` is 0.
+
+        When deleting in batches, keep requesting page 0: deleting a page shifts
+        the remaining matches, so incrementing the page would skip assets.
+
+        If the user is not allowed to delete one of the matching assets, the
+        call fails. Moving to the trash bin is atomic, a permanent deletion
+        commits in batches, so assets removed by an earlier batch stay deleted.
       summary: Bulk delete assets by filter
       tags:
         - Asset
@@ -11317,6 +11347,25 @@ paths:
           required: false
           name: namespace
           in: query
+        - schema:
+            type: integer
+            nullable: true
+            minimum: -1
+            default: 100
+            description: Maximum number of assets to delete. -1 deletes all matches.
+            example: 100
+          required: false
+          name: limit
+          in: query
+        - schema:
+            type: number
+            nullable: true
+            minimum: 0
+            default: 0
+            description: Page index
+          required: false
+          name: page
+          in: query
       requestBody:
         required: true
         content:
@@ -11334,7 +11383,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'query' parameter
-            'namespace'
+            'namespace' | Failed to validate 'query' parameter 'limit' | Failed
+            to validate 'query' parameter 'page'
           content:
             application/json:
               schema:
@@ -11361,6 +11411,20 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'namespace' - {error}
+                Failed to validate 'query' parameter 'limit':
+                  summary: Failed to validate 'query' parameter 'limit'
+                  description: Failed to validate 'query' parameter 'limit' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'limit' - {error}
+                Failed to validate 'query' parameter 'page':
+                  summary: Failed to validate 'query' parameter 'page'
+                  description: Failed to validate 'query' parameter 'page' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'page' - {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
