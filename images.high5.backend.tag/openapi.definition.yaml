@@ -2380,6 +2380,9 @@ components:
             - type
             - data
           description: Stream execution payload
+          example:
+            type: JSON
+            data: eyJmb28iOiJCQVIifQ==
         target:
           anyOf:
             - type: string
@@ -2394,20 +2397,102 @@ components:
                 128 characters)
               example: My-Pool
           description: Target that executes the stream. Can be a user email or pool name.
+          example: target@helmut.cloud
         dry:
           type: boolean
           description: >-
             Definition whether the execution should be a dry run or not.
             Standard is false
+          example: false
         parentExecutionSecret:
           type: string
           description: >-
             Secret of the parent execution, present when Execution is triggered
             in Trigger Stream node
+          example: Execution-Secret_123
+        queued:
+          type: boolean
+          default: false
+          description: >-
+            Whether the execution should be placed in the queue instead of
+            dispatched immediately
+          example: false
+        blocking:
+          type: boolean
+          default: false
+          description: >-
+            Whether the agent should block further queue processing until this
+            execution completes
+          example: false
+        priority:
+          type: integer
+          minimum: 1
+          maximum: 1000
+          default: 1
+          description: Execution priority (1 = lowest, 1000 = highest)
+          example: 1
+        retryCount:
+          type: integer
+          minimum: 0
+          maximum: 10
+          default: 0
+          description: Number of retries on client disconnect
+          example: 0
+        startTime:
+          type: number
+          default: 0
+          description: >-
+            Unix timestamp (ms) after which the execution may be picked up from
+            the queue (0 - immediately)
+          example: 0
       required:
         - payload
         - target
       description: Request for the execution
+      example:
+        payload:
+          type: JSON
+          data: eyJmb28iOiJCQVIifQ==
+        target: target@helmut.cloud
+        dry: false
+        parentExecutionSecret: Execution-Secret_123
+        queued: false
+        blocking: false
+        priority: 1
+        retryCount: 0
+        startTime: 0
+    High5QueuePollDto:
+      type: object
+      properties:
+        organizationIds:
+          type: array
+          items:
+            type: string
+            minLength: 1
+          minItems: 1
+          maxItems: 50
+          description: IDs of the organizations to poll the queue for
+          example:
+            - 507f1f77bcf86cd799439011
+        blocking:
+          type: boolean
+          description: Whether this agent is ready to accept blocking executions
+          example: false
+        limit:
+          type: integer
+          minimum: 1
+          maximum: 100
+          description: Maximum number of executions to return
+          example: 10
+      required:
+        - organizationIds
+        - blocking
+      description: Request body for polling the execution queue
+      example:
+        organizationIds:
+          - 507f1f77bcf86cd799439011
+        blocking: false
+        limit: 10
     CommandType:
       type: string
       enum:
@@ -15067,6 +15152,11 @@ paths:
             - high5:space:execute
         - patAuth:
             - high5:space:execute
+      description: >-
+        Creates execution entries in the database and dispatches the stream to
+        the specified target agent via NATS; supports an optional 'design' flag
+        to execute the current design instead of the published snapshot and an
+        optional 'debug' flag to enable step-by-step debug mode
       summary: Execute a stream by it's ID
       tags:
         - Execute
@@ -15381,6 +15471,10 @@ paths:
             - high5:space:execute
         - patAuth:
             - high5:space:execute
+      description: >-
+        Sends a debug command (e.g. step, continue, replace node) via NATS to
+        the agent currently executing a stream in debug mode, waiting up to 5
+        seconds for the agent to confirm receipt
       summary: >-
         Issue a command to the debug client of the agent executing a certain
         stream
@@ -15627,6 +15721,11 @@ paths:
             - high5:space:execute
         - patAuth:
             - high5:space:execute
+      description: >-
+        Creates execution entries for all active streams of the event and
+        dispatches the first stream to the target agent; each subsequent stream
+        is triggered automatically once the agent reports successful completion
+        of the previous one
       summary: Execute all streams connected to an event by the event name
       tags:
         - Execute
@@ -15879,6 +15978,11 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
+      description: >-
+        Returns the complete execution package needed by the agent to run a
+        stream, including the stream build, payload, wave engine version and
+        catalog data; the optional 'hash' query parameter allows the agent to
+        skip re-downloading an unchanged design build
       summary: Request the execution package by streamId and a secret
       tags:
         - Execute
@@ -16100,6 +16204,98 @@ paths:
                     code: 002.025.0003
                     error: execution.not.found
                     message: Execution object not found.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/execute/queue:
+    post:
+      security:
+        - bearerAuth:
+            - high5:space:execute
+        - basicAuth:
+            - high5:space:execute
+        - patAuth:
+            - high5:space:execute
+      description: >-
+        Fetches pending queued executions across all provided organizations,
+        dispatches each one to the calling agent via NATS and waits until all
+        have been accepted or failed
+      summary: Poll the global execution queue
+      tags:
+        - Execute
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: authorization
+          in: header
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/High5QueuePollDto'
+      responses:
+        '204':
+          description: No Content - all dispatched executions have been processed
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:execute'] not included in
+            authorization
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:execute'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:execute'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
         '500':
           description: something went wrong
           content:
