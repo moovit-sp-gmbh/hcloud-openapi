@@ -1980,6 +1980,13 @@ components:
             ID of the stream (ObjectId identifier, consists of 24 hexadecimal
             digits)
           example: 76194791721d55d3a5051092
+        executor:
+          type: string
+          description: >-
+            ID of the user linked to the context on the agent executing the
+            stream. Will match the target user for non-pool executions. Older
+            agent versions will not report this value.
+          example: 6a8865a3c59130f4a57ec450
         state:
           $ref: '#/components/schemas/High5ExecutionState'
         outcome:
@@ -2331,6 +2338,13 @@ components:
             ID of the stream (ObjectId identifier, consists of 24 hexadecimal
             digits)
           example: 76194791721d55d3a5051092
+        executor:
+          type: string
+          description: >-
+            ID of the user linked to the context on the agent executing the
+            stream. Will match the target user for non-pool executions. Older
+            agent versions will not report this value.
+          example: 6a8865a3c59130f4a57ec450
         state:
           $ref: '#/components/schemas/High5ExecutionState'
         outcome:
