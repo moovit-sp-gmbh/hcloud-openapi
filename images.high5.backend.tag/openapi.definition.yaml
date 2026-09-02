@@ -3191,7 +3191,7 @@ components:
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -3219,11 +3219,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -3255,11 +3255,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -3452,7 +3452,7 @@ components:
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -3480,11 +3480,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -3516,11 +3516,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -6228,7 +6228,7 @@ components:
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -6256,11 +6256,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
@@ -6292,11 +6292,11 @@ components:
                     month:
                       type: number
                       minimum: 0
-                      maximum: 11
+                      maximum: 12
                     day:
                       type: number
                       minimum: 0
-                      maximum: 30
+                      maximum: 31
                     hour:
                       type: number
                       minimum: 0
