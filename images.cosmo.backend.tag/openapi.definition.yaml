@@ -3006,6 +3006,161 @@ components:
         - _id
         - name
         - avatarUrl
+    Unknown:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: original
+        url:
+          type: string
+          format: uri
+          description: >-
+            URL to the media. Can be undefined if the media is still being
+            uploaded
+          example: https://example.com
+        type:
+          type: string
+          enum:
+            - UNKNOWN
+          description: Media type
+          example: UNKNOWN
+      required:
+        - name
+        - type
+    Image:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: thumbnail
+        url:
+          type: string
+          format: uri
+          description: >-
+            URL to the media. Can be undefined if the media is still being
+            uploaded
+          example: https://example.com
+        type:
+          type: string
+          enum:
+            - IMAGE
+          description: Media type
+          example: IMAGE
+      required:
+        - name
+        - type
+    AudioMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - AUDIO
+          example: AUDIO
+        codec:
+          type: string
+          example: aac
+        channels:
+          type: number
+          example: 6
+        channelLayout:
+          type: string
+          example: '5.1'
+        bitRate:
+          type: number
+          example: 383960
+        sampleRate:
+          type: number
+          example: 48000
+      required:
+        - type
+        - codec
+        - channels
+        - channelLayout
+        - bitRate
+        - sampleRate
+    VideoMetadata:
+      type: object
+      properties:
+        type:
+          type: string
+          enum:
+            - VIDEO
+          example: VIDEO
+        codec:
+          type: string
+          example: h264
+        frameRate:
+          type: number
+          example: 25
+        pixelFormat:
+          type: string
+          example: yuv420p
+        aspectRatio:
+          type: string
+          example: '16:9'
+        colorSpace:
+          type: string
+        width:
+          type: number
+          example: 1280
+        height:
+          type: number
+          example: 720
+        fieldOrder:
+          type: string
+        duration:
+          type: number
+          example: 29.56
+        tcIn:
+          type: number
+          example: 36000.002
+        tcOut:
+          type: number
+        noOfFrames:
+          type: number
+          example: 739
+        formatLongName:
+          type: string
+          example: QuickTime / MOV
+      required:
+        - type
+        - codec
+        - frameRate
+        - pixelFormat
+        - aspectRatio
+        - width
+        - height
+        - fieldOrder
+        - duration
+        - tcIn
+        - tcOut
+        - formatLongName
+      description: Video metadata
+    Vtt:
+      type: object
+      properties:
+        name:
+          type: string
+          description: Name of the media
+          example: tile_preview
+        url:
+          type: string
+          format: uri
+          description: URL to the VTT file. Can be undefined if still being generated
+          example: https://example.com/tile_preview.vtt
+        type:
+          type: string
+          enum:
+            - VTT
+          description: Media type
+          example: VTT
+      required:
+        - name
+        - type
     AssetDto:
       oneOf:
         - allOf:
@@ -3225,6 +3380,69 @@ components:
                   description: >-
                     Information about whether or not the asset is in a stack and
                     what is it's position in it
+                media:
+                  type: array
+                  items:
+                    oneOf:
+                      - $ref: '#/components/schemas/Unknown'
+                      - $ref: '#/components/schemas/Image'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - AUDIO
+                            description: Media type
+                            example: AUDIO
+                          metadata:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AudioMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - VIDEO
+                            description: Media type
+                            example: VIDEO
+                          metadata:
+                            type: array
+                            items:
+                              anyOf:
+                                - $ref: '#/components/schemas/AudioMetadata'
+                                - $ref: '#/components/schemas/VideoMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+                      - $ref: '#/components/schemas/Vtt'
                 storage:
                   $ref: '#/components/schemas/ReducedStorage'
                 commentCount:
@@ -3292,6 +3510,69 @@ components:
                   description: Allowed operations on the asset
                   example:
                     - VIEW_ASSETS
+                media:
+                  type: array
+                  items:
+                    oneOf:
+                      - $ref: '#/components/schemas/Unknown'
+                      - $ref: '#/components/schemas/Image'
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - AUDIO
+                            description: Media type
+                            example: AUDIO
+                          metadata:
+                            type: array
+                            items:
+                              $ref: '#/components/schemas/AudioMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+                      - type: object
+                        properties:
+                          name:
+                            type: string
+                            description: Name of the media
+                            example: original
+                          url:
+                            type: string
+                            format: uri
+                            description: >-
+                              URL to the media. Can be undefined if the media is
+                              still being uploaded
+                            example: https://example.com
+                          type:
+                            type: string
+                            enum:
+                              - VIDEO
+                            description: Media type
+                            example: VIDEO
+                          metadata:
+                            type: array
+                            items:
+                              anyOf:
+                                - $ref: '#/components/schemas/AudioMetadata'
+                                - $ref: '#/components/schemas/VideoMetadata'
+                            description: Media metadata
+                        required:
+                          - name
+                          - type
+                      - $ref: '#/components/schemas/Vtt'
                 commentCount:
                   type: number
                   description: >-
@@ -3302,161 +3583,6 @@ components:
                 - type
                 - commentCount
           example: *ref_15
-    Unknown:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the media
-          example: original
-        url:
-          type: string
-          format: uri
-          description: >-
-            URL to the media. Can be undefined if the media is still being
-            uploaded
-          example: https://example.com
-        type:
-          type: string
-          enum:
-            - UNKNOWN
-          description: Media type
-          example: UNKNOWN
-      required:
-        - name
-        - type
-    Image:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the media
-          example: thumbnail
-        url:
-          type: string
-          format: uri
-          description: >-
-            URL to the media. Can be undefined if the media is still being
-            uploaded
-          example: https://example.com
-        type:
-          type: string
-          enum:
-            - IMAGE
-          description: Media type
-          example: IMAGE
-      required:
-        - name
-        - type
-    AudioMetadata:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - AUDIO
-          example: AUDIO
-        codec:
-          type: string
-          example: aac
-        channels:
-          type: number
-          example: 6
-        channelLayout:
-          type: string
-          example: '5.1'
-        bitRate:
-          type: number
-          example: 383960
-        sampleRate:
-          type: number
-          example: 48000
-      required:
-        - type
-        - codec
-        - channels
-        - channelLayout
-        - bitRate
-        - sampleRate
-    VideoMetadata:
-      type: object
-      properties:
-        type:
-          type: string
-          enum:
-            - VIDEO
-          example: VIDEO
-        codec:
-          type: string
-          example: h264
-        frameRate:
-          type: number
-          example: 25
-        pixelFormat:
-          type: string
-          example: yuv420p
-        aspectRatio:
-          type: string
-          example: '16:9'
-        colorSpace:
-          type: string
-        width:
-          type: number
-          example: 1280
-        height:
-          type: number
-          example: 720
-        fieldOrder:
-          type: string
-        duration:
-          type: number
-          example: 29.56
-        tcIn:
-          type: number
-          example: 36000.002
-        tcOut:
-          type: number
-        noOfFrames:
-          type: number
-          example: 739
-        formatLongName:
-          type: string
-          example: QuickTime / MOV
-      required:
-        - type
-        - codec
-        - frameRate
-        - pixelFormat
-        - aspectRatio
-        - width
-        - height
-        - fieldOrder
-        - duration
-        - tcIn
-        - tcOut
-        - formatLongName
-      description: Video metadata
-    Vtt:
-      type: object
-      properties:
-        name:
-          type: string
-          description: Name of the media
-          example: tile_preview
-        url:
-          type: string
-          format: uri
-          description: URL to the VTT file. Can be undefined if still being generated
-          example: https://example.com/tile_preview.vtt
-        type:
-          type: string
-          enum:
-            - VTT
-          description: Media type
-          example: VTT
-      required:
-        - name
-        - type
     MediaAssetDetailedDto:
       type: object
       properties:
