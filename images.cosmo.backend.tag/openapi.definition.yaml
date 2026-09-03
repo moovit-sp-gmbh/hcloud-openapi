@@ -15897,23 +15897,26 @@ paths:
         - schema:
             type: string
             enum:
-              - timecode
-              - creator
-              - createDate
-            default: createDate
-            description: Field to sort comments by
-            example: createDate
+              - TIMECODE
+              - CREATOR
+              - NEWEST
+              - OLDEST
+            default: NEWEST
+            description: >-
+              Field to sort comments by. NEWEST/OLDEST sort by create date
+              desc/asc.
+            example: NEWEST
           required: false
           name: sort_field
           in: query
         - schema:
             type: string
             enum:
-              - asc
-              - desc
-            default: desc
-            description: Sort direction for comments
-            example: desc
+              - ASC
+              - DESC
+            default: DESC
+            description: Sort direction for comments (ignored for NEWEST/OLDEST).
+            example: DESC
           required: false
           name: sort_direction
           in: query
