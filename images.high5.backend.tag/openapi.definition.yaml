@@ -155,6 +155,9 @@ components:
                           type: string
                         advanced:
                           type: boolean
+                        if:
+                          type: object
+                          properties: {}
                         type:
                           type: string
                           enum:
@@ -334,6 +337,9 @@ components:
                           type: string
                         advanced:
                           type: boolean
+                        if:
+                          type: object
+                          properties: {}
                         type:
                           type: string
                           enum:
@@ -562,6 +568,9 @@ components:
                           type: string
                         advanced:
                           type: boolean
+                        if:
+                          type: object
+                          properties: {}
                         type:
                           type: string
                           enum:
@@ -927,6 +936,9 @@ components:
                             type: string
                           advanced:
                             type: boolean
+                          if:
+                            type: object
+                            properties: {}
                           type:
                             type: string
                             enum:
@@ -1106,6 +1118,9 @@ components:
                             type: string
                           advanced:
                             type: boolean
+                          if:
+                            type: object
+                            properties: {}
                           type:
                             type: string
                             enum:
@@ -1334,6 +1349,9 @@ components:
                             type: string
                           advanced:
                             type: boolean
+                          if:
+                            type: object
+                            properties: {}
                           type:
                             type: string
                             enum:
@@ -2601,6 +2619,9 @@ components:
                         type: string
                       advanced:
                         type: boolean
+                      if:
+                        type: object
+                        properties: {}
                       type:
                         type: string
                         enum:
@@ -2780,6 +2801,9 @@ components:
                         type: string
                       advanced:
                         type: boolean
+                      if:
+                        type: object
+                        properties: {}
                       type:
                         type: string
                         enum:
@@ -3008,6 +3032,9 @@ components:
                         type: string
                       advanced:
                         type: boolean
+                      if:
+                        type: object
+                        properties: {}
                       type:
                         type: string
                         enum:
@@ -6961,6 +6988,9 @@ components:
                               type: string
                             advanced:
                               type: boolean
+                            if:
+                              type: object
+                              properties: {}
                             type:
                               type: string
                               enum:
@@ -7140,6 +7170,9 @@ components:
                               type: string
                             advanced:
                               type: boolean
+                            if:
+                              type: object
+                              properties: {}
                             type:
                               type: string
                               enum:
@@ -7368,6 +7401,9 @@ components:
                               type: string
                             advanced:
                               type: boolean
+                            if:
+                              type: object
+                              properties: {}
                             type:
                               type: string
                               enum:
