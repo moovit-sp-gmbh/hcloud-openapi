@@ -288,11 +288,6 @@ paths:
           required: true
           name: streamId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
@@ -501,11 +496,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Message history of the ai chat
