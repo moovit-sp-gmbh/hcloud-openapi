@@ -25290,11 +25290,6 @@ paths:
           required: true
           name: orgName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Organization statistics information
@@ -25450,11 +25445,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '200':
           description: Space statistics information
