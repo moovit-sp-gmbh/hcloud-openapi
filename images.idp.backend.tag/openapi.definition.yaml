@@ -4951,6 +4951,32 @@ components:
           - MUWES4KBJ54DUURPIB3GCVLHHY4GGLST
         createDate: 1665569820033
         modifyDate: 1665569820033
+    ReducedSpace:
+      type: object
+      properties:
+        _id:
+          type: string
+          format: hexadecimal
+          description: Unique identifier of the space
+          example: 75562d052ed0590e5d580da0
+        name:
+          type: string
+          description: Name of the space
+          example: Design-Team-Workspace
+        avatarUrl:
+          type: string
+          format: uri
+          description: URL to the avatar image of the Space
+          example: https://example.com/space-avatar.webp
+      required:
+        - _id
+        - name
+        - avatarUrl
+      description: Spaces that are using this storage
+      example:
+        _id: 9687e64ff912d31ffa27a1bd
+        name: MySpace
+        avatarUrl: https://example.com/asset/some_avatar.webp
     StorageDto:
       type: object
       properties:
@@ -5010,6 +5036,11 @@ components:
           type: string
           description: Error message if the storage is not valid
           example: Unable to reach s3 storage
+        spaces:
+          type: array
+          items:
+            $ref: '#/components/schemas/ReducedSpace'
+          description: Spaces that are using this storage
       required:
         - _id
         - name
@@ -5022,6 +5053,7 @@ components:
         - bucket
         - region
         - valid
+        - spaces
       description: Storage
       example:
         _id: 63ca7c7683160ed3ad9162ff
@@ -5045,6 +5077,10 @@ components:
         modifyDate: 1660922024145
         valid: false
         errorMessage: Unable to reach s3 storage
+        spaces:
+          - _id: 63ca7c7683160ed3ad9162ff
+            name: My Space
+            avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
     StorageCreateDto:
       type: object
       properties:
