@@ -2267,6 +2267,35 @@ components:
       required:
         - avatar
       description: Custom image must be send in request body as multipart/form-data as file
+    AddressBookMemberDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the member
+          example: peter@example.com
+        name:
+          type: string
+          description: Optional display name
+          example: Peter Example
+        addedDate:
+          type: number
+          description: Timestamp in milliseconds when the member was added
+          example: 1700000000000
+        type:
+          type: string
+          enum:
+            - INTERNAL
+            - EXTERNAL
+          description: >-
+            INTERNAL for existing helmut.cloud users, EXTERNAL for email-only
+            recipients
+          example: EXTERNAL
+      required:
+        - email
+        - addedDate
+        - type
     ReducedUser:
       type: object
       properties:
@@ -2326,12 +2355,10 @@ components:
           type: string
           description: Optional description
         members:
-          type: object
-          additionalProperties:
-            type: string
-          description: Members as key-value pairs (email / optional name)
-          example:
-            alice@example.com: Alice Example
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressBookMemberDto'
+          description: Members of the address book
         teamIds:
           type: array
           items:
