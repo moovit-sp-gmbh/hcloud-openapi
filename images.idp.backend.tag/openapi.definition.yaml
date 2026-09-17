@@ -4996,8 +4996,10 @@ components:
         - _id
         - name
         - avatarUrl
-      description: Spaces that are using this storage
-      example:
+      description: >-
+        Simplified representation of a space object used for referencing or
+        displaying minimal space details
+      example: &ref_2
         _id: 9687e64ff912d31ffa27a1bd
         name: MySpace
         avatarUrl: https://example.com/asset/some_avatar.webp
@@ -5063,8 +5065,23 @@ components:
         spaces:
           type: array
           items:
-            $ref: '#/components/schemas/ReducedSpace'
+            allOf:
+              - $ref: '#/components/schemas/ReducedSpace'
+              - type: object
+                properties:
+                  storageUsed:
+                    type: number
+                    description: Bytes used by this space's assets
+                    example: 12345
+                required:
+                  - storageUsed
+            description: Space that is using this storage
+            example: *ref_2
           description: Spaces that are using this storage
+        storageUsed:
+          type: number
+          description: Total bytes used across all spaces assigned to this storage
+          example: 123456789
       required:
         - _id
         - name
@@ -5078,6 +5095,7 @@ components:
         - region
         - valid
         - spaces
+        - storageUsed
       description: Storage
       example:
         _id: 63ca7c7683160ed3ad9162ff
@@ -5105,6 +5123,8 @@ components:
           - _id: 63ca7c7683160ed3ad9162ff
             name: My Space
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
+            storageUsed: 12345
+        storageUsed: 123456789
     StorageCreateDto:
       type: object
       properties:
@@ -8016,7 +8036,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: &ref_2
+      tags: &ref_3
         - Login.OAuth
       parameters:
         - schema:
@@ -8068,7 +8088,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: &ref_3
+            enum: &ref_4
               - plain
               - S256
             description: >-
@@ -8161,7 +8181,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: &ref_4
+                The redirect_uri provided is either missing or failed to be validated.: &ref_5
                   summary: >-
                     The redirect_uri provided is either missing or failed to be
                     validated.
@@ -8259,7 +8279,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: &ref_5
+              examples: &ref_6
                 OAuth missing query parameter:
                   summary: OAuth missing query parameter
                   description: 'OAuth missing query parameter: ''client_id'''
@@ -8298,7 +8318,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: *ref_2
+      tags: *ref_3
       parameters:
         - schema:
             type: string
@@ -8349,7 +8369,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_3
+            enum: *ref_4
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
@@ -8440,7 +8460,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: *ref_4
+                The redirect_uri provided is either missing or failed to be validated.: *ref_5
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8529,7 +8549,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: *ref_5
+              examples: *ref_6
         '500':
           description: something went wrong
           content:
@@ -8607,7 +8627,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_3
+            enum: *ref_4
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
