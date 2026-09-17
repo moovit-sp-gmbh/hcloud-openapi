@@ -1683,6 +1683,29 @@ components:
     AssetBrowseDto:
       type: object
       properties:
+        filters:
+          type: array
+          items:
+            anyOf:
+              - $ref: '#/components/schemas/type filters'
+              - $ref: '#/components/schemas/assetType filters'
+              - $ref: '#/components/schemas/_id filters'
+              - $ref: '#/components/schemas/name filters'
+              - $ref: '#/components/schemas/createDate filters'
+              - $ref: '#/components/schemas/modifyDate filters'
+              - $ref: '#/components/schemas/size filters'
+              - $ref: '#/components/schemas/extension filters'
+              - $ref: '#/components/schemas/creator.name filters'
+              - $ref: '#/components/schemas/creator._id filters'
+              - $ref: '#/components/schemas/resolution filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.approvalStatus
+                  filters
+              - $ref: '#/components/schemas/namespace.<namespaceName>.tag filters'
+              - $ref: >-
+                  #/components/schemas/namespace.<namespaceName>.metadata.<key>
+                  filters
+          description: Filters to apply to the search
         sorting:
           type: object
           properties:
@@ -1715,6 +1738,9 @@ components:
           required:
             - fields
           description: Sorting to apply to the search
+      description: >-
+        Listing parameters. Filters are optional - without them the whole
+        listing is returned. Uses the same filters as the asset search.
     AssetBulkDeleteByFilterDto:
       type: object
       properties:
