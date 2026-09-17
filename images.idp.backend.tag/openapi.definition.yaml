@@ -2643,6 +2643,24 @@ components:
                       required:
                         - quota
                         - documents
+                    jobs:
+                      type: object
+                      properties:
+                        quota:
+                          type: number
+                        logs:
+                          type: object
+                          properties:
+                            quota:
+                              type: number
+                          required:
+                            - quota
+                      required:
+                        - quota
+                        - logs
+                      description: >-
+                        Cronjob quota, formerly under the Fuse service. Absent
+                        on older licenses that still carry it under `fuse`.
                   required:
                     - quota
                     - catalogs
@@ -2673,6 +2691,11 @@ components:
                       type: number
                   required:
                     - quota
+                secondBaseExecutions:
+                  type: boolean
+                  description: >-
+                    Formerly under the Fuse service. Absent on older licenses
+                    that still carry it under `fuse`.
               required:
                 - spaces
                 - executionsPerMonth
@@ -2710,7 +2733,9 @@ components:
               required:
                 - spaces
                 - secondBaseExecutions
-              description: License quota for the Fuse service
+              description: >-
+                Legacy license quota for what is now the cronjob-related part of
+                High5. Absent on licenses issued after the Fuse-to-High5 merge.
             friday:
               type: object
               properties:
@@ -2743,7 +2768,6 @@ components:
           required:
             - idp
             - high5
-            - fuse
             - friday
           description: Quota assigned to this license
         creator:
