@@ -14155,6 +14155,275 @@ paths:
                     code: 009.000.0002
                     error: internal.server.error
                     message: something went wrong
+  /v1/hls/master:
+    get:
+      summary: Get a signed HLS master playlist
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: storageId
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: libraryId
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: videoId
+          in: query
+        - schema:
+            type: number
+            nullable: true
+          required: false
+          name: expires
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: sig
+          in: query
+      responses:
+        '200':
+          description: HLS master playlist
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: >-
+                  HLS master playlist (m3u8) with signed rendition/audio
+                  playlist URLs
+        '400':
+          description: >-
+            Failed to validate 'query' parameter 'storageId' | Failed to
+            validate 'query' parameter 'libraryId' | Failed to validate 'query'
+            parameter 'videoId' | Failed to validate 'query' parameter 'expires'
+            | Failed to validate 'query' parameter 'sig'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'query' parameter 'storageId':
+                  summary: Failed to validate 'query' parameter 'storageId'
+                  description: Failed to validate 'query' parameter 'storageId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'storageId' - {error}
+                Failed to validate 'query' parameter 'libraryId':
+                  summary: Failed to validate 'query' parameter 'libraryId'
+                  description: Failed to validate 'query' parameter 'libraryId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'libraryId' - {error}
+                Failed to validate 'query' parameter 'videoId':
+                  summary: Failed to validate 'query' parameter 'videoId'
+                  description: Failed to validate 'query' parameter 'videoId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'videoId' - {error}
+                Failed to validate 'query' parameter 'expires':
+                  summary: Failed to validate 'query' parameter 'expires'
+                  description: Failed to validate 'query' parameter 'expires' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'expires' - {error}
+                Failed to validate 'query' parameter 'sig':
+                  summary: Failed to validate 'query' parameter 'sig'
+                  description: Failed to validate 'query' parameter 'sig' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'sig' - {error}
+        '401':
+          description: You're not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+        '404':
+          description: Media not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Media not found:
+                  summary: Media not found
+                  value:
+                    code: 009.041.0001
+                    error: media.not.found
+                    message: Media not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/hls/playlist:
+    get:
+      summary: Get a signed HLS rendition/audio playlist
+      tags:
+        - Asset
+      parameters:
+        - schema:
+            type: string
+          required: true
+          name: storageId
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: libraryId
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: videoId
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: resolution
+          in: query
+        - schema:
+            type: number
+            nullable: true
+          required: false
+          name: expires
+          in: query
+        - schema:
+            type: string
+          required: true
+          name: sig
+          in: query
+      responses:
+        '200':
+          description: HLS rendition playlist
+          content:
+            text/plain:
+              schema:
+                type: string
+                description: >-
+                  HLS rendition playlist (m3u8) with signed 'fileSequenceX.ts'
+                  URLs
+        '400':
+          description: >-
+            Failed to validate 'query' parameter 'storageId' | Failed to
+            validate 'query' parameter 'libraryId' | Failed to validate 'query'
+            parameter 'videoId' | Failed to validate 'query' parameter
+            'resolution' | Failed to validate 'query' parameter 'expires' |
+            Failed to validate 'query' parameter 'sig'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'query' parameter 'storageId':
+                  summary: Failed to validate 'query' parameter 'storageId'
+                  description: Failed to validate 'query' parameter 'storageId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'storageId' - {error}
+                Failed to validate 'query' parameter 'libraryId':
+                  summary: Failed to validate 'query' parameter 'libraryId'
+                  description: Failed to validate 'query' parameter 'libraryId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'libraryId' - {error}
+                Failed to validate 'query' parameter 'videoId':
+                  summary: Failed to validate 'query' parameter 'videoId'
+                  description: Failed to validate 'query' parameter 'videoId' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'videoId' - {error}
+                Failed to validate 'query' parameter 'resolution':
+                  summary: Failed to validate 'query' parameter 'resolution'
+                  description: Failed to validate 'query' parameter 'resolution' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'resolution' -
+                      {error}
+                Failed to validate 'query' parameter 'expires':
+                  summary: Failed to validate 'query' parameter 'expires'
+                  description: Failed to validate 'query' parameter 'expires' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'expires' - {error}
+                Failed to validate 'query' parameter 'sig':
+                  summary: Failed to validate 'query' parameter 'sig'
+                  description: Failed to validate 'query' parameter 'sig' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'sig' - {error}
+        '401':
+          description: You're not authorized
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+        '404':
+          description: Media not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Media not found:
+                  summary: Media not found
+                  value:
+                    code: 009.041.0001
+                    error: media.not.found
+                    message: Media not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/locations:
     post:
       security:
