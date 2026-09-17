@@ -8688,15 +8688,19 @@ paths:
           name: spaceName
           in: path
         - schema:
-            type: string
-            minLength: 24
-            maxLength: 24
-            format: hexadecimal
+            anyOf:
+              - type: string
+                minLength: 24
+                maxLength: 24
+                format: hexadecimal
+              - type: string
+                enum:
+                  - default
             description: >-
               ID of the storage configuration to use for that space. If not
               provided, the default storage will be used. Only available if
               space is empty
-          required: false
+          required: true
           name: storageId
           in: path
       responses:
