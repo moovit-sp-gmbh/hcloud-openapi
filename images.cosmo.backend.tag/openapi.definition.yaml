@@ -21891,6 +21891,22 @@ paths:
         - schema:
             anyOf:
               - type: string
+                enum:
+                  - ''
+              - type: string
+                enum:
+                  - 'true'
+              - type: string
+                enum:
+                  - 'false'
+            default: 'false'
+            description: Recursive flag. If true the browse will be recursive.
+          required: false
+          name: recursive
+          in: query
+        - schema:
+            anyOf:
+              - type: string
                 minLength: 3
                 maxLength: 64
                 pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
@@ -21974,8 +21990,9 @@ paths:
             'query' parameter 'context' | Failed to validate 'query' parameter
             'spaceName' | Failed to validate 'query' parameter 'limit' | Failed
             to validate 'query' parameter 'page' | Failed to validate 'query'
-            parameter 'namespace' | Failed to validate 'query' parameter
-            'parentId' | Failed to validate 'query' parameter 'shareId'
+            parameter 'recursive' | Failed to validate 'query' parameter
+            'namespace' | Failed to validate 'query' parameter 'parentId' |
+            Failed to validate 'query' parameter 'shareId'
           content:
             application/json:
               schema:
@@ -22016,6 +22033,13 @@ paths:
                     code: 009.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                Failed to validate 'query' parameter 'recursive':
+                  summary: Failed to validate 'query' parameter 'recursive'
+                  description: Failed to validate 'query' parameter 'recursive' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'recursive' - {error}
                 Failed to validate 'query' parameter 'namespace':
                   summary: Failed to validate 'query' parameter 'namespace'
                   description: Failed to validate 'query' parameter 'namespace' - {error}
