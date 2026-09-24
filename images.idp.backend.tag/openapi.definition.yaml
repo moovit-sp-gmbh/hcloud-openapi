@@ -26309,7 +26309,7 @@ paths:
             You have not enough rights to access/manipulate this resource | Your
             role does not have the required permission | You have exceeded the
             assigned quota for this action. | The specified license is not
-            assigned to this organization.
+            assigned to this organization. | This storage is protected
           content:
             application/json:
               schema:
@@ -26371,6 +26371,12 @@ paths:
                     message: >-
                       The specified license is not assigned to this
                       organization.
+                This storage is protected:
+                  summary: This storage is protected
+                  value:
+                    code: 001.055.0005
+                    error: storage.protected
+                    message: This storage is protected
         '404':
           description: Organization not found | Storage not found
           content:
@@ -26552,7 +26558,7 @@ paths:
             You have not enough rights to access/manipulate this resource | Your
             role does not have the required permission | You have exceeded the
             assigned quota for this action. | The specified license is not
-            assigned to this organization.
+            assigned to this organization. | This storage is protected
           content:
             application/json:
               schema:
@@ -26614,6 +26620,12 @@ paths:
                     message: >-
                       The specified license is not assigned to this
                       organization.
+                This storage is protected:
+                  summary: This storage is protected
+                  value:
+                    code: 001.055.0005
+                    error: storage.protected
+                    message: This storage is protected
         '404':
           description: Organization not found | Storage not found
           content:
@@ -26809,7 +26821,7 @@ paths:
             You have not enough rights to access/manipulate this resource | Your
             role does not have the required permission | You have exceeded the
             assigned quota for this action. | The specified license is not
-            assigned to this organization.
+            assigned to this organization. | This storage is protected
           content:
             application/json:
               schema:
@@ -26871,6 +26883,12 @@ paths:
                     message: >-
                       The specified license is not assigned to this
                       organization.
+                This storage is protected:
+                  summary: This storage is protected
+                  value:
+                    code: 001.055.0005
+                    error: storage.protected
+                    message: This storage is protected
         '404':
           description: Organization not found | Storage not found
           content:
@@ -27469,7 +27487,7 @@ paths:
             enough rights to access/manipulate this resource | Your role does
             not have the required permission | You have exceeded the assigned
             quota for this action. | The specified license is not assigned to
-            this organization.
+            this organization. | This storage is protected
           content:
             application/json:
               schema:
@@ -27531,6 +27549,12 @@ paths:
                     message: >-
                       The specified license is not assigned to this
                       organization.
+                This storage is protected:
+                  summary: This storage is protected
+                  value:
+                    code: 001.055.0005
+                    error: storage.protected
+                    message: This storage is protected
         '404':
           description: Organization not found | Storage not found
           content:
