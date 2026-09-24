@@ -4622,7 +4622,7 @@ components:
         - _id
         - name
         - avatarUrl
-      description: Space the request belongs to
+      description: Space the database belongs to
       example:
         _id: 9687e64ff912d31ffa27a1bd
         name: MySpace
@@ -4648,56 +4648,11 @@ components:
         - _id
         - name
         - avatarUrl
-      description: Organization the request belongs to
+      description: Organization the database belongs to
       example:
         _id: 82f7e64ff912d31ffa27a5b7
         name: Moovit Software Products
         avatarUrl: https://example.com/asset/some_avatar.webp
-    CapturedRequestDto:
-      type: object
-      properties:
-        method:
-          type: string
-          description: Http method of the catched request
-          example: POST
-        headers:
-          type: object
-          additionalProperties:
-            nullable: true
-          description: HTTP headers of the catched request
-          example:
-            content-type: application/json
-            user-agent: Postman
-        body:
-          nullable: true
-          description: HTTP body of the catched request
-          example:
-            key: value
-        space:
-          $ref: '#/components/schemas/ReducedSpace'
-        organization:
-          $ref: '#/components/schemas/ReducedOrganization'
-      required:
-        - method
-        - headers
-        - space
-        - organization
-      description: Detailed representation of a captured request
-      example:
-        method: POST
-        headers:
-          content-type: application/json
-          user-agent: Postman
-        body:
-          key: value
-        space:
-          _id: 41c7e64ff912d31ffa27a5b4
-          name: MySpace
-          avatarUrl: https://example.com/asset/some_avatar.webp
-        organization:
-          _id: 7157e64ff912d31ffa27a5f4
-          name: Moovit Software Products
-          avatarUrl: https://example.com/asset/some_avatar.webp
     ReducedUser:
       type: object
       properties:
@@ -4754,13 +4709,9 @@ components:
           description: Name of the database
           example: Customer-Analytics-Collection
         space:
-          allOf:
-            - $ref: '#/components/schemas/ReducedSpace'
-            - description: Space the database belongs to
+          $ref: '#/components/schemas/ReducedSpace'
         organization:
-          allOf:
-            - $ref: '#/components/schemas/ReducedOrganization'
-            - description: Organization the database belongs to
+          $ref: '#/components/schemas/ReducedOrganization'
         creator:
           $ref: '#/components/schemas/ReducedUser'
         createDate:
@@ -8436,12 +8387,8 @@ paths:
           name: spaceName
           in: path
       responses:
-        '200':
+        '204':
           description: Request successfully captured and forwarded to NATS
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CapturedRequestDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8556,12 +8503,8 @@ paths:
           name: spaceName
           in: path
       responses:
-        '200':
+        '204':
           description: Request successfully captured and forwarded to NATS
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CapturedRequestDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8676,12 +8619,8 @@ paths:
           name: spaceName
           in: path
       responses:
-        '200':
+        '204':
           description: Request successfully captured and forwarded to NATS
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CapturedRequestDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8796,12 +8735,8 @@ paths:
           name: spaceName
           in: path
       responses:
-        '200':
+        '204':
           description: Request successfully captured and forwarded to NATS
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CapturedRequestDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
@@ -8916,12 +8851,8 @@ paths:
           name: spaceName
           in: path
       responses:
-        '200':
+        '204':
           description: Request successfully captured and forwarded to NATS
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CapturedRequestDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
