@@ -5624,29 +5624,38 @@ components:
         users:
           type: array
           items:
-            anyOf:
-              - allOf:
-                  - $ref: '#/components/schemas/ReducedUser'
-                  - properties:
-                      _id:
-                        type: string
-                        format: hex
-                        description: User ID
-                        example: 67336a3f31ed8ecdc24e0080
-                      name:
-                        type: string
-                        description: User Name
-                        example: Bob
-                      email:
-                        type: string
-                        description: User email
-                        example: bob@helmut.cloud
-                      avatarUrl:
-                        type: string
-                        format: uri
-                        description: URL to the user's avatar
-                        example: https://example.com
-              - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+            allOf:
+              - anyOf:
+                  - allOf:
+                      - $ref: '#/components/schemas/ReducedUser'
+                      - properties:
+                          _id:
+                            type: string
+                            format: hex
+                            description: User ID
+                            example: 67336a3f31ed8ecdc24e0080
+                          name:
+                            type: string
+                            description: User Name
+                            example: Bob
+                          email:
+                            type: string
+                            description: User email
+                            example: bob@helmut.cloud
+                          avatarUrl:
+                            type: string
+                            format: uri
+                            description: URL to the user's avatar
+                            example: https://example.com
+                  - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+              - type: object
+                properties:
+                  remainingCooldownInSeconds:
+                    type: number
+                    description: >-
+                      Remaining seconds until the share email can be resent to
+                      this user. Only present if the user is in cooldown.
+                    example: 42
           description: >-
             Array of the users associated with the share. Only present when
             searching shares of a space.
@@ -18043,29 +18052,39 @@ paths:
                   users:
                     type: array
                     items:
-                      anyOf:
-                        - allOf:
-                            - $ref: '#/components/schemas/ReducedUser'
-                            - properties:
-                                _id:
-                                  type: string
-                                  format: hex
-                                  description: User ID
-                                  example: 67336a3f31ed8ecdc24e0080
-                                name:
-                                  type: string
-                                  description: User Name
-                                  example: Bob
-                                email:
-                                  type: string
-                                  description: User email
-                                  example: bob@helmut.cloud
-                                avatarUrl:
-                                  type: string
-                                  format: uri
-                                  description: URL to the user's avatar
-                                  example: https://example.com
-                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                      allOf:
+                        - anyOf:
+                            - allOf:
+                                - $ref: '#/components/schemas/ReducedUser'
+                                - properties:
+                                    _id:
+                                      type: string
+                                      format: hex
+                                      description: User ID
+                                      example: 67336a3f31ed8ecdc24e0080
+                                    name:
+                                      type: string
+                                      description: User Name
+                                      example: Bob
+                                    email:
+                                      type: string
+                                      description: User email
+                                      example: bob@helmut.cloud
+                                    avatarUrl:
+                                      type: string
+                                      format: uri
+                                      description: URL to the user's avatar
+                                      example: https://example.com
+                            - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        - type: object
+                          properties:
+                            remainingCooldownInSeconds:
+                              type: number
+                              description: >-
+                                Remaining seconds until the share email can be
+                                resent to this user. Only present if the user is
+                                in cooldown.
+                              example: 42
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -18696,29 +18715,39 @@ paths:
                   users:
                     type: array
                     items:
-                      anyOf:
-                        - allOf:
-                            - $ref: '#/components/schemas/ReducedUser'
-                            - properties:
-                                _id:
-                                  type: string
-                                  format: hex
-                                  description: User ID
-                                  example: 67336a3f31ed8ecdc24e0080
-                                name:
-                                  type: string
-                                  description: User Name
-                                  example: Bob
-                                email:
-                                  type: string
-                                  description: User email
-                                  example: bob@helmut.cloud
-                                avatarUrl:
-                                  type: string
-                                  format: uri
-                                  description: URL to the user's avatar
-                                  example: https://example.com
-                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                      allOf:
+                        - anyOf:
+                            - allOf:
+                                - $ref: '#/components/schemas/ReducedUser'
+                                - properties:
+                                    _id:
+                                      type: string
+                                      format: hex
+                                      description: User ID
+                                      example: 67336a3f31ed8ecdc24e0080
+                                    name:
+                                      type: string
+                                      description: User Name
+                                      example: Bob
+                                    email:
+                                      type: string
+                                      description: User email
+                                      example: bob@helmut.cloud
+                                    avatarUrl:
+                                      type: string
+                                      format: uri
+                                      description: URL to the user's avatar
+                                      example: https://example.com
+                            - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        - type: object
+                          properties:
+                            remainingCooldownInSeconds:
+                              type: number
+                              description: >-
+                                Remaining seconds until the share email can be
+                                resent to this user. Only present if the user is
+                                in cooldown.
+                              example: 42
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -19167,29 +19196,39 @@ paths:
                   users:
                     type: array
                     items:
-                      anyOf:
-                        - allOf:
-                            - $ref: '#/components/schemas/ReducedUser'
-                            - properties:
-                                _id:
-                                  type: string
-                                  format: hex
-                                  description: User ID
-                                  example: 67336a3f31ed8ecdc24e0080
-                                name:
-                                  type: string
-                                  description: User Name
-                                  example: Bob
-                                email:
-                                  type: string
-                                  description: User email
-                                  example: bob@helmut.cloud
-                                avatarUrl:
-                                  type: string
-                                  format: uri
-                                  description: URL to the user's avatar
-                                  example: https://example.com
-                        - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                      allOf:
+                        - anyOf:
+                            - allOf:
+                                - $ref: '#/components/schemas/ReducedUser'
+                                - properties:
+                                    _id:
+                                      type: string
+                                      format: hex
+                                      description: User ID
+                                      example: 67336a3f31ed8ecdc24e0080
+                                    name:
+                                      type: string
+                                      description: User Name
+                                      example: Bob
+                                    email:
+                                      type: string
+                                      description: User email
+                                      example: bob@helmut.cloud
+                                    avatarUrl:
+                                      type: string
+                                      format: uri
+                                      description: URL to the user's avatar
+                                      example: https://example.com
+                            - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        - type: object
+                          properties:
+                            remainingCooldownInSeconds:
+                              type: number
+                              description: >-
+                                Remaining seconds until the share email can be
+                                resent to this user. Only present if the user is
+                                in cooldown.
+                              example: 42
                     description: >-
                       Array of the users associated with the share. Only present
                       when searching shares of a space.
@@ -20559,29 +20598,39 @@ paths:
                     users:
                       type: array
                       items:
-                        anyOf:
-                          - allOf:
-                              - $ref: '#/components/schemas/ReducedUser'
-                              - properties:
-                                  _id:
-                                    type: string
-                                    format: hex
-                                    description: User ID
-                                    example: 67336a3f31ed8ecdc24e0080
-                                  name:
-                                    type: string
-                                    description: User Name
-                                    example: Bob
-                                  email:
-                                    type: string
-                                    description: User email
-                                    example: bob@helmut.cloud
-                                  avatarUrl:
-                                    type: string
-                                    format: uri
-                                    description: URL to the user's avatar
-                                    example: https://example.com
-                          - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        allOf:
+                          - anyOf:
+                              - allOf:
+                                  - $ref: '#/components/schemas/ReducedUser'
+                                  - properties:
+                                      _id:
+                                        type: string
+                                        format: hex
+                                        description: User ID
+                                        example: 67336a3f31ed8ecdc24e0080
+                                      name:
+                                        type: string
+                                        description: User Name
+                                        example: Bob
+                                      email:
+                                        type: string
+                                        description: User email
+                                        example: bob@helmut.cloud
+                                      avatarUrl:
+                                        type: string
+                                        format: uri
+                                        description: URL to the user's avatar
+                                        example: https://example.com
+                              - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                          - type: object
+                            properties:
+                              remainingCooldownInSeconds:
+                                type: number
+                                description: >-
+                                  Remaining seconds until the share email can be
+                                  resent to this user. Only present if the user
+                                  is in cooldown.
+                                example: 42
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
@@ -20991,29 +21040,39 @@ paths:
                     users:
                       type: array
                       items:
-                        anyOf:
-                          - allOf:
-                              - $ref: '#/components/schemas/ReducedUser'
-                              - properties:
-                                  _id:
-                                    type: string
-                                    format: hex
-                                    description: User ID
-                                    example: 67336a3f31ed8ecdc24e0080
-                                  name:
-                                    type: string
-                                    description: User Name
-                                    example: Bob
-                                  email:
-                                    type: string
-                                    description: User email
-                                    example: bob@helmut.cloud
-                                  avatarUrl:
-                                    type: string
-                                    format: uri
-                                    description: URL to the user's avatar
-                                    example: https://example.com
-                          - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        allOf:
+                          - anyOf:
+                              - allOf:
+                                  - $ref: '#/components/schemas/ReducedUser'
+                                  - properties:
+                                      _id:
+                                        type: string
+                                        format: hex
+                                        description: User ID
+                                        example: 67336a3f31ed8ecdc24e0080
+                                      name:
+                                        type: string
+                                        description: User Name
+                                        example: Bob
+                                      email:
+                                        type: string
+                                        description: User email
+                                        example: bob@helmut.cloud
+                                      avatarUrl:
+                                        type: string
+                                        format: uri
+                                        description: URL to the user's avatar
+                                        example: https://example.com
+                              - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                          - type: object
+                            properties:
+                              remainingCooldownInSeconds:
+                                type: number
+                                description: >-
+                                  Remaining seconds until the share email can be
+                                  resent to this user. Only present if the user
+                                  is in cooldown.
+                                example: 42
                       description: >-
                         Array of the users associated with the share. Only
                         present when searching shares of a space.
