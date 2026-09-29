@@ -2742,6 +2742,20 @@ components:
           fields:
             - name
             - company
+    AddressBookMemberInputDto:
+      type: object
+      properties:
+        email:
+          type: string
+          format: email
+          description: Email address of the member
+          example: user@example.com
+        name:
+          type: string
+          description: Optional member name
+          example: Eric Example
+      required:
+        - email
     AddressBookCreateDto:
       type: object
       properties:
@@ -2757,15 +2771,14 @@ components:
           description: Optional description
           example: All marketing stakeholders
         members:
-          type: object
-          additionalProperties:
-            type: string
-            description: Optional member name
-            example: Alice Example
-          default: {}
-          description: Members as key-value pairs (email -> optional name)
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressBookMemberInputDto'
+          default: []
+          description: Members to add (email + optional name)
           example: &ref_13
-            alice@example.com: Alice Example
+            - email: eric@example.com
+              name: Eric Example
         teamIds:
           type: array
           items:
@@ -2796,12 +2809,11 @@ components:
       type: object
       properties:
         members:
-          type: object
-          additionalProperties:
-            type: string
-            description: Optional member name
-            example: Alice Example
-          description: Members as key-value pairs (email -> optional name)
+          type: array
+          items:
+            $ref: '#/components/schemas/AddressBookMemberInputDto'
+          minItems: 1
+          description: Members to add (email + optional name)
           example: *ref_13
       required:
         - members
