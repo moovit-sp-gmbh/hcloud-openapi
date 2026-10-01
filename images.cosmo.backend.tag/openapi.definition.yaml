@@ -16570,10 +16570,11 @@ paths:
               - CREATOR
               - NEWEST
               - OLDEST
+              - INCOMPLETE
             default: NEWEST
             description: >-
               Field to sort comments by. NEWEST/OLDEST sort by create date
-              desc/asc.
+              desc/asc. INCOMPLETE: incomplete first.
             example: NEWEST
           required: false
           name: sort_field
