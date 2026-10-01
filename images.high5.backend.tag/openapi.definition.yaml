@@ -4529,6 +4529,14 @@ components:
             204 response will be send. This option can be overwritten via a
             '?callback=false' query paramater inside the webhook execution
             request
+        targetOverrideEnabled:
+          type: boolean
+          description: >-
+            If enabled, the execution target can be overwritten per request via
+            a '?target=<pool name or user email>' query parameter in the webhook
+            execution request. Anyone who knows the webhook url can then choose
+            any valid target of the space, so combine it with HMAC or IP white
+            listing
       required:
         - name
         - target
@@ -4589,6 +4597,11 @@ components:
             Global setting to enable/disable callbacks that can just be
             overwritten by ?callback=false query param in the webhook execution
             endpoint
+        targetOverrideEnabled:
+          type: boolean
+          description: >-
+            Enables/disables overwriting the execution target via '?target='
+            query param in the webhook execution endpoint
       description: Update webhook configuration details
     CustomAvatarDto:
       type: object
@@ -8272,6 +8285,11 @@ components:
         callbackEnabled:
           type: boolean
           description: Shows if callback is enabled
+        targetOverrideEnabled:
+          type: boolean
+          description: >-
+            Shows if the execution target can be overwritten via '?target='
+            query param
       required:
         - _id
         - name
@@ -8285,6 +8303,7 @@ components:
         - modifyDate
         - sub
         - callbackEnabled
+        - targetOverrideEnabled
       description: Full representation of a webhook configuration
     WebhookLogDto:
       type: object
@@ -16307,6 +16326,15 @@ paths:
           required: true
           name: webhookToken
           in: path
+        - schema:
+            type: string
+            minLength: 1
+            description: >-
+              Overwrites the execution target (pool name or user email). Only
+              allowed if 'targetOverrideEnabled' is set on the webhook
+          required: false
+          name: target
+          in: query
       responses:
         '204':
           description: No content
@@ -16314,7 +16342,8 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'path' parameter 'spaceName' | Failed to validate 'path' parameter
-            'webhookToken' | Failed to prepare webhook
+            'webhookToken' | Failed to validate 'query' parameter 'target' |
+            Failed to prepare webhook
           content:
             application/json:
               schema:
@@ -16343,6 +16372,13 @@ paths:
                     message: >-
                       Failed to validate 'path' parameter 'webhookToken' -
                       {error}
+                Failed to validate 'query' parameter 'target':
+                  summary: Failed to validate 'query' parameter 'target'
+                  description: Failed to validate 'query' parameter 'target' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'target' - {error}
                 Failed to prepare webhook:
                   summary: Failed to prepare webhook
                   description: Failed to prepare webhook - Missing hmac request header
