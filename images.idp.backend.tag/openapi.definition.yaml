@@ -2406,6 +2406,106 @@ components:
           isGuest: false
         createDate: 1680251765050
         modifyDate: 1680251765050
+    FullSAMLProviderDto:
+      type: object
+      properties:
+        domainName:
+          type: string
+          description: Domain name associated with the SAML provider.
+          example: hlmc.io
+        ssoLoginURL:
+          type: string
+          format: uri
+          description: >-
+            The Single Sign-On (SSO) login URL provided by the identity
+            provider.
+          example: https://example.com/login
+        ssoLogoutURL:
+          type: string
+          format: uri
+          description: >-
+            The Single Sign-On (SSO) logout URL provided by the identity
+            provider.
+          example: https://example.com/logout
+        certificates:
+          type: array
+          items:
+            type: string
+          description: An array of certificates used to verify SAML assertions.
+          example:
+            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
+            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
+        allowUnencryptedAssertion:
+          type: boolean
+          description: Indicates whether unencrypted SAML assertions are allowed.
+          example: true
+      required:
+        - domainName
+        - ssoLoginURL
+        - ssoLogoutURL
+        - certificates
+        - allowUnencryptedAssertion
+      description: >-
+        Represents a full SAML provider configuration for a domain, including
+        SSO URLs and certificates.
+      example: &ref_0
+        domainName: hlmc.io
+        ssoLoginURL: https://example.com/login
+        ssoLogoutURL: https://example.com/logout
+        certificates:
+          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
+          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
+        allowUnencryptedAssertion: true
+    OIDCProviderDto:
+      type: object
+      properties:
+        authorizationEndpoint:
+          type: string
+          description: Authorization endpoint of the provider
+          example: https://example.com/oidc/authorization
+        tokenEndpoint:
+          type: string
+          description: Token endpoint of the provider
+          example: https://example.com/oidc/token
+        discoveryEndpoint:
+          type: string
+          description: Discovery endpoint of the provider
+          example: https://example.com/.well-known/openid-configuration
+        clientId:
+          type: string
+          description: ClientID associated with the OIDC provider
+      required:
+        - clientId
+    SSOProviderDto:
+      oneOf:
+        - allOf:
+            - $ref: '#/components/schemas/FullSAMLProviderDto'
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - saml
+              required:
+                - type
+          description: >-
+            Represents a full SAML provider configuration for a domain,
+            including SSO URLs and certificates.
+          example: *ref_0
+        - allOf:
+            - $ref: '#/components/schemas/OIDCProviderDto'
+            - type: object
+              properties:
+                type:
+                  type: string
+                  enum:
+                    - oidc
+              required:
+                - type
+        - nullable: true
+      description: >-
+        The SSO provider of a domain. The 'type' field tells whether it is a
+        SAML or an OIDC provider.
     UserDto:
       type: object
       properties:
@@ -2795,7 +2895,7 @@ components:
       description: >-
         Represents a license configuration including tier, type, quota, and
         metadata.
-      example: &ref_1
+      example: &ref_2
         tier: PRO
         type: PRODUCTION
         quota:
@@ -3152,7 +3252,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/OAuthAppPublicInfoDto'
             - description: OAuth application involved in the authentication attempt
-              example: &ref_0
+              example: &ref_1
                 _id: 67ca7c7683160ed3ad9162ff
                 name: SevTest
                 organization:
@@ -3180,7 +3280,7 @@ components:
       example:
         scopes:
           - cosmo:space:delete
-        app: *ref_0
+        app: *ref_1
     DiscoveryDto:
       type: object
       properties:
@@ -3510,7 +3610,7 @@ components:
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
             isGuest: false
         totalMemberCount: 2
-        license: *ref_1
+        license: *ref_2
     OrganizationMemberDto:
       type: object
       properties:
@@ -4231,56 +4331,6 @@ components:
         Options the client uses to authenticate with an existing passkey; the
         allowed credential list is intentionally omitted so any matching passkey
         can be offered without prior identification of the user
-    FullSAMLProviderDto:
-      type: object
-      properties:
-        domainName:
-          type: string
-          description: Domain name associated with the SAML provider.
-          example: hlmc.io
-        ssoLoginURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) login URL provided by the identity
-            provider.
-          example: https://example.com/login
-        ssoLogoutURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) logout URL provided by the identity
-            provider.
-          example: https://example.com/logout
-        certificates:
-          type: array
-          items:
-            type: string
-          description: An array of certificates used to verify SAML assertions.
-          example:
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion:
-          type: boolean
-          description: Indicates whether unencrypted SAML assertions are allowed.
-          example: true
-      required:
-        - domainName
-        - ssoLoginURL
-        - ssoLogoutURL
-        - certificates
-        - allowUnencryptedAssertion
-      description: >-
-        Represents a full SAML provider configuration for a domain, including
-        SSO URLs and certificates.
-      example:
-        domainName: hlmc.io
-        ssoLoginURL: https://example.com/login
-        ssoLogoutURL: https://example.com/logout
-        certificates:
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion: true
     SAMLProviderDto:
       type: object
       properties:
@@ -4325,26 +4375,6 @@ components:
           - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
           - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
         allowUnencryptedAssertion: true
-    OIDCProviderDto:
-      type: object
-      properties:
-        authorizationEndpoint:
-          type: string
-          description: Authorization endpoint of the provider
-          example: https://example.com/oidc/authorization
-        tokenEndpoint:
-          type: string
-          description: Token endpoint of the provider
-          example: https://example.com/oidc/token
-        discoveryEndpoint:
-          type: string
-          description: Discovery endpoint of the provider
-          example: https://example.com/.well-known/openid-configuration
-        clientId:
-          type: string
-          description: ClientID associated with the OIDC provider
-      required:
-        - clientId
     ServiceAccountDto:
       type: object
       properties:
@@ -4999,7 +5029,7 @@ components:
       description: >-
         Simplified representation of a space object used for referencing or
         displaying minimal space details
-      example: &ref_2
+      example: &ref_3
         _id: 9687e64ff912d31ffa27a1bd
         name: MySpace
         avatarUrl: https://example.com/asset/some_avatar.webp
@@ -5076,7 +5106,7 @@ components:
                 required:
                   - storageUsed
             description: Space that is using this storage
-            example: *ref_2
+            example: *ref_3
           description: Spaces that are using this storage
         storageUsed:
           type: number
@@ -5950,6 +5980,216 @@ paths:
                     message: >-
                       Unable to find the correct UUID in the DNS TXT records
                       associated with this domain.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/org/{orgName}/settings/domains/{domainName}/provider:
+    get:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: >-
+        A domain has at most one SSO provider. The 'type' field tells whether it
+        is SAML or OIDC.
+
+
+        Required role: ADMIN
+      summary: Gets the SSO provider of a domain
+      tags:
+        - Organization.Settings.Domains
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            pattern: >-
+              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          required: true
+          name: domainName
+          in: path
+      responses:
+        '200':
+          description: SSO provider of the domain, or null if it has none
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/SSOProviderDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'domainName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'domainName':
+                  summary: Failed to validate 'path' parameter 'domainName'
+                  description: Failed to validate 'path' parameter 'domainName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'domainName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid | Your
+            token expired | The personal access token used for authentication
+            has expired. | Your session expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 001.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 001.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+                Your token expired:
+                  summary: Your token expired
+                  value:
+                    code: 001.001.0006
+                    error: token.expired
+                    message: Your token expired
+                The personal access token used for authentication has expired.:
+                  summary: >-
+                    The personal access token used for authentication has
+                    expired.
+                  value:
+                    code: 001.004.0003
+                    error: pat.expired
+                    message: >-
+                      The personal access token used for authentication has
+                      expired.
+                Your session expired:
+                  summary: Your session expired
+                  value:
+                    code: 001.001.0005
+                    error: session.expired
+                    message: Your session expired
+        '403':
+          description: >-
+            Basic Auth has been disabled as 2FA is enabled for this account |
+            This operation is disabled for user organizations | You have not
+            enough rights to access/manipulate this resource | Your role does
+            not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Basic Auth has been disabled as 2FA is enabled for this account:
+                  summary: >-
+                    Basic Auth has been disabled as 2FA is enabled for this
+                    account
+                  value:
+                    code: 001.001.0007
+                    error: basic.auth.disabled.2fa
+                    message: >-
+                      Basic Auth has been disabled as 2FA is enabled for this
+                      account
+                This operation is disabled for user organizations:
+                  summary: This operation is disabled for user organizations
+                  value:
+                    code: 001.007.0005
+                    error: operation.disabled.for.user.organization
+                    message: This operation is disabled for user organizations
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                Your role does not have the required permission:
+                  summary: Your role does not have the required permission
+                  value:
+                    code: 001.007.0004
+                    error: organization.insufficient.role
+                    message: Your role does not have the required permission
+        '404':
+          description: >-
+            Organization not found | Your organization has no domain associated
+            with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
         '500':
           description: something went wrong
           content:
@@ -8036,7 +8276,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: &ref_3
+      tags: &ref_4
         - Login.OAuth
       parameters:
         - schema:
@@ -8088,7 +8328,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: &ref_4
+            enum: &ref_5
               - plain
               - S256
             description: >-
@@ -8181,7 +8421,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: &ref_5
+                The redirect_uri provided is either missing or failed to be validated.: &ref_6
                   summary: >-
                     The redirect_uri provided is either missing or failed to be
                     validated.
@@ -8279,7 +8519,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: &ref_6
+              examples: &ref_7
                 OAuth missing query parameter:
                   summary: OAuth missing query parameter
                   description: 'OAuth missing query parameter: ''client_id'''
@@ -8318,7 +8558,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: *ref_3
+      tags: *ref_4
       parameters:
         - schema:
             type: string
@@ -8369,7 +8609,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_4
+            enum: *ref_5
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
@@ -8460,7 +8700,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: *ref_5
+                The redirect_uri provided is either missing or failed to be validated.: *ref_6
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8549,7 +8789,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: *ref_6
+              examples: *ref_7
         '500':
           description: something went wrong
           content:
@@ -8627,7 +8867,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_4
+            enum: *ref_5
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
@@ -17808,7 +18048,8 @@ paths:
 
         - The certificates sent are invalid
 
-        - There is already an IdP associated with this organization and domain
+        - There is already an IdP (SAML or OIDC) associated with this
+        organization and domain
 
 
         Required organization role: ADMIN
@@ -18028,7 +18269,9 @@ paths:
                       Your organization has no domain associated with the given
                       name.
         '409':
-          description: SAML provider already exists for the specified domain.
+          description: >-
+            SAML provider already exists for the specified domain. | oidc
+            provider already exists for the specified domain.
           content:
             application/json:
               schema:
@@ -18040,6 +18283,12 @@ paths:
                     code: 001.022.0002
                     error: saml.provider.already.exists
                     message: SAML provider already exists for the specified domain.
+                oidc provider already exists for the specified domain.:
+                  summary: oidc provider already exists for the specified domain.
+                  value:
+                    code: 001.056.0001
+                    error: oidc.provider.already.exists
+                    message: oidc provider already exists for the specified domain.
         '500':
           description: something went wrong
           content:
@@ -18925,7 +19174,8 @@ paths:
 
         - The domain is not verified
 
-        - There is already an IdP associated with this organization and domain
+        - There is already an IdP (SAML or OIDC) associated with this
+        organization and domain
 
 
         Required organization role: ADMIN
@@ -19153,7 +19403,9 @@ paths:
                       Your organization has no domain associated with the given
                       name.
         '409':
-          description: oidc provider already exists for the specified domain.
+          description: >-
+            oidc provider already exists for the specified domain. | SAML
+            provider already exists for the specified domain.
           content:
             application/json:
               schema:
@@ -19165,6 +19417,12 @@ paths:
                     code: 001.056.0001
                     error: oidc.provider.already.exists
                     message: oidc provider already exists for the specified domain.
+                SAML provider already exists for the specified domain.:
+                  summary: SAML provider already exists for the specified domain.
+                  value:
+                    code: 001.022.0002
+                    error: saml.provider.already.exists
+                    message: SAML provider already exists for the specified domain.
         '500':
           description: something went wrong
           content:
