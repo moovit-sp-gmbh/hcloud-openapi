@@ -5641,6 +5641,12 @@ components:
           allOf:
             - $ref: '#/components/schemas/AgentInfoDto'
             - description: Info about the Agent
+        payload:
+          nullable: true
+          description: >-
+            Plaintext payload data of the execution, only set when searching by
+            payload. JSON payloads are returned as JSON value, generic payloads
+            as string
       required:
         - _id
         - streamId
@@ -17258,6 +17264,44 @@ paths:
             - high5:space:read
         - patAuth:
             - high5:space:read
+      description: >-
+        Besides the fields of the execution state, filters can target the
+        payload of the execution:
+
+        * `payload.<path>` - filters JSON payloads by the value at the given
+        property path, e.g. `payload.user.id`
+
+        * `payload` with `contains` - index-backed, case-insensitive text search
+        over all string values of the payload (JSON and raw text).
+          A single word only matches whole words (`lub` does not match `blablubb`). Values with separators are searched as phrase
+          (`user-12` matches `user-12` and `user-123`). Only the newest 10000 matching executions are considered.
+        * `payload` with other comparators - filters raw text payloads (and JSON
+        payloads which could not be stored as document) by their content
+
+
+        Comparators for payload filters: `is` matches the exact value (numbers
+        and booleans keep their type), `starts with` is case-sensitive,
+
+        `contains` and `ends with` are case-insensitive. Besides `payload`
+        contains, only `is`, `starts with` and relational comparators on
+        `payload.<path>` are index-backed,
+
+        searches using only other payload comparators scan the executions of the
+        organization and can time out.
+
+
+        When filtering by payload, each result contains the plaintext `payload`
+        data of the execution.
+
+        The `total` header is capped at 1000; the header `total-capped: true`
+        indicates that more results exist.
+
+
+        With `fullSearch=true` payload searches consider all executions (also
+        beyond the newest 10000 text matches) and skip the count:
+
+        instead of `total` the header `has-more` tells whether a next page
+        exists. Full searches can take considerably longer.
       summary: Retrieve the Stream execution states of an Organization
       tags:
         - Execute.Status
@@ -17303,6 +17347,16 @@ paths:
           required: false
           name: page
           in: query
+        - schema:
+            type: boolean
+            nullable: true
+            description: >-
+              Optional parameter for payload searches to consider all executions
+              without limits. The count is skipped, so the `total` header is not
+              set; the header `has-more` tells whether a next page exists
+          required: false
+          name: fullSearch
+          in: query
       requestBody:
         required: true
         content:
@@ -17328,7 +17382,7 @@ paths:
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
             'query' parameter 'limit' | Failed to validate 'query' parameter
-            'page'
+            'page' | Failed to validate 'query' parameter 'fullSearch'
           content:
             application/json:
               schema:
@@ -17355,6 +17409,15 @@ paths:
                     code: 002.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                Failed to validate 'query' parameter 'fullSearch':
+                  summary: Failed to validate 'query' parameter 'fullSearch'
+                  description: Failed to validate 'query' parameter 'fullSearch' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'fullSearch' -
+                      {error}
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
