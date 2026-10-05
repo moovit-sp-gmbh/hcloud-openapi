@@ -15690,6 +15690,301 @@ paths:
                     code: 002.015.0009
                     error: debug.command.timeout
                     message: Acknowledgement of debug command timed out
+  /v1/org/{orgName}/spaces/{spaceName}/execute/{executionId}/rerun:
+    post:
+      security:
+        - bearerAuth:
+            - high5:space:execute
+        - basicAuth:
+            - high5:space:execute
+        - patAuth:
+            - high5:space:execute
+      description: >-
+        Execute a stream with the same payload. Should a design/published
+        snapshot change in between the initial execution and the rerun, then the
+        updated version is used.
+      summary: Rerun the previous execution with the same parameters
+      tags:
+        - Execute
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+        - schema:
+            type: string
+            minLength: 24
+            maxLength: 24
+            format: hexadecimal
+          required: true
+          name: executionId
+          in: path
+        - schema:
+            type: boolean
+            nullable: true
+          required: false
+          name: debug
+          in: query
+      responses:
+        '200':
+          description: >-
+            Object holding execution object, status object and log object ids
+            that can be used to poll latest information about stream execution
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/High5ExecutionResponseDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName' | Failed to validate 'path' parameter
+            'executionId' | Failed to validate 'query' parameter 'debug' |
+            Failed to validate 'path' parameter 'spaceName' | Unable to execute
+            stream marked as inactive. Please change the state of the stream
+            first. | invalid execution configuration
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                Failed to validate 'path' parameter 'executionId':
+                  summary: Failed to validate 'path' parameter 'executionId'
+                  description: Failed to validate 'path' parameter 'executionId' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'executionId' -
+                      {error}
+                Failed to validate 'query' parameter 'debug':
+                  summary: Failed to validate 'query' parameter 'debug'
+                  description: Failed to validate 'query' parameter 'debug' - {error}
+                  value:
+                    code: 002.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'debug' - {error}
+                Unable to execute stream marked as inactive. Please change the state of the stream first.:
+                  summary: >-
+                    Unable to execute stream marked as inactive. Please change
+                    the state of the stream first.
+                  value:
+                    code: 002.015.0001
+                    error: stream.inactive
+                    message: >-
+                      Unable to execute stream marked as inactive. Please change
+                      the state of the stream first.
+                invalid execution configuration:
+                  summary: invalid execution configuration
+                  description: >-
+                    invalid execution configuration: a stream can only be
+                    executed in debug mode if the design is executed
+                  value:
+                    code: 002.015.0006
+                    error: invalid.execution.configuration
+                    message: >-
+                      invalid execution configuration: a stream can only be
+                      executed in debug mode if the design is executed
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 002.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 002.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 002.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+        '403':
+          description: >-
+            Required scopes ['high5:space:execute'] not included in
+            authorization | User's organization role is insufficient. Must be at
+            least MEMBER | You do not have the required permission | You have
+            exceeded the assigned quota for this action.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Required scopes ['high5:space:execute'] not included in authorization:
+                  summary: >-
+                    Required scopes ['high5:space:execute'] not included in
+                    authorization
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                User's organization role is insufficient. Must be at least MEMBER:
+                  summary: >-
+                    User's organization role is insufficient. Must be at least
+                    MEMBER
+                  value:
+                    code: 002.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                You do not have the required permission:
+                  summary: You do not have the required permission
+                  value:
+                    code: 002.010.0003
+                    error: space.insufficient.permission
+                    message: You do not have the required permission
+                You have exceeded the assigned quota for this action.:
+                  summary: You have exceeded the assigned quota for this action.
+                  value:
+                    code: 002.032.0001
+                    error: license.quota.exceeded
+                    message: You have exceeded the assigned quota for this action.
+        '404':
+          description: >-
+            Organization not found | Given space not found | Execution object
+            not found.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Given space not found:
+                  summary: Given space not found
+                  value:
+                    code: 002.010.0001
+                    error: space.not.found
+                    message: Given space not found
+                Execution object not found.:
+                  summary: Execution object not found.
+                  value:
+                    code: 002.025.0003
+                    error: execution.not.found
+                    message: Execution object not found.
+        '409':
+          description: >-
+            Requested target john.doe@helmut.cloud is a member of the
+            organization but not an execution target | Requested target
+            target@helmut.cloud is not a member of the organization | Minimum
+            engine version required '3.1.0', but current space version is '2.3.1
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Requested target john.doe@helmut.cloud is a member of the organization but not an execution target:
+                  summary: >-
+                    Requested target john.doe@helmut.cloud is a member of the
+                    organization but not an execution target
+                  value:
+                    code: 002.015.0010
+                    error: execution.target.not.execution.target
+                    message: >-
+                      Requested target john.doe@helmut.cloud is a member of the
+                      organization but not an execution target
+                Requested target target@helmut.cloud is not a member of the organization:
+                  summary: >-
+                    Requested target target@helmut.cloud is not a member of the
+                    organization
+                  value:
+                    code: 002.015.0004
+                    error: execution.target.not.member
+                    message: >-
+                      Requested target target@helmut.cloud is not a member of
+                      the organization
+                Minimum engine version required '3.1.0', but current space version is '2.3.1:
+                  summary: >-
+                    Minimum engine version required '3.1.0', but current space
+                    version is '2.3.1
+                  description: >-
+                    Minimum engine version required '3.1.0', but current space
+                    version is '2.3.1-dev-17'
+                  value:
+                    code: 002.015.0005
+                    error: incompatible.engine.version
+                    message: >-
+                      Minimum engine version required '3.1.0', but current space
+                      version is '2.3.1-dev-17'
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 002.000.0002
+                    error: internal.server.error
+                    message: something went wrong
   /v1/org/{orgName}/spaces/{spaceName}/execute/event/name/{eventName}:
     post:
       security:
