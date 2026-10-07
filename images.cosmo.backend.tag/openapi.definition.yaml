@@ -4931,6 +4931,37 @@ components:
               assetId:
                 type: string
                 format: uuid
+              completed:
+                type: boolean
+                description: Whether the reply has been completed or not
+              completedAt:
+                type: number
+                minimum: 0
+                exclusiveMinimum: true
+                description: Timestamp at which the reply was completed.
+              completedBy:
+                allOf:
+                  - $ref: '#/components/schemas/ReducedUser'
+                  - properties:
+                      _id:
+                        type: string
+                        format: hex
+                        description: User ID
+                        example: 67336a3f31ed8ecdc24e0080
+                      name:
+                        type: string
+                        description: User Name
+                        example: Bob
+                      email:
+                        type: string
+                        description: User email
+                        example: bob@helmut.cloud
+                      avatarUrl:
+                        type: string
+                        format: uri
+                        description: URL to the user's avatar
+                        example: https://example.com
+                    description: User who completed the reply.
               metadata:
                 type: object
                 additionalProperties:
@@ -4958,6 +4989,7 @@ components:
               - commentType
               - commentRef
               - assetId
+              - completed
           description: Replies to this comment
         completed:
           type: boolean
