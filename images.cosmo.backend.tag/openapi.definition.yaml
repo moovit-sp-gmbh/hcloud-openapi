@@ -10507,7 +10507,9 @@ paths:
                     error: wrong.auth.token
                     message: Your authentication token is invalid
         '403':
-          description: Required scopes ['cosmo:space:write'] not included in authorization
+          description: >-
+            Required scopes ['cosmo:space:write'] not included in authorization
+            | You have exceeded the assigned quota for this action.
           content:
             application/json:
               schema:
@@ -10523,6 +10525,12 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                You have exceeded the assigned quota for this action.:
+                  summary: You have exceeded the assigned quota for this action.
+                  value:
+                    code: 009.032.0001
+                    error: license.quota.exceeded
+                    message: You have exceeded the assigned quota for this action.
         '404':
           description: Organization not found | Given space not found
           content:
