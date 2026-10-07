@@ -6320,6 +6320,248 @@ paths:
                     error: internal.server.error
                     message: something went wrong
   /v1/org/{orgName}/settings/domains/{domainName}:
+    patch:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: >-
+        The renamed domain is no longer verified and has to be verified again
+        with the same uuid.
+
+        An SSO provider attached to the domain is kept, but cannot be used for
+        login until the domain is verified again.
+
+
+        Required role: ADMIN
+      summary: Renames a domain of an organization
+      tags:
+        - Organization.Settings.Domains
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            pattern: >-
+              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          required: true
+          name: domainName
+          in: path
+      requestBody:
+        required: true
+        content:
+          application/json:
+            schema:
+              $ref: '#/components/schemas/DomainCreateDto'
+      responses:
+        '200':
+          description: Renamed domain
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/DomainDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'domainName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                Failed to validate 'path' parameter 'domainName':
+                  summary: Failed to validate 'path' parameter 'domainName'
+                  description: Failed to validate 'path' parameter 'domainName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'domainName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid | Your
+            token expired | The personal access token used for authentication
+            has expired. | Your session expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 001.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 001.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+                Your token expired:
+                  summary: Your token expired
+                  value:
+                    code: 001.001.0006
+                    error: token.expired
+                    message: Your token expired
+                The personal access token used for authentication has expired.:
+                  summary: >-
+                    The personal access token used for authentication has
+                    expired.
+                  value:
+                    code: 001.004.0003
+                    error: pat.expired
+                    message: >-
+                      The personal access token used for authentication has
+                      expired.
+                Your session expired:
+                  summary: Your session expired
+                  value:
+                    code: 001.001.0005
+                    error: session.expired
+                    message: Your session expired
+        '403':
+          description: >-
+            Basic Auth has been disabled as 2FA is enabled for this account |
+            This operation is disabled for user organizations | You have not
+            enough rights to access/manipulate this resource | Your role does
+            not have the required permission
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Basic Auth has been disabled as 2FA is enabled for this account:
+                  summary: >-
+                    Basic Auth has been disabled as 2FA is enabled for this
+                    account
+                  value:
+                    code: 001.001.0007
+                    error: basic.auth.disabled.2fa
+                    message: >-
+                      Basic Auth has been disabled as 2FA is enabled for this
+                      account
+                This operation is disabled for user organizations:
+                  summary: This operation is disabled for user organizations
+                  value:
+                    code: 001.007.0005
+                    error: operation.disabled.for.user.organization
+                    message: This operation is disabled for user organizations
+                You have not enough rights to access/manipulate this resource:
+                  summary: >-
+                    You have not enough rights to access/manipulate this
+                    resource
+                  value:
+                    code: 001.001.0004
+                    error: insufficient.rights
+                    message: >-
+                      You have not enough rights to access/manipulate this
+                      resource
+                Your role does not have the required permission:
+                  summary: Your role does not have the required permission
+                  value:
+                    code: 001.007.0004
+                    error: organization.insufficient.role
+                    message: Your role does not have the required permission
+        '404':
+          description: >-
+            Organization not found | Your organization has no domain associated
+            with the given name.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                Your organization has no domain associated with the given name.:
+                  summary: >-
+                    Your organization has no domain associated with the given
+                    name.
+                  value:
+                    code: 001.021.0002
+                    error: domain.not.found
+                    message: >-
+                      Your organization has no domain associated with the given
+                      name.
+        '409':
+          description: >-
+            Domain already taken by another organization. If you are the current
+            owner of this domain, this means that the previous owner already
+            verified it. Contact support to resolve this issue.
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Domain already taken by another organization. If you are the current owner of this domain, this means that the previous owner already verified it. Contact support to resolve this issue.:
+                  summary: >-
+                    Domain already taken by another organization. If you are the
+                    current owner of this domain, this means that the previous
+                    owner already verified it. Contact support to resolve this
+                    issue.
+                  value:
+                    code: 001.021.0001
+                    error: domain.already.taken
+                    message: >-
+                      Domain already taken by another organization. If you are
+                      the current owner of this domain, this means that the
+                      previous owner already verified it. Contact support to
+                      resolve this issue.
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
     delete:
       security:
         - bearerAuth: []
