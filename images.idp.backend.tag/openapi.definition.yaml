@@ -2651,6 +2651,45 @@ components:
                           type: number
                       required:
                         - quota
+                    storages:
+                      type: object
+                      properties:
+                        byos:
+                          type: boolean
+                          description: >-
+                            Whether the organization may register its own (bring
+                            your own) S3 storages
+                        quota:
+                          type: number
+                          description: >-
+                            Maximum number of own storages the organization may
+                            register
+                        capacityInGB:
+                          type: number
+                          description: >-
+                            Maximum total usage across all own storages of the
+                            organization in GB (1 GB = 1024³ bytes)
+                      required:
+                        - byos
+                        - quota
+                        - capacityInGB
+                      description: >-
+                        Bring your own storage quota. Absent on older licenses,
+                        in which case own storages are not allowed.
+                    defaultStorage:
+                      type: object
+                      properties:
+                        capacityInGB:
+                          type: number
+                          description: >-
+                            Maximum usage of the default (hcloud provided)
+                            storage by the organization in GB (1 GB = 1024³
+                            bytes)
+                      required:
+                        - capacityInGB
+                      description: >-
+                        Default storage quota. Absent on older licenses, in
+                        which case a capacity of 1 GB applies.
                     logPeriodInDays:
                       type: number
                   required:
@@ -2909,6 +2948,12 @@ components:
                 quota: 15
               domains:
                 quota: 10
+              storages:
+                byos: true
+                quota: 3
+                capacityInGB: 1024
+              defaultStorage:
+                capacityInGB: 100
               logPeriodInDays: 90
           high5:
             spaces:
@@ -5112,6 +5157,15 @@ components:
           type: number
           description: Total bytes used across all spaces assigned to this storage
           example: 123456789
+        capacityInGB:
+          type: number
+          description: >-
+            Licensed maximum capacity in GB (1 GB = 1024³ bytes). For the
+            default storage the default storage quota of the organization,
+            counted against the storageUsed of its spaces. For own storages the
+            storages quota of the organization, shared across all of its own
+            storages (0 if own storages are not allowed).
+          example: 1024
       required:
         - _id
         - name
@@ -5126,6 +5180,7 @@ components:
         - valid
         - spaces
         - storageUsed
+        - capacityInGB
       description: Storage
       example:
         _id: 63ca7c7683160ed3ad9162ff
@@ -5155,6 +5210,7 @@ components:
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
             storageUsed: 12345
         storageUsed: 123456789
+        capacityInGB: 1024
     StorageCreateDto:
       type: object
       properties:
@@ -5286,6 +5342,66 @@ components:
         isDefault: false
         valid: true
     ID of the storage. If default got passed the default storage will be returned.:
+      anyOf:
+        - type: string
+          minLength: 24
+          maxLength: 24
+          format: hexadecimal
+        - type: string
+          enum:
+            - default
+    StorageCapacityDto:
+      type: object
+      properties:
+        storageId:
+          type: string
+          format: hexadecimal
+          description: ID of the storage
+          example: 63ca7c7683160ed3ad9162ff
+        organizationId:
+          type: string
+          format: hexadecimal
+          description: >-
+            ID of the organization the capacity was determined for. For own
+            storages the owner, for the default storage the requested
+            organization.
+          example: 63ca7c7683160ed3ad9162fa
+        isDefault:
+          type: boolean
+          description: Whether the storage is the default storage
+          example: false
+        byos:
+          type: boolean
+          description: Whether the license of the organization allows own storages
+          example: true
+        capacityBytes:
+          type: number
+          description: >-
+            Licensed capacity in bytes. For own storages across all own storages
+            of the organization, for the default storage the default storage
+            quota of the organization.
+          example: 1099511627776
+        usedBytes:
+          type: number
+          description: >-
+            Current usage in bytes. For own storages across all own storages of
+            the organization, for the default storage by the spaces of the
+            organization.
+          example: 1234
+        exceeded:
+          type: boolean
+          description: >-
+            Whether an upload of the requested size would exceed the licensed
+            capacity
+          example: false
+      required:
+        - storageId
+        - organizationId
+        - isDefault
+        - byos
+        - exceeded
+      description: License capacity of a storage for an organization
+    ID of the storage. If default got passed the default storage will be checked.:
       anyOf:
         - type: string
           minLength: 24
@@ -27613,6 +27729,206 @@ paths:
                     code: 001.055.0002
                     error: storage.not.found
                     message: Storage not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 001.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+  /v1/storage/{storageIdOrDefault}/capacity:
+    get:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      description: >-
+        Checks whether the storage can take an upload of the given size
+        according to the license of the organization.
+
+        Required scopes: IDP_STORAGE_READ
+      summary: Get license capacity of a storage
+      tags:
+        - Storage
+      parameters:
+        - schema:
+            $ref: >-
+              #/components/schemas/ID of the storage. If default got passed the
+              default storage will be checked.
+          required: true
+          name: storageIdOrDefault
+          in: path
+        - schema:
+            type: integer
+            nullable: true
+            minimum: 0
+            description: Size of the upload that is about to start in bytes
+          required: false
+          name: uploadSize
+          in: query
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+            description: Name of the organization the upload belongs to.
+          required: false
+          name: orgName
+          in: query
+      responses:
+        '200':
+          description: Storage capacity
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/StorageCapacityDto'
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'storageIdOrDefault' | Failed to
+            validate 'query' parameter 'uploadSize' | Failed to validate 'query'
+            parameter 'orgName' | Failed to validate 'query' parameter 'orgName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'storageIdOrDefault':
+                  summary: Failed to validate 'path' parameter 'storageIdOrDefault'
+                  description: >-
+                    Failed to validate 'path' parameter 'storageIdOrDefault' -
+                    {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'path' parameter 'storageIdOrDefault' -
+                      {error}
+                Failed to validate 'query' parameter 'uploadSize':
+                  summary: Failed to validate 'query' parameter 'uploadSize'
+                  description: Failed to validate 'query' parameter 'uploadSize' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: >-
+                      Failed to validate 'query' parameter 'uploadSize' -
+                      {error}
+                Failed to validate 'query' parameter 'orgName':
+                  summary: Failed to validate 'query' parameter 'orgName'
+                  description: Failed to validate 'query' parameter 'orgName' - {error}
+                  value:
+                    code: 001.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'query' parameter 'orgName' - {error}
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid | Your
+            token expired | The personal access token used for authentication
+            has expired. | Your session expired
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 001.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 001.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 001.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+                Your token expired:
+                  summary: Your token expired
+                  value:
+                    code: 001.001.0006
+                    error: token.expired
+                    message: Your token expired
+                The personal access token used for authentication has expired.:
+                  summary: >-
+                    The personal access token used for authentication has
+                    expired.
+                  value:
+                    code: 001.004.0003
+                    error: pat.expired
+                    message: >-
+                      The personal access token used for authentication has
+                      expired.
+                Your session expired:
+                  summary: Your session expired
+                  value:
+                    code: 001.001.0005
+                    error: session.expired
+                    message: Your session expired
+        '403':
+          description: Basic Auth has been disabled as 2FA is enabled for this account
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Basic Auth has been disabled as 2FA is enabled for this account:
+                  summary: >-
+                    Basic Auth has been disabled as 2FA is enabled for this
+                    account
+                  value:
+                    code: 001.001.0007
+                    error: basic.auth.disabled.2fa
+                    message: >-
+                      Basic Auth has been disabled as 2FA is enabled for this
+                      account
+        '404':
+          description: Storage not found | Organization not found
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Storage not found:
+                  summary: Storage not found
+                  value:
+                    code: 001.055.0002
+                    error: storage.not.found
+                    message: Storage not found
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 001.007.0001
+                    error: organization.not.found
+                    message: Organization not found
         '500':
           description: something went wrong
           content:
