@@ -2934,6 +2934,12 @@ components:
           type: number
           description: Amount of storage used by the space's assets in bytes
           example: 1234
+        assetCount:
+          type: integer
+          description: >-
+            Number of assets in the space, including trashed ones. Only
+            available on the space get and list endpoints
+          example: 42
         trashAutoDelete:
           type: boolean
           description: >-
