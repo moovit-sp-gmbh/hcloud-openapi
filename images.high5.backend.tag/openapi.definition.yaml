@@ -19709,7 +19709,7 @@ paths:
         '404':
           description: >-
             Organization not found | Given space not found | Given cronjob not
-            found
+            found | Given event not found
           content:
             application/json:
               schema:
@@ -19733,6 +19733,12 @@ paths:
                     code: 002.020.0001
                     error: cronjob.not.found
                     message: Given cronjob not found
+                Given event not found:
+                  summary: Given event not found
+                  value:
+                    code: 002.017.0001
+                    error: event.not.found
+                    message: Given event not found
         '500':
           description: something went wrong | Internal system failure
           content:
@@ -20400,7 +20406,9 @@ paths:
                     error: space.insufficient.permission
                     message: You do not have the required permission
         '404':
-          description: Organization not found | Given space not found
+          description: >-
+            Organization not found | Given space not found | Given event not
+            found
           content:
             application/json:
               schema:
@@ -20418,6 +20426,12 @@ paths:
                     code: 002.010.0001
                     error: space.not.found
                     message: Given space not found
+                Given event not found:
+                  summary: Given event not found
+                  value:
+                    code: 002.017.0001
+                    error: event.not.found
+                    message: Given event not found
         '500':
           description: something went wrong
           content:
