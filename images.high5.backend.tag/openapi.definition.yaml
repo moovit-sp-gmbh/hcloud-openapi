@@ -4358,9 +4358,29 @@ components:
               - path
               - size
           description: List of files discovered during the scan
+        errorMessage:
+          type: string
+          minLength: 1
+          maxLength: 1000
+          description: >-
+            Reason why the scan could not be performed (e.g. the path does not
+            exist or is not accessible), in which case the scan is recorded as
+            failed and tracked files are left untouched
+          example: Path '/mnt/share/ingest' not found
+        status:
+          type: string
+          enum:
+            - PATH_NOT_FOUND
+            - FAILED
+          description: >-
+            Reason category of the failed scan, only allowed together with
+            errorMessage and recorded as FAILED if omitted
+          example: PATH_NOT_FOUND
       required:
         - files
-      description: Scan report submitted by the agent after scanning the watch folder
+      description: >-
+        Scan report submitted by the agent after scanning the watch folder,
+        including an error message if the scan could not be performed
       example:
         files:
           - path: ingest/raw/video.mp4
@@ -8034,6 +8054,41 @@ components:
                 count: 19
               '3':
                 count: 33
+    WatchFolderScanStatus:
+      type: string
+      enum:
+        - SUCCESSFUL
+        - PATH_NOT_FOUND
+        - NO_AGENT_AVAILABLE
+        - FAILED
+      description: >-
+        Outcome of the most recent scan, absent until the watch folder has been
+        scanned for the first time or since its path, credentials or target were
+        last changed
+      example: PATH_NOT_FOUND
+    WatchFolderScanError:
+      type: object
+      properties:
+        message:
+          type: string
+          maxLength: 1000
+          description: Description of why the most recent scan failed
+          example: Path '/mnt/share/ingest' not found
+        since:
+          type: integer
+          description: >-
+            Unix timestamp (ms) of the first failed scan in the current,
+            uninterrupted series of failures
+          example: 1759046520000
+      required:
+        - message
+        - since
+      description: >-
+        Details of the ongoing scan failure (e.g. the path not being reachable
+        by the agent), present for any status other than SUCCESSFUL
+      example:
+        message: Path '/mnt/share/ingest' not found
+        since: 1759046520000
     WatchFolderDto:
       type: object
       properties:
@@ -8093,6 +8148,10 @@ components:
             a stream execution (e.g. via an incomplete-file check) before
             further reset requests are rejected
           example: 5
+        status:
+          $ref: '#/components/schemas/WatchFolderScanStatus'
+        error:
+          $ref: '#/components/schemas/WatchFolderScanError'
       required:
         - _id
         - name
@@ -8141,6 +8200,10 @@ components:
           region: us-east-1
           bucket: my-bucket
         maxFileResetAttempts: 5
+        status: PATH_NOT_FOUND
+        error:
+          message: Path '/mnt/share/ingest' not found
+          since: 1759046520000
     WatchFolderScanConfigDto:
       type: object
       properties:
@@ -34641,9 +34704,10 @@ paths:
         - basicAuth: []
         - patAuth: []
       description: >-
-        Accepts a list of files discovered by the agent and updates file
-        tracking state. Requires the one-time scan secret handed out with that
-        scan's NATS dispatch, not general space write access.
+        Accepts a list of files discovered by the agent (or the reason the scan
+        could not be performed) and updates the scan status and file tracking
+        state. Requires the one-time scan secret handed out with that scan's
+        NATS dispatch, not general space write access.
       summary: Submit a watch folder scan report
       tags:
         - WatchFolder
