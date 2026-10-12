@@ -4306,7 +4306,9 @@ components:
           $ref: '#/components/schemas/WatchFolderResourceType'
         path:
           type: string
-          description: Folder path or prefix to scan
+          description: >-
+            Folder path or prefix to scan. For S3, an empty string scans the
+            entire bucket/root; '.' and a leading '/' are not valid S3 prefixes
           example: ingest/raw/
         interval:
           type: integer
