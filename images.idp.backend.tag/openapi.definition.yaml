@@ -50,6 +50,82 @@ components:
         - code
         - message
       description: API errors obey this shape
+    DomainName:
+      type: string
+      pattern: >-
+        ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+      description: Fully qualified domain name
+      example: example.helmut.cloud
+    DomainSSOConfigDto:
+      oneOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - oidc
+            clientId:
+              type: string
+              minLength: 1
+              description: Client ID of hcloud at the identity provider
+            clientSecret:
+              type: string
+              minLength: 1
+              description: >-
+                Client secret of hcloud at the identity provider. Required for a
+                new OIDC configuration, left out on updates it keeps the stored
+                secret
+            discoveryEndpoint:
+              type: string
+              format: uri
+              example: https://example.com/.well-known/openid-configuration
+            authorizationEndpoint:
+              type: string
+              format: uri
+              description: Required with tokenEndpoint if there is no discoveryEndpoint
+            tokenEndpoint:
+              type: string
+              format: uri
+              description: >-
+                Required with authorizationEndpoint if there is no
+                discoveryEndpoint
+          required:
+            - type
+            - clientId
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - saml
+            ssoLoginURL:
+              type: string
+              format: uri
+              example: https://example.com/login
+            ssoLogoutURL:
+              type: string
+              format: uri
+              example: https://example.com/logout
+            certificates:
+              type: array
+              items:
+                type: string
+              minItems: 1
+              description: >-
+                PEM encoded certificates of the identity provider used to verify
+                SAML assertions, one string may contain several certificates
+            allowUnencryptedAssertion:
+              type: boolean
+              description: Allow SAML assertions that are not encrypted
+              example: true
+          required:
+            - type
+            - ssoLoginURL
+            - ssoLogoutURL
+            - certificates
+      description: >-
+        Single sign-on configuration of a domain, either OIDC or SAML. Sending
+        it replaces the whole configuration.
     DomainCreateDto:
       type: object
       properties:
@@ -59,9 +135,99 @@ components:
             ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
           description: Fully qualified domain name
           example: example.helmut.cloud
+        sso:
+          $ref: '#/components/schemas/DomainSSOConfigDto'
       required:
         - name
-      description: Object containing a fully qualified domain name
+      description: >-
+        Object containing a fully qualified domain name and optionally its
+        single sign-on configuration
+      example:
+        name: example.helmut.cloud
+    DomainPatchDto:
+      type: object
+      properties:
+        name:
+          type: string
+          pattern: >-
+            ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
+          description: Fully qualified domain name
+          example: example.helmut.cloud
+        sso:
+          allOf:
+            - $ref: '#/components/schemas/DomainSSOConfigDto'
+            - oneOf:
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - oidc
+                    clientId:
+                      type: string
+                      minLength: 1
+                      description: Client ID of hcloud at the identity provider
+                    clientSecret:
+                      type: string
+                      minLength: 1
+                      description: >-
+                        Client secret of hcloud at the identity provider.
+                        Required for a new OIDC configuration, left out on
+                        updates it keeps the stored secret
+                    discoveryEndpoint:
+                      type: string
+                      format: uri
+                      example: https://example.com/.well-known/openid-configuration
+                    authorizationEndpoint:
+                      type: string
+                      format: uri
+                      description: >-
+                        Required with tokenEndpoint if there is no
+                        discoveryEndpoint
+                    tokenEndpoint:
+                      type: string
+                      format: uri
+                      description: >-
+                        Required with authorizationEndpoint if there is no
+                        discoveryEndpoint
+                  required:
+                    - type
+                    - clientId
+                - type: object
+                  properties:
+                    type:
+                      type: string
+                      enum:
+                        - saml
+                    ssoLoginURL:
+                      type: string
+                      format: uri
+                      example: https://example.com/login
+                    ssoLogoutURL:
+                      type: string
+                      format: uri
+                      example: https://example.com/logout
+                    certificates:
+                      type: array
+                      items:
+                        type: string
+                      minItems: 1
+                      description: >-
+                        PEM encoded certificates of the identity provider used
+                        to verify SAML assertions, one string may contain
+                        several certificates
+                    allowUnencryptedAssertion:
+                      type: boolean
+                      description: Allow SAML assertions that are not encrypted
+                      example: true
+                  required:
+                    - type
+                    - ssoLoginURL
+                    - ssoLogoutURL
+                    - certificates
+                - nullable: true
+              description: New single sign-on configuration, null removes it
+      description: Renames a domain and/or changes its single sign-on configuration
       example:
         name: example.helmut.cloud
     GuestCreateDto:
@@ -1416,65 +1582,6 @@ components:
           - high5:space:read
           - high5:space:execute
         token: '451379'
-    SAMLProviderCreateDto:
-      type: object
-      properties:
-        ssoLoginURL:
-          type: string
-          format: uri
-          description: URL used for Single Sign-On
-          example: https://example.com/login
-        ssoLogoutURL:
-          type: string
-          format: uri
-          description: URL used for Single Logout
-          example: https://example.com/logout
-        certificates:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: The .pem files with the certificates used to validate signatures.
-          format: binary
-          example:
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion:
-          type: boolean
-          description: Flag to allow assertions to not be encrypted
-          example: true
-      required:
-        - ssoLoginURL
-        - ssoLogoutURL
-        - certificates
-      description: Payload for creating a new SAML provider configuration
-      example:
-        ssoLoginURL: https://example.com/login
-        ssoLogoutURL: https://example.com/logout
-        certificates:
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion: true
-    SAMLProviderPatchDto:
-      type: object
-      properties:
-        certificates:
-          type: array
-          items:
-            type: string
-          minItems: 1
-          description: The .pem files with the certificates used to valid signatures.
-          format: binary
-          example:
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-      required:
-        - certificates
-      description: Payload for updating SAML provider certificates
-      example:
-        certificates:
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
     SAMLResponse:
       type: object
       properties:
@@ -2340,6 +2447,59 @@ components:
         avatarUrl: https://example.com/asset/some_avatar.webp
         isGuest: false
         isAgent: false
+    SSOProviderDto:
+      oneOf:
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - oidc
+            clientId:
+              type: string
+              description: Client ID of hcloud at the identity provider
+            discoveryEndpoint:
+              type: string
+              example: https://example.com/.well-known/openid-configuration
+            authorizationEndpoint:
+              type: string
+              example: https://example.com/oidc/authorization
+            tokenEndpoint:
+              type: string
+              example: https://example.com/oidc/token
+          required:
+            - type
+            - clientId
+        - type: object
+          properties:
+            type:
+              type: string
+              enum:
+                - saml
+            ssoLoginURL:
+              type: string
+              format: uri
+              example: https://example.com/login
+            ssoLogoutURL:
+              type: string
+              format: uri
+              example: https://example.com/logout
+            certificates:
+              type: array
+              items:
+                type: string
+              description: PEM encoded certificates used to verify SAML assertions
+            allowUnencryptedAssertion:
+              type: boolean
+          required:
+            - type
+            - ssoLoginURL
+            - ssoLogoutURL
+            - certificates
+            - allowUnencryptedAssertion
+      description: >-
+        Single sign-on configuration, only used for login once the domain is
+        verified
     DomainDto:
       type: object
       properties:
@@ -2367,6 +2527,8 @@ components:
           example: 8de11b9b-9807-4b78-a6e4-412bda0e85c7
         creator:
           $ref: '#/components/schemas/ReducedUser'
+        sso:
+          $ref: '#/components/schemas/SSOProviderDto'
         createDate:
           type: number
           description: Unix timestamp of when the domain was created.
@@ -2406,106 +2568,6 @@ components:
           isGuest: false
         createDate: 1680251765050
         modifyDate: 1680251765050
-    FullSAMLProviderDto:
-      type: object
-      properties:
-        domainName:
-          type: string
-          description: Domain name associated with the SAML provider.
-          example: hlmc.io
-        ssoLoginURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) login URL provided by the identity
-            provider.
-          example: https://example.com/login
-        ssoLogoutURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) logout URL provided by the identity
-            provider.
-          example: https://example.com/logout
-        certificates:
-          type: array
-          items:
-            type: string
-          description: An array of certificates used to verify SAML assertions.
-          example:
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion:
-          type: boolean
-          description: Indicates whether unencrypted SAML assertions are allowed.
-          example: true
-      required:
-        - domainName
-        - ssoLoginURL
-        - ssoLogoutURL
-        - certificates
-        - allowUnencryptedAssertion
-      description: >-
-        Represents a full SAML provider configuration for a domain, including
-        SSO URLs and certificates.
-      example: &ref_0
-        domainName: hlmc.io
-        ssoLoginURL: https://example.com/login
-        ssoLogoutURL: https://example.com/logout
-        certificates:
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion: true
-    OIDCProviderDto:
-      type: object
-      properties:
-        authorizationEndpoint:
-          type: string
-          description: Authorization endpoint of the provider
-          example: https://example.com/oidc/authorization
-        tokenEndpoint:
-          type: string
-          description: Token endpoint of the provider
-          example: https://example.com/oidc/token
-        discoveryEndpoint:
-          type: string
-          description: Discovery endpoint of the provider
-          example: https://example.com/.well-known/openid-configuration
-        clientId:
-          type: string
-          description: ClientID associated with the OIDC provider
-      required:
-        - clientId
-    SSOProviderDto:
-      oneOf:
-        - allOf:
-            - $ref: '#/components/schemas/FullSAMLProviderDto'
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - saml
-              required:
-                - type
-          description: >-
-            Represents a full SAML provider configuration for a domain,
-            including SSO URLs and certificates.
-          example: *ref_0
-        - allOf:
-            - $ref: '#/components/schemas/OIDCProviderDto'
-            - type: object
-              properties:
-                type:
-                  type: string
-                  enum:
-                    - oidc
-              required:
-                - type
-        - nullable: true
-      description: >-
-        The SSO provider of a domain. The 'type' field tells whether it is a
-        SAML or an OIDC provider.
     UserDto:
       type: object
       properties:
@@ -2934,7 +2996,7 @@ components:
       description: >-
         Represents a license configuration including tier, type, quota, and
         metadata.
-      example: &ref_2
+      example: &ref_1
         tier: PRO
         type: PRODUCTION
         quota:
@@ -3297,7 +3359,7 @@ components:
           allOf:
             - $ref: '#/components/schemas/OAuthAppPublicInfoDto'
             - description: OAuth application involved in the authentication attempt
-              example: &ref_1
+              example: &ref_0
                 _id: 67ca7c7683160ed3ad9162ff
                 name: SevTest
                 organization:
@@ -3325,7 +3387,7 @@ components:
       example:
         scopes:
           - cosmo:space:delete
-        app: *ref_1
+        app: *ref_0
     DiscoveryDto:
       type: object
       properties:
@@ -3655,7 +3717,7 @@ components:
             avatarUrl: https://app.helmut.cloud/asset/no_avatar.webp
             isGuest: false
         totalMemberCount: 2
-        license: *ref_2
+        license: *ref_1
     OrganizationMemberDto:
       type: object
       properties:
@@ -4376,50 +4438,6 @@ components:
         Options the client uses to authenticate with an existing passkey; the
         allowed credential list is intentionally omitted so any matching passkey
         can be offered without prior identification of the user
-    SAMLProviderDto:
-      type: object
-      properties:
-        ssoLoginURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) login URL provided by the identity
-            provider.
-          example: https://example.com/login
-        ssoLogoutURL:
-          type: string
-          format: uri
-          description: >-
-            The Single Sign-On (SSO) logout URL provided by the identity
-            provider.
-          example: https://example.com/logout
-        certificates:
-          type: array
-          items:
-            type: string
-          description: An array of certificates used to verify SAML assertions.
-          example:
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-            - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion:
-          type: boolean
-          description: Indicates whether unencrypted SAML assertions are allowed.
-          example: true
-      required:
-        - ssoLoginURL
-        - ssoLogoutURL
-        - certificates
-        - allowUnencryptedAssertion
-      description: >-
-        Represents a SAML provider configuration including SSO URLs and
-        certificates.
-      example:
-        ssoLoginURL: https://example.com/login
-        ssoLogoutURL: https://example.com/logout
-        certificates:
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-          - "-----BEGIN CERTIFICATE-----\r\nMIIDEzCCAfugAwIBAgIJG6QUfOLmCkjUMA0GCSqGSIb3DQEBCwUAMCcxJTAjBgNV\r\nBAMTHGhjbG91ZC1pZHAtdGVzdC5ldS5hdXRoMC5jb20wHhcNMjMwNDAzMTI1MDAw\r\nWhcNMzYxMjEwMTI1MDAwWjAnMSUwIwYDVQQDExxoY2xvdWQtaWRwLXRlc3QuZXUu\r\nYXV0aDAuY29tMIIBIjANBgkqhkiG9w0BAQEFAAOCAQ8AMIIBCgKCAQEAt06DwZ6C\r\n8M7m/jbiRzYrJ715A3OktUiQuUZdutfFoGc+l+/qh+TUJHg58gcZmAnDxSy2dTlE\r\nlcF0GjOmRsOq6mdYUEHiTmRayoPfi08FJzD2/O9J9tl7wYvbCqfNbC7AfgzbGbAW\r\nRGGlB5mIamssdCAZLMChfyYsDXsux5reRCmf+ZexZWEhr7/qIqtcLu/r72+83ihf\r\nHNIQdLX89TPujsyQ58Wrw8N9KS+jE7e5oLytxHZqH7GpiOn1NvxX2ey6Xl9RKv3N\r\nKNEA9Ayxd/X3UZrYMQ6OiX+o7Oywg9eLR67PGcuyRu6eUTSP6r0pnkqxV4jF7aFu\r\n0TWB7FMiqlc07QIDAQABo0IwQDAPBgNVHRMBAf8EBTADAQH/MB0GA1UdDgQWBBQp\r\nzjA+jRxdhN4RKAY1x4y64dOp5DAOBgNVHQ8BAf8EBAMCAoQwDQYJKoZIhvcNAQEL\r\nBQADggEBAEHN/kj/07CqlOxbmsufA7mGMiV05YWBkVSIhpusm9xnT8mAfQO7y0pu\r\ntHvrBGnzgMG1L2iFOWnxhxHyd3LrMz/CQS/xxis5ypX+LmJ3BS/47UdkAK3kS1jB\r\nnk9LV1kXHJf/RikT3v2XODwVEVZCN6WCmMlIY0uw2HWdY/3Ayx71S+JOIxIvfw7h\r\nMaxdIDh+JDH9w3VTofb91V2/x0bNQQVwbgLdHVqSFWsVn1NWOrMc6J1kFGpLM+KY\r\nk2I0HFMXLzDMzw/jQG400BslLTfOLKAtGxBEBMnnIMqsRONTFEGgSAPAXl4v0Ifn\r\nNbsaQ9QA34+Vxi6DSEpfL3KcPEUm17o=\r\n-----END CERTIFICATE-----"
-        allowUnencryptedAssertion: true
     ServiceAccountDto:
       type: object
       properties:
@@ -5074,7 +5092,7 @@ components:
       description: >-
         Simplified representation of a space object used for referencing or
         displaying minimal space details
-      example: &ref_3
+      example: &ref_2
         _id: 9687e64ff912d31ffa27a1bd
         name: MySpace
         avatarUrl: https://example.com/asset/some_avatar.webp
@@ -5151,7 +5169,7 @@ components:
                 required:
                   - storageUsed
             description: Space that is using this storage
-            example: *ref_3
+            example: *ref_2
           description: Spaces that are using this storage
         storageUsed:
           type: number
@@ -5603,7 +5621,10 @@ paths:
         - bearerAuth: []
         - basicAuth: []
         - patAuth: []
-      description: |-
+      description: >-
+        The single sign-on configuration ('sso') can be sent right away, it is
+        only used for login once the domain is verified.
+
 
         Required role: ADMIN
       summary: Creates a new domain for an organization
@@ -5647,7 +5668,9 @@ paths:
               schema:
                 $ref: '#/components/schemas/DomainDto'
         '400':
-          description: Failed to validate 'path' parameter 'orgName'
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | The certificate sent
+            is invalid.
           content:
             application/json:
               schema:
@@ -5660,6 +5683,12 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                The certificate sent is invalid.:
+                  summary: The certificate sent is invalid.
+                  value:
+                    code: 001.022.0001
+                    error: saml.invalid.certificate
+                    message: The certificate sent is invalid.
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -6109,216 +6138,6 @@ paths:
                     code: 001.000.0002
                     error: internal.server.error
                     message: something went wrong
-  /v1/org/{orgName}/settings/domains/{domainName}/provider:
-    get:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: >-
-        A domain has at most one SSO provider. The 'type' field tells whether it
-        is SAML or OIDC.
-
-
-        Required role: ADMIN
-      summary: Gets the SSO provider of a domain
-      tags:
-        - Organization.Settings.Domains
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      responses:
-        '200':
-          description: SSO provider of the domain, or null if it has none
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SSOProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
   /v1/org/{orgName}/settings/domains/{domainName}:
     patch:
       security:
@@ -6329,12 +6148,15 @@ paths:
         The renamed domain is no longer verified and has to be verified again
         with the same uuid.
 
-        An SSO provider attached to the domain is kept, but cannot be used for
-        login until the domain is verified again.
+        Its single sign-on configuration is kept, but cannot be used for login
+        until the domain is verified again.
+
+        Sending 'sso' replaces the whole configuration, null removes it. A left
+        out OIDC clientSecret keeps the stored one.
 
 
         Required role: ADMIN
-      summary: Renames a domain of an organization
+      summary: Renames a domain and/or changes its single sign-on configuration
       tags:
         - Organization.Settings.Domains
       parameters:
@@ -6373,10 +6195,10 @@ paths:
         content:
           application/json:
             schema:
-              $ref: '#/components/schemas/DomainCreateDto'
+              $ref: '#/components/schemas/DomainPatchDto'
       responses:
         '200':
-          description: Renamed domain
+          description: Updated domain
           content:
             application/json:
               schema:
@@ -6384,7 +6206,7 @@ paths:
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
+            'path' parameter 'domainName' | The certificate sent is invalid.
           content:
             application/json:
               schema:
@@ -6404,6 +6226,12 @@ paths:
                     code: 001.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'domainName' - {error}
+                The certificate sent is invalid.:
+                  summary: The certificate sent is invalid.
+                  value:
+                    code: 001.022.0001
+                    error: saml.invalid.certificate
+                    message: The certificate sent is invalid.
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -8634,7 +8462,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: &ref_4
+      tags: &ref_3
         - Login.OAuth
       parameters:
         - schema:
@@ -8686,7 +8514,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: &ref_5
+            enum: &ref_4
               - plain
               - S256
             description: >-
@@ -8779,7 +8607,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: &ref_6
+                The redirect_uri provided is either missing or failed to be validated.: &ref_5
                   summary: >-
                     The redirect_uri provided is either missing or failed to be
                     validated.
@@ -8877,7 +8705,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: &ref_7
+              examples: &ref_6
                 OAuth missing query parameter:
                   summary: OAuth missing query parameter
                   description: 'OAuth missing query parameter: ''client_id'''
@@ -8916,7 +8744,7 @@ paths:
         Request access code for the user
         Required scopes: HCLOUD_FULL
       summary: OAuth Authorization Endpoint
-      tags: *ref_4
+      tags: *ref_3
       parameters:
         - schema:
             type: string
@@ -8967,7 +8795,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_5
+            enum: *ref_4
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
@@ -9058,7 +8886,7 @@ paths:
                     message: >-
                       Failed to validate 'query' parameter
                       'code_challenge_method' - {error}
-                The redirect_uri provided is either missing or failed to be validated.: *ref_6
+                The redirect_uri provided is either missing or failed to be validated.: *ref_5
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -9147,7 +8975,7 @@ paths:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
-              examples: *ref_7
+              examples: *ref_6
         '500':
           description: something went wrong
           content:
@@ -9225,7 +9053,7 @@ paths:
           in: query
         - schema:
             type: string
-            enum: *ref_5
+            enum: *ref_4
             description: >-
               Optional value, used for PKCE
               (https://www.rfc-editor.org/rfc/rfc7636#section-4)
@@ -18196,2036 +18024,6 @@ paths:
                     code: 001.009.0004
                     error: verification.email.resend.limit.exceeded
                     message: Too many resend-verification-emails sent. Try again later.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/settings/domains/saml:
-    get:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Gets all providers for an organization
-      tags:
-        - Organization.Settings.Domains.SAML
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-      responses:
-        '200':
-          description: Available SAML IdPs
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/FullSAMLProviderDto'
-        '400':
-          description: Failed to validate 'path' parameter 'orgName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/settings/domains/{domainName}/saml:
-    post:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: >-
-        Creates a new provider for the specified domain in an organization
-
-        There are multiple ways the process can fail besides
-        authentication/authorization:
-
-        - The domain is not verified
-
-        - The certificates sent are invalid
-
-        - There is already an IdP (SAML or OIDC) associated with this
-        organization and domain
-
-
-        Required organization role: ADMIN
-      summary: Creates a new provider for the specified domain in an organization
-      tags:
-        - Organization.Settings.Domains.SAML
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      requestBody:
-        required: true
-        description: >-
-          Important note regarding the example request body shown below:
-          Provider data must be send as multipart/form-data with the
-          certificates as files, not strings!
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SAMLProviderCreateDto'
-      responses:
-        '201':
-          description: Created SAMLProvider
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SAMLProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName' | No certificates found in the request
-            | The certificate sent is invalid. | Cannot link SAML provider to an
-            unverified domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-                No certificates found in the request:
-                  summary: No certificates found in the request
-                  value:
-                    code: 001.000.0004
-                    error: invalid.body
-                    message: No certificates found in the request
-                The certificate sent is invalid.:
-                  summary: The certificate sent is invalid.
-                  value:
-                    code: 001.022.0001
-                    error: saml.invalid.certificate
-                    message: The certificate sent is invalid.
-                Cannot link SAML provider to an unverified domain.:
-                  summary: Cannot link SAML provider to an unverified domain.
-                  value:
-                    code: 001.022.0004
-                    error: saml.unverified.domain
-                    message: Cannot link SAML provider to an unverified domain.
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-        '409':
-          description: >-
-            SAML provider already exists for the specified domain. | oidc
-            provider already exists for the specified domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                SAML provider already exists for the specified domain.:
-                  summary: SAML provider already exists for the specified domain.
-                  value:
-                    code: 001.022.0002
-                    error: saml.provider.already.exists
-                    message: SAML provider already exists for the specified domain.
-                oidc provider already exists for the specified domain.:
-                  summary: oidc provider already exists for the specified domain.
-                  value:
-                    code: 001.056.0001
-                    error: oidc.provider.already.exists
-                    message: oidc provider already exists for the specified domain.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    put:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: >-
-        Overwrites the previous provider for the specified domain in an
-        organization
-      tags:
-        - Organization.Settings.Domains.SAML
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      requestBody:
-        required: true
-        description: >-
-          Important note regarding the example request body shown below:
-          Provider data must be send as multipart/form-data with the
-          certificates as files, not strings!
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SAMLProviderCreateDto'
-      responses:
-        '200':
-          description: Updated SAMLProvider
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SAMLProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName' | No certificates found in the request
-            | The certificate sent is invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-                No certificates found in the request:
-                  summary: No certificates found in the request
-                  value:
-                    code: 001.000.0004
-                    error: invalid.body
-                    message: No certificates found in the request
-                The certificate sent is invalid.:
-                  summary: The certificate sent is invalid.
-                  value:
-                    code: 001.022.0001
-                    error: saml.invalid.certificate
-                    message: The certificate sent is invalid.
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    delete:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Deletes a SAML IdP
-      tags:
-        - Organization.Settings.Domains.SAML
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      responses:
-        '204':
-          description: No content
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name. | SAML provider not found for the specified
-            domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-                SAML provider not found for the specified domain.:
-                  summary: SAML provider not found for the specified domain.
-                  value:
-                    code: 001.022.0003
-                    error: saml.provider.not.found
-                    message: SAML provider not found for the specified domain.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/settings/domains/{domainName}/saml/certificates:
-    patch:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Adds an additional certificate to the existing certificates of the IdP
-      tags:
-        - Organization.Settings.Domains.SAML
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      requestBody:
-        required: true
-        description: >-
-          Important note regarding the example request body shown below: Data
-          must be send as multipart/form-data with the certificates as files,
-          not strings!
-        content:
-          multipart/form-data:
-            schema:
-              $ref: '#/components/schemas/SAMLProviderPatchDto'
-      responses:
-        '200':
-          description: Updated SAMLProvider
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/SAMLProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName' | No certificates found in the request
-            | The certificate sent is invalid.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-                No certificates found in the request:
-                  summary: No certificates found in the request
-                  value:
-                    code: 001.000.0004
-                    error: invalid.body
-                    message: No certificates found in the request
-                The certificate sent is invalid.:
-                  summary: The certificate sent is invalid.
-                  value:
-                    code: 001.022.0001
-                    error: saml.invalid.certificate
-                    message: The certificate sent is invalid.
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name. | SAML provider not found for the specified
-            domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-                SAML provider not found for the specified domain.:
-                  summary: SAML provider not found for the specified domain.
-                  value:
-                    code: 001.022.0003
-                    error: saml.provider.not.found
-                    message: SAML provider not found for the specified domain.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/settings/domains/oidc:
-    get:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Gets all providers for an organization
-      tags:
-        - Organization.Settings.Domains.OIDC
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-      responses:
-        '200':
-          description: Available OIDC IdPs
-          content:
-            application/json:
-              schema:
-                type: array
-                items:
-                  $ref: '#/components/schemas/OIDCProviderDto'
-        '400':
-          description: Failed to validate 'path' parameter 'orgName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: Organization not found
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-  /v1/org/{orgName}/settings/domains/{domainName}/oidc:
-    post:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: >-
-        Creates a new provider for the specified domain in an organization
-
-        There are multiple ways the process can fail besides
-        authentication/authorization:
-
-        - The domain is not verified
-
-        - There is already an IdP (SAML or OIDC) associated with this
-        organization and domain
-
-
-        Required organization role: ADMIN
-      summary: Creates a new provider for the specified domain in an organization
-      tags:
-        - Organization.Settings.Domains.OIDC
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              allOf:
-                - type: object
-                  properties:
-                    clientId:
-                      type: string
-                    clientSecret:
-                      type: string
-                  required:
-                    - clientId
-                    - clientSecret
-                - anyOf:
-                    - type: object
-                      properties:
-                        discoveryEndpoint:
-                          type: string
-                      required:
-                        - discoveryEndpoint
-                    - type: object
-                      properties:
-                        authorizationEndpoint:
-                          type: string
-                        tokenEndpoint:
-                          type: string
-                      required:
-                        - authorizationEndpoint
-                        - tokenEndpoint
-      responses:
-        '201':
-          description: Created OIDCProvider
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OIDCProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName' | Cannot link oidc provider to an
-            unverified domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-                Cannot link oidc provider to an unverified domain.:
-                  summary: Cannot link oidc provider to an unverified domain.
-                  value:
-                    code: 001.056.0003
-                    error: oidc.unverified.domain
-                    message: Cannot link oidc provider to an unverified domain.
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-        '409':
-          description: >-
-            oidc provider already exists for the specified domain. | SAML
-            provider already exists for the specified domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                oidc provider already exists for the specified domain.:
-                  summary: oidc provider already exists for the specified domain.
-                  value:
-                    code: 001.056.0001
-                    error: oidc.provider.already.exists
-                    message: oidc provider already exists for the specified domain.
-                SAML provider already exists for the specified domain.:
-                  summary: SAML provider already exists for the specified domain.
-                  value:
-                    code: 001.022.0002
-                    error: saml.provider.already.exists
-                    message: SAML provider already exists for the specified domain.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    patch:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Edit the current configuration of the OIDC provider linked with a domain
-      tags:
-        - Organization.Settings.Domains.OIDC
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      requestBody:
-        required: true
-        content:
-          application/json:
-            schema:
-              allOf:
-                - type: object
-                  properties:
-                    clientId:
-                      type: string
-                    clientSecret:
-                      type: string
-                - anyOf:
-                    - type: object
-                      properties:
-                        discoveryEndpoint:
-                          type: string
-                    - type: object
-                      properties:
-                        authorizationEndpoint:
-                          type: string
-                        tokenEndpoint:
-                          type: string
-      responses:
-        '200':
-          description: Updated OIDCProvider
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/OIDCProviderDto'
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name. | OIDC provider not found for the specified
-            domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-                OIDC provider not found for the specified domain.:
-                  summary: OIDC provider not found for the specified domain.
-                  value:
-                    code: 001.056.0002
-                    error: domain.oidc.provider.not.found
-                    message: OIDC provider not found for the specified domain.
-        '500':
-          description: something went wrong
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                something went wrong:
-                  summary: something went wrong
-                  value:
-                    code: 001.000.0002
-                    error: internal.server.error
-                    message: something went wrong
-    delete:
-      security:
-        - bearerAuth: []
-        - basicAuth: []
-        - patAuth: []
-      description: |-
-
-        Required organization role: ADMIN
-      summary: Deletes a OIDC IdP
-      tags:
-        - Organization.Settings.Domains.OIDC
-      parameters:
-        - schema:
-            anyOf:
-              - type: string
-                minLength: 3
-                maxLength: 64
-                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
-                description: >-
-                  Name of the organization (only alphanumeric characters,
-                  hyphens and dots are allowed; it should contain between 3 and
-                  64 characters)
-                example: MoovIT-Software-Products-GmbH
-              - type: string
-                minLength: 3
-                maxLength: 255
-                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
-                description: >-
-                  Name of the user's private organization, allowed everything
-                  defined in the RFC for the email specification (it should
-                  contain between 3 and 255 characters)
-                example: hmc@helmut.cloud
-          required: true
-          name: orgName
-          in: path
-        - schema:
-            type: string
-            pattern: >-
-              ^(?=.{1,253}$)(?!-)[A-Za-z0-9-]{1,63}(?<!-)(\.(?!-)[A-Za-z0-9-]{1,63}(?<!-))*\.[A-Za-z]{2,}$
-          required: true
-          name: domainName
-          in: path
-      responses:
-        '204':
-          description: No content
-        '400':
-          description: >-
-            Failed to validate 'path' parameter 'orgName' | Failed to validate
-            'path' parameter 'domainName'
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Failed to validate 'path' parameter 'orgName':
-                  summary: Failed to validate 'path' parameter 'orgName'
-                  description: Failed to validate 'path' parameter 'orgName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'orgName' - {error}
-                Failed to validate 'path' parameter 'domainName':
-                  summary: Failed to validate 'path' parameter 'domainName'
-                  description: Failed to validate 'path' parameter 'domainName' - {error}
-                  value:
-                    code: 001.000.0003
-                    error: invalid.parameter
-                    message: Failed to validate 'path' parameter 'domainName' - {error}
-        '401':
-          description: >-
-            You're not authorized | Expected an authentication token that has
-            not been provided | Your authentication token is invalid | Your
-            token expired | The personal access token used for authentication
-            has expired. | Your session expired
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                You're not authorized:
-                  summary: You're not authorized
-                  value:
-                    code: 001.001.0001
-                    error: unauthorized
-                    message: You're not authorized
-                Expected an authentication token that has not been provided:
-                  summary: Expected an authentication token that has not been provided
-                  value:
-                    code: 001.001.0002
-                    error: missing.auth.token
-                    message: >-
-                      Expected an authentication token that has not been
-                      provided
-                Your authentication token is invalid:
-                  summary: Your authentication token is invalid
-                  value:
-                    code: 001.001.0003
-                    error: wrong.auth.token
-                    message: Your authentication token is invalid
-                Your token expired:
-                  summary: Your token expired
-                  value:
-                    code: 001.001.0006
-                    error: token.expired
-                    message: Your token expired
-                The personal access token used for authentication has expired.:
-                  summary: >-
-                    The personal access token used for authentication has
-                    expired.
-                  value:
-                    code: 001.004.0003
-                    error: pat.expired
-                    message: >-
-                      The personal access token used for authentication has
-                      expired.
-                Your session expired:
-                  summary: Your session expired
-                  value:
-                    code: 001.001.0005
-                    error: session.expired
-                    message: Your session expired
-        '403':
-          description: >-
-            Basic Auth has been disabled as 2FA is enabled for this account |
-            This operation is disabled for user organizations | You have not
-            enough rights to access/manipulate this resource | Your role does
-            not have the required permission
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Basic Auth has been disabled as 2FA is enabled for this account:
-                  summary: >-
-                    Basic Auth has been disabled as 2FA is enabled for this
-                    account
-                  value:
-                    code: 001.001.0007
-                    error: basic.auth.disabled.2fa
-                    message: >-
-                      Basic Auth has been disabled as 2FA is enabled for this
-                      account
-                This operation is disabled for user organizations:
-                  summary: This operation is disabled for user organizations
-                  value:
-                    code: 001.007.0005
-                    error: operation.disabled.for.user.organization
-                    message: This operation is disabled for user organizations
-                You have not enough rights to access/manipulate this resource:
-                  summary: >-
-                    You have not enough rights to access/manipulate this
-                    resource
-                  value:
-                    code: 001.001.0004
-                    error: insufficient.rights
-                    message: >-
-                      You have not enough rights to access/manipulate this
-                      resource
-                Your role does not have the required permission:
-                  summary: Your role does not have the required permission
-                  value:
-                    code: 001.007.0004
-                    error: organization.insufficient.role
-                    message: Your role does not have the required permission
-        '404':
-          description: >-
-            Organization not found | Your organization has no domain associated
-            with the given name. | OIDC provider not found for the specified
-            domain.
-          content:
-            application/json:
-              schema:
-                $ref: '#/components/schemas/CustomError'
-              examples:
-                Organization not found:
-                  summary: Organization not found
-                  value:
-                    code: 001.007.0001
-                    error: organization.not.found
-                    message: Organization not found
-                Your organization has no domain associated with the given name.:
-                  summary: >-
-                    Your organization has no domain associated with the given
-                    name.
-                  value:
-                    code: 001.021.0002
-                    error: domain.not.found
-                    message: >-
-                      Your organization has no domain associated with the given
-                      name.
-                OIDC provider not found for the specified domain.:
-                  summary: OIDC provider not found for the specified domain.
-                  value:
-                    code: 001.056.0002
-                    error: domain.oidc.provider.not.found
-                    message: OIDC provider not found for the specified domain.
         '500':
           description: something went wrong
           content:
