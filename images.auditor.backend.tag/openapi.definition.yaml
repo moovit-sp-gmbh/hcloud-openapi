@@ -560,11 +560,6 @@ paths:
           required: false
           name: page
           in: query
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       requestBody:
         required: true
         content:
