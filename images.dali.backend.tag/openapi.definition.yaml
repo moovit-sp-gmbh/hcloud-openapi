@@ -131,11 +131,6 @@ paths:
           required: true
           name: bookId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -355,11 +350,6 @@ paths:
           required: true
           name: bookId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -554,11 +544,6 @@ paths:
           required: true
           name: appId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -733,11 +718,6 @@ paths:
           required: true
           name: appId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -897,11 +877,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -1106,11 +1081,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -1312,11 +1282,6 @@ paths:
           required: true
           name: poolName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -1542,11 +1507,6 @@ paths:
           required: true
           name: poolName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -1742,11 +1702,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -1951,11 +1906,6 @@ paths:
           required: true
           name: spaceName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -2132,11 +2082,6 @@ paths:
           required: true
           name: orgName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -2293,11 +2238,6 @@ paths:
           required: true
           name: orgName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -2447,11 +2387,6 @@ paths:
           required: true
           name: userId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -2626,11 +2561,6 @@ paths:
           required: true
           name: userId
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -2790,11 +2720,6 @@ paths:
           required: true
           name: teamName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -2970,11 +2895,6 @@ paths:
           required: true
           name: teamName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -3098,12 +3018,6 @@ paths:
       summary: Create a new Avatar for user
       tags:
         - User.Avatar
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -3204,12 +3118,6 @@ paths:
         with the current user and the relevant user organization
       tags:
         - User.Avatar
-      parameters:
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
@@ -3320,11 +3228,6 @@ paths:
           required: true
           name: storageName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '201':
           description: Public URL of the created avatar
@@ -3502,11 +3405,6 @@ paths:
           required: true
           name: storageName
           in: path
-        - schema:
-            type: string
-          required: true
-          name: authorization
-          in: header
       responses:
         '204':
           description: No Content
