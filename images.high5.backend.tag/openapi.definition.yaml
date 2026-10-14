@@ -4209,8 +4209,8 @@ components:
           example: ingest/raw/
         interval:
           type: integer
-          minimum: 10
-          description: Interval between scans in seconds, at least 10
+          minimum: 5
+          description: Interval between scans in seconds, at least 5
           example: 60
         eventName:
           type: string
@@ -4311,8 +4311,8 @@ components:
           example: ingest/raw/
         interval:
           type: integer
-          minimum: 10
-          description: Interval between scans in seconds, at least 10
+          minimum: 5
+          description: Interval between scans in seconds, at least 5
           example: 60
         eventName:
           type: string
