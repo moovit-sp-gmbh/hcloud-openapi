@@ -27479,8 +27479,8 @@ paths:
                 $ref: '#/components/schemas/StorageDto'
         '400':
           description: >-
-            Failed to validate 'path' parameter 'storageId' | Storage does not
-            fulfill requirements
+            Failed to validate 'path' parameter 'storageId' | 'Can't connect to
+            s3 storage'
           content:
             application/json:
               schema:
@@ -27494,17 +27494,12 @@ paths:
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'storageId' - {error}
                     shortMessage: Invalid parameter
-                Storage does not fulfill requirements:
-                  summary: Storage does not fulfill requirements
-                  description: >-
-                    Storage does not fulfill requirements: 'Can't connect to s3
-                    storage'
+                '''Can''t connect to s3 storage''':
+                  summary: '''Can''t connect to s3 storage'''
                   value:
                     code: 001.055.0004
                     error: storage.does.not.fulfill.requirements
-                    message: >-
-                      Storage does not fulfill requirements: 'Can't connect to
-                      s3 storage'
+                    message: '''Can''t connect to s3 storage'''
                     shortMessage: Storage does not fulfill requirements
         '401':
           description: >-
