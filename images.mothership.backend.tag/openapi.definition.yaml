@@ -42,6 +42,9 @@ components:
         message:
           type: string
           description: Error message
+        shortMessage:
+          type: string
+          description: Short, human-readable error summary
       required:
         - error
         - code
@@ -858,6 +861,7 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
   /v1/org/{orgName}/connect/search:
     post:
       security:
@@ -941,6 +945,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
@@ -948,6 +953,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'limit' - {error}
+                    shortMessage: Invalid parameter
                 Failed to validate 'query' parameter 'page':
                   summary: Failed to validate 'query' parameter 'page'
                   description: Failed to validate 'query' parameter 'page' - {error}
@@ -955,6 +961,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                    shortMessage: Invalid parameter
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -970,6 +977,7 @@ paths:
                     code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
+                    shortMessage: Not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
@@ -978,12 +986,14 @@ paths:
                     message: >-
                       Expected an authentication token that has not been
                       provided
+                    shortMessage: Missing authentication token
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
                     code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+                    shortMessage: Invalid authentication token
         '403':
           description: User's organization role is insufficient. Must be at least MEMBER
           content:
@@ -1001,6 +1011,7 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                    shortMessage: Insufficient rights
         '404':
           description: Organization not found
           content:
@@ -1014,6 +1025,7 @@ paths:
                     code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
+                    shortMessage: Organization not found
         '500':
           description: something went wrong
           content:
@@ -1027,6 +1039,7 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
   /v1/org/{orgName}/connect:
     post:
       summary: Connect to a given organization
@@ -1081,18 +1094,21 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
                 Agent is offline:
                   summary: Agent is offline
                   value:
                     code: 008.030.0002
                     error: agent.offline
                     message: Agent is offline
+                    shortMessage: Agent offline
                 Agent already connected to this organization.:
                   summary: Agent already connected to this organization.
                   value:
                     code: 008.030.0004
                     error: agent.already.connected
                     message: Agent already connected to this organization.
+                    shortMessage: Agent already connected
         '403':
           description: User's organization role is insufficient. Must be at least MEMBER
           content:
@@ -1110,6 +1126,7 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                    shortMessage: Insufficient rights
         '404':
           description: Organization not found
           content:
@@ -1123,6 +1140,7 @@ paths:
                     code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
+                    shortMessage: Organization not found
         '500':
           description: something went wrong
           content:
@@ -1136,6 +1154,7 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
   /v1/org/{orgName}/connect/{email}:
     delete:
       summary: Disconnect from a given organization
@@ -1193,6 +1212,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
                 Failed to validate 'path' parameter 'email':
                   summary: Failed to validate 'path' parameter 'email'
                   description: Failed to validate 'path' parameter 'email' - {error}
@@ -1200,12 +1220,14 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'email' - {error}
+                    shortMessage: Invalid parameter
                 Agent not connected:
                   summary: Agent not connected
                   value:
                     code: 008.030.0005
                     error: agent.not.connected
                     message: Agent not connected
+                    shortMessage: Agent not connected
         '500':
           description: something went wrong | Database issues.
           content:
@@ -1219,12 +1241,14 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
                 Database issues.:
                   summary: Database issues.
                   value:
                     code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
+                    shortMessage: Internal server error
   /v1/connect/{email}:
     delete:
       summary: Disconnect as a target
@@ -1257,6 +1281,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'email' - {error}
+                    shortMessage: Invalid parameter
         '500':
           description: something went wrong | Database issues.
           content:
@@ -1270,12 +1295,14 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
                 Database issues.:
                   summary: Database issues.
                   value:
                     code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
+                    shortMessage: Internal server error
   /v1/hello:
     post:
       summary: Say hello to the mothership to signify that an agent is online
@@ -1311,18 +1338,21 @@ paths:
                     message: >-
                       Expected an authentication token that has not been
                       provided
+                    shortMessage: Missing authentication token
                 You're not authorized:
                   summary: You're not authorized
                   value:
                     code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
+                    shortMessage: Not authorized
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
                     code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+                    shortMessage: Invalid authentication token
         '500':
           description: something went wrong | Database issues.
           content:
@@ -1336,12 +1366,14 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
                 Database issues.:
                   summary: Database issues.
                   value:
                     code: 008.000.0002
                     error: internal.server.error
                     message: Database issues.
+                    shortMessage: Internal server error
   /v1/hello/again:
     patch:
       summary: >-
@@ -1375,6 +1407,7 @@ paths:
                     code: 008.030.0002
                     error: agent.offline
                     message: Agent is offline
+                    shortMessage: Agent offline
         '500':
           description: something went wrong
           content:
@@ -1388,6 +1421,7 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
   /v1/register:
     post:
       summary: Register an agent with the mothership
@@ -1419,6 +1453,7 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
   /v1/org/{orgName}/stats:
     get:
       security:
@@ -1474,6 +1509,7 @@ paths:
                     code: 008.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -1489,6 +1525,7 @@ paths:
                     code: 008.001.0001
                     error: unauthorized
                     message: You're not authorized
+                    shortMessage: Not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
@@ -1497,12 +1534,14 @@ paths:
                     message: >-
                       Expected an authentication token that has not been
                       provided
+                    shortMessage: Missing authentication token
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
                     code: 008.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+                    shortMessage: Invalid authentication token
         '403':
           description: User's organization role is insufficient. Must be at least ADMIN
           content:
@@ -1520,6 +1559,7 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                    shortMessage: Insufficient rights
         '404':
           description: Organization not found
           content:
@@ -1533,6 +1573,7 @@ paths:
                     code: 008.007.0001
                     error: organization.not.found
                     message: Organization not found
+                    shortMessage: Organization not found
         '500':
           description: something went wrong
           content:
@@ -1546,3 +1587,4 @@ paths:
                     code: 008.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
