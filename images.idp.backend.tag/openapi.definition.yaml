@@ -2881,6 +2881,13 @@ components:
                       type: number
                   required:
                     - quota
+                concurrentExecutions:
+                  type: object
+                  properties:
+                    quota:
+                      type: number
+                  required:
+                    - quota
                 executionLogPeriodInDays:
                   type: object
                   properties:
