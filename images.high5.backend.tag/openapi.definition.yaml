@@ -17261,12 +17261,19 @@ paths:
                     message: Incoming request from blocked IP address 85.208.98.18
                     shortMessage: Request from blocked IP address
         '404':
-          description: Given webhook not found
+          description: Organization not found | Given webhook not found
           content:
             application/json:
               schema:
                 $ref: '#/components/schemas/CustomError'
               examples:
+                Organization not found:
+                  summary: Organization not found
+                  value:
+                    code: 002.007.0001
+                    error: organization.not.found
+                    message: Organization not found
+                    shortMessage: Organization not found
                 Given webhook not found:
                   summary: Given webhook not found
                   value:
