@@ -42,6 +42,9 @@ components:
         message:
           type: string
           description: Error message
+        shortMessage:
+          type: string
+          description: Short, human-readable error summary
       required:
         - error
         - code
@@ -592,6 +595,7 @@ paths:
                     code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
                 Failed to validate 'query' parameter 'limit':
                   summary: Failed to validate 'query' parameter 'limit'
                   description: Failed to validate 'query' parameter 'limit' - {error}
@@ -599,6 +603,7 @@ paths:
                     code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'limit' - {error}
+                    shortMessage: Invalid parameter
                 Failed to validate 'query' parameter 'page':
                   summary: Failed to validate 'query' parameter 'page'
                   description: Failed to validate 'query' parameter 'page' - {error}
@@ -606,6 +611,7 @@ paths:
                     code: 003.000.0003
                     error: invalid.parameter
                     message: Failed to validate 'query' parameter 'page' - {error}
+                    shortMessage: Invalid parameter
         '401':
           description: >-
             You're not authorized | Expected an authentication token that has
@@ -621,6 +627,7 @@ paths:
                     code: 003.001.0001
                     error: unauthorized
                     message: You're not authorized
+                    shortMessage: Not authorized
                 Expected an authentication token that has not been provided:
                   summary: Expected an authentication token that has not been provided
                   value:
@@ -629,12 +636,14 @@ paths:
                     message: >-
                       Expected an authentication token that has not been
                       provided
+                    shortMessage: Missing authentication token
                 Your authentication token is invalid:
                   summary: Your authentication token is invalid
                   value:
                     code: 003.001.0003
                     error: wrong.auth.token
                     message: Your authentication token is invalid
+                    shortMessage: Invalid authentication token
         '403':
           description: >-
             Required scopes ['idp:organization:read'] not included in
@@ -655,6 +664,7 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                    shortMessage: Insufficient rights
                 User's organization role is insufficient. Must be at least ADMIN:
                   summary: >-
                     User's organization role is insufficient. Must be at least
@@ -665,6 +675,7 @@ paths:
                     message: >-
                       You have not enough rights to access/manipulate this
                       resource
+                    shortMessage: Insufficient rights
         '404':
           description: Organization not found
           content:
@@ -678,6 +689,7 @@ paths:
                     code: 003.007.0001
                     error: organization.not.found
                     message: Organization not found
+                    shortMessage: Organization not found
         '500':
           description: something went wrong
           content:
@@ -691,3 +703,4 @@ paths:
                     code: 003.000.0002
                     error: internal.server.error
                     message: something went wrong
+                    shortMessage: Internal server error
