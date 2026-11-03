@@ -6149,6 +6149,22 @@ components:
             - f2130bf6-f1bb-4bc4-9749-6c7b08e66a68
       required:
         - assetIds
+    QueueDto:
+      type: object
+      properties:
+        start:
+          type: string
+          pattern: ^[0-9]+$
+          description: Start of the queue
+          example: '123'
+        end:
+          type: string
+          pattern: ^[0-9]+$
+          description: End of the queue
+          example: '144'
+      required:
+        - start
+        - end
   parameters: {}
 paths:
   /v1/org/{orgName}/spaces/{spaceName}/address-book/search:
@@ -28163,6 +28179,68 @@ paths:
                     error: stack.not.found
                     message: Stack not found
                     shortMessage: Stack not found
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+                    shortMessage: Internal server error
+  /v1/queue:
+    get:
+      security:
+        - bearerAuth: []
+        - basicAuth: []
+        - patAuth: []
+      summary: Gets the current state of the queue
+      tags:
+        - Queue
+      responses:
+        '200':
+          description: Queue State
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/QueueDto'
+        '401':
+          description: >-
+            You're not authorized | Expected an authentication token that has
+            not been provided | Your authentication token is invalid
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                You're not authorized:
+                  summary: You're not authorized
+                  value:
+                    code: 009.001.0001
+                    error: unauthorized
+                    message: You're not authorized
+                    shortMessage: Not authorized
+                Expected an authentication token that has not been provided:
+                  summary: Expected an authentication token that has not been provided
+                  value:
+                    code: 009.001.0002
+                    error: missing.auth.token
+                    message: >-
+                      Expected an authentication token that has not been
+                      provided
+                    shortMessage: Missing authentication token
+                Your authentication token is invalid:
+                  summary: Your authentication token is invalid
+                  value:
+                    code: 009.001.0003
+                    error: wrong.auth.token
+                    message: Your authentication token is invalid
+                    shortMessage: Invalid authentication token
         '500':
           description: something went wrong
           content:
