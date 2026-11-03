@@ -3274,11 +3274,40 @@ components:
                     the asset
                   example: 75
                 queuePosition:
-                  type: number
-                  description: 1-indexed position in the transcoding queue
-                queueTotal:
-                  type: number
-                  description: Total number of assets currently in the transcoding queue
+                  type: string
+                  description: >
+                    Unresolved index of the asset in the processing queue. This
+                    value is a string value because it can have values greater
+                    than the number type of Javascript can support. To work with
+                    this value in Javascript, it should be converted to BigInt
+                    from the string.
+
+                    The real value can be calculated with the start and end of
+                    the queue (GET /v1/queue or the queue NATS subject) in the
+                    following way:
+
+
+
+                    S = queue start index (index of the next asset to be
+                    processed)
+
+
+                    E = queue end index (index the next queued asset will get)
+
+
+                    P = asset index in queue (this value)
+
+
+                    MAX = 9007199254740991 // maximum safe integer, the index
+                    after MAX is 0
+
+
+                    queuePosition = P >= S ? P - S : MAX - S + P + 1 //
+                    0-indexed, 0 means the asset is processed next
+
+
+                    queueTotal = E >= S ? E - S : MAX - S + E + 1 // number of
+                    assets in the queue
                 assetType:
                   type: string
                   enum:
@@ -3700,11 +3729,37 @@ components:
           description: According to status the upload or transcoding progress of the asset
           example: 75
         queuePosition:
-          type: number
-          description: 1-indexed position in the transcoding queue
-        queueTotal:
-          type: number
-          description: Total number of assets currently in the transcoding queue
+          type: string
+          description: >
+            Unresolved index of the asset in the processing queue. This value is
+            a string value because it can have values greater than the number
+            type of Javascript can support. To work with this value in
+            Javascript, it should be converted to BigInt from the string.
+
+            The real value can be calculated with the start and end of the queue
+            (GET /v1/queue or the queue NATS subject) in the following way:
+
+
+
+            S = queue start index (index of the next asset to be processed)
+
+
+            E = queue end index (index the next queued asset will get)
+
+
+            P = asset index in queue (this value)
+
+
+            MAX = 9007199254740991 // maximum safe integer, the index after MAX
+            is 0
+
+
+            queuePosition = P >= S ? P - S : MAX - S + P + 1 // 0-indexed, 0
+            means the asset is processed next
+
+
+            queueTotal = E >= S ? E - S : MAX - S + E + 1 // number of assets in
+            the queue
         assetType:
           type: string
           enum:
@@ -4094,11 +4149,37 @@ components:
           description: According to status the upload or transcoding progress of the asset
           example: 75
         queuePosition:
-          type: number
-          description: 1-indexed position in the transcoding queue
-        queueTotal:
-          type: number
-          description: Total number of assets currently in the transcoding queue
+          type: string
+          description: >
+            Unresolved index of the asset in the processing queue. This value is
+            a string value because it can have values greater than the number
+            type of Javascript can support. To work with this value in
+            Javascript, it should be converted to BigInt from the string.
+
+            The real value can be calculated with the start and end of the queue
+            (GET /v1/queue or the queue NATS subject) in the following way:
+
+
+
+            S = queue start index (index of the next asset to be processed)
+
+
+            E = queue end index (index the next queued asset will get)
+
+
+            P = asset index in queue (this value)
+
+
+            MAX = 9007199254740991 // maximum safe integer, the index after MAX
+            is 0
+
+
+            queuePosition = P >= S ? P - S : MAX - S + P + 1 // 0-indexed, 0
+            means the asset is processed next
+
+
+            queueTotal = E >= S ? E - S : MAX - S + E + 1 // number of assets in
+            the queue
         assetType:
           type: string
           enum:
@@ -4600,11 +4681,39 @@ components:
                 asset
               example: 75
             queuePosition:
-              type: number
-              description: 1-indexed position in the transcoding queue
-            queueTotal:
-              type: number
-              description: Total number of assets currently in the transcoding queue
+              type: string
+              description: >
+                Unresolved index of the asset in the processing queue. This
+                value is a string value because it can have values greater than
+                the number type of Javascript can support. To work with this
+                value in Javascript, it should be converted to BigInt from the
+                string.
+
+                The real value can be calculated with the start and end of the
+                queue (GET /v1/queue or the queue NATS subject) in the following
+                way:
+
+
+
+                S = queue start index (index of the next asset to be processed)
+
+
+                E = queue end index (index the next queued asset will get)
+
+
+                P = asset index in queue (this value)
+
+
+                MAX = 9007199254740991 // maximum safe integer, the index after
+                MAX is 0
+
+
+                queuePosition = P >= S ? P - S : MAX - S + P + 1 // 0-indexed, 0
+                means the asset is processed next
+
+
+                queueTotal = E >= S ? E - S : MAX - S + E + 1 // number of
+                assets in the queue
             assetType:
               type: string
               enum:
@@ -22602,7 +22711,9 @@ paths:
           content:
             application/json:
               schema:
-                $ref: '#/components/schemas/AssetDto'
+                type: array
+                items:
+                  $ref: '#/components/schemas/AssetDto'
         '400':
           description: >-
             Failed to validate 'path' parameter 'orgName' | Failed to validate
