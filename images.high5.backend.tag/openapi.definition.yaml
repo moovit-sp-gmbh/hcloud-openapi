@@ -36126,7 +36126,9 @@ paths:
       description: >-
         Returns the path and decrypted credentials to scan, for the agent that
         received this scan's NATS dispatch. Requires the one-time scan secret
-        handed out with that dispatch, not general space read access.
+        handed out with that dispatch, not general space read access. The caller
+        must also still be the watch folder's target, directly or through its
+        pool
       summary: Get the scan configuration for a watch folder
       tags:
         - WatchFolder
@@ -36346,7 +36348,8 @@ paths:
         Accepts a list of files discovered by the agent (or the reason the scan
         could not be performed) and updates the scan status and file tracking
         state. Requires the one-time scan secret handed out with that scan's
-        NATS dispatch, not general space write access.
+        NATS dispatch, not general space write access. The caller must also
+        still be the watch folder's target, directly or through its pool
       summary: Submit a watch folder scan report
       tags:
         - WatchFolder
