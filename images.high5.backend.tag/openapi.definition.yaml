@@ -4208,7 +4208,9 @@ components:
           $ref: '#/components/schemas/WatchFolderResourceType'
         path:
           type: string
-          description: Folder path or prefix to scan
+          description: >-
+            Folder path to scan. For S3, an empty string scans the entire
+            bucket; '.' and a leading '/' are not valid
           example: ingest/raw/
         interval:
           type: integer
@@ -4309,8 +4311,8 @@ components:
         path:
           type: string
           description: >-
-            Folder path or prefix to scan. For S3, an empty string scans the
-            entire bucket/root; '.' and a leading '/' are not valid S3 prefixes
+            Folder path to scan. For S3, an empty string scans the entire
+            bucket; '.' and a leading '/' are not valid
           example: ingest/raw/
         interval:
           type: integer
@@ -8130,7 +8132,7 @@ components:
           $ref: '#/components/schemas/WatchFolderResourceType'
         path:
           type: string
-          description: Folder path or prefix to scan
+          description: Folder path to scan
           example: ingest/raw/
         interval:
           type: integer
@@ -8212,7 +8214,7 @@ components:
       properties:
         path:
           type: string
-          description: Folder path or prefix to scan
+          description: Folder path to scan. For S3, a non-empty path always ends with '/'
           example: ingest/raw/
         credentials:
           allOf:
