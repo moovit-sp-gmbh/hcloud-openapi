@@ -4352,7 +4352,9 @@ components:
               path:
                 type: string
                 minLength: 1
-                description: File path relative to the configured folder prefix
+                description: >-
+                  Full file path (absolute path for LOCAL, full object key for
+                  S3), where S3 folder markers ending with "/" are ignored
                 example: ingest/raw/video.mp4
               size:
                 type: integer
