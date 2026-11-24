@@ -22558,6 +22558,369 @@ paths:
                     error: internal.server.error
                     message: something went wrong
                     shortMessage: Internal server error
+  /v1/org/{orgName}/spaces/{spaceName}/shares/:shareId/anonymous:
+    get:
+      summary: Get a PAT to interact with this share as an anonymous user
+      tags:
+        - Share
+      parameters:
+        - schema:
+            anyOf:
+              - type: string
+                minLength: 3
+                maxLength: 64
+                pattern: ^(?!-)(?!.*--)[a-zA-Z0-9-.]{3,64}(?<!-)$
+                description: >-
+                  Name of the organization (only alphanumeric characters,
+                  hyphens and dots are allowed; it should contain between 3 and
+                  64 characters)
+                example: MoovIT-Software-Products-GmbH
+              - type: string
+                minLength: 3
+                maxLength: 255
+                pattern: ^[\p{L}\p{M}0-9_+@.-]{3,255}$
+                description: >-
+                  Name of the user's private organization, allowed everything
+                  defined in the RFC for the email specification (it should
+                  contain between 3 and 255 characters)
+                example: hmc@helmut.cloud
+          required: true
+          name: orgName
+          in: path
+        - schema:
+            type: string
+            minLength: 1
+            maxLength: 32
+            pattern: ^[\w-.]{1,32}$
+            description: >-
+              Name of the space (only alphanumeric characters, hyphens and dots
+              are allowed; it should contain between 1 and 32 characters)
+            example: Helmut4
+          required: true
+          name: spaceName
+          in: path
+      responses:
+        '204':
+          description: >-
+            Token that should be used in the authorization header of further
+            requests.
+          headers:
+            authorization:
+              description: Authorization header to be used in further requests.
+              required: true
+              schema:
+                type: string
+          content:
+            application/json:
+              schema:
+                type: object
+                properties:
+                  _id:
+                    type: string
+                    format: uuid
+                  name:
+                    type: string
+                  active:
+                    type: boolean
+                    description: >-
+                      Whether the share is active or not. Inactive shares cannot
+                      be accessed.
+                    example: true
+                  invalidLink:
+                    type: boolean
+                    description: >-
+                      True if the parent Space was renamed and share links may
+                      no longer be valid.
+                    example: false
+                  waiting:
+                    type: boolean
+                    description: >-
+                      Will be true only if the share was created as a deferred
+                      share and its assets are not yet ready.
+                  creator:
+                    allOf:
+                      - $ref: '#/components/schemas/ReducedUser'
+                      - properties:
+                          _id:
+                            type: string
+                            format: hex
+                            description: User ID
+                            example: 67336a3f31ed8ecdc24e0080
+                          name:
+                            type: string
+                            description: User Name
+                            example: Bob
+                          email:
+                            type: string
+                            description: User email
+                            example: bob@helmut.cloud
+                          avatarUrl:
+                            type: string
+                            format: uri
+                            description: URL to the user's avatar
+                            example: https://example.com
+                  createDate:
+                    type: number
+                  emailStatus:
+                    type: array
+                    items:
+                      type: object
+                      properties:
+                        email:
+                          type: string
+                          example: example@helmut.cloud
+                        status:
+                          type: string
+                          enum:
+                            - OPENED
+                            - SENT
+                            - CLICKED
+                            - FAILED
+                            - BOUNCED
+                            - BLOCKED
+                            - NOT_SENT
+                            - SPAM
+                            - UNKNOWN
+                            - DELIVERED
+                            - DELIVERED_DELAYED
+                            - SUPPRESSED
+                            - PENDING
+                          example: CLICKED
+                      required:
+                        - email
+                        - status
+                  items:
+                    type: array
+                    items:
+                      oneOf:
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - FOLDER
+                          required:
+                            - _id
+                            - name
+                            - type
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - MEDIA_ASSET
+                            thumbnailUrl:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnailUrl
+                        - type: object
+                          properties:
+                            _id:
+                              type: string
+                              format: uuid
+                            name:
+                              type: string
+                            type:
+                              type: string
+                              enum:
+                                - STACK
+                            thumbnailUrl:
+                              type: string
+                              description: Thumbnail URL
+                              example: >-
+                                https://example-bucket.s3.eu-west-1.amazonaws.com/thumbnails/ae13321a-522d-48da-9733-27c97bcab124/thumb.webp
+                          required:
+                            - _id
+                            - name
+                            - type
+                            - thumbnailUrl
+                    description: List of assets and folders in the share.
+                  permissionGroups:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_26
+                    description: >-
+                      List of asset permission groups applied to the share (e.g.
+                      BASE, REVIEW).
+                    example: *ref_27
+                  permissions:
+                    type: array
+                    items:
+                      type: string
+                      enum: *ref_28
+                    description: >-
+                      List of permissions granted to the share members over the
+                      share's assets.
+                    example: *ref_29
+                  namespaceGroups:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_30
+                    description: >-
+                      Namespaces to include in the share. Share consumers will
+                      only be able to read/write asset comments and statuses
+                      according to the permission groups set in this map.
+                    example: *ref_31
+                  namespaces:
+                    type: object
+                    additionalProperties:
+                      type: array
+                      items:
+                        type: string
+                        enum: *ref_32
+                    description: >-
+                      Map of permissions granted to the share members over the
+                      share's assets in the context of each namespace.
+                    example: *ref_33
+                  users:
+                    type: array
+                    items:
+                      allOf:
+                        - anyOf:
+                            - allOf:
+                                - $ref: '#/components/schemas/ReducedUser'
+                                - properties:
+                                    _id:
+                                      type: string
+                                      format: hex
+                                      description: User ID
+                                      example: 67336a3f31ed8ecdc24e0080
+                                    name:
+                                      type: string
+                                      description: User Name
+                                      example: Bob
+                                    email:
+                                      type: string
+                                      description: User email
+                                      example: bob@helmut.cloud
+                                    avatarUrl:
+                                      type: string
+                                      format: uri
+                                      description: URL to the user's avatar
+                                      example: https://example.com
+                            - $ref: '#/components/schemas/ShareReducedUnlinkedUser'
+                        - type: object
+                          properties:
+                            remainingCooldownInSeconds:
+                              type: number
+                              description: >-
+                                Remaining seconds until the share email can be
+                                resent to this user. Only present if the user is
+                                in cooldown.
+                              example: 42
+                    description: >-
+                      Array of the users associated with the share. Only present
+                      when searching shares of a space.
+                  publicLink:
+                    type: object
+                    properties:
+                      link:
+                        type: string
+                        format: uri
+                        description: >-
+                          Public URL of the share, only present if the share is
+                          a public link share.
+                      visitsLimit:
+                        type: number
+                        minimum: 1
+                        maximum: 1000
+                        description: >-
+                          Maximum number of visits allowed for the share (only
+                          if it's a public link share)
+                        example: 100
+                    required:
+                      - link
+                    description: >-
+                      Public link information, only present if the share is a
+                      public link share.
+                  organization:
+                    $ref: '#/components/schemas/ReducedOrganization'
+                  space:
+                    $ref: '#/components/schemas/ReducedSpace'
+                  password:
+                    type: string
+                    description: Share password
+                    example: super-safe
+                  expires:
+                    type: number
+                    minimum: 0
+                    exclusiveMinimum: true
+                    description: >-
+                      UTC timestamp in milliseconds marking when the share
+                      should expire
+                    example: 1752057295637
+                  message:
+                    type: string
+                    description: >-
+                      Optional message for private shares that will be displayed
+                      in the email. Requires public to be false.
+                required:
+                  - _id
+                  - name
+                  - active
+                  - invalidLink
+                  - waiting
+                  - creator
+                  - createDate
+        '400':
+          description: >-
+            Failed to validate 'path' parameter 'orgName' | Failed to validate
+            'path' parameter 'spaceName'
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                Failed to validate 'path' parameter 'orgName':
+                  summary: Failed to validate 'path' parameter 'orgName'
+                  description: Failed to validate 'path' parameter 'orgName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'orgName' - {error}
+                    shortMessage: Invalid parameter
+                Failed to validate 'path' parameter 'spaceName':
+                  summary: Failed to validate 'path' parameter 'spaceName'
+                  description: Failed to validate 'path' parameter 'spaceName' - {error}
+                  value:
+                    code: 009.000.0003
+                    error: invalid.parameter
+                    message: Failed to validate 'path' parameter 'spaceName' - {error}
+                    shortMessage: Invalid parameter
+        '500':
+          description: something went wrong
+          content:
+            application/json:
+              schema:
+                $ref: '#/components/schemas/CustomError'
+              examples:
+                something went wrong:
+                  summary: something went wrong
+                  value:
+                    code: 009.000.0002
+                    error: internal.server.error
+                    message: something went wrong
+                    shortMessage: Internal server error
   /v1/org/{orgName}/assets/search:
     post:
       security:
